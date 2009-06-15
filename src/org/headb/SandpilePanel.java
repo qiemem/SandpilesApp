@@ -94,7 +94,10 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		currentConfig = new SandpileConfiguration();
 
 		drawer = new SandpileGLDrawer();
+		Canvas canvas = drawer.getCanvas();
+		canvas.setPreferredSize(this.getSize());
 		this.add(drawer.getCanvas());
+		canvas.setVisible(true);
 
 		selectedVertex = -1;
 		addMouseListener(new MouseInputAdapter() {
