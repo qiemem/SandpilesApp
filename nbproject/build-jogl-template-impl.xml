@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*** GENERATED FROM jogl-projects module - DO NOT EDIT  ***
+***             EDIT ../build.xml INSTEAD              ***
+-->
+<project name="jogl-template-impl" default="default" basedir=".." >
+    <description>Ant targets for JOGL projects.</description>
+
+    <target name="-jogl-template-post-jar">
+        <echo message="Creating native distibutions"/>
+
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="linux-i586"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="linux-amd64"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="macosx-ppc"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="macosx-universal"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="solaris-sparc"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="solaris-sparcv9"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="solaris-i586"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="windows-i586"/>
+        </antcall>
+        <antcall target="-create-native-distribution" inheritall="true">
+            <param name="platform.name" value="windows-amd64"/>
+        </antcall>
+        <antcall target="-jogl-template-copy-natives" inheritall="true"/>
+    </target>
+
+    <target name="-jogl-template-copy-natives" depends="-jogl-template-test-jnlp-enabled" unless="is.jnlp.enabled">
+        <copy todir="${dist.dir}">
+            <fileset dir="${libs.JOGL.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+            <fileset dir="${libs.GLUEGEN-RT.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+        </copy >
+    </target>
+
+    <target name="-jogl-template-jnlp" depends="-jogl-template-test-jnlp-enabled,-jogl-template-patch-master-jnlp,jnlp-impl.jnlp" if="is.jnlp.enabled">
+        <!--remove jogl from dist/lib folder-->
+        <delete file="${dist.dir}/lib/jogl.jar"/>
+        <delete file="${dist.dir}/lib/gluegen-rt.jar"/>
+
+        <!--remove jogl dependency from jnlp to add it later as jnlp extention-->
+        <replace file="${dist.dir}/launch.jnlp">
+            <replacetoken><![CDATA[<jar href="lib/jogl.jar"/>]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="${dist.dir}/launch.jnlp">
+            <replacetoken><![CDATA[<jar href="lib/gluegen-rt.jar"/>]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="${dist.dir}/launch.jnlp">
+            <replacetoken><![CDATA[<jar href="lib/jogl.jar" download="eager"/>]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="${dist.dir}/launch.jnlp">
+            <replacetoken><![CDATA[<jar href="lib/gluegen-rt.jar" download="eager"/>]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+    </target>
+
+    <!--noop in case jnlp-impl.xml is not available-->
+    <target name="jnlp-impl.jnlp" ></target>
+
+
+    <target name="-jogl-template-patch-master-jnlp" depends="-jogl-template-check-master-jnlp" if="is.jnlp.unpatched">
+        <replace file="master-${jnlp.descriptor}.jnlp">
+            <replacetoken><![CDATA[</resources>]]></replacetoken>
+            <replacevalue><![CDATA[    <extension name="jogl" href="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp" />
+    </resources>]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="-jogl-template-check-master-jnlp" if="is.jnlp.enabled">
+        <loadfile property="master.jnlp.content" srcfile="master-${jnlp.descriptor}.jnlp"/>
+        <condition property="is.jnlp.unpatched">
+            <not>
+                <contains string="${master.jnlp.content}" substring='extension name="jogl"'/>
+            </not>
+        </condition>
+    </target>
+
+    <target name="-create-native-distribution">
+        <mkdir dir="${dist.dir}-${platform.name}"/>
+        <!-- This is a bit of a hack to simulate string replacements with ant :/ -->
+        <pathconvert pathsep=" " property="platformFiles">
+            <path>
+                <fileset dir="${libs.JOGL.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+                <fileset dir="${libs.GLUEGEN-RT.classpath}-natives-${natives.platform}" defaultexcludes="yes"/>
+            </path>
+        </pathconvert>
+        <echo file="${java.io.tmpdir}/platformExcludes.properties" message="platformExcludes: ${platformFiles}" />
+        <replace file="${java.io.tmpdir}/platformExcludes.properties" value="">
+            <replacefilter token="${libs.JOGL.classpath}-natives-${natives.platform}"/>
+            <replacefilter token="${libs.GLUEGEN-RT.classpath}-natives-${natives.platform}"/>
+        </replace>
+        <property file="${java.io.tmpdir}/platformExcludes.properties"/>
+        <delete file="${java.io.tmpdir}/platformExcludes.properties"/>
+        <copy todir="${dist.dir}-${platform.name}" overwrite="yes">
+            <fileset dir="${dist.dir}" excludes="${platformExcludes}" defaultexcludes="no"/>
+            <fileset dir="${libs.JOGL.classpath}-natives-${platform.name}"/>
+            <fileset dir="${libs.GLUEGEN-RT.classpath}-natives-${platform.name}"/>
+        </copy >
+    </target>
+
+    <target name="-jogl-template-post-clean">
+        <echo message="Removing native distibutions"/>
+        <delete dir="${dist.dir}-linux-i586"/>
+        <delete dir="${dist.dir}-linux-amd64"/>
+        <delete dir="${dist.dir}-macosx-ppc"/>
+        <delete dir="${dist.dir}-macosx-universal"/>
+        <delete dir="${dist.dir}-solaris-sparc"/>
+        <delete dir="${dist.dir}-solaris-sparcv9"/>
+        <delete dir="${dist.dir}-solaris-i586"/>
+        <delete dir="${dist.dir}-windows-i586"/>
+        <delete dir="${dist.dir}-windows-amd64"/>
+    </target>
+
+    <target name="-jogl-template-test-jnlp-enabled">
+        <condition property="is.jnlp.enabled">
+            <equals arg1="${jnlp.enabled}" arg2="true" casesensitive="false" trim="true"/>
+        </condition>
+    </target>
+
+</project>
