@@ -122,10 +122,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         edgeWeightField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         editGraphButtonGroup = new javax.swing.ButtonGroup();
-        sandpileViewPanel = new SandpilePanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         sandpileViewScrollPane = new javax.swing.JScrollPane();
-        canvas = new javax.media.opengl.GLCanvas();
+        sandpileViewPanel = new SandpilePanel();
         controlPanel = new javax.swing.JPanel();
         runButton = new javax.swing.JToggleButton();
         delaySlider = new javax.swing.JSlider();
@@ -565,10 +564,17 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
+        jSplitPane1.setDividerLocation(600);
+        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setOneTouchExpandable(true);
+
+        sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
         sandpileViewPanel.setBackground(new java.awt.Color(0, 0, 0));
         sandpileViewPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(153, 153, 153), new java.awt.Color(153, 153, 153)));
-        sandpileViewPanel.setFont(new java.awt.Font("Lucida Grande", 0, 12));
-        sandpileViewPanel.setPreferredSize(new java.awt.Dimension(2000, 2000));
+        sandpileViewPanel.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        sandpileViewPanel.setPreferredSize(new java.awt.Dimension(500, 500));
         sandpileViewPanel.setRepaint(true);
         sandpileViewPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -583,22 +589,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         sandpileViewPanel.setLayout(sandpileViewPanelLayout);
         sandpileViewPanelLayout.setHorizontalGroup(
             sandpileViewPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 1996, Short.MAX_VALUE)
+            .add(0, 496, Short.MAX_VALUE)
         );
         sandpileViewPanelLayout.setVerticalGroup(
             sandpileViewPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 1996, Short.MAX_VALUE)
+            .add(0, 613, Short.MAX_VALUE)
         );
 
-        jSplitPane1.setDividerLocation(600);
-        jSplitPane1.setResizeWeight(1.0);
-        jSplitPane1.setOneTouchExpandable(true);
-
-        sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-        canvas.addGLEventListener(sandpileViewPanel);
-        sandpileViewScrollPane.setViewportView(canvas);
+        sandpileViewScrollPane.setViewportView(sandpileViewPanel);
 
         jSplitPane1.setLeftComponent(sandpileViewScrollPane);
 
@@ -1046,7 +1044,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton addVertexRadioButton;
     private javax.swing.JTextField amountOfSandField;
     private javax.swing.JPanel blankOptionsPanel;
-    private javax.media.opengl.GLCanvas canvas;
     private javax.swing.JCheckBox changingNodeSizeCheckBox;
     private javax.swing.JButton clearSandButton;
     private javax.swing.JCheckBox colorCheckBox;

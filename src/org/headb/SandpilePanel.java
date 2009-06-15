@@ -35,12 +35,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Iterator;
 
+import java.awt.Canvas;
+
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
-public class SandpilePanel extends JPanel implements GLEventListener, ActionListener, Serializable, Runnable {
+public class SandpilePanel extends JPanel implements ActionListener, Serializable, Runnable {
 
 	public static final int ADD_VERT_STATE = 0;
 	public static final int DEL_VERT_STATE = 1;
@@ -64,7 +66,7 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 	static final Color[] SAND_MONOCHROME = {new Color(25, 25, 25), new Color(50, 50, 50), new Color(100, 100, 100), new Color(150, 150, 150), new Color(200, 200, 200), new Color(225, 225, 225), new Color(255, 255, 255)};
 	private BufferedImage[] vertexImages = new BufferedImage[SAND_COLOR.length];
 	private double scale = 1.0;
-	ArrayList<int[]> vertexData;
+	ArrayList<float[]> vertexData;
 	//only keeps track of the existence of edges, not of their weights
 	ArrayList<HashSet<Integer>> edges;
 	private int selectedVertex;
@@ -74,6 +76,8 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 	private boolean outputFPS = true;
 	private SandpileConfiguration currentConfig;
 
+	private SandpileDrawer drawer;
+
 	public SandpilePanel() {
 		initWithSandpileGraph(new SandpileGraph());
 	}
@@ -82,65 +86,16 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 		initWithSandpileGraph(sg);
 	}
 
-	public void init(GLAutoDrawable drawable){
-		// Use debug pipeline
-        // drawable.setGL(new DebugGL(drawable.getGL()));
-
-        GL gl = drawable.getGL();
-        System.err.println("INIT GL IS: " + gl.getClass().getName());
-
-        // Enable VSync
-        gl.setSwapInterval(1);
-
-        // Setup the drawing area and shading mode
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
-
-		//gl.glEnable(gl.GL_DEPTH_TEST);
-		//gl.glDepthFunc(gl.GL_LEQUAL);
-	}
-
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		GL gl = drawable.getGL();
-        GLU glu = new GLU();
-
-        if (height <= 0) { // avoid a divide by zero error!
-
-            height = 1;
-		}
-        final float h = (float) width / (float) height;
-        gl.glViewport(0, 0, width, height);
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glLoadIdentity();
-        //glu.gluPerspective(45.0f, h, 1.0, 1000.0);
-		glu.gluOrtho2D(-10.0, 10.0, 10.0, -10.0);
-        gl.glMatrixMode(GL.GL_MODELVIEW);
-        gl.glLoadIdentity();
-	}
-
-	    public void display(GLAutoDrawable drawable) {
-		//System.err.println("display");
-		//randomizeGrid(gridHeights);
-        GL gl = drawable.getGL();
-		GLU glu = new GLU();
-
-        // Clear the drawing area
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        // Reset the current matrix to the "identity"
-        gl.glLoadIdentity();
-        gl.glFlush();
-    }
-
-    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-		System.err.println("displayChanged");
-    }
-
 	private void initWithSandpileGraph(SandpileGraph sg) {
 		//this.curState = ADD_VERT_STATE;
 		this.sg = sg;
-		vertexData = new ArrayList<int[]>();
+		vertexData = new ArrayList<float[]>();
 		edges = new ArrayList<HashSet<Integer>>();
 		currentConfig = new SandpileConfiguration();
+
+		drawer = new SandpileGLDrawer();
+		this.add(drawer.getCanvas());
+
 		selectedVertex = -1;
 		addMouseListener(new MouseInputAdapter() {
 
@@ -275,18 +230,18 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 	 */
 	public void update() {
 		SandpileConfiguration nextConfig = sg.updateConfig(currentConfig);
-		//repaint();
+		repaint();/*
 		if (repaintAll) {
 			repaint();
 		} else {
 			for (int i = 0; i < currentConfig.size(); i++) {
 				if (nextConfig.get(i) != currentConfig.get(i)) {
-					int[] v = vertexData.get(i);
+					float[] v = vertexData.get(i);
 					this.repaint(scaleCoordinate(v[0] - VERT_RADIUS), scaleCoordinate(v[1] - VERT_RADIUS), scaleCoordinate(VERT_RADIUS * 2), scaleCoordinate(VERT_RADIUS * 2));
 				}
 			}
 		//System.out.println(count);
-		}
+		}*/
 		currentConfig = nextConfig;
 		if (outputFPS) {
 			long curTime = System.currentTimeMillis();
@@ -316,6 +271,8 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 		//Graphics2D g2 = (Graphics2D) g;
 		Graphics g2 = g;
 		super.paintComponent(g2);
+		drawer.paintSandpileGraph(sg, vertexData, currentConfig);
+		/*
 		if (drawEdges) {
 			for (int e1 = 0; e1 < edges.size(); e1++) {
 				for (int e2 : edges.get(e1)) {
@@ -366,7 +323,7 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 			int[] v = vertexData.get(selectedVertex);
 			g2.setColor(Color.cyan);
 			g2.drawOval(scaleCoordinate(v[0] - VERT_RADIUS), scaleCoordinate(v[1] - VERT_RADIUS), scaleCoordinate(VERT_RADIUS * 2), scaleCoordinate(VERT_RADIUS * 2));
-		}
+		}*/
 	}
 
 	public void addVertexControl(int x, int y) {
@@ -886,7 +843,7 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 
 	public void addVertex(int x, int y) {
 		sg.addVertex();
-		int[] newPos = {unscaleCoordinate(x), unscaleCoordinate(y)};
+		float[] newPos = {unscaleCoordinate(x), unscaleCoordinate(y)};
 		vertexData.add(newPos);
 		edges.add(new HashSet<Integer>());
 		currentConfig.add(0);
@@ -895,7 +852,7 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 
 	private void addVertexUnscaled(int x, int y) {
 		sg.addVertex();
-		int[] newPos = {x, y};
+		float[] newPos = {x, y};
 		vertexData.add(newPos);
 		edges.add(new HashSet<Integer>());
 		currentConfig.add(0);
@@ -960,7 +917,7 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 
 	private int touchingVertex(int x, int y) {
 		for (int i = 0; i < vertexData.size(); i++) {
-			int[] v = vertexData.get(i);
+			float[] v = vertexData.get(i);
 			if (Math.sqrt((x - scaleCoordinate(v[0])) * (x - scaleCoordinate(v[0])) + (y - scaleCoordinate(v[1])) * (y - scaleCoordinate(v[1]))) <= VERT_RADIUS) {
 				return i;
 			}
@@ -968,11 +925,11 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 		return -1;
 	}
 
-	private int scaleCoordinate(int coord) {
+	private int scaleCoordinate(float coord) {
 		return (int) Math.ceil(coord * scale);
 	}
 
-	private int unscaleCoordinate(int coord) {
+	private int unscaleCoordinate(float coord) {
 		return (int) ((double) coord / scale);
 	}
 
@@ -1009,7 +966,7 @@ public class SandpilePanel extends JPanel implements GLEventListener, ActionList
 	public void saveGraph(File file) {
 		try {
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
-			for (int[] coords : vertexData) {
+			for (float[] coords : vertexData) {
 				outBuffer.write("vertex " + coords[0] + " " + coords[1]);
 				outBuffer.newLine();
 			}
