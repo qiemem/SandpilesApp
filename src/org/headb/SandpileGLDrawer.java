@@ -37,6 +37,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	public boolean drawVertices = true;
 	public boolean printFPS = false;
 	public boolean repaint = true;
+	public boolean changingVertexSize=true;
 
 	private long timeOfLastDisplay = 0;
 
@@ -146,6 +147,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 	private void drawEdgeLabels(TextRenderer tr) {
 		float textPlacement = 0.8f;
+		tr.setColor(.8f, .5f, .6f, 1f);
 		tr.begin3DRendering();
 		for (int source = 0; source < vertexLocations.size(); source++) {
 			for (int dest : graph.getOutgoingVertices(source)) {
@@ -157,7 +159,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				if(Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f) {
 					float x = (1f-textPlacement)*sx + textPlacement*dx;
 					float y = (1f-textPlacement)*sy + textPlacement*dy;
-					tr.draw3D(Integer.toString(graph.weight(source, dest)), x, y, 0f, .2f*vertSize);
+					String str = Integer.toString(graph.weight(source, dest));
+					tr.draw3D(str, x, y, 0f, .15f*vertSize/str.length());
 				}
 			}
 		}
@@ -169,23 +172,30 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		for (int vert = 0; vert < vertexLocations.size(); vert++) {
 			float x = vertexLocations.get(vert)[0];
 			float y = vertexLocations.get(vert)[1];
-			setColorForVertex(gl, config.get(vert));
+			float size = vertSize;
+			int sand = config.get(vert);
+			if(changingVertexSize&&!graph.isSink(vert)){
+				size = Math.min(((float)sand+2)/((float)graph.degree(vert)+2),vertSize);
+			}
+			setColorForVertex(gl, sand);
 			//GLUquadric quadric = glu.gluNewQuadric();
 			//gl.glTranslatef(x, y, 0f);
 			//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
 			//gl.glLoadIdentity();
-			gl.glVertex2f(x - vertSize, y + vertSize);
-			gl.glVertex2f(x + vertSize, y + vertSize);
-			gl.glVertex2f(x + vertSize, y - vertSize);
-			gl.glVertex2f(x - vertSize, y - vertSize);
+			gl.glVertex2f(x - size, y + size);
+			gl.glVertex2f(x + size, y + size);
+			gl.glVertex2f(x + size, y - size);
+			gl.glVertex2f(x - size, y - size);
 		}
 		gl.glEnd();
 	}
 
 	private void drawVertexLabels(TextRenderer tr){
+		tr.setColor(.8f, .5f, .6f, 1f);
 		tr.begin3DRendering();
 			for (int vert = 0; vert < vertexLocations.size(); vert++) {
-				tr.draw3D(Integer.toString(config.get(vert)), vertexLocations.get(vert)[0]-vertSize, vertexLocations.get(vert)[1]-.9f*vertSize, 0f, .2f*vertSize);
+				String str = Integer.toString(config.get(vert));
+				tr.draw3D(str, vertexLocations.get(vert)[0]-vertSize, vertexLocations.get(vert)[1]-.9f*vertSize, 0f, .15f*vertSize/str.length());
 			}
 		tr.end3DRendering();
 	}

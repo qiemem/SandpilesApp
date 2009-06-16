@@ -950,11 +950,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 
 	private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelsCheckBoxActionPerformed
 		drawer.drawLabels=labelsCheckBox.isSelected();
-		sandpileController.repaint();§
+		sandpileController.repaint();
 }//GEN-LAST:event_labelsCheckBoxActionPerformed
 
 	private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changingNodeSizeCheckBoxActionPerformed
-		//sandpileController.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
+		drawer.changingVertexSize = changingNodeSizeCheckBox.isSelected();
+		sandpileController.repaint();
 }//GEN-LAST:event_changingNodeSizeCheckBoxActionPerformed
 
 	private void drawEdgesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawEdgesCheckBoxActionPerformed
