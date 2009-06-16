@@ -118,7 +118,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		if(drawVertices)
 			drawVertices(gl,glu);
 		if(drawLabels){
-			drawVertexLabels(gl,tr);
+			drawVertexLabels(tr);
+			drawEdgeLabels(tr);
 		}
 		drawSelected(gl);
 
@@ -143,6 +144,25 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		}
 		gl.glEnd();
 	}
+	private void drawEdgeLabels(TextRenderer tr) {
+		float textPlacement = 0.8f;
+		tr.begin3DRendering();
+		for (int source = 0; source < vertexLocations.size(); source++) {
+			for (int dest : graph.getOutgoingVertices(source)) {
+				float sx = vertexLocations.get(source)[0];
+				float sy = vertexLocations.get(source)[1];
+				float dx = vertexLocations.get(dest)[0];
+				float dy = vertexLocations.get(dest)[1];
+				//Only draw the edges that aren't covered by vertices
+				if(Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f) {
+					float x = (1f-textPlacement)*sx + textPlacement*dx;
+					float y = (1f-textPlacement)*sy + textPlacement*dy;
+					tr.draw3D(Integer.toString(graph.weight(source, dest)), x, y, 0f, .2f*vertSize);
+				}
+			}
+		}
+		tr.end3DRendering();
+	}
 
 	private void drawVertices(GL gl, GLU glu) {
 		gl.glBegin(gl.GL_QUADS);
@@ -162,7 +182,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.glEnd();
 	}
 
-	private void drawVertexLabels(GL gl, TextRenderer tr){
+	private void drawVertexLabels(TextRenderer tr){
 		tr.begin3DRendering();
 			for (int vert = 0; vert < vertexLocations.size(); vert++) {
 				tr.draw3D(Integer.toString(config.get(vert)), vertexLocations.get(vert)[0]-vertSize, vertexLocations.get(vert)[1]-.9f*vertSize, 0f, .2f*vertSize);
