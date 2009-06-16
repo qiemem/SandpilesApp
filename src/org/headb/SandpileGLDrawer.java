@@ -32,6 +32,14 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private float mouseX = 0f,  mouseY = 0f;
 	private float vertSize = 1f;
 
+	public boolean drawLabels = false;
+	public boolean drawEdges = true;
+	public boolean drawVertices = true;
+	public boolean printFPS = true;
+	public boolean repaint = true;
+
+	private long timeOfLastDisplay = 0;
+
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
 		canvas.addGLEventListener(this);
@@ -88,6 +96,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	public void display(GLAutoDrawable drawable) {
+		if(!repaint)	return;
+
+		if(printFPS){
+			long curTime = System.currentTimeMillis();
+			System.err.println(1000f/(curTime-timeOfLastDisplay));
+			timeOfLastDisplay = curTime;
+		}
 		GL gl = drawable.getGL();
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
@@ -97,8 +112,10 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		// Reset the current matrix to the "identity"
 		gl.glLoadIdentity();
-		drawEdges(gl);
-		drawVertices(gl,glu);
+		if(drawEdges)
+			drawEdges(gl);
+		if(drawVertices)
+			drawVertices(gl,glu);
 		drawSelected(gl);
 
 		gl.glFlush();

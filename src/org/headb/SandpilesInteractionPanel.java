@@ -941,7 +941,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_setConfigButtonActionPerformed
 
 	private void repaintCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintCheckBoxActionPerformed
-		//sandpileController.setRepaint(repaintCheckBox.isSelected() );
+		drawer.repaint = repaintCheckBox.isSelected();
 }//GEN-LAST:event_repaintCheckBoxActionPerformed
 
 	private void colorCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorCheckBoxActionPerformed
@@ -949,7 +949,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_colorCheckBoxActionPerformed
 
 	private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelsCheckBoxActionPerformed
-		//sandpileController.setLabels(labelsCheckBox.isSelected());
+		drawer.drawLabels=labelsCheckBox.isSelected();
 }//GEN-LAST:event_labelsCheckBoxActionPerformed
 
 	private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changingNodeSizeCheckBoxActionPerformed
@@ -957,7 +957,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_changingNodeSizeCheckBoxActionPerformed
 
 	private void drawEdgesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawEdgesCheckBoxActionPerformed
-		//sandpileController.setDrawEdges(drawEdgesCheckBox.isSelected());
+		drawer.drawEdges=drawEdgesCheckBox.isSelected();
 }//GEN-LAST:event_drawEdgesCheckBoxActionPerformed
 
 	private void sandpileViewPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseClicked
@@ -977,7 +977,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 	}//GEN-LAST:event_useBufferedImagesCheckBoxActionPerformed
 
 	private void printFPSCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSCheckBoxActionPerformed
-		//this.sandpileController.setOutputFPS(this.printFPSCheckBox.isSelected());
+		drawer.printFPS = printFPSCheckBox.isSelected();
 	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
 
 	private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
