@@ -697,8 +697,8 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void editFromString(String s) {
 		String[] parts = s.split(" ");
 		if (parts[0].toLowerCase().equals("vertex")) {
-			float x = Integer.valueOf(parts[1]);
-			float y = Integer.valueOf(parts[2]);
+			float x = Float.valueOf(parts[1]);
+			float y = Float.valueOf(parts[2]);
 			addVertex(x, y);
 		} else if (parts[0].toLowerCase().equals("edge")) {
 			int v1 = Integer.valueOf(parts[1]);
@@ -763,7 +763,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		try {
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
 			for (int v : currentConfig) {
-				outBuffer.write(v);
+				outBuffer.write(Integer.toString(v));
 				outBuffer.newLine();
 			}
 			outBuffer.close();

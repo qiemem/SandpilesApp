@@ -35,7 +35,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	public boolean drawLabels = false;
 	public boolean drawEdges = true;
 	public boolean drawVertices = true;
-	public boolean printFPS = true;
+	public boolean printFPS = false;
 	public boolean repaint = true;
 
 	private long timeOfLastDisplay = 0;
@@ -54,7 +54,6 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	public void init(GLAutoDrawable drawable) {
-		System.err.println("init");
 		// Use debug pipeline
 		// drawable.setGL(new DebugGL(drawable.getGL()));
 
