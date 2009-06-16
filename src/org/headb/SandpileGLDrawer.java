@@ -28,11 +28,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private float originX = 0.0f,  originY = 0.0f,  width = 500.0f,  height = 500.0f;
 	private int canvasX, canvasY, canvasW, canvasH;
 	private boolean needsReshape=true;
+	private float mouseX=0f, mouseY=0f;
 
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
 		canvas.addGLEventListener(this);
 		canvas.addMouseListener(this);
+		canvas.addMouseMotionListener(this);
 	}
 
 	public SandpileGLDrawer(GLCanvas canvas) {
@@ -93,8 +95,6 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		// Reset the current matrix to the "identity"
 		gl.glLoadIdentity();
 		gl.glColor3f(1f, 0f, 0f);
-
-
 		gl.glBegin(gl.GL_QUADS);
 			for (int vert = 0; vert < vertexLocations.size(); vert++) {
 				float x = vertexLocations.get(vert)[0];
@@ -143,8 +143,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	public void setGLDimensions(float x,float y,float w,float h){
-		width = w;
-		height = h;
+		width = Math.max(w, 1f);
+		height = Math.max(h, 1f);
 		originX = x;
 		originY = y;
 		needsReshape = true;
@@ -162,12 +162,19 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	@Override
 	public void mousePressed(MouseEvent e) {
 		float[] coords = transformCanvasCoords(e.getX(), e.getY());
-		System.err.println(coords[0] + " " + coords[1]);
+		mouseX = coords[0];
+		mouseY = coords[1];
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		//float deltaX =
+		float[] coords = transformCanvasCoords(e.getX(),e.getY());
+		float deltaX = mouseX-coords[0];
+		float deltaY = mouseY-coords[1];
+		setGLDimensions(getOriginX()+deltaX, getOriginY()+deltaY, getWidth(), getHeight());
+		coords = transformCanvasCoords(e.getX(),e.getY());
+		mouseX = coords[0];
+		mouseY = coords[1];
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {

@@ -33,7 +33,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 	private static final String BURNING_CONFIG = "Burning";
 	private static final String DUAL_CONFIG = "Dual of Current";
 	private static final String ONES_CONFIG = "Ones Everywhere";
-	private SandpileController sandpileViewPanel;
+	private SandpileController sandpileController;
 	private SandpileGLDrawer drawer;
 
 
@@ -47,10 +47,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     public SandpilesInteractionPanel() {
         initComponents();
 		drawer = new SandpileGLDrawer(canvas);
-		sandpileViewPanel = new SandpileController(drawer);
-		sandpileViewScrollPane.setViewportView(drawer.getCanvas());
+		sandpileController = new SandpileController(drawer);
+		canvas.addMouseListener(drawer);
+		canvas.addMouseMotionListener(drawer);
 
-		runTimer = new Timer(0,sandpileViewPanel);
+		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(delaySlider.getValue());
 		CardLayout cl = (CardLayout)(optionsContainerPanel.getLayout());
 		//cl.show(optionsContainerPanel, (String)evt.getItem());
@@ -66,7 +67,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		}else if(currentState.equals(EDIT_GRAPH_STATE)){
 			cl.show(optionsContainerPanel, EDIT_GRAPH_STATE);
 		}
-		//spThread = new Thread(sandpileViewPanel);
+		//spThread = new Thread(sandpileController);
     }
 
     /** This method is called from within the constructor to
@@ -793,7 +794,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 	public SandpileController getSandpilePanel() {
-		return this.sandpileViewPanel;
+		return this.sandpileController;
 	}
 	private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
 		runTimer.setDelay( delaySlider.getValue());
@@ -806,7 +807,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 			spThread.interrupt();
 			try{
 				spThread.join();
-				spThread = new Thread(sandpileViewPanel);
+				spThread = new Thread(sandpileController);
 			}catch(InterruptedException e){
 				return;
 			}
@@ -817,7 +818,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 
 	private void delaySliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySliderStateChanged
 		runTimer.setDelay(delaySlider.getValue());
-		//sandpileViewPanel.setDelay(delaySlider.getValue());
+		//sandpileController.setDelay(delaySlider.getValue());
 }//GEN-LAST:event_delaySliderStateChanged
 
 	private void delayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayTextFieldActionPerformed
@@ -842,11 +843,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_controlStateComboBoxItemStateChanged
 
 	private void controlStateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_controlStateComboBoxActionPerformed
-		//sandpileViewPanel.setControlState(controlStateComboBox.getSelectedIndex());
+		//sandpileController.setControlState(controlStateComboBox.getSelectedIndex());
 }//GEN-LAST:event_controlStateComboBoxActionPerformed
 
 	private void clearSandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSandButtonActionPerformed
-		sandpileViewPanel.clearSand();
+		sandpileController.clearSand();
 }//GEN-LAST:event_clearSandButtonActionPerformed
 
 	private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
@@ -854,7 +855,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_quitButtonActionPerformed
 
 	private void stepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stepButtonActionPerformed
-		sandpileViewPanel.update();
+		sandpileController.update();
 }//GEN-LAST:event_stepButtonActionPerformed
 
 	private void stepButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stepButtonMouseClicked
@@ -862,7 +863,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_stepButtonMouseClicked
 
 	private void deleteGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGraphButtonActionPerformed
-		sandpileViewPanel.delAllVertices();
+		sandpileController.delAllVertices();
 }//GEN-LAST:event_deleteGraphButtonActionPerformed
 
 	private void scaleSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_scaleSliderStateChanged
@@ -878,7 +879,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_makeHoneycombRadiusFieldActionPerformed
 
 	private void gridRowsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gridRowsFieldActionPerformed
-		//sandpileViewPanel.setGridRows( Integer.parseInt(gridRowsField.getText() ) );
+		//sandpileController.setGridRows( Integer.parseInt(gridRowsField.getText() ) );
 }//GEN-LAST:event_gridRowsFieldActionPerformed
 
 	private void gridRowsFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_gridRowsFieldPropertyChange
@@ -886,7 +887,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_gridRowsFieldPropertyChange
 
 	private void gridColsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gridColsFieldActionPerformed
-		//sandpileViewPanel.setGridCols( Integer.parseInt( gridColsField.getText() ) );
+		//sandpileController.setGridCols( Integer.parseInt( gridColsField.getText() ) );
 }//GEN-LAST:event_gridColsFieldActionPerformed
 
 	private void nBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nBorderComboBoxActionPerformed
@@ -909,15 +910,15 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
 		if(selection.equals(MAX_CONFIG)){
-			sandpileViewPanel.addMaxStableConfig();
+			sandpileController.addMaxStableConfig();
 		}else if(selection.equals(DUAL_CONFIG)){
-			sandpileViewPanel.addDualConfig();
+			sandpileController.addDualConfig();
 		}else if(selection.equals(ONES_CONFIG)){
-			sandpileViewPanel.addSandEverywhere(1);
+			sandpileController.addSandEverywhere(1);
 		}else if(selection.equals(IDENTITY_CONFIG)){
-			sandpileViewPanel.addIdentity();
+			sandpileController.addIdentity();
 		}else if(selection.equals(BURNING_CONFIG)){
-			sandpileViewPanel.addBurningConfig();
+			sandpileController.addBurningConfig();
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_addConfigButtonActionPerformed
@@ -926,37 +927,37 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
 		if(selection.equals(MAX_CONFIG)){
-			sandpileViewPanel.setToMaxStableConfig();
+			sandpileController.setToMaxStableConfig();
 		}else if(selection.equals(DUAL_CONFIG)){
-			sandpileViewPanel.setToDualConfig();
+			sandpileController.setToDualConfig();
 		}else if(selection.equals(ONES_CONFIG)){
-			sandpileViewPanel.setSandEverywhere(1);
+			sandpileController.setSandEverywhere(1);
 		}else if(selection.equals(IDENTITY_CONFIG)){
-			sandpileViewPanel.setToIdentity();
+			sandpileController.setToIdentity();
 		}else if(selection.equals(BURNING_CONFIG)){
-			sandpileViewPanel.setToBurningConfig();
+			sandpileController.setToBurningConfig();
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_setConfigButtonActionPerformed
 
 	private void repaintCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintCheckBoxActionPerformed
-		//sandpileViewPanel.setRepaint(repaintCheckBox.isSelected() );
+		//sandpileController.setRepaint(repaintCheckBox.isSelected() );
 }//GEN-LAST:event_repaintCheckBoxActionPerformed
 
 	private void colorCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorCheckBoxActionPerformed
-		//sandpileViewPanel.setColor(colorCheckBox.isSelected());
+		//sandpileController.setColor(colorCheckBox.isSelected());
 }//GEN-LAST:event_colorCheckBoxActionPerformed
 
 	private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelsCheckBoxActionPerformed
-		//sandpileViewPanel.setLabels(labelsCheckBox.isSelected());
+		//sandpileController.setLabels(labelsCheckBox.isSelected());
 }//GEN-LAST:event_labelsCheckBoxActionPerformed
 
 	private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changingNodeSizeCheckBoxActionPerformed
-		//sandpileViewPanel.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
+		//sandpileController.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
 }//GEN-LAST:event_changingNodeSizeCheckBoxActionPerformed
 
 	private void drawEdgesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawEdgesCheckBoxActionPerformed
-		//sandpileViewPanel.setDrawEdges(drawEdgesCheckBox.isSelected());
+		//sandpileController.setDrawEdges(drawEdgesCheckBox.isSelected());
 }//GEN-LAST:event_drawEdgesCheckBoxActionPerformed
 
 	private void sandpileViewPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseClicked
@@ -968,15 +969,15 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_sandpileViewPanelMouseReleased
 
 	private void repaintAllCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintAllCheckBoxActionPerformed
-		//this.sandpileViewPanel.setRepaintAll(this.repaintAllCheckBox.isSelected());
+		//this.sandpileController.setRepaintAll(this.repaintAllCheckBox.isSelected());
 	}//GEN-LAST:event_repaintAllCheckBoxActionPerformed
 
 	private void useBufferedImagesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBufferedImagesCheckBoxActionPerformed
-		//this.sandpileViewPanel.setUseBufferedImages(this.useBufferedImagesCheckBox.isSelected());
+		//this.sandpileController.setUseBufferedImages(this.useBufferedImagesCheckBox.isSelected());
 	}//GEN-LAST:event_useBufferedImagesCheckBoxActionPerformed
 
 	private void printFPSCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSCheckBoxActionPerformed
-		//this.sandpileViewPanel.setOutputFPS(this.printFPSCheckBox.isSelected());
+		//this.sandpileController.setOutputFPS(this.printFPSCheckBox.isSelected());
 	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
 
 	private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
@@ -987,41 +988,41 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		float y = coords[1];
 		System.err.println(x+" and "+y);
 		if(currentState.equals(MAKE_GRID_STATE)){
-			sandpileViewPanel.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
+			sandpileController.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
 					nBorderComboBox.getSelectedIndex(),
 					sBorderComboBox.getSelectedIndex(),
 					eBorderComboBox.getSelectedIndex(),
 					wBorderComboBox.getSelectedIndex());
 		}else if(currentState.equals(MAKE_HEX_GRID_STATE)){
-			sandpileViewPanel.makeHexGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
+			sandpileController.makeHexGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
 					nBorderComboBox.getSelectedIndex(),
 					sBorderComboBox.getSelectedIndex(),
 					eBorderComboBox.getSelectedIndex(),
 					wBorderComboBox.getSelectedIndex());
 		}else if(currentState.equals(EDIT_GRAPH_STATE)) {
 			if(editGraphButtonGroup.isSelected(addVertexRadioButton.getModel())){
-				sandpileViewPanel.addVertexControl(x,y);
+				sandpileController.addVertexControl(x,y);
 			}else if(editGraphButtonGroup.isSelected(removeVertexRadioButton.getModel())){
-				sandpileViewPanel.delVertexControl(x, y);
+				sandpileController.delVertexControl(x, y);
 			}else if(editGraphButtonGroup.isSelected(addEdgeRadioButton.getModel())){
-				sandpileViewPanel.addEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				sandpileController.addEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
 			}else if(editGraphButtonGroup.isSelected(removeEdgeRadioButton.getModel())){
-				sandpileViewPanel.delEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				sandpileController.delEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
 			}else if(editGraphButtonGroup.isSelected(addUndirectedEdgeRadioButton.getModel())){
-				sandpileViewPanel.addUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				sandpileController.addUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
 			}else if(editGraphButtonGroup.isSelected(removeUndirectedEdgeRadioButton.getModel())){
-				sandpileViewPanel.delUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				sandpileController.delUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
 			}
 
 		}else if(currentState.equals(MAKE_HONEYCOMB_STATE)){
-			sandpileViewPanel.makeHoneycomb(Integer.valueOf(makeHoneycombRadiusField.getText()),x, y,  makeHoneycombBorderComboBox.getSelectedIndex());
+			sandpileController.makeHoneycomb(Integer.valueOf(makeHoneycombRadiusField.getText()),x, y,  makeHoneycombBorderComboBox.getSelectedIndex());
 		}else if(currentState.equals(CONFIG_MANAGER_STATE)){
 			if(editConfigButtonGroup.isSelected(addSandRadioButton.getModel())){
-				sandpileViewPanel.addSandControl(x,y, Integer.valueOf(amountOfSandField.getText() ) );
+				sandpileController.addSandControl(x,y, Integer.valueOf(amountOfSandField.getText() ) );
 			}else if(editConfigButtonGroup.isSelected(removeSandRadioButton.getModel())){
-				sandpileViewPanel.addSandControl(x,y, -Integer.valueOf(amountOfSandField.getText()));
+				sandpileController.addSandControl(x,y, -Integer.valueOf(amountOfSandField.getText()));
 			}else if(editConfigButtonGroup.isSelected(setSandRadioButton.getModel())){
-				sandpileViewPanel.setSandControl(x,y, Integer.valueOf(amountOfSandField.getText()));
+				sandpileController.setSandControl(x,y, Integer.valueOf(amountOfSandField.getText()));
 			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
