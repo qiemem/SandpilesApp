@@ -220,29 +220,29 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				gridRef[i][j] = vertexData.size();
-				addVertex(x + j * gridSpacing, y + i * gridSpacing);
+				addVertex(x + j * gridSpacing, y - i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols; i++) {
 			if (nBorder < 2) {
 				nBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing, y - gridSpacing);
+				addVertex(x + i * gridSpacing, y + gridSpacing);
 			}
 			if (sBorder < 2) {
 				sBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing, y + (rows) * gridSpacing);
+				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
 			}
 
 		}
 		for (int i = 0; i < rows; i++) {
 			if (wBorder < 2) {
 				wBorderRef[i] = vertexData.size();
-				addVertex(x - gridSpacing, y + i * gridSpacing);
+				addVertex(x - gridSpacing, y - i * gridSpacing);
 			}
 			if (eBorder < 2) {
 				eBorderRef[i] = vertexData.size();
-				addVertex(x + (cols) * gridSpacing, y + i * gridSpacing);
+				addVertex(x + (cols) * gridSpacing, y - i * gridSpacing);
 			}
 		}
 		//create edges
@@ -413,18 +413,18 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				gridRef[i][j] = vertexData.size();
-				addVertex(x + j * gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
+				addVertex(x + j * gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols + 1; i++) {
 			if (nBorder < 2) {
 				nBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing - (gridSpacing / 2), y - gridSpacing);
+				addVertex(x + i * gridSpacing - (gridSpacing / 2), y + gridSpacing);
 			}
 			if (sBorder < 2) {
 				sBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing - (gridSpacing / 2), y + (rows) * gridSpacing);
+				addVertex(x + i * gridSpacing - (gridSpacing / 2), y - (rows) * gridSpacing);
 			}
 
 		}
@@ -432,11 +432,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < rows; i++) {
 			if (wBorder < 2) {
 				wBorderRef[i] = vertexData.size();
-				addVertex(x - gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
+				addVertex(x - gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 			if (eBorder < 2) {
 				eBorderRef[i] = vertexData.size();
-				addVertex(x + (cols) * gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
+				addVertex(x + (cols) * gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 		}
 
