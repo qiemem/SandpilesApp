@@ -31,14 +31,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private boolean needsReshape = true;
 	private float mouseX = 0f,  mouseY = 0f;
 	private float vertSize = 1f;
-
 	public boolean drawLabels = false;
 	public boolean drawEdges = true;
 	public boolean drawVertices = true;
 	public boolean printFPS = false;
 	public boolean repaint = true;
-	public boolean changingVertexSize=true;
-
+	public boolean changingVertexSize = true;
+	public boolean drawCircles = false;
 	private long timeOfLastDisplay = 0;
 
 	public SandpileGLDrawer() {
@@ -96,11 +95,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		if(!repaint)	return;
+		if (!repaint) {
+			return;
+		}
 
-		if(printFPS){
+		if (printFPS) {
 			long curTime = System.currentTimeMillis();
-			System.err.println(1000f/(curTime-timeOfLastDisplay));
+			System.err.println(1000f / (curTime - timeOfLastDisplay));
 			timeOfLastDisplay = curTime;
 		}
 		TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 12));
@@ -114,11 +115,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		// Reset the current matrix to the "identity"
 		gl.glLoadIdentity();
-		if(drawEdges)
+		if (drawEdges) {
 			drawEdges(gl);
-		if(drawVertices)
-			drawVertices(gl,glu);
-		if(drawLabels){
+		}
+		if (drawVertices) {
+			drawVertices(gl, glu);
+		}
+		if (drawLabels) {
 			drawVertexLabels(tr);
 			drawEdgeLabels(tr);
 		}
@@ -137,7 +140,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float dx = vertexLocations.get(dest)[0];
 				float dy = vertexLocations.get(dest)[1];
 				//Only draw the edges that aren't covered by vertices
-				if(Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f) {
+				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
 					gl.glVertex2f(sx, sy);
 					gl.glVertex2f(dx, dy);
 				}
@@ -145,6 +148,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		}
 		gl.glEnd();
 	}
+
 	private void drawEdgeLabels(TextRenderer tr) {
 		float textPlacement = 0.8f;
 		tr.setColor(.8f, .5f, .6f, 1f);
@@ -156,11 +160,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float dx = vertexLocations.get(dest)[0];
 				float dy = vertexLocations.get(dest)[1];
 				//Only draw the edges that aren't covered by vertices
-				if(Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f) {
-					float x = (1f-textPlacement)*sx + textPlacement*dx;
-					float y = (1f-textPlacement)*sy + textPlacement*dy;
+				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f) {
+					float x = (1f - textPlacement) * sx + textPlacement * dx;
+					float y = (1f - textPlacement) * sy + textPlacement * dy;
 					String str = Integer.toString(graph.weight(source, dest));
-					tr.draw3D(str, x, y, 0f, .15f*vertSize/str.length());
+					tr.draw3D(str, x, y, 0f, .15f * vertSize / str.length());
 				}
 			}
 		}
@@ -168,57 +172,70 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	private void drawVertices(GL gl, GLU glu) {
-		gl.glBegin(gl.GL_QUADS);
-		for (int vert = 0; vert < vertexLocations.size(); vert++) {
-			float x = vertexLocations.get(vert)[0];
-			float y = vertexLocations.get(vert)[1];
-			float size = vertSize;
-			int sand = config.get(vert);
-			if(changingVertexSize&&!graph.isSink(vert)){
-				size = Math.min(((float)sand+2)/((float)graph.degree(vert)+2),vertSize);
+		if (drawCircles) {
+			GLUquadric quadric = glu.gluNewQuadric();
+			for (int vert = 0; vert < vertexLocations.size(); vert++) {
+				float x = vertexLocations.get(vert)[0];
+				float y = vertexLocations.get(vert)[1];
+				float size = vertSize;
+				int sand = config.get(vert);
+				if (changingVertexSize && !graph.isSink(vert)) {
+					size = Math.min(((float) sand + 1) / ((float) graph.degree(vert)), vertSize);
+				}
+				setColorForVertex(gl, sand);
+				gl.glTranslatef(x, y, 0f);
+				glu.gluDisk(quadric, 0.0, size, 8, 1);
+				gl.glLoadIdentity();
 			}
-			setColorForVertex(gl, sand);
-			//GLUquadric quadric = glu.gluNewQuadric();
-			//gl.glTranslatef(x, y, 0f);
-			//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
-			//gl.glLoadIdentity();
-			gl.glVertex2f(x - size, y + size);
-			gl.glVertex2f(x + size, y + size);
-			gl.glVertex2f(x + size, y - size);
-			gl.glVertex2f(x - size, y - size);
+		} else {
+			gl.glBegin(gl.GL_QUADS);
+			for (int vert = 0; vert < vertexLocations.size(); vert++) {
+				float x = vertexLocations.get(vert)[0];
+				float y = vertexLocations.get(vert)[1];
+				float size = vertSize;
+				int sand = config.get(vert);
+				if (changingVertexSize && !graph.isSink(vert)) {
+					size = Math.min(((float) sand + 1) / ((float) graph.degree(vert)), vertSize);
+				}
+				setColorForVertex(gl, sand);
+				gl.glVertex2f(x - size, y + size);
+				gl.glVertex2f(x + size, y + size);
+				gl.glVertex2f(x + size, y - size);
+				gl.glVertex2f(x - size, y - size);
+			}
+			gl.glEnd();
 		}
-		gl.glEnd();
 	}
 
-	private void drawVertexLabels(TextRenderer tr){
+	private void drawVertexLabels(TextRenderer tr) {
 		tr.setColor(.8f, .5f, .6f, 1f);
 		tr.begin3DRendering();
-			for (int vert = 0; vert < vertexLocations.size(); vert++) {
-				String str = Integer.toString(config.get(vert));
-				tr.draw3D(str, vertexLocations.get(vert)[0]-vertSize, vertexLocations.get(vert)[1]-.9f*vertSize, 0f, .15f*vertSize/str.length());
-			}
+		for (int vert = 0; vert < vertexLocations.size(); vert++) {
+			String str = Integer.toString(config.get(vert));
+			tr.draw3D(str, vertexLocations.get(vert)[0] - vertSize, vertexLocations.get(vert)[1] - .9f * vertSize, 0f, .15f * vertSize / str.length());
+		}
 		tr.end3DRendering();
 	}
 
 	private void drawSelected(GL gl) {
 		if (selectedVertex >= 0) {
 			gl.glBegin(gl.GL_LINES);
-				float x = vertexLocations.get(selectedVertex)[0];
-				float y = vertexLocations.get(selectedVertex)[1];
-				//GLUquadric quadric = glu.gluNewQuadric();
-				//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
-				gl.glColor3f(0f,1f,.5f);
-				gl.glVertex2f(x - vertSize, y + vertSize);
-				gl.glVertex2f(x + vertSize, y + vertSize);
+			float x = vertexLocations.get(selectedVertex)[0];
+			float y = vertexLocations.get(selectedVertex)[1];
+			//GLUquadric quadric = glu.gluNewQuadric();
+			//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
+			gl.glColor3f(0f, 1f, .5f);
+			gl.glVertex2f(x - vertSize, y + vertSize);
+			gl.glVertex2f(x + vertSize, y + vertSize);
 
-				gl.glVertex2f(x + vertSize, y + vertSize);
-				gl.glVertex2f(x + vertSize, y - vertSize);
+			gl.glVertex2f(x + vertSize, y + vertSize);
+			gl.glVertex2f(x + vertSize, y - vertSize);
 
-				gl.glVertex2f(x + vertSize, y - vertSize);
-				gl.glVertex2f(x - vertSize, y - vertSize);
+			gl.glVertex2f(x + vertSize, y - vertSize);
+			gl.glVertex2f(x - vertSize, y - vertSize);
 
-				gl.glVertex2f(x - vertSize, y - vertSize);
-				gl.glVertex2f(x - vertSize, y + vertSize);
+			gl.glVertex2f(x - vertSize, y - vertSize);
+			gl.glVertex2f(x - vertSize, y + vertSize);
 			gl.glEnd();
 		}
 	}
@@ -320,6 +337,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				gl.glColor3f(1.0f, 0.0f, 0.0f);
 				break;
 			case 5:
+				gl.glColor3f(1.0f, 0.5f, 0.0f);
+				break;
+			case 6:
 				gl.glColor3f(1.0f, 1.0f, 0.0f);
 				break;
 			default:

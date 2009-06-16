@@ -414,15 +414,12 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="repaintCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="colorCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="labelsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="changingNodeSizeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="drawEdgesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="repaintAllCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="useBufferedImagesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="printFPSCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="32" max="32767" attributes="0"/>
+                  <EmptySpace pref="42" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -431,20 +428,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="repaintCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="colorCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="labelsCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="changingNodeSizeCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="drawEdgesCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="repaintAllCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="useBufferedImagesCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="printFPSCheckBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="76" max="32767" attributes="0"/>
+                  <EmptySpace pref="145" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -457,15 +448,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintCheckBoxActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="colorCheckBox">
-          <Properties>
-            <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="Color" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colorCheckBoxActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="labelsCheckBox">
@@ -492,23 +474,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawEdgesCheckBoxActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="repaintAllCheckBox">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Repaint All on Update"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintAllCheckBoxActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="useBufferedImagesCheckBox">
-          <Properties>
-            <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="Use Buffered Images"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="useBufferedImagesCheckBoxActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="printFPSCheckBox">

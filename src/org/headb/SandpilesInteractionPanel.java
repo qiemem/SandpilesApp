@@ -112,12 +112,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         amountOfSandField = new javax.swing.JTextField();
         visualOptionsPanel = new javax.swing.JPanel();
         repaintCheckBox = new javax.swing.JCheckBox();
-        colorCheckBox = new javax.swing.JCheckBox();
         labelsCheckBox = new javax.swing.JCheckBox();
         changingNodeSizeCheckBox = new javax.swing.JCheckBox();
         drawEdgesCheckBox = new javax.swing.JCheckBox();
-        repaintAllCheckBox = new javax.swing.JCheckBox();
-        useBufferedImagesCheckBox = new javax.swing.JCheckBox();
         printFPSCheckBox = new javax.swing.JCheckBox();
         editConfigButtonGroup = new javax.swing.ButtonGroup();
         editGraphPanel = new javax.swing.JPanel();
@@ -419,14 +416,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
             }
         });
 
-        colorCheckBox.setSelected(true);
-        colorCheckBox.setText("Color"); // NOI18N
-        colorCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                colorCheckBoxActionPerformed(evt);
-            }
-        });
-
         labelsCheckBox.setText("Draw Labels"); // NOI18N
         labelsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -450,21 +439,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
             }
         });
 
-        repaintAllCheckBox.setText("Repaint All on Update");
-        repaintAllCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                repaintAllCheckBoxActionPerformed(evt);
-            }
-        });
-
-        useBufferedImagesCheckBox.setSelected(true);
-        useBufferedImagesCheckBox.setText("Use Buffered Images");
-        useBufferedImagesCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                useBufferedImagesCheckBoxActionPerformed(evt);
-            }
-        });
-
         printFPSCheckBox.setText("Print FPS");
         printFPSCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -479,21 +453,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
             .add(visualOptionsPanelLayout.createSequentialGroup()
                 .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(repaintCheckBox)
-                    .add(colorCheckBox)
                     .add(labelsCheckBox)
                     .add(changingNodeSizeCheckBox)
                     .add(drawEdgesCheckBox)
-                    .add(repaintAllCheckBox)
-                    .add(useBufferedImagesCheckBox)
                     .add(printFPSCheckBox))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(visualOptionsPanelLayout.createSequentialGroup()
                 .add(repaintCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(colorCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(labelsCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -501,12 +470,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(drawEdgesCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(repaintAllCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(useBufferedImagesCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(printFPSCheckBox)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         editGraphButtonGroup.add(addVertexRadioButton);
@@ -944,10 +909,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		drawer.repaint = repaintCheckBox.isSelected();
 }//GEN-LAST:event_repaintCheckBoxActionPerformed
 
-	private void colorCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorCheckBoxActionPerformed
-		//sandpileController.setColor(colorCheckBox.isSelected());
-}//GEN-LAST:event_colorCheckBoxActionPerformed
-
 	private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelsCheckBoxActionPerformed
 		drawer.drawLabels=labelsCheckBox.isSelected();
 		sandpileController.repaint();
@@ -970,14 +931,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 	private void sandpileViewPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseReleased
 
 }//GEN-LAST:event_sandpileViewPanelMouseReleased
-
-	private void repaintAllCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintAllCheckBoxActionPerformed
-		//this.sandpileController.setRepaintAll(this.repaintAllCheckBox.isSelected());
-	}//GEN-LAST:event_repaintAllCheckBoxActionPerformed
-
-	private void useBufferedImagesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBufferedImagesCheckBoxActionPerformed
-		//this.sandpileController.setUseBufferedImages(this.useBufferedImagesCheckBox.isSelected());
-	}//GEN-LAST:event_useBufferedImagesCheckBoxActionPerformed
 
 	private void printFPSCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSCheckBoxActionPerformed
 		drawer.printFPS = printFPSCheckBox.isSelected();
@@ -1047,7 +1000,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     private javax.media.opengl.GLCanvas canvas;
     private javax.swing.JCheckBox changingNodeSizeCheckBox;
     private javax.swing.JButton clearSandButton;
-    private javax.swing.JCheckBox colorCheckBox;
     private javax.swing.JPanel configManagerOptionsPanel;
     private javax.swing.JList configSelectList;
     private javax.swing.JPanel controlPanel;
@@ -1093,7 +1045,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton removeSandRadioButton;
     private javax.swing.JRadioButton removeUndirectedEdgeRadioButton;
     private javax.swing.JRadioButton removeVertexRadioButton;
-    private javax.swing.JCheckBox repaintAllCheckBox;
     private javax.swing.JCheckBox repaintCheckBox;
     private javax.swing.JToggleButton runButton;
     private javax.swing.JComboBox sBorderComboBox;
@@ -1103,7 +1054,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     private javax.swing.JButton setConfigButton;
     private javax.swing.JRadioButton setSandRadioButton;
     private javax.swing.JButton stepButton;
-    private javax.swing.JCheckBox useBufferedImagesCheckBox;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
