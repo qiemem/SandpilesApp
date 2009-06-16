@@ -142,7 +142,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void repaint() {
-		drawer.paintSandpileGraph(sg, vertexData, currentConfig);
+		drawer.paintSandpileGraph(sg, vertexData, currentConfig, selectedVertex);
 	}
 
 	public void addVertexControl(float x, float y) {

@@ -25,10 +25,12 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private List<float[]> vertexLocations = new ArrayList<float[]>();
 	private SandpileGraph graph = new SandpileGraph();
 	private SandpileConfiguration config = new SandpileConfiguration();
+	private int selectedVertex = -1;
 	private float originX = 0.0f,  originY = 0.0f,  width = 500.0f,  height = 500.0f;
-	private int canvasX, canvasY, canvasW, canvasH;
-	private boolean needsReshape=true;
-	private float mouseX=0f, mouseY=0f;
+	private int canvasX,  canvasY,  canvasW,  canvasH;
+	private boolean needsReshape = true;
+	private float mouseX = 0f,  mouseY = 0f;
+	private float vertSize = 1f;
 
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
@@ -87,29 +89,77 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
-		if(needsReshape)
+		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
+		}
 		//GLU glu = new GLU();
 		// Clear the drawing area
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		// Reset the current matrix to the "identity"
 		gl.glLoadIdentity();
-		gl.glColor3f(1f, 0f, 0f);
+		drawEdges(gl);
+		drawVertices(gl);
+		drawSelected(gl);
+
+		gl.glFlush();
+	}
+
+	private void drawEdges(GL gl) {
+		gl.glColor3f(1.0f, 1.0f, 1.0f);
+		gl.glBegin(gl.GL_LINES);
+		for (int source = 0; source < vertexLocations.size(); source++) {
+			for (int dest : graph.getOutgoingVertices(source)) {
+				float sx = vertexLocations.get(source)[0];
+				float sy = vertexLocations.get(source)[1];
+				float dx = vertexLocations.get(dest)[0];
+				float dy = vertexLocations.get(dest)[1];
+				//Only draw the edges that aren't covered by vertices
+				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) < vertSize * 2) {
+					gl.glVertex2f(sx, sy);
+					gl.glVertex2f(dx, dy);
+				}
+			}
+		}
+		gl.glEnd();
+	}
+
+	private void drawVertices(GL gl) {
 		gl.glBegin(gl.GL_QUADS);
-			for (int vert = 0; vert < vertexLocations.size(); vert++) {
-				float x = vertexLocations.get(vert)[0];
-				float y = vertexLocations.get(vert)[1];
-				setColorForVertex(gl, config.get(vert));
+		for (int vert = 0; vert < vertexLocations.size(); vert++) {
+			float x = vertexLocations.get(vert)[0];
+			float y = vertexLocations.get(vert)[1];
+			setColorForVertex(gl, config.get(vert));
+			//GLUquadric quadric = glu.gluNewQuadric();
+			//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
+			gl.glVertex2f(x - vertSize, y + vertSize);
+			gl.glVertex2f(x + vertSize, y + vertSize);
+			gl.glVertex2f(x + vertSize, y - vertSize);
+			gl.glVertex2f(x - vertSize, y - vertSize);
+		}
+		gl.glEnd();
+	}
+
+	private void drawSelected(GL gl) {
+		if (selectedVertex >= 0) {
+			gl.glBegin(gl.GL_LINES);
+				float x = vertexLocations.get(selectedVertex)[0];
+				float y = vertexLocations.get(selectedVertex)[1];
 				//GLUquadric quadric = glu.gluNewQuadric();
 				//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
-				gl.glVertex2f(x-1f, y+1f);
-				gl.glVertex2f(x+1f, y+1f);
-				gl.glVertex2f(x+1f, y-1f);
-				gl.glVertex2f(x-1f, y-1f);
-				gl.glLoadIdentity();
-			}
-		gl.glEnd();
-		gl.glFlush();
+				gl.glColor3f(0f,1f,.5f);
+				gl.glVertex2f(x - vertSize, y + vertSize);
+				gl.glVertex2f(x + vertSize, y + vertSize);
+
+				gl.glVertex2f(x + vertSize, y + vertSize);
+				gl.glVertex2f(x + vertSize, y - vertSize);
+
+				gl.glVertex2f(x + vertSize, y - vertSize);
+				gl.glVertex2f(x - vertSize, y - vertSize);
+
+				gl.glVertex2f(x - vertSize, y - vertSize);
+				gl.glVertex2f(x - vertSize, y + vertSize);
+			gl.glEnd();
+		}
 	}
 
 	/**
@@ -126,10 +176,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		return canvas;
 	}
 
-	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config) {
+	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, int selectedVertex) {
 		this.graph = graph;
 		this.vertexLocations = vertexLocations;
 		this.config = config;
+		this.selectedVertex = selectedVertex;
 		canvas.display();
 	}
 
@@ -142,7 +193,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		return coords;
 	}
 
-	public void setGLDimensions(float x,float y,float w,float h){
+	public void setGLDimensions(float x, float y, float w, float h) {
 		width = Math.max(w, 1f);
 		height = Math.max(h, 1f);
 		originX = x;
@@ -151,13 +202,21 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		canvas.display();
 	}
 
-	public float getOriginX() {return originX;}
+	public float getOriginX() {
+		return originX;
+	}
 
-	public float getOriginY() {return originY;}
+	public float getOriginY() {
+		return originY;
+	}
 
-	public float getWidth() {return width;}
+	public float getWidth() {
+		return width;
+	}
 
-	public float getHeight() {return height;}
+	public float getHeight() {
+		return height;
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -168,18 +227,18 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		float[] coords = transformCanvasCoords(e.getX(),e.getY());
-		float deltaX = mouseX-coords[0];
-		float deltaY = mouseY-coords[1];
-		setGLDimensions(getOriginX()+deltaX, getOriginY()+deltaY, getWidth(), getHeight());
-		coords = transformCanvasCoords(e.getX(),e.getY());
+		float[] coords = transformCanvasCoords(e.getX(), e.getY());
+		float deltaX = mouseX - coords[0];
+		float deltaY = mouseY - coords[1];
+		setGLDimensions(getOriginX() + deltaX, getOriginY() + deltaY, getWidth(), getHeight());
+		coords = transformCanvasCoords(e.getX(), e.getY());
 		mouseX = coords[0];
 		mouseY = coords[1];
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		float amount = e.getUnitsToScroll();
-		setGLDimensions(getOriginX(), getOriginY(), getWidth()+amount, getHeight()+amount);
+		setGLDimensions(getOriginX(), getOriginY(), getWidth() + amount, getHeight() + amount);
 	}
 
 	private void setColorForVertex(GL gl, int sand) {
