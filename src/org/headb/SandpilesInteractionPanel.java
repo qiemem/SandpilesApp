@@ -19,7 +19,7 @@ import java.awt.CardLayout;
 import java.awt.Cursor;
 import javax.swing.Timer;
 
-public class SandpilesInteractionPanel extends javax.swing.JPanel {
+public class SandpilesInteractionPanel extends javax.swing.JPanel implements RepaintListener {
 	private static final String MAKE_GRID_STATE = "Make Grid";
 	private static final String MAKE_HEX_GRID_STATE = "Make Hex Grid";
 	private static final String MAKE_HONEYCOMB_STATE = "Make Honeycomb";
@@ -50,6 +50,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		sandpileController = new SandpileController(drawer);
 		canvas.addMouseListener(drawer);
 		canvas.addMouseMotionListener(drawer);
+		drawer.addRepaintListener(this);
 
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(delaySlider.getValue());
@@ -69,6 +70,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		}
 		//spThread = new Thread(sandpileController);
     }
+
+	public void onRepaint(){
+		this.zoomSlider.setValue((int)(drawer.getZoom()*1000));
+	}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -142,8 +147,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         stepButton = new javax.swing.JButton();
         deleteGraphButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        scaleTextField = new javax.swing.JTextField();
-        scaleSlider = new javax.swing.JSlider();
+        zoomTextField = new javax.swing.JTextField();
+        zoomSlider = new javax.swing.JSlider();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
 
@@ -646,16 +651,22 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("Scale:"); // NOI18N
+        jLabel2.setText("Zoom:"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, scaleSlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), scaleTextField, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, zoomSlider, org.jdesktop.beansbinding.ELProperty.create("${value/10.0}"), zoomTextField, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
-        scaleSlider.setMaximum(200);
-        scaleSlider.setValue(100);
-        scaleSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+        zoomTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zoomTextFieldActionPerformed(evt);
+            }
+        });
+
+        zoomSlider.setMaximum(10000);
+        zoomSlider.setValue(1000);
+        zoomSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                scaleSliderStateChanged(evt);
+                zoomSliderStateChanged(evt);
             }
         });
 
@@ -680,7 +691,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, delaySlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                    .add(scaleSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .add(zoomSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
                         .add(clearSandButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -703,7 +714,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
                                     .add(jLabel12))
                                 .add(org.jdesktop.layout.GroupLayout.TRAILING, stepButton))
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
-                                .add(scaleTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 59, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(zoomTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 59, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(jLabel11)))))
                 .addContainerGap())
@@ -727,9 +738,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
                 .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
                     .add(jLabel11)
-                    .add(scaleTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(zoomTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(scaleSlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(zoomSlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(clearSandButton)
@@ -832,9 +843,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		sandpileController.delAllVertices();
 }//GEN-LAST:event_deleteGraphButtonActionPerformed
 
-	private void scaleSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_scaleSliderStateChanged
-		drawer.setZoom((float)scaleSlider.getValue()/100f);
-}//GEN-LAST:event_scaleSliderStateChanged
+	private void zoomSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zoomSliderStateChanged
+
+		drawer.setZoom(zoomSlider.getValue()/1000f);
+}//GEN-LAST:event_zoomSliderStateChanged
 
 	private void makeHoneycombBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHoneycombBorderComboBoxActionPerformed
 		// TODO add your handling code here:
@@ -989,6 +1001,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		// TODO add your handling code here:
 	}//GEN-LAST:event_canvasMouseReleased
 
+	private void zoomTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomTextFieldActionPerformed
+		// TODO add your handling code here:
+	}//GEN-LAST:event_zoomTextFieldActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConfigButton;
@@ -1050,13 +1066,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     private javax.swing.JToggleButton runButton;
     private javax.swing.JComboBox sBorderComboBox;
     private javax.swing.JScrollPane sandpileViewScrollPane;
-    private javax.swing.JSlider scaleSlider;
-    private javax.swing.JTextField scaleTextField;
     private javax.swing.JButton setConfigButton;
     private javax.swing.JRadioButton setSandRadioButton;
     private javax.swing.JButton stepButton;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;
+    private javax.swing.JSlider zoomSlider;
+    private javax.swing.JTextField zoomTextField;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

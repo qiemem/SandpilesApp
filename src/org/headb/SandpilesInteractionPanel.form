@@ -684,7 +684,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="delaySlider" alignment="1" pref="226" max="32767" attributes="0"/>
-                          <Component id="scaleSlider" alignment="0" pref="226" max="32767" attributes="0"/>
+                          <Component id="zoomSlider" alignment="0" pref="226" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="clearSandButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
@@ -713,7 +713,7 @@
                                       <Component id="stepButton" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="scaleTextField" min="-2" pref="59" max="-2" attributes="0"/>
+                                      <Component id="zoomTextField" min="-2" pref="59" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -746,10 +746,10 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="scaleTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="zoomTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="scaleSlider" min="-2" max="-2" attributes="0"/>
+                      <Component id="zoomSlider" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="clearSandButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -861,23 +861,26 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Scale:" noResource="true"/>
+                <Property name="text" type="java.lang.String" value="Zoom:" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="scaleTextField">
+            <Component class="javax.swing.JTextField" name="zoomTextField">
               <BindingProperties>
-                <BindingProperty name="text" source="scaleSlider" sourcePath="${value}" target="scaleTextField" targetPath="text" updateStrategy="0" immediately="false">
+                <BindingProperty name="text" source="zoomSlider" sourcePath="${value/10.0}" target="zoomTextField" targetPath="text" updateStrategy="0" immediately="false">
                   <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
                 </BindingProperty>
               </BindingProperties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="zoomTextFieldActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JSlider" name="scaleSlider">
+            <Component class="javax.swing.JSlider" name="zoomSlider">
               <Properties>
-                <Property name="maximum" type="int" value="200"/>
-                <Property name="value" type="int" value="100"/>
+                <Property name="maximum" type="int" value="10000"/>
+                <Property name="value" type="int" value="1000"/>
               </Properties>
               <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="scaleSliderStateChanged"/>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="zoomSliderStateChanged"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel11">

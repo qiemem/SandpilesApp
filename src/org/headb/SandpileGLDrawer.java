@@ -41,6 +41,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	public boolean drawCircles = false;
 	private long timeOfLastDisplay = 0;
 
+	private ArrayList<RepaintListener> repaintListeners = new ArrayList<RepaintListener>();
+
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
 		canvas.addGLEventListener(this);
@@ -129,6 +131,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		drawSelected(gl);
 
 		gl.glFlush();
+		for(RepaintListener r : repaintListeners)
+			r.onRepaint();
 	}
 
 	private void drawEdges(GL gl) {
@@ -303,8 +307,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 	public void setZoom(float zoom){
 		this.zoom = Math.max(zoom, 0.00001f);
-		height = startingHeight*zoom;
-		width = startingWidth*zoom;
+		height = startingHeight/zoom;
+		width = startingWidth/zoom;
 		needsReshape=true;
 		canvas.display();
 	}
@@ -328,7 +332,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		float amount = 1f+0.01f*e.getUnitsToScroll();
+		float amount = 1f-0.01f*e.getUnitsToScroll();
 		setZoom(getZoom()*amount);
 		//setGLDimensions(getOriginX(), getOriginY(), getWidth() + amount, getHeight() + amount);
 	}
@@ -359,5 +363,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			default:
 				gl.glColor3f(1.0f, 1.0f, 1.0f);
 		}
+	}
+
+	public void addRepaintListener(RepaintListener r){
+		repaintListeners.add(r);
 	}
 }
