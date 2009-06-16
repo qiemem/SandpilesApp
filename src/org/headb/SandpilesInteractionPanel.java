@@ -46,7 +46,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     /** Creates new form SandpilesInteractionPanel */
     public SandpilesInteractionPanel() {
         initComponents();
-		drawer = new SandpileGLDrawer();
+		drawer = new SandpileGLDrawer(canvas);
 		sandpileViewPanel = new SandpileController(drawer);
 		sandpileViewScrollPane.setViewportView(drawer.getCanvas());
 
@@ -579,6 +579,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                canvasMouseReleased(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 canvasMouseClicked(evt);
             }
@@ -981,6 +984,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
 		float x = coords[0];
 		float y = coords[1];
+		System.err.println(x+" and "+y);
 		if(currentState.equals(MAKE_GRID_STATE)){
 			sandpileViewPanel.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
 					nBorderComboBox.getSelectedIndex(),
@@ -1021,6 +1025,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}//GEN-LAST:event_canvasMouseClicked
+
+	private void canvasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseReleased
+		// TODO add your handling code here:
+	}//GEN-LAST:event_canvasMouseReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

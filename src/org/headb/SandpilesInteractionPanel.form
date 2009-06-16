@@ -685,6 +685,7 @@
           <SubComponents>
             <Component class="javax.media.opengl.GLCanvas" name="canvas">
               <Events>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="canvasMouseReleased"/>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="canvasMouseClicked"/>
               </Events>
             </Component>

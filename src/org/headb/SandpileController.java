@@ -157,6 +157,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		} else {
 			selectedVertex = touchVert;
 		}
+		repaint();
 	}
 
 	public void delVertexControl(float x, float y) {
@@ -166,7 +167,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		} else {
 			selectedVertex = -1;
 		}
-
+		repaint();
 	}
 
 	public void addEdgeControl(float x, float y, int weight) {
@@ -180,6 +181,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		} else {
 			selectedVertex = -1;
 		}
+		repaint();
 	}
 
 	public void delEdgeControl(float x, float y, int weight) {
@@ -193,6 +195,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		} else {
 			selectedVertex = -1;
 		}
+		repaint();
 	}
 
 	public void addUndiEdgeControl(float x, float y, int weight) {
@@ -205,6 +208,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 				addEdge(touchVert, selectedVertex, weight);
 			}
 		}
+		repaint();
 	}
 
 	public void delUndiEdgeControl(float x, float y, int weight) {
@@ -217,6 +221,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 				delEdge(touchVert, selectedVertex, weight);
 			}
 		}
+		repaint();
 	}
 
 	public void addSandControl(float x, float y, int amount) {
@@ -225,6 +230,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			selectedVertex = touchVert;
 			addSand(touchVert, amount);
 		}
+		repaint();
 	}
 
 	public void setSandControl(float x, float y, int amount) {
@@ -233,7 +239,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			selectedVertex = touchVert;
 			setSand(touchVert, amount);
 		}
-
+		repaint();
 	}
 
 	public void makeGrid(int rows, int cols, float x, float y, int nBorder, int sBorder, int eBorder, int wBorder) {
@@ -653,7 +659,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		float[] newPos = {x, y};
 		vertexData.add(newPos);
 		currentConfig.add(0);
-		repaint();
 	}
 
 	public void delVertex(int v) {
