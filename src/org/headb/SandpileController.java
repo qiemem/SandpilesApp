@@ -42,16 +42,40 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
-public class SandpileController implements ActionListener, Serializable, Runnable {
-	private float VERT_RADIUS = 1.0f;
+public class SandpileController extends JPanel implements ActionListener, Serializable, Runnable {
 
+	public static final int ADD_VERT_STATE = 0;
+	public static final int DEL_VERT_STATE = 1;
+	public static final int ADD_EDGE_STATE = 2;
+	public static final int DEL_EDGE_STATE = 3;
+	public static final int ADD_UNDI_EDGE_STATE = 4;
+	public static final int DEL_UNDI_EDGE_STATE = 5;
+	public static final int ADD_SAND_STATE = 6;
+	public static final int DEL_SAND_STATE = 7;
+	public static final int MAKE_GRID_STATE = 8;
+	private boolean repaint = true;
+	private boolean repaintAll = false;
+	private boolean labels = false;
+	private boolean color = true;
+	private boolean changingNodeSize = true;
+	private boolean drawEdges = true;
 	private long delay = 0;
 	private SandpileGraph sg;
+	static final int VERT_RADIUS = 10;
+	static final Color[] SAND_COLOR = {Color.gray, Color.blue, Color.cyan, Color.green, Color.red, Color.orange, Color.yellow};
+	static final Color[] SAND_MONOCHROME = {new Color(25, 25, 25), new Color(50, 50, 50), new Color(100, 100, 100), new Color(150, 150, 150), new Color(200, 200, 200), new Color(225, 225, 225), new Color(255, 255, 255)};
+	private BufferedImage[] vertexImages = new BufferedImage[SAND_COLOR.length];
+	private double scale = 1.0;
 	ArrayList<float[]> vertexData;
+	//only keeps track of the existence of edges, not of their weights
+	ArrayList<HashSet<Integer>> edges;
 	private int selectedVertex;
 	private long lastUpdate = System.currentTimeMillis();
 	public double fps = 0.0;
+	private boolean useBufferedImages = true;
+	private boolean outputFPS = true;
 	private SandpileConfiguration currentConfig;
+
 	private SandpileDrawer drawer;
 
 	public SandpileController() {
@@ -64,7 +88,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		initWithSandpileGraph(new SandpileGraph());
 	}
 
-	public SandpileController(SandpileDrawer d,SandpileGraph sg) {
+	public SandpileController(SandpileGraph sg) {
 		initWithSandpileGraph(sg);
 	}
 
@@ -72,12 +96,16 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		//this.curState = ADD_VERT_STATE;
 		this.sg = sg;
 		vertexData = new ArrayList<float[]>();
+		edges = new ArrayList<HashSet<Integer>>();
 		currentConfig = new SandpileConfiguration();
 
 		Canvas canvas = drawer.getCanvas();
+		canvas.setPreferredSize(this.getSize());
+		this.add(drawer.getCanvas());
+		//canvas.setVisible(true);
 
 		selectedVertex = -1;
-		canvas.addMouseListener(new MouseInputAdapter() {
+		addMouseListener(new MouseInputAdapter() {
 
 			@Override
 			public void mouseReleased(MouseEvent evt) {
@@ -104,6 +132,101 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 				}
 			}
 		});
+		this.setIgnoreRepaint(false);
+		this.setDoubleBuffered(true);
+		this.calcVertexImages();
+	}
+
+	public void calcVertexImages() {
+		int r = (int) Math.ceil(VERT_RADIUS * this.scale);
+		for (int i = 0; i < vertexImages.length; i++) {
+			BufferedImage bi = new BufferedImage(r * 2, r * 2, BufferedImage.TYPE_INT_RGB);
+			renderVertex(bi.createGraphics(), i, r, r, r);
+			vertexImages[i] = toCompatibleImage(bi);
+			vertexImages[i]=bi;
+		}
+	}
+
+	private BufferedImage toCompatibleImage(BufferedImage image) {
+		// obtain the current system graphical settings
+		GraphicsConfiguration gfx_config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().
+				getDefaultConfiguration();
+
+		/*
+		 * if image is already compatible and optimized for current system
+		 * settings, simply return it
+		 */
+		if (image.getColorModel().equals(gfx_config.getColorModel())) {
+			return image;
+		}
+
+		// image is not optimized, so create a new image that is
+		BufferedImage new_image = gfx_config.createCompatibleImage(
+				image.getWidth(), image.getHeight(), image.getTransparency());
+
+		// get the graphics context of the new image to draw the old image on
+		Graphics2D g2d = (Graphics2D) new_image.getGraphics();
+
+		// actually draw the image and dispose of context no longer needed
+		g2d.drawImage(image, 0, 0, null);
+		g2d.dispose();
+
+		// return the new optimized image
+		return new_image;
+	}
+
+	public void renderVertex(Graphics g, int sand, int radius, int x, int y) {
+		int colorNum = Math.max(0, Math.min(sand, SAND_COLOR.length - 1));
+		if (color) {
+			g.setColor(SAND_COLOR[colorNum]);
+		} else {
+			g.setColor(SAND_MONOCHROME[colorNum]);
+		}
+		//g.setColor(new Color(+64));
+		g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
+
+	}
+
+	public void setRepaint(boolean val) {
+		repaint = val;
+		repaint();
+	}
+
+	public void setRepaintAll(boolean val) {
+		repaintAll = val;
+	//repaint();
+	}
+
+	public void setUseBufferedImages(boolean val) {
+		useBufferedImages = val;
+	}
+
+	public void setOutputFPS(boolean val) {
+		outputFPS = val;
+	}
+
+	public void setDelay(long ms) {
+		delay = ms;
+	}
+
+	public void setColor(boolean val) {
+		color = val;
+		repaint();
+	}
+
+	public void setLabels(boolean val) {
+		labels = val;
+		repaint();
+	}
+
+	public void setDrawEdges(boolean val) {
+		this.drawEdges = val;
+		repaint();
+	}
+
+	public void setChangingNodeSize(boolean val) {
+		changingNodeSize = val;
+		repaint();
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -128,6 +251,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		//System.out.println(count);
 		}*/
 		currentConfig = nextConfig;
+		if (outputFPS) {
+			long curTime = System.currentTimeMillis();
+			fps = 1.0 / (curTime - lastUpdate) * 1000.0;
+			System.out.println(fps);
+			lastUpdate = System.currentTimeMillis();
+		}
 	}
 
 	public void run() {
@@ -141,11 +270,71 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		}
 	}
 
-	public void repaint() {
-		drawer.paintSandpileGraph(sg, vertexData, currentConfig);
+	@Override
+	public void paintComponent(Graphics g) {
+		if (!repaint) {
+			return;
+		}
+
+		//Graphics2D g2 = (Graphics2D) g;
+		Graphics g2 = g;
+		super.paintComponent(g2);
+		//drawer.paintSandpileGraph(sg, vertexData, currentConfig);
+		/*
+		if (drawEdges) {
+			for (int e1 = 0; e1 < edges.size(); e1++) {
+				for (int e2 : edges.get(e1)) {
+					int[] pos1 = vertexData.get(e1);
+					int[] pos2 = vertexData.get(e2);
+					g2.setColor(Color.white);
+					g2.drawLine(scaleCoordinate(pos1[0]), scaleCoordinate(pos1[1]), scaleCoordinate(pos2[0]), scaleCoordinate(pos2[1]));
+					g2.setColor(Color.pink);
+					if (labels) {
+						g2.drawString(String.valueOf(sg.weight(e1, e2)), scaleCoordinate((int) (pos1[0] + 0.8 * (pos2[0] - pos1[0]))), scaleCoordinate((int) (pos1[1] + 0.8 * (pos2[1] - pos1[1]))));
+					}
+				}
+			}
+		}
+		for (int i = 0; i < vertexData.size(); i++) {
+			int[] v = vertexData.get(i);
+			int sand = currentConfig.get(i);
+			int colorNum = Math.max(0, Math.min(sand, SAND_COLOR.length - 1));
+			if (useBufferedImages) {
+				//int r = VERT_RADIUS;
+				g2.drawImage(vertexImages[colorNum], scaleCoordinate(v[0] - VERT_RADIUS), scaleCoordinate(v[1] - VERT_RADIUS), new Color(0,0,0,0),null);
+			} else {
+				int degree = sg.degree(i);
+				int radius = VERT_RADIUS;
+
+				if (changingNodeSize && (degree > 0 && degree > sand)) {
+					radius = (int) (((float) sand + 2) / (degree + 2) * VERT_RADIUS);
+				}
+				if (color) {
+					g2.setColor(SAND_COLOR[colorNum]);
+				} else {
+					g2.setColor(SAND_MONOCHROME[colorNum]);
+				}
+				//g.setColor(new Color(+64));
+				g2.fillOval(scaleCoordinate(v[0] - radius), scaleCoordinate(v[1] - radius), scaleCoordinate(radius * 2), scaleCoordinate(radius * 2));
+			}
+		}
+		if (labels) {
+			g2.setColor(Color.black);
+			for (int i = 0; i < vertexData.size(); i++) {
+				int[] v = vertexData.get(i);
+				int sand = currentConfig.get(i);
+
+				g2.drawString(String.valueOf(sand), scaleCoordinate(v[0] - VERT_RADIUS / 2), scaleCoordinate(v[1] + VERT_RADIUS / 2));
+			}
+		}
+		if (selectedVertex >= 0) {
+			int[] v = vertexData.get(selectedVertex);
+			g2.setColor(Color.cyan);
+			g2.drawOval(scaleCoordinate(v[0] - VERT_RADIUS), scaleCoordinate(v[1] - VERT_RADIUS), scaleCoordinate(VERT_RADIUS * 2), scaleCoordinate(VERT_RADIUS * 2));
+		}*/
 	}
 
-	public void addVertexControl(float x, float y) {
+	public void addVertexControl(int x, int y) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert < 0) {
 			if (selectedVertex >= 0) {
@@ -160,9 +349,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void delVertexControl(float x, float y) {
+	public void delVertexControl(int x, int y) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
+			//System.out.println("Del vertex "+x+" "+y);
 			delVertex(touchVert);
 		} else {
 			selectedVertex = -1;
@@ -170,7 +360,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void addEdgeControl(float x, float y, int weight) {
+	public void addEdgeControl(int x, int y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			if (selectedVertex < 0) {
@@ -184,7 +374,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void delEdgeControl(float x, float y, int weight) {
+	public void delEdgeControl(int x, int y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			if (selectedVertex < 0) {
@@ -198,7 +388,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void addUndiEdgeControl(float x, float y, int weight) {
+	public void addUndiEdgeControl(int x, int y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			if (selectedVertex < 0) {
@@ -211,7 +401,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void delUndiEdgeControl(float x, float y, int weight) {
+	public void delUndiEdgeControl(int x, int y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			if (selectedVertex < 0) {
@@ -224,7 +414,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void addSandControl(float x, float y, int amount) {
+	public void addSandControl(int x, int y, int amount) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			selectedVertex = touchVert;
@@ -233,7 +423,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void setSandControl(float x, float y, int amount) {
+	public void setSandControl(int x, int y, int amount) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			selectedVertex = touchVert;
@@ -242,8 +432,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void makeGrid(int rows, int cols, float x, float y, int nBorder, int sBorder, int eBorder, int wBorder) {
-		float gridSpacing = VERT_RADIUS * 2;
+	public void makeGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
+		x = unscaleCoordinate(x);
+		y = unscaleCoordinate(y);
+		int gridSpacing = VERT_RADIUS * 2;
 		//int curVertDataSize = vertexData.size();
 		int[][] gridRef = new int[rows][cols];
 		int[] nBorderRef = new int[cols];
@@ -255,29 +447,29 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				gridRef[i][j] = vertexData.size();
-				addVertex(x + j * gridSpacing, y + i * gridSpacing);
+				addVertexUnscaled(x + j * gridSpacing, y + i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols; i++) {
 			if (nBorder < 2) {
 				nBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing, y - gridSpacing);
+				addVertexUnscaled(x + i * gridSpacing, y - gridSpacing);
 			}
 			if (sBorder < 2) {
 				sBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing, y + (rows) * gridSpacing);
+				addVertexUnscaled(x + i * gridSpacing, y + (rows) * gridSpacing);
 			}
 
 		}
 		for (int i = 0; i < rows; i++) {
 			if (wBorder < 2) {
 				wBorderRef[i] = vertexData.size();
-				addVertex(x - gridSpacing, y + i * gridSpacing);
+				addVertexUnscaled(x - gridSpacing, y + i * gridSpacing);
 			}
 			if (eBorder < 2) {
 				eBorderRef[i] = vertexData.size();
-				addVertex(x + (cols) * gridSpacing, y + i * gridSpacing);
+				addVertexUnscaled(x + (cols) * gridSpacing, y + i * gridSpacing);
 			}
 		}
 		//create edges
@@ -331,19 +523,21 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void makeHoneycomb(int radius, float x, float y, int borders) {
+	public void makeHoneycomb(int radius, int x, int y, int borders) {
 		/*
 		 * for borders:
 		 * 0 - directed
 		 * 1 - undirected
 		 **/
-		float gridSpacing = VERT_RADIUS * 2;
+		x = unscaleCoordinate(x);
+		y = unscaleCoordinate(y);
+		int gridSpacing = VERT_RADIUS * 2;
 		int curRowLength = radius;
 		int[][] gridRef = new int[radius * 2 - 1][radius * 2 - 1];
 		for (int i = 0; i < radius * 2 - 1; i++) {
 			for (int j = 0; j < curRowLength; j++) {
 				gridRef[i][j] = vertexData.size();
-				addVertex(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y + i * (gridSpacing - 4));
+				addVertexUnscaled(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y + i * (gridSpacing - 4));
 			}
 			if (i < radius - 1) {
 				curRowLength++;
@@ -434,8 +628,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	}
 
-	public void makeHexGrid(int rows, int cols, float x, float y, int nBorder, int sBorder, int eBorder, int wBorder) {
-		float gridSpacing = VERT_RADIUS * 2;
+	public void makeHexGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
+		x = unscaleCoordinate(x);
+		y = unscaleCoordinate(y);
+		int gridSpacing = VERT_RADIUS * 2;
 		//int curVertDataSize = vertexData.size();
 
 		int[][] gridRef = new int[rows][cols];
@@ -448,18 +644,18 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				gridRef[i][j] = vertexData.size();
-				addVertex(x + j * gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
+				addVertexUnscaled(x + j * gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols + 1; i++) {
 			if (nBorder < 2) {
 				nBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing - (gridSpacing / 2), y - gridSpacing);
+				addVertexUnscaled(x + i * gridSpacing - (gridSpacing / 2), y - gridSpacing);
 			}
 			if (sBorder < 2) {
 				sBorderRef[i] = vertexData.size();
-				addVertex(x + i * gridSpacing - (gridSpacing / 2), y + (rows) * gridSpacing);
+				addVertexUnscaled(x + i * gridSpacing - (gridSpacing / 2), y + (rows) * gridSpacing);
 			}
 
 		}
@@ -467,11 +663,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < rows; i++) {
 			if (wBorder < 2) {
 				wBorderRef[i] = vertexData.size();
-				addVertex(x - gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
+				addVertexUnscaled(x - gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
 			}
 			if (eBorder < 2) {
 				eBorderRef[i] = vertexData.size();
-				addVertex(x + (cols) * gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
+				addVertexUnscaled(x + (cols) * gridSpacing + i % 2 * (gridSpacing / 2), y + i * gridSpacing);
 			}
 		}
 
@@ -608,6 +804,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	//public void setControlState(int controlState) {
 	//curState = controlState;
 	//}
+	public void setScale(double scale) {
+		this.scale = Math.max(scale, 0.0000001);
+		this.calcVertexImages();
+		repaint();
+	}
 
 	public void setToMaxStableConfig() {
 		currentConfig = sg.getMaxConfig();
@@ -654,21 +855,81 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void addVertex(float x, float y) {
+	public void addVertex(int x, int y) {
+<<<<<<< HEAD:src/org/headb/SandpileController.java
+<<<<<<< HEAD:src/org/headb/SandpileController.java
+<<<<<<< HEAD:src/org/headb/SandpileController.java
+		sg.addVertex();
+		float[] newPos = {unscaleCoordinate(x), unscaleCoordinate(y)};
+		vertexData.add(newPos);
+		edges.add(new HashSet<Integer>());
+		currentConfig.add(0);
+	}
+
+	private void addVertexUnscaled(int x, int y) {
+=======
+>>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpileController.java
+		sg.addVertex();
+		float[] newPos = {unscaleCoordinate(x), unscaleCoordinate(y)};
+		vertexData.add(newPos);
+		edges.add(new HashSet<Integer>());
+		currentConfig.add(0);
+	//repaint();
+	}
+
+	private void addVertexUnscaled(int x, int y) {
+=======
+>>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpileController.java
+		sg.addVertex();
+		float[] newPos = {unscaleCoordinate(x), unscaleCoordinate(y)};
+		vertexData.add(newPos);
+		edges.add(new HashSet<Integer>());
+		currentConfig.add(0);
+	//repaint();
+	}
+
+	private void addVertexUnscaled(int x, int y) {
+=======
+>>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpileController.java
+		sg.addVertex();
+		float[] newPos = {unscaleCoordinate(x), unscaleCoordinate(y)};
+		vertexData.add(newPos);
+		edges.add(new HashSet<Integer>());
+		currentConfig.add(0);
+	//repaint();
+	}
+
+	private void addVertexUnscaled(int x, int y) {
 		sg.addVertex();
 		float[] newPos = {x, y};
 		vertexData.add(newPos);
+		edges.add(new HashSet<Integer>());
 		currentConfig.add(0);
+	//repaint();
 	}
 
 	public void delVertex(int v) {
 		vertexData.remove(v);
 		currentConfig.remove(v);
 		sg.removeVertex(v);
+		edges.remove(v);
+		for (int i = 0; i < edges.size(); i++) {
+			edges.get(i).remove(v);
+			Set<Integer> updatedOutVerts = new HashSet<Integer>();
+			for (Iterator<Integer> iter = edges.get(i).iterator(); iter.hasNext();) {
+				int u = iter.next();
+				if (u > v) {
+					iter.remove();
+					updatedOutVerts.add(u - 1);
+				}
+			}
+			edges.get(i).addAll(updatedOutVerts);
+		}
 	}
 
 	public void delAllVertices() {
 		vertexData.clear();
+		edges.clear();
 		currentConfig.clear();
 		sg.removeAllVertices();
 		this.selectedVertex = -1;
@@ -680,6 +941,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void addEdge(int originVert, int destVert, int weight) {
+		edges.get(originVert).add(destVert);
 		sg.addEdge(originVert, destVert, weight);
 	}
 
@@ -689,6 +951,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void delEdge(int originVert, int destVert, int weight) {
 		sg.removeEdge(originVert, destVert, weight);
+		if (sg.weight(originVert, destVert) == 0) {
+			edges.get(originVert).remove(destVert);
+		}
 	}
 
 	public void addSand(int vert, int amount) {
@@ -699,22 +964,30 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		currentConfig.set(vert, amount);
 	}
 
-	private int touchingVertex(float x, float y) {
+	private int touchingVertex(int x, int y) {
 		for (int i = 0; i < vertexData.size(); i++) {
 			float[] v = vertexData.get(i);
-			if (Math.sqrt((x - v[0]) * (x - v[0]) + (y - v[1]) * (y - v[1])) <= VERT_RADIUS) {
+			if (Math.sqrt((x - scaleCoordinate(v[0])) * (x - scaleCoordinate(v[0])) + (y - scaleCoordinate(v[1])) * (y - scaleCoordinate(v[1]))) <= VERT_RADIUS) {
 				return i;
 			}
 		}
 		return -1;
 	}
 
+	private int scaleCoordinate(float coord) {
+		return (int) Math.ceil(coord * scale);
+	}
+
+	private int unscaleCoordinate(float coord) {
+		return (int) ((double) coord / scale);
+	}
+
 	public void editFromString(String s) {
 		String[] parts = s.split(" ");
 		if (parts[0].toLowerCase().equals("vertex")) {
-			float x = Integer.valueOf(parts[1]);
-			float y = Integer.valueOf(parts[2]);
-			addVertex(x, y);
+			int x = Integer.valueOf(parts[1]);
+			int y = Integer.valueOf(parts[2]);
+			addVertexUnscaled(x, y);
 		} else if (parts[0].toLowerCase().equals("edge")) {
 			int v1 = Integer.valueOf(parts[1]);
 			int v2 = Integer.valueOf(parts[2]);
