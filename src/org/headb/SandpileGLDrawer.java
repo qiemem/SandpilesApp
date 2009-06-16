@@ -26,6 +26,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private SandpileGraph graph = new SandpileGraph();
 	private SandpileConfiguration config = new SandpileConfiguration();
 	private int selectedVertex = -1;
+	private float startingWidth=200.0f, startingHeight=200.0f, zoom=1f;
 	private float originX = 0.0f,  originY = 0.0f,  width = 200.0f,  height = 200.0f;
 	private int canvasX,  canvasY,  canvasW,  canvasH;
 	private boolean needsReshape = true;
@@ -160,7 +161,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float dx = vertexLocations.get(dest)[0];
 				float dy = vertexLocations.get(dest)[1];
 				//Only draw the edges that aren't covered by vertices
-				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f) {
+				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
 					float x = (1f - textPlacement) * sx + textPlacement * dx;
 					float y = (1f - textPlacement) * sy + textPlacement * dy;
 					String str = Integer.toString(graph.weight(source, dest));
@@ -296,6 +297,18 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		return height;
 	}
 
+	public float getZoom(){
+		return zoom;
+	}
+
+	public void setZoom(float zoom){
+		this.zoom = Math.max(zoom, 0.00001f);
+		height = startingHeight*zoom;
+		width = startingWidth*zoom;
+		needsReshape=true;
+		canvas.display();
+	}
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		float[] coords = transformCanvasCoords(e.getX(), e.getY());
@@ -315,8 +328,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		float amount = e.getUnitsToScroll();
-		setGLDimensions(getOriginX(), getOriginY(), getWidth() + amount, getHeight() + amount);
+		float amount = 1f+0.01f*e.getUnitsToScroll();
+		setZoom(getZoom()*amount);
+		//setGLDimensions(getOriginX(), getOriginY(), getWidth() + amount, getHeight() + amount);
 	}
 
 	private void setColorForVertex(GL gl, int sand) {

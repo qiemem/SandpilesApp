@@ -832,7 +832,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_deleteGraphButtonActionPerformed
 
 	private void scaleSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_scaleSliderStateChanged
-		double scale = (double)scaleSlider.getValue()/100.0;
+		drawer.setZoom((float)scaleSlider.getValue()/100f);
 }//GEN-LAST:event_scaleSliderStateChanged
 
 	private void makeHoneycombBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHoneycombBorderComboBoxActionPerformed
