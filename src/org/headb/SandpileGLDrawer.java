@@ -6,7 +6,7 @@ package org.headb;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
-import com.sun.opengl.util.Animator;
+import com.sun.opengl.util.j2d.TextRenderer;
 import java.awt.Canvas;
 import java.util.List;
 import java.util.ArrayList;
@@ -102,6 +102,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			System.err.println(1000f/(curTime-timeOfLastDisplay));
 			timeOfLastDisplay = curTime;
 		}
+		TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 12));
+
 		GL gl = drawable.getGL();
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
@@ -115,6 +117,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			drawEdges(gl);
 		if(drawVertices)
 			drawVertices(gl,glu);
+		if(drawLabels){
+			drawVertexLabels(gl,tr);
+		}
 		drawSelected(gl);
 
 		gl.glFlush();
@@ -155,6 +160,14 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			gl.glVertex2f(x - vertSize, y - vertSize);
 		}
 		gl.glEnd();
+	}
+
+	private void drawVertexLabels(GL gl, TextRenderer tr){
+		tr.begin3DRendering();
+			for (int vert = 0; vert < vertexLocations.size(); vert++) {
+				tr.draw3D(Integer.toString(config.get(vert)), vertexLocations.get(vert)[0]-vertSize, vertexLocations.get(vert)[1]-.9f*vertSize, 0f, .2f*vertSize);
+			}
+		tr.end3DRendering();
 	}
 
 	private void drawSelected(GL gl) {
