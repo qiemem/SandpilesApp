@@ -7,6 +7,7 @@ package org.headb;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
+import com.sun.opengl.util.Animator;
 import java.awt.Canvas;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * @author headb
  */
 public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
-	private GLCanvas canvas = new GLCanvas();
+	private GLCanvas canvas;
 
 	private List<float[]> vertexLocations;
 	private SandpileGraph graph;
@@ -23,7 +24,13 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 
 
 	public SandpileGLDrawer() {
+		canvas = new GLCanvas();
 		canvas.addGLEventListener(this);
+	}
+
+	public SandpileGLDrawer(GLCanvas canvas) {
+		this.canvas = canvas;
+		this.canvas.addGLEventListener(this);
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -65,6 +72,7 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 	}
 
 	public void display(GLAutoDrawable drawable) {
+		System.err.println("display");
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 
@@ -96,6 +104,7 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 	}
 
 	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config){
+		System.err.println("paintSandpileGraph");
 		this.graph = graph;
 		this.vertexLocations = vertexLocations;
 		this.config = config;

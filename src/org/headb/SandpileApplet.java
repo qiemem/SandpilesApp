@@ -149,7 +149,7 @@ public class SandpileApplet extends javax.swing.JApplet {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         sandpileViewScrollPane = new javax.swing.JScrollPane();
-        sandpileViewPanel = new SandpilePanel();
+        sandpileViewPanel = new SandpileController();
 
         jLabel9.setText("Border:"); // NOI18N
 
@@ -1023,7 +1023,7 @@ public class SandpileApplet extends javax.swing.JApplet {
     private javax.swing.JCheckBox repaintCheckBox;
     private javax.swing.JToggleButton runButton;
     private javax.swing.JComboBox sBorderComboBox;
-    private SandpilePanel sandpileViewPanel;
+    private SandpileController sandpileViewPanel;
     private javax.swing.JScrollPane sandpileViewScrollPane;
     private javax.swing.JSlider scaleSlider;
     private javax.swing.JTextField scaleTextField;

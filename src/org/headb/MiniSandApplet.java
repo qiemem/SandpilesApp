@@ -39,7 +39,7 @@ public class MiniSandApplet extends javax.swing.JApplet {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        sandpilePanel1 = new SandpilePanel();
+        sandpilePanel1 = new SandpileController();
 
         sandpilePanel1.setPreferredSize(new java.awt.Dimension(400, 400));
 
@@ -68,7 +68,7 @@ public class MiniSandApplet extends javax.swing.JApplet {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private SandpilePanel sandpilePanel1;
+    private SandpileController sandpilePanel1;
     // End of variables declaration//GEN-END:variables
 
 }

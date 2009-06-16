@@ -42,7 +42,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
-public class SandpilePanel extends JPanel implements ActionListener, Serializable, Runnable {
+public class SandpileController extends JPanel implements ActionListener, Serializable, Runnable {
 
 	public static final int ADD_VERT_STATE = 0;
 	public static final int DEL_VERT_STATE = 1;
@@ -78,11 +78,17 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 
 	private SandpileDrawer drawer;
 
-	public SandpilePanel() {
+	public SandpileController() {
+		drawer = new SandpileGLDrawer();
 		initWithSandpileGraph(new SandpileGraph());
 	}
 
-	public SandpilePanel(SandpileGraph sg) {
+	public SandpileController(SandpileDrawer d) {
+		drawer = d;
+		initWithSandpileGraph(new SandpileGraph());
+	}
+
+	public SandpileController(SandpileGraph sg) {
 		initWithSandpileGraph(sg);
 	}
 
@@ -93,11 +99,10 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		edges = new ArrayList<HashSet<Integer>>();
 		currentConfig = new SandpileConfiguration();
 
-		drawer = new SandpileGLDrawer();
 		Canvas canvas = drawer.getCanvas();
 		canvas.setPreferredSize(this.getSize());
 		this.add(drawer.getCanvas());
-		canvas.setVisible(true);
+		//canvas.setVisible(true);
 
 		selectedVertex = -1;
 		addMouseListener(new MouseInputAdapter() {
@@ -274,7 +279,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		//Graphics2D g2 = (Graphics2D) g;
 		Graphics g2 = g;
 		super.paintComponent(g2);
-		drawer.paintSandpileGraph(sg, vertexData, currentConfig);
+		//drawer.paintSandpileGraph(sg, vertexData, currentConfig);
 		/*
 		if (drawEdges) {
 			for (int e1 = 0; e1 < edges.size(); e1++) {
