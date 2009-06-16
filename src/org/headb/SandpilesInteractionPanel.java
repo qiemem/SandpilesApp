@@ -578,6 +578,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        canvas.setPreferredSize(new java.awt.Dimension(1,1));
         canvas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 canvasMouseReleased(evt);
