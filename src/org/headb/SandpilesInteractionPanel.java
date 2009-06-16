@@ -18,7 +18,6 @@ package org.headb;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import javax.swing.Timer;
-import java.awt.Dimension;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -80,7 +79,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        sandpileViewScrollPane = new javax.swing.JScrollPane();
         makeHoneycombOptionsPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         makeHoneycombBorderComboBox = new javax.swing.JComboBox();
@@ -132,6 +130,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         editGraphButtonGroup = new javax.swing.ButtonGroup();
         jSplitPane1 = new javax.swing.JSplitPane();
+        sandpileViewScrollPane = new javax.swing.JScrollPane();
+        canvas = new javax.media.opengl.GLCanvas();
         controlPanel = new javax.swing.JPanel();
         runButton = new javax.swing.JToggleButton();
         delaySlider = new javax.swing.JSlider();
@@ -148,11 +148,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         scaleSlider = new javax.swing.JSlider();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        canvas = new javax.media.opengl.GLCanvas();
-
-        sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         jLabel9.setText("Border:"); // NOI18N
 
@@ -580,15 +575,21 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
         jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setOneTouchExpandable(true);
 
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
-=======
         sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                canvasMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canvasMouseClicked(evt);
+            }
+        });
         sandpileViewScrollPane.setViewportView(canvas);
 
         jSplitPane1.setLeftComponent(sandpileViewScrollPane);
 
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
         runButton.setText("Run"); // NOI18N
         runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -776,44 +777,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 
         jSplitPane1.setRightComponent(controlPanel);
 
-        jPanel1.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                jPanel1ComponentResized(evt);
-            }
-        });
-
-        canvas.setRealized(false);
-        canvas.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                canvasComponentResized(evt);
-            }
-        });
-        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                canvasMouseReleased(evt);
-            }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                canvasMouseClicked(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 451, Short.MAX_VALUE)
-            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 636, Short.MAX_VALUE)
-            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE))
-        );
-
-        jSplitPane1.setLeftComponent(jPanel1);
-
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -903,11 +866,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 
 	private void scaleSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_scaleSliderStateChanged
 		double scale = (double)scaleSlider.getValue()/100.0;
-		sandpileViewPanel.setScale(scale);
-		//sandpileViewScrollPane.
-		//sandpileViewScrollPane.setLocation((int)(sandpileViewScrollPane.getX()*scale) , (int)(sandpileViewScrollPane.getY()*scale));
-		//sandpileViewPanel.setPreferredSize(new java.awt.Dimension((int)(sandpileViewPanel.getPreferredSize().getWidth()*scale), (int)(sandpileViewPanel.getPreferredSize().getWidth()*scale)));
-		//sandpileViewScrollPane.repaint();
 }//GEN-LAST:event_scaleSliderStateChanged
 
 	private void makeHoneycombBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHoneycombBorderComboBoxActionPerformed
@@ -981,23 +939,23 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_setConfigButtonActionPerformed
 
 	private void repaintCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintCheckBoxActionPerformed
-		sandpileViewPanel.setRepaint(repaintCheckBox.isSelected() );
+		//sandpileViewPanel.setRepaint(repaintCheckBox.isSelected() );
 }//GEN-LAST:event_repaintCheckBoxActionPerformed
 
 	private void colorCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorCheckBoxActionPerformed
-		sandpileViewPanel.setColor(colorCheckBox.isSelected());
+		//sandpileViewPanel.setColor(colorCheckBox.isSelected());
 }//GEN-LAST:event_colorCheckBoxActionPerformed
 
 	private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelsCheckBoxActionPerformed
-		sandpileViewPanel.setLabels(labelsCheckBox.isSelected());
+		//sandpileViewPanel.setLabels(labelsCheckBox.isSelected());
 }//GEN-LAST:event_labelsCheckBoxActionPerformed
 
 	private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changingNodeSizeCheckBoxActionPerformed
-		sandpileViewPanel.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
+		//sandpileViewPanel.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
 }//GEN-LAST:event_changingNodeSizeCheckBoxActionPerformed
 
 	private void drawEdgesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawEdgesCheckBoxActionPerformed
-		sandpileViewPanel.setDrawEdges(drawEdgesCheckBox.isSelected());
+		//sandpileViewPanel.setDrawEdges(drawEdgesCheckBox.isSelected());
 }//GEN-LAST:event_drawEdgesCheckBoxActionPerformed
 
 	private void sandpileViewPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseClicked
@@ -1005,32 +963,28 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_sandpileViewPanelMouseClicked
 
 	private void sandpileViewPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseReleased
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+}//GEN-LAST:event_sandpileViewPanelMouseReleased
+
+	private void repaintAllCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintAllCheckBoxActionPerformed
+		//this.sandpileViewPanel.setRepaintAll(this.repaintAllCheckBox.isSelected());
+	}//GEN-LAST:event_repaintAllCheckBoxActionPerformed
+
+	private void useBufferedImagesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBufferedImagesCheckBoxActionPerformed
+		//this.sandpileViewPanel.setUseBufferedImages(this.useBufferedImagesCheckBox.isSelected());
+	}//GEN-LAST:event_useBufferedImagesCheckBoxActionPerformed
+
+	private void printFPSCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSCheckBoxActionPerformed
+		//this.sandpileViewPanel.setOutputFPS(this.printFPSCheckBox.isSelected());
+	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
+
+	private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
+				this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String currentState = (String) controlStateComboBox.getSelectedItem();
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
 		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
 		float x = coords[0];
 		float y = coords[1];
 		System.err.println(x+" and "+y);
-=======
-		int x = evt.getX();
-		int y = evt.getY();
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
-=======
-		int x = evt.getX();
-		int y = evt.getY();
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
-=======
-		int x = evt.getX();
-		int y = evt.getY();
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
-=======
-		int x = evt.getX();
-		int y = evt.getY();
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
 		if(currentState.equals(MAKE_GRID_STATE)){
 			sandpileViewPanel.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
 					nBorderComboBox.getSelectedIndex(),
@@ -1070,40 +1024,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-}//GEN-LAST:event_sandpileViewPanelMouseReleased
-
-	private void repaintAllCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintAllCheckBoxActionPerformed
-		this.sandpileViewPanel.setRepaintAll(this.repaintAllCheckBox.isSelected());
-	}//GEN-LAST:event_repaintAllCheckBoxActionPerformed
-
-	private void useBufferedImagesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBufferedImagesCheckBoxActionPerformed
-		this.sandpileViewPanel.setUseBufferedImages(this.useBufferedImagesCheckBox.isSelected());
-	}//GEN-LAST:event_useBufferedImagesCheckBoxActionPerformed
-
-	private void printFPSCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSCheckBoxActionPerformed
-		this.sandpileViewPanel.setOutputFPS(this.printFPSCheckBox.isSelected());
-	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
-<<<<<<< HEAD:src/org/headb/SandpilesInteractionPanel.java
+	}//GEN-LAST:event_canvasMouseClicked
 
 	private void canvasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseReleased
 		// TODO add your handling code here:
 	}//GEN-LAST:event_canvasMouseReleased
-
-	private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel1ComponentResized
-		// TODO add your handling code here:
-	}//GEN-LAST:event_jPanel1ComponentResized
-
-	private void canvasComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_canvasComponentResized
-		// TODO add your handling code here:
-	}//GEN-LAST:event_canvasComponentResized
-=======
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
-=======
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
-=======
->>>>>>> 98d0cde... Converted SandpileController to float coordinates and continued converting it to a controller. Trying to get vertices to show up.:src/org/headb/SandpilesInteractionPanel.java
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1148,7 +1073,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JCheckBox labelsCheckBox;

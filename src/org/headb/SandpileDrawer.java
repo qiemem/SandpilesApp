@@ -15,4 +15,5 @@ import java.util.List;
 public interface SandpileDrawer{
 	public Canvas getCanvas();
 	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config);
+	public float[] transformCanvasCoords(int x, int y);
 }
