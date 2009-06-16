@@ -10,12 +10,15 @@ import javax.media.opengl.glu.GLU;
 import com.sun.opengl.util.Animator;
 import java.awt.Canvas;
 import java.util.List;
+import java.util.ArrayList;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
  * @author headb
  */
-public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
+public class SandpileGLDrawer extends MouseInputAdapter implements SandpileDrawer, GLEventListener{
 	private GLCanvas canvas;
 
 	private List<float[]> vertexLocations;
@@ -28,6 +31,7 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
 		canvas.addGLEventListener(this);
+		canvas.addMouseListener(this);
 	}
 
 	public SandpileGLDrawer(GLCanvas canvas) {
@@ -111,5 +115,19 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 		this.vertexLocations = vertexLocations;
 		this.config = config;
 		canvas.display();
+	}
+
+	private float[] transformCanvasCoords(int x, int y){
+		float topLeftX = originX - width/2f;
+		float topLeftY = originY + height/2f;
+		float widthScale = width/(float)canvas.getWidth();
+		float heightScale = height/(float)canvas.getHeight();
+		float[] coords = {topLeftX + x*widthScale,topLeftY - y*heightScale};
+		return coords;
+	}
+
+	@Override public void mousePressed(MouseEvent e){
+		float[] coords = transformCanvasCoords(e.getX(), e.getY());
+		System.err.println(coords[0]+" "+coords[1]);
 	}
 }
