@@ -26,7 +26,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private SandpileGraph graph = new SandpileGraph();
 	private SandpileConfiguration config = new SandpileConfiguration();
 	private int selectedVertex = -1;
-	private float originX = 0.0f,  originY = 0.0f,  width = 500.0f,  height = 500.0f;
+	private float originX = 0.0f,  originY = 0.0f,  width = 200.0f,  height = 200.0f;
 	private int canvasX,  canvasY,  canvasW,  canvasH;
 	private boolean needsReshape = true;
 	private float mouseX = 0f,  mouseY = 0f;
@@ -92,13 +92,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
 		}
-		//GLU glu = new GLU();
+		GLU glu = new GLU();
 		// Clear the drawing area
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		// Reset the current matrix to the "identity"
 		gl.glLoadIdentity();
 		drawEdges(gl);
-		drawVertices(gl);
+		drawVertices(gl,glu);
 		drawSelected(gl);
 
 		gl.glFlush();
@@ -114,7 +114,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float dx = vertexLocations.get(dest)[0];
 				float dy = vertexLocations.get(dest)[1];
 				//Only draw the edges that aren't covered by vertices
-				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) < vertSize * 2) {
+				if(Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f) {
 					gl.glVertex2f(sx, sy);
 					gl.glVertex2f(dx, dy);
 				}
@@ -123,14 +123,16 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.glEnd();
 	}
 
-	private void drawVertices(GL gl) {
+	private void drawVertices(GL gl, GLU glu) {
 		gl.glBegin(gl.GL_QUADS);
 		for (int vert = 0; vert < vertexLocations.size(); vert++) {
 			float x = vertexLocations.get(vert)[0];
 			float y = vertexLocations.get(vert)[1];
 			setColorForVertex(gl, config.get(vert));
 			//GLUquadric quadric = glu.gluNewQuadric();
+			//gl.glTranslatef(x, y, 0f);
 			//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
+			//gl.glLoadIdentity();
 			gl.glVertex2f(x - vertSize, y + vertSize);
 			gl.glVertex2f(x + vertSize, y + vertSize);
 			gl.glVertex2f(x + vertSize, y - vertSize);

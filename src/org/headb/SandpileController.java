@@ -77,11 +77,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		Canvas canvas = drawer.getCanvas();
 
 		selectedVertex = -1;
-		canvas.addMouseListener(new MouseInputAdapter() {
-
+		canvas.addMouseListener(new MouseInputAdapter() {/*
 			@Override
-			public void mouseReleased(MouseEvent evt) {
-
+			public void mouseClicked(MouseEvent evt) { 
 				int x = evt.getX();
 				int y = evt.getY();
 				int touchVert = touchingVertex(x, y);
@@ -89,20 +87,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 					selectedVertex = -1;
 				}
 				repaint();
-			}
-
-			@Override
-			public void mouseDragged(MouseEvent evt) {
-				System.out.println("Mouse drag");
-				int x = evt.getX();
-				int y = evt.getY();
-
-				int touchVert = touchingVertex(x, y);
-				if (touchVert >= 0) {
-					vertexData.get(touchVert)[0] = x;
-					vertexData.get(touchVert)[1] = y;
-				}
-			}
+			}*/
 		});
 	}
 
