@@ -577,6 +577,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 
         sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canvasMouseClicked(evt);
+            }
+        });
         sandpileViewScrollPane.setViewportView(canvas);
 
         jSplitPane1.setLeftComponent(sandpileViewScrollPane);
@@ -857,11 +863,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 
 	private void scaleSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_scaleSliderStateChanged
 		double scale = (double)scaleSlider.getValue()/100.0;
-		sandpileViewPanel.setScale(scale);
-		//sandpileViewScrollPane.
-		//sandpileViewScrollPane.setLocation((int)(sandpileViewScrollPane.getX()*scale) , (int)(sandpileViewScrollPane.getY()*scale));
-		//sandpileViewPanel.setPreferredSize(new java.awt.Dimension((int)(sandpileViewPanel.getPreferredSize().getWidth()*scale), (int)(sandpileViewPanel.getPreferredSize().getWidth()*scale)));
-		//sandpileViewScrollPane.repaint();
 }//GEN-LAST:event_scaleSliderStateChanged
 
 	private void makeHoneycombBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHoneycombBorderComboBoxActionPerformed
@@ -935,23 +936,23 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_setConfigButtonActionPerformed
 
 	private void repaintCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintCheckBoxActionPerformed
-		sandpileViewPanel.setRepaint(repaintCheckBox.isSelected() );
+		//sandpileViewPanel.setRepaint(repaintCheckBox.isSelected() );
 }//GEN-LAST:event_repaintCheckBoxActionPerformed
 
 	private void colorCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorCheckBoxActionPerformed
-		sandpileViewPanel.setColor(colorCheckBox.isSelected());
+		//sandpileViewPanel.setColor(colorCheckBox.isSelected());
 }//GEN-LAST:event_colorCheckBoxActionPerformed
 
 	private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelsCheckBoxActionPerformed
-		sandpileViewPanel.setLabels(labelsCheckBox.isSelected());
+		//sandpileViewPanel.setLabels(labelsCheckBox.isSelected());
 }//GEN-LAST:event_labelsCheckBoxActionPerformed
 
 	private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changingNodeSizeCheckBoxActionPerformed
-		sandpileViewPanel.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
+		//sandpileViewPanel.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
 }//GEN-LAST:event_changingNodeSizeCheckBoxActionPerformed
 
 	private void drawEdgesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawEdgesCheckBoxActionPerformed
-		sandpileViewPanel.setDrawEdges(drawEdgesCheckBox.isSelected());
+		//sandpileViewPanel.setDrawEdges(drawEdgesCheckBox.isSelected());
 }//GEN-LAST:event_drawEdgesCheckBoxActionPerformed
 
 	private void sandpileViewPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseClicked
@@ -959,10 +960,27 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_sandpileViewPanelMouseClicked
 
 	private void sandpileViewPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseReleased
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+}//GEN-LAST:event_sandpileViewPanelMouseReleased
+
+	private void repaintAllCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintAllCheckBoxActionPerformed
+		//this.sandpileViewPanel.setRepaintAll(this.repaintAllCheckBox.isSelected());
+	}//GEN-LAST:event_repaintAllCheckBoxActionPerformed
+
+	private void useBufferedImagesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBufferedImagesCheckBoxActionPerformed
+		//this.sandpileViewPanel.setUseBufferedImages(this.useBufferedImagesCheckBox.isSelected());
+	}//GEN-LAST:event_useBufferedImagesCheckBoxActionPerformed
+
+	private void printFPSCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSCheckBoxActionPerformed
+		//this.sandpileViewPanel.setOutputFPS(this.printFPSCheckBox.isSelected());
+	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
+
+	private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
+				this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String currentState = (String) controlStateComboBox.getSelectedItem();
-		int x = evt.getX();
-		int y = evt.getY();
+		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
+		float x = coords[0];
+		float y = coords[1];
 		if(currentState.equals(MAKE_GRID_STATE)){
 			sandpileViewPanel.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
 					nBorderComboBox.getSelectedIndex(),
@@ -1002,19 +1020,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel {
 			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-}//GEN-LAST:event_sandpileViewPanelMouseReleased
-
-	private void repaintAllCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintAllCheckBoxActionPerformed
-		this.sandpileViewPanel.setRepaintAll(this.repaintAllCheckBox.isSelected());
-	}//GEN-LAST:event_repaintAllCheckBoxActionPerformed
-
-	private void useBufferedImagesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBufferedImagesCheckBoxActionPerformed
-		this.sandpileViewPanel.setUseBufferedImages(this.useBufferedImagesCheckBox.isSelected());
-	}//GEN-LAST:event_useBufferedImagesCheckBoxActionPerformed
-
-	private void printFPSCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSCheckBoxActionPerformed
-		this.sandpileViewPanel.setOutputFPS(this.printFPSCheckBox.isSelected());
-	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
+	}//GEN-LAST:event_canvasMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

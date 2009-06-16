@@ -21,9 +21,9 @@ import java.awt.event.MouseEvent;
 public class SandpileGLDrawer extends MouseInputAdapter implements SandpileDrawer, GLEventListener{
 	private GLCanvas canvas;
 
-	private List<float[]> vertexLocations;
-	private SandpileGraph graph;
-	private SandpileConfiguration config;
+	private List<float[]> vertexLocations = new ArrayList<float[]>();
+	private SandpileGraph graph  = new SandpileGraph();
+	private SandpileConfiguration config = new SandpileConfiguration();
 
 	private float originX=0.0f, originY=0.0f, width=20.0f, height=20.0f;
 
@@ -86,12 +86,20 @@ public class SandpileGLDrawer extends MouseInputAdapter implements SandpileDrawe
         // Reset the current matrix to the "identity"
         gl.glLoadIdentity();
 		gl.glColor3f(1f,0f,0f);
-		gl.glBegin(gl.GL_QUADS);
-			gl.glVertex2f(-1f, 1f);
-			gl.glVertex2f(1f,1f);
-			gl.glVertex2f(1f,-1f);
-			gl.glVertex2f(-1f, -1f);
-		gl.glEnd();
+
+		for(int vert=0; vert<vertexLocations.size();vert++){
+			float x = vertexLocations.get(vert)[0];
+			float y = vertexLocations.get(vert)[1];
+			setColorForVertex(gl,config.get(vert));
+			gl.glTranslatef(x, y, 0f);
+			gl.glBegin(gl.GL_QUADS);
+				gl.glVertex2f(-1f, 1f);
+				gl.glVertex2f(1f,1f);
+				gl.glVertex2f(1f,-1f);
+				gl.glVertex2f(-1f, -1f);
+			gl.glEnd();
+			gl.glLoadIdentity();
+		}
         gl.glFlush();
 	}
 
@@ -117,7 +125,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements SandpileDrawe
 		canvas.display();
 	}
 
-	private float[] transformCanvasCoords(int x, int y){
+	public float[] transformCanvasCoords(int x, int y){
 		float topLeftX = originX - width/2f;
 		float topLeftY = originY + height/2f;
 		float widthScale = width/(float)canvas.getWidth();
@@ -129,5 +137,17 @@ public class SandpileGLDrawer extends MouseInputAdapter implements SandpileDrawe
 	@Override public void mousePressed(MouseEvent e){
 		float[] coords = transformCanvasCoords(e.getX(), e.getY());
 		System.err.println(coords[0]+" "+coords[1]);
+	}
+
+	private void setColorForVertex(GL gl, int sand){
+		switch(sand){
+			case 0: gl.glColor3f(0.2f,0.2f,0.2f); break;
+			case 1: gl.glColor3f(0.0f, 0.0f, 1.0f); break;
+			case 2: gl.glColor3f(0.0f, 1.0f, 1.0f); break;
+			case 3: gl.glColor3f(0.0f, 1.0f, 0.0f); break;
+			case 4: gl.glColor3f(1.0f, 0.0f, 0.0f); break;
+			case 5: gl.glColor3f(1.0f, 1.0f, 0.0f); break;
+			default: gl.glColor3f(1.0f, 1.0f, 1.0f);
+		}
 	}
 }
