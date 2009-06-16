@@ -22,6 +22,8 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 	private SandpileGraph graph;
 	private SandpileConfiguration config;
 
+	private float originX=0.0f, originY=0.0f, width=20.0f, height=20.0f;
+
 
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
@@ -45,7 +47,7 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
         gl.setSwapInterval(1);
 
         // Setup the drawing area and shading mode
-        gl.glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
@@ -53,7 +55,6 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		System.err.println("reshape");
         GL gl = drawable.getGL();
         GLU glu = new GLU();
 
@@ -61,18 +62,18 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 
             height = 1;
 		}
-        final float h = (float) width / (float) height;
+        final float ratio = (float) width / (float) height;
+		this.width = this.height*ratio;
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
         //glu.gluPerspective(45.0f, h, 1.0, 1000.0);
-		glu.gluOrtho2D(-10.0, 10.0, 10.0, -10.0);
+		glu.gluOrtho2D(originX - this.width/2f, originX + this.width/2f, originY - this.height/2f, originY + this.height/2f);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		System.err.println("display");
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 
@@ -86,6 +87,7 @@ public class SandpileGLDrawer implements SandpileDrawer, GLEventListener{
 			gl.glVertex2f(1f,1f);
 			gl.glVertex2f(1f,-1f);
 			gl.glVertex2f(-1f, -1f);
+		gl.glEnd();
         gl.glFlush();
 	}
 
