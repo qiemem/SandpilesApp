@@ -132,9 +132,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         edgeWeightField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         editGraphButtonGroup = new javax.swing.ButtonGroup();
-        jSplitPane1 = new javax.swing.JSplitPane();
         sandpileViewScrollPane = new javax.swing.JScrollPane();
-        canvas = new javax.media.opengl.GLCanvas();
+        jSplitPane1 = new javax.swing.JSplitPane();
         controlPanel = new javax.swing.JPanel();
         runButton = new javax.swing.JToggleButton();
         delaySlider = new javax.swing.JSlider();
@@ -151,6 +150,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         zoomSlider = new javax.swing.JSlider();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        canvas = new javax.media.opengl.GLCanvas();
 
         jLabel9.setText("Border:"); // NOI18N
 
@@ -542,25 +542,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        jSplitPane1.setDividerLocation(600);
-        jSplitPane1.setResizeWeight(1.0);
-        jSplitPane1.setOneTouchExpandable(true);
-
         sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        canvas.setPreferredSize(new java.awt.Dimension(1,1));
-        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                canvasMouseReleased(evt);
-            }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                canvasMouseClicked(evt);
-            }
-        });
-        sandpileViewScrollPane.setViewportView(canvas);
-
-        jSplitPane1.setLeftComponent(sandpileViewScrollPane);
+        jSplitPane1.setDividerLocation(600);
+        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setOneTouchExpandable(true);
 
         runButton.setText("Run"); // NOI18N
         runButton.addActionListener(new java.awt.event.ActionListener() {
@@ -755,6 +742,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         );
 
         jSplitPane1.setRightComponent(controlPanel);
+
+        canvas.setPreferredSize(new java.awt.Dimension(1,1));
+        canvas.setMinimumSize(new java.awt.Dimension(1,1));
+        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                canvasMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canvasMouseClicked(evt);
+            }
+        });
+        jSplitPane1.setLeftComponent(canvas);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -955,7 +954,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
 		float x = coords[0];
 		float y = coords[1];
-		System.err.println(x+" and "+y);
 		if(currentState.equals(MAKE_GRID_STATE)){
 			sandpileController.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
 					nBorderComboBox.getSelectedIndex(),
