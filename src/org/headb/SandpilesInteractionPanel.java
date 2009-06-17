@@ -73,6 +73,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 
 	public void onRepaint(){
 		this.zoomSlider.setValue((int)(drawer.getZoom()*1000));
+		this.centerCoordLabel.setText(drawer.getOriginX()+", "+drawer.getOriginY());
 	}
 
     /** This method is called from within the constructor to
@@ -150,7 +151,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         zoomSlider = new javax.swing.JSlider();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         canvas = new javax.media.opengl.GLCanvas();
+        jLabel13 = new javax.swing.JLabel();
+        centerCoordLabel = new javax.swing.JLabel();
 
         jLabel9.setText("Border:"); // NOI18N
 
@@ -753,7 +757,33 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 canvasMouseClicked(evt);
             }
         });
-        jSplitPane1.setLeftComponent(canvas);
+
+        jLabel13.setText("Center:");
+
+        centerCoordLabel.setText("0.0, 0.0");
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jLabel13)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(centerCoordLabel)
+                .add(388, 388, 388))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel13)
+                    .add(centerCoordLabel)))
+        );
+
+        jSplitPane1.setLeftComponent(jPanel1);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -1013,6 +1043,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JTextField amountOfSandField;
     private javax.swing.JPanel blankOptionsPanel;
     private javax.media.opengl.GLCanvas canvas;
+    private javax.swing.JLabel centerCoordLabel;
     private javax.swing.JCheckBox changingNodeSizeCheckBox;
     private javax.swing.JButton clearSandButton;
     private javax.swing.JPanel configManagerOptionsPanel;
@@ -1037,6 +1068,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1045,6 +1077,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JCheckBox labelsCheckBox;
