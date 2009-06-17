@@ -4,7 +4,6 @@ package org.headb;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author headb
@@ -23,9 +22,12 @@ import java.util.ArrayList;
 import java.awt.Canvas;
 
 public class SandpileController implements ActionListener, Serializable, Runnable {
-	private float VERT_RADIUS = 1.0f;
 
-	private long delay = 0;
+	private float VERT_RADIUS = 1.0f;
+	private long minUpdateDelay = 0;
+	private long lastUpdateTime = 0;
+	private long minRepaintDelay = 33;
+	private long lastRepaintTime = 0;
 	private SandpileGraph sg;
 	ArrayList<float[]> vertexData;
 	private int selectedVertex;
@@ -44,7 +46,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		initWithSandpileGraph(new SandpileGraph());
 	}
 
-	public SandpileController(SandpileDrawer d,SandpileGraph sg) {
+	public SandpileController(SandpileDrawer d, SandpileGraph sg) {
 		initWithSandpileGraph(sg);
 	}
 
@@ -60,19 +62,27 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		canvas.addMouseListener(new MouseInputAdapter() {/*
 			@Override
 			public void mouseClicked(MouseEvent evt) { 
-				int x = evt.getX();
-				int y = evt.getY();
-				int touchVert = touchingVertex(x, y);
-				if (touchVert < 0) {
-					selectedVertex = -1;
-				}
-				repaint();
+			int x = evt.getX();
+			int y = evt.getY();
+			int touchVert = touchingVertex(x, y);
+			if (touchVert < 0) {
+			selectedVertex = -1;
+			}
+			repaint();
 			}*/
+
 		});
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-		update();
+		if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+			lastUpdateTime = System.currentTimeMillis();
+			this.update();
+		}
+		if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay) {
+			lastRepaintTime = System.currentTimeMillis();
+			this.repaint();
+		}
 	}
 
 	/**
@@ -80,28 +90,18 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	 */
 	public void update() {
 		SandpileConfiguration nextConfig = sg.updateConfig(currentConfig);
-		repaint();/*
-		if (repaintAll) {
-			repaint();
-		} else {
-			for (int i = 0; i < currentConfig.size(); i++) {
-				if (nextConfig.get(i) != currentConfig.get(i)) {
-					float[] v = vertexData.get(i);
-					this.repaint(scaleCoordinate(v[0] - VERT_RADIUS), scaleCoordinate(v[1] - VERT_RADIUS), scaleCoordinate(VERT_RADIUS * 2), scaleCoordinate(VERT_RADIUS * 2));
-				}
-			}
-		//System.out.println(count);
-		}*/
 		currentConfig = nextConfig;
 	}
 
 	public void run() {
 		while (!Thread.interrupted()) {
-			this.update();
-			try {
-				Thread.sleep(delay);
-			} catch (InterruptedException e) {
-				return;
+			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+				lastUpdateTime = System.currentTimeMillis();
+				this.update();
+			}
+			if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay) {
+				lastRepaintTime = System.currentTimeMillis();
+				this.repaint();
 			}
 		}
 	}
@@ -573,7 +573,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	//public void setControlState(int controlState) {
 	//curState = controlState;
 	//}
-
 	public void setToMaxStableConfig() {
 		currentConfig = sg.getMaxConfig();
 		repaint();
@@ -668,10 +667,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < vertexData.size(); i++) {
 			float[] v = vertexData.get(i);/*
 			if (Math.sqrt((x - v[0]) * (x - v[0]) + (y - v[1]) * (y - v[1])) <= VERT_RADIUS) {
-				return i;
+			return i;
 			}*/
-			if((v[0]-VERT_RADIUS)<=x && v[0]+VERT_RADIUS>=x&&(v[1]-VERT_RADIUS)<=y && v[1]+VERT_RADIUS>=y)
+			if ((v[0] - VERT_RADIUS) <= x && v[0] + VERT_RADIUS >= x && (v[1] - VERT_RADIUS) <= y && v[1] + VERT_RADIUS >= y) {
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -753,5 +753,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			System.err.println("Caught IOException while trying to save graph: " + e.getMessage());
 		}
 		repaint();
+	}
+
+	public void setMinRepaintDelay(long delay) {
+		minRepaintDelay = delay;
+	}
+	public void setMinUpdateDelay(long delay) {
+		minUpdateDelay = delay;
 	}
 }

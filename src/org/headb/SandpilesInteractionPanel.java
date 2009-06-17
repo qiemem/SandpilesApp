@@ -53,7 +53,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		drawer.addRepaintListener(this);
 
 		runTimer = new Timer(0,sandpileController);
-		runTimer.setDelay(delaySlider.getValue());
+		runTimer.setDelay(0);
+		sandpileController.setMinUpdateDelay(delaySlider.getValue());
 		CardLayout cl = (CardLayout)(optionsContainerPanel.getLayout());
 		//cl.show(optionsContainerPanel, (String)evt.getItem());
 		String currentState =  (String) controlStateComboBox.getSelectedItem();
@@ -766,12 +767,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
             .add(jPanel1Layout.createSequentialGroup()
-                .add(jLabel13)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(centerCoordLabel)
-                .add(388, 388, 388))
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(jLabel13)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(centerCoordLabel))
+                    .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -789,7 +792,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 727, Short.MAX_VALUE)
+            .add(jSplitPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -803,7 +806,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		return this.sandpileController;
 	}
 	private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
-		runTimer.setDelay( delaySlider.getValue());
+		//runTimer.setDelay( delaySlider.getValue());
+		sandpileController.setMinUpdateDelay(delaySlider.getValue());
 		if(runTimer.isRunning()){
 			runTimer.stop();
 		}else{
@@ -823,7 +827,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 }//GEN-LAST:event_runButtonActionPerformed
 
 	private void delaySliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySliderStateChanged
-		runTimer.setDelay(delaySlider.getValue());
+		sandpileController.setMinUpdateDelay(delaySlider.getValue());
 		//sandpileController.setDelay(delaySlider.getValue());
 }//GEN-LAST:event_delaySliderStateChanged
 
