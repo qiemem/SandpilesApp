@@ -666,10 +666,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	private int touchingVertex(float x, float y) {
 		for (int i = 0; i < vertexData.size(); i++) {
-			float[] v = vertexData.get(i);
+			float[] v = vertexData.get(i);/*
 			if (Math.sqrt((x - v[0]) * (x - v[0]) + (y - v[1]) * (y - v[1])) <= VERT_RADIUS) {
 				return i;
-			}
+			}*/
+			if((v[0]-VERT_RADIUS)<=x && v[0]+VERT_RADIUS>=x&&(v[1]-VERT_RADIUS)<=y && v[1]+VERT_RADIUS>=y)
+				return i;
 		}
 		return -1;
 	}
