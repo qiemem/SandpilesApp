@@ -1,0 +1,4 @@
+SandpilesApp contains a NetBeans project with the current code. The current build can be found in SandpilesApp/dist-[your system]. To run, use "java -jar SandpileApp.jar" from a command line, or just double click on SandpileApp.jar. For FPS output, you must run from the command line, since it prints the FPS to command line right now. 
+
+To move around the graph editing canvas, simply click and drag. To zoom, one may either use the mouse wheel or the zoom slider on the control panel. The coordinates of the center of the canvas are shown on the bottom left of the app.
+
