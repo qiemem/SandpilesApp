@@ -137,6 +137,19 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         eBorderComboBox = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         wBorderComboBox = new javax.swing.JComboBox();
+        makeHexGridOptionsPanel = new javax.swing.JPanel();
+        gridSizeLabel1 = new javax.swing.JLabel();
+        hexGridRowsField = new javax.swing.JTextField();
+        gridSizeCrossLabel1 = new javax.swing.JLabel();
+        hexGridColsField = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        hexNBorderComboBox = new javax.swing.JComboBox();
+        jLabel15 = new javax.swing.JLabel();
+        hexSBorderComboBox = new javax.swing.JComboBox();
+        jLabel16 = new javax.swing.JLabel();
+        hexEBorderComboBox = new javax.swing.JComboBox();
+        jLabel17 = new javax.swing.JLabel();
+        hexWBorderComboBox = new javax.swing.JComboBox();
         visualOptionsPanel = new javax.swing.JPanel();
         repaintCheckBox = new javax.swing.JCheckBox();
         labelsCheckBox = new javax.swing.JCheckBox();
@@ -208,12 +221,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        setPreferredSize(new java.awt.Dimension(900, 651));
+        setPreferredSize(new java.awt.Dimension(1024, 768));
         setRequestFocusEnabled(false);
 
         jSplitPane1.setDividerLocation(270);
         jSplitPane1.setDividerSize(8);
         jSplitPane1.setOneTouchExpandable(true);
+        jSplitPane1.setPreferredSize(new java.awt.Dimension(996, 800));
 
         quitButton.setText("Quit"); // NOI18N
         quitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -551,6 +565,126 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         );
 
         optionsTabbedPane.addTab(MAKE_GRID_STATE, makeGridOptionsPanel);
+
+        gridSizeLabel1.setText("Grid Size:"); // NOI18N
+
+        hexGridRowsField.setText("5"); // NOI18N
+        hexGridRowsField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexGridRowsFieldActionPerformed(evt);
+            }
+        });
+        hexGridRowsField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                hexGridRowsFieldPropertyChange(evt);
+            }
+        });
+
+        gridSizeCrossLabel1.setText("X"); // NOI18N
+
+        hexGridColsField.setText("5"); // NOI18N
+        hexGridColsField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexGridColsFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("N Border:"); // NOI18N
+
+        hexNBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
+        hexNBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexNBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("S Border:"); // NOI18N
+
+        hexSBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
+        hexSBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexSBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("E Border:"); // NOI18N
+
+        hexEBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
+        hexEBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexEBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("W Border:"); // NOI18N
+
+        hexWBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
+        hexWBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexWBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout makeHexGridOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(makeHexGridOptionsPanel);
+        makeHexGridOptionsPanel.setLayout(makeHexGridOptionsPanelLayout);
+        makeHexGridOptionsPanelLayout.setHorizontalGroup(
+            makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(makeHexGridOptionsPanelLayout.createSequentialGroup()
+                .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(makeHexGridOptionsPanelLayout.createSequentialGroup()
+                        .add(gridSizeLabel1)
+                        .add(2, 2, 2)
+                        .add(hexGridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(gridSizeCrossLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(hexGridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(makeHexGridOptionsPanelLayout.createSequentialGroup()
+                        .add(jLabel15)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(hexSBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(makeHexGridOptionsPanelLayout.createSequentialGroup()
+                        .add(jLabel14)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(hexNBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(makeHexGridOptionsPanelLayout.createSequentialGroup()
+                        .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel16)
+                            .add(jLabel17))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(hexWBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(hexEBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .add(37, 37, 37))
+        );
+        makeHexGridOptionsPanelLayout.setVerticalGroup(
+            makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(makeHexGridOptionsPanelLayout.createSequentialGroup()
+                .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(gridSizeLabel1)
+                    .add(hexGridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(gridSizeCrossLabel1)
+                    .add(hexGridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel14)
+                    .add(hexNBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel15)
+                    .add(hexSBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel16)
+                    .add(hexEBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel17)
+                    .add(hexWBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(416, Short.MAX_VALUE))
+        );
+
+        optionsTabbedPane.addTab(MAKE_HEX_GRID_STATE, makeHexGridOptionsPanel);
 
         repaintCheckBox.setSelected(true);
         repaintCheckBox.setText("Repaint"); // NOI18N
@@ -990,11 +1124,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 					eBorderComboBox.getSelectedIndex(),
 					wBorderComboBox.getSelectedIndex());
 		}else if(currentState.equals(MAKE_HEX_GRID_STATE)){
-			sandpileController.makeHexGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
-					nBorderComboBox.getSelectedIndex(),
-					sBorderComboBox.getSelectedIndex(),
-					eBorderComboBox.getSelectedIndex(),
-					wBorderComboBox.getSelectedIndex());
+			sandpileController.makeHexGrid(Integer.valueOf(hexGridRowsField.getText()), Integer.valueOf(hexGridColsField.getText()), x, y,
+					hexNBorderComboBox.getSelectedIndex(),
+					hexSBorderComboBox.getSelectedIndex(),
+					hexEBorderComboBox.getSelectedIndex(),
+					hexWBorderComboBox.getSelectedIndex());
 		}else if(currentState.equals(EDIT_GRAPH_STATE)) {
 			if(editGraphButtonGroup.isSelected(addVertexRadioButton.getModel())){
 				sandpileController.addVertexControl(x,y);
@@ -1038,6 +1172,34 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		sandpileController.repaint();
 }//GEN-LAST:event_addRandomSandButtonActionPerformed
 
+	private void hexGridRowsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexGridRowsFieldActionPerformed
+		// TODO add your handling code here:
+}//GEN-LAST:event_hexGridRowsFieldActionPerformed
+
+	private void hexGridRowsFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_hexGridRowsFieldPropertyChange
+		// TODO add your handling code here:
+}//GEN-LAST:event_hexGridRowsFieldPropertyChange
+
+	private void hexGridColsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexGridColsFieldActionPerformed
+		// TODO add your handling code here:
+}//GEN-LAST:event_hexGridColsFieldActionPerformed
+
+	private void hexNBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexNBorderComboBoxActionPerformed
+		// TODO add your handling code here:
+}//GEN-LAST:event_hexNBorderComboBoxActionPerformed
+
+	private void hexSBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexSBorderComboBoxActionPerformed
+		// TODO add your handling code here:
+}//GEN-LAST:event_hexSBorderComboBoxActionPerformed
+
+	private void hexEBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexEBorderComboBoxActionPerformed
+		// TODO add your handling code here:
+}//GEN-LAST:event_hexEBorderComboBoxActionPerformed
+
+	private void hexWBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexWBorderComboBoxActionPerformed
+		// TODO add your handling code here:
+}//GEN-LAST:event_hexWBorderComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConfigButton;
@@ -1069,12 +1231,24 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JTextField gridColsField;
     private javax.swing.JTextField gridRowsField;
     private javax.swing.JLabel gridSizeCrossLabel;
+    private javax.swing.JLabel gridSizeCrossLabel1;
     private javax.swing.JLabel gridSizeLabel;
+    private javax.swing.JLabel gridSizeLabel1;
+    private javax.swing.JComboBox hexEBorderComboBox;
+    private javax.swing.JTextField hexGridColsField;
+    private javax.swing.JTextField hexGridRowsField;
+    private javax.swing.JComboBox hexNBorderComboBox;
+    private javax.swing.JComboBox hexSBorderComboBox;
+    private javax.swing.JComboBox hexWBorderComboBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1093,6 +1267,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JCheckBox labelsCheckBox;
     private javax.swing.JPanel makeGridOptionsPanel;
+    private javax.swing.JPanel makeHexGridOptionsPanel;
     private javax.swing.JComboBox makeHoneycombBorderComboBox;
     private javax.swing.JPanel makeHoneycombOptionsPanel;
     private javax.swing.JTextField makeHoneycombRadiusField;
