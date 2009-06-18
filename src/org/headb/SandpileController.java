@@ -660,6 +660,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void addSandToRandom(int amount){
+		if(currentConfig.isEmpty())	return;
 		int v = (int)(Math.random()*currentConfig.size());
 		addSand(v, amount);
 	}
