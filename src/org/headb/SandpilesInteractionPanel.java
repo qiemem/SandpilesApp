@@ -117,6 +117,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         setSandRadioButton = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
         amountOfSandField = new javax.swing.JTextField();
+        addRandomSandButton = new javax.swing.JButton();
         visualOptionsPanel = new javax.swing.JPanel();
         repaintCheckBox = new javax.swing.JCheckBox();
         labelsCheckBox = new javax.swing.JCheckBox();
@@ -331,6 +332,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             .add(0, 17, Short.MAX_VALUE)
         );
 
+        configManagerOptionsPanel.setPreferredSize(new java.awt.Dimension(200, 600));
+
         configSelectList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, DUAL_CONFIG, ONES_CONFIG };
             public int getSize() { return strings.length; }
@@ -368,54 +371,67 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 
         amountOfSandField.setText("1"); // NOI18N
 
+        addRandomSandButton.setText("Add Random");
+        addRandomSandButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addRandomSandButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout configManagerOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(configManagerOptionsPanel);
         configManagerOptionsPanel.setLayout(configManagerOptionsPanelLayout);
         configManagerOptionsPanelLayout.setHorizontalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
-            .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                .add(addConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 67, Short.MAX_VALUE)
-                .add(setConfigButton))
-            .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                .add(jLabel7)
-                .addContainerGap())
-            .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                .add(addSandRadioButton)
-                .addContainerGap())
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(setSandRadioButton)
                     .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                        .add(jLabel8)
-                        .add(18, 18, 18)
-                        .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(103, Short.MAX_VALUE))
-            .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                .add(removeSandRadioButton)
+                        .add(addConfigButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 102, Short.MAX_VALUE)
+                        .add(setConfigButton))
+                    .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                        .add(setSandRadioButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 167, Short.MAX_VALUE))
+                    .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                        .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel7)
+                            .add(addSandRadioButton)
+                            .add(removeSandRadioButton))
+                        .add(43, 43, 43)
+                        .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel8))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 40, Short.MAX_VALUE)))
                 .addContainerGap())
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(addRandomSandButton)
+                .addContainerGap(111, Short.MAX_VALUE))
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 95, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(addConfigButton)
                     .add(setConfigButton))
                 .add(18, 18, 18)
-                .add(jLabel7)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(addSandRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(removeSandRadioButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(setSandRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel8)
+                    .add(jLabel7)
+                    .add(jLabel8))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                        .add(addSandRadioButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(removeSandRadioButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(setSandRadioButton))
                     .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(addRandomSandButton)
+                .addContainerGap(124, Short.MAX_VALUE))
         );
 
         repaintCheckBox.setSelected(true);
@@ -551,6 +567,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         jSplitPane1.setDividerLocation(600);
+        jSplitPane1.setDividerSize(8);
         jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setOneTouchExpandable(true);
 
@@ -672,21 +689,21 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(controlStateComboBox, 0, 229, Short.MAX_VALUE)
+                .add(controlStateComboBox, 0, 230, Short.MAX_VALUE)
                 .addContainerGap())
             .add(optionsContainerPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                 .addContainerGap())
             .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, delaySlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                    .add(zoomSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, delaySlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                    .add(zoomSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
                         .add(clearSandButton)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 7, Short.MAX_VALUE)
                         .add(deleteGraphButton))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
                         .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -701,7 +718,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                         .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                 .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
-                                    .add(delayTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                                    .add(delayTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                                     .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                     .add(jLabel12))
                                 .add(org.jdesktop.layout.GroupLayout.TRAILING, stepButton))
@@ -768,18 +785,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jLabel13)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(centerCoordLabel))
-                    .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE))
-                .addContainerGap())
+                .add(jLabel13)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(centerCoordLabel)
+                .addContainerGap(497, Short.MAX_VALUE))
+            .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel13)
@@ -792,11 +807,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
         );
 
         bindingGroup.bind();
@@ -1037,10 +1052,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		// TODO add your handling code here:
 	}//GEN-LAST:event_zoomTextFieldActionPerformed
 
+	private void addRandomSandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRandomSandButtonActionPerformed
+		for(int i=0; i<Integer.valueOf(this.amountOfSandField.getText()); i++)
+			sandpileController.addSandToRandom(1);
+}//GEN-LAST:event_addRandomSandButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConfigButton;
     private javax.swing.JRadioButton addEdgeRadioButton;
+    private javax.swing.JButton addRandomSandButton;
     private javax.swing.JRadioButton addSandRadioButton;
     private javax.swing.JRadioButton addUndirectedEdgeRadioButton;
     private javax.swing.JRadioButton addVertexRadioButton;
