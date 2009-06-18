@@ -308,7 +308,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < radius * 2 - 1; i++) {
 			for (int j = 0; j < curRowLength; j++) {
 				gridRef[i][j] = vertexData.size();
-				addVertex(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y + i * (gridSpacing - 4));
+				addVertex(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y + i * (gridSpacing * 5f/6f));
 			}
 			if (i < radius - 1) {
 				curRowLength++;
