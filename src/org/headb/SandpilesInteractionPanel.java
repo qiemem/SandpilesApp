@@ -206,9 +206,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        jSplitPane1.setDividerLocation(670);
+        jSplitPane1.setDividerLocation(270);
         jSplitPane1.setDividerSize(8);
-        jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setOneTouchExpandable(true);
 
         quitButton.setText("Quit"); // NOI18N
@@ -218,7 +217,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             }
         });
 
-        optionsTabbedPane.setTabPlacement(javax.swing.JTabbedPane.RIGHT);
+        optionsTabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         optionsTabbedPane.setMinimumSize(new java.awt.Dimension(200, 44));
         optionsTabbedPane.setPreferredSize(new java.awt.Dimension(200, 621));
 
@@ -256,13 +255,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                     .add(addEdgeRadioButton)
                     .add(removeEdgeRadioButton)
                     .add(addUndirectedEdgeRadioButton)
-                    .add(removeUndirectedEdgeRadioButton))
-                .addContainerGap(21, Short.MAX_VALUE))
-            .add(editGraphPanelLayout.createSequentialGroup()
-                .add(jLabel1)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 47, Short.MAX_VALUE)
-                .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(134, 134, 134))
+                    .add(removeUndirectedEdgeRadioButton)
+                    .add(editGraphPanelLayout.createSequentialGroup()
+                        .add(jLabel1)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         editGraphPanelLayout.setVerticalGroup(
             editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -280,8 +278,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .add(removeUndirectedEdgeRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel1))
+                    .add(jLabel1)
+                    .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(370, Short.MAX_VALUE))
         );
 
@@ -340,7 +338,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             .add(removeSandRadioButton)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 72, Short.MAX_VALUE)
                 .add(setConfigButton))
             .add(jLabel7)
             .add(addSandRadioButton)
@@ -351,7 +349,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
             .add(addRandomSandButton)
-            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -493,30 +491,32 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         makeGridOptionsPanelLayout.setHorizontalGroup(
             makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                .add(gridSizeLabel)
-                .add(2, 2, 2)
-                .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(gridSizeCrossLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                .add(jLabel4)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(sBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                .add(jLabel3)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(nBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(makeGridOptionsPanelLayout.createSequentialGroup()
                 .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel5)
-                    .add(jLabel6))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(eBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
+                        .add(gridSizeLabel)
+                        .add(2, 2, 2)
+                        .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(gridSizeCrossLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
+                        .add(jLabel4)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(sBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
+                        .add(jLabel3)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(nBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
+                        .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel5)
+                            .add(jLabel6))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(eBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .add(37, 37, 37))
         );
         makeGridOptionsPanelLayout.setVerticalGroup(
             makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -596,7 +596,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                     .add(changingNodeSizeCheckBox)
                     .add(drawEdgesCheckBox)
                     .add(printFPSCheckBox))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -621,9 +621,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
                 .addContainerGap())
-            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -634,7 +634,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .addContainerGap())
         );
 
-        jSplitPane1.setRightComponent(controlPanel);
+        jSplitPane1.setLeftComponent(controlPanel);
 
         canvas.setPreferredSize(new java.awt.Dimension(1,1));
         canvas.setMinimumSize(new java.awt.Dimension(1,1));
@@ -659,8 +659,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .add(jLabel13)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(centerCoordLabel)
-                .addContainerGap(567, Short.MAX_VALUE))
-            .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
+                .addContainerGap(683, Short.MAX_VALUE))
+            .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 784, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -672,7 +672,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                     .add(centerCoordLabel)))
         );
 
-        jSplitPane1.setLeftComponent(jPanel1);
+        jSplitPane1.setRightComponent(jPanel1);
 
         jToolBar1.setRollover(true);
 
@@ -771,8 +771,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1)
-            .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 934, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1064, Short.MAX_VALUE)
+            .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1064, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)

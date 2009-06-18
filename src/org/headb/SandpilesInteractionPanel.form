@@ -71,8 +71,8 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jSplitPane1" alignment="0" max="32767" attributes="0"/>
-          <Component id="jToolBar1" alignment="0" pref="934" max="32767" attributes="0"/>
+          <Component id="jSplitPane1" alignment="0" pref="1064" max="32767" attributes="0"/>
+          <Component id="jToolBar1" alignment="0" pref="1064" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -88,9 +88,8 @@
   <SubComponents>
     <Container class="javax.swing.JSplitPane" name="jSplitPane1">
       <Properties>
-        <Property name="dividerLocation" type="int" value="670"/>
+        <Property name="dividerLocation" type="int" value="270"/>
         <Property name="dividerSize" type="int" value="8"/>
-        <Property name="resizeWeight" type="double" value="1.0"/>
         <Property name="oneTouchExpandable" type="boolean" value="true"/>
       </Properties>
 
@@ -99,7 +98,7 @@
         <Container class="javax.swing.JPanel" name="controlPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
-              <JSplitPaneConstraints position="right"/>
+              <JSplitPaneConstraints position="left"/>
             </Constraint>
           </Constraints>
 
@@ -108,10 +107,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="quitButton" pref="220" max="32767" attributes="0"/>
+                      <Component id="quitButton" pref="234" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
-                  <Component id="optionsTabbedPane" alignment="0" pref="254" max="32767" attributes="0"/>
+                  <Component id="optionsTabbedPane" alignment="0" pref="268" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -136,7 +135,7 @@
             </Component>
             <Container class="javax.swing.JTabbedPane" name="optionsTabbedPane">
               <Properties>
-                <Property name="tabPlacement" type="int" value="4"/>
+                <Property name="tabPlacement" type="int" value="2"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 44]"/>
                 </Property>
@@ -161,7 +160,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="addVertexRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="removeVertexRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -169,14 +168,13 @@
                                   <Component id="removeEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="addUndirectedEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="removeUndirectedEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="edgeWeightField" min="-2" pref="36" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace pref="21" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="47" max="32767" attributes="0"/>
-                              <Component id="edgeWeightField" min="-2" pref="36" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="134" max="-2" attributes="0"/>
+                              <EmptySpace pref="35" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -196,8 +194,8 @@
                               <Component id="removeUndirectedEdgeRadioButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="edgeWeightField" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="edgeWeightField" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="370" max="32767" attributes="0"/>
                           </Group>
@@ -288,7 +286,7 @@
                           <Component id="removeSandRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="addConfigButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="58" max="32767" attributes="0"/>
+                              <EmptySpace pref="72" max="32767" attributes="0"/>
                               <Component id="setConfigButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -302,7 +300,7 @@
                               <Component id="amountOfSandField" min="-2" pref="74" max="-2" attributes="0"/>
                           </Group>
                           <Component id="addRandomSandButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPane3" alignment="0" pref="208" max="32767" attributes="0"/>
+                          <Component id="jScrollPane3" alignment="0" pref="222" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -513,36 +511,40 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="gridSizeLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                              <Component id="gridRowsField" min="-2" pref="40" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="gridSizeCrossLabel" min="-2" pref="8" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="gridColsField" min="-2" pref="39" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="sBorderComboBox" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="nBorderComboBox" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="gridSizeLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                                      <Component id="gridRowsField" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="gridSizeCrossLabel" min="-2" pref="8" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="gridColsField" min="-2" pref="39" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="sBorderComboBox" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="nBorderComboBox" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="wBorderComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="eBorderComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="wBorderComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="eBorderComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -708,7 +710,7 @@
                                   <Component id="drawEdgesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="printFPSCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="50" max="32767" attributes="0"/>
+                              <EmptySpace pref="64" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -782,7 +784,7 @@
         <Container class="javax.swing.JPanel" name="jPanel1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
-              <JSplitPaneConstraints position="left"/>
+              <JSplitPaneConstraints position="right"/>
             </Constraint>
           </Constraints>
 
@@ -793,9 +795,9 @@
                       <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="centerCoordLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="567" max="32767" attributes="0"/>
+                      <EmptySpace pref="683" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="canvas" alignment="0" pref="698" max="32767" attributes="0"/>
+                  <Component id="canvas" alignment="0" pref="784" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
