@@ -340,7 +340,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private void setColorForVertex(GL gl, int sand) {
 		switch (sand) {
 			case 0:
-				gl.glColor3f(0.2f, 0.2f, 0.2f);
+				gl.glColor3f(0.3f, 0.3f, 0.3f);
 				break;
 			case 1:
 				gl.glColor3f(0.0f, 0.0f, 1.0f);

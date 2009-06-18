@@ -629,7 +629,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jSplitPane1" alignment="0" pref="640" max="32767" attributes="0"/>
+          <Component id="jSplitPane1" alignment="0" pref="694" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -905,7 +905,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="canvas" pref="610" max="32767" attributes="0"/>
+                      <Component id="canvas" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
