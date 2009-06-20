@@ -149,22 +149,7 @@ public class SandpileGraph {
 	/**
 	 * Takes in a configuration and outputs the resulting configuration
 	 */
-	public SandpileConfiguration updateConfig(SandpileConfiguration config) {/*
-		int[] newConfig = new int[config.size()];
-		for(int i = 0; i<config.size(); i++){
-			newConfig[i]+=config.get(i);
-			if(config.get(i) >= this.degree(i)){
-				newConfig[i]-=this.degree(i);
-				//newConfig.set(i, newConfig.get(i)-degree(i));
-				for(Integer j : this.getOutgoingVertices(i)){
-					newConfig[j]+=this.weight(i, j);
-					//newConfig.set(j,newConfig.get(j)+this.weight(i,j));
-				}
-			}
-		}
-		ArrayList<Integer> asAList = new ArrayList<Integer>(config.size());
-		for(int i = 0; i<config.size(); i++) asAList.add(newConfig[i]);
-		return asAList;*/
+	public SandpileConfiguration updateConfig(SandpileConfiguration config) {
 		if(config.size()!=edges.size())
 			throw new ArrayIndexOutOfBoundsException
 					("Tried to update configuration with a different number of vertices than the graph.");

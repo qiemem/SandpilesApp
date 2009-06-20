@@ -32,6 +32,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private boolean needsReshape = true;
 	private float mouseX = 0f,  mouseY = 0f;
 	private float vertSize = 1f;
+	private ColorMode mode = SandpileDrawer.ColorMode.NUM_OF_GRAINS;
+	private List<Integer> firings=new ArrayList<Integer>();
 	public boolean drawLabels = false;
 	public boolean drawEdges = true;
 	public boolean drawVertices = true;
@@ -135,6 +137,15 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			r.onRepaint();
 	}
 
+	public void setColorMode(ColorMode cm){
+		mode = cm;
+	}
+	public ColorMode getColorMode(){
+		return mode;
+	}
+
+	
+
 	private void drawEdges(GL gl) {
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
 		gl.glBegin(gl.GL_LINES);
@@ -187,7 +198,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				if (changingVertexSize && !graph.isSink(vert)) {
 					size = Math.min(((float) sand + 1) / ((float) graph.degree(vert)), vertSize);
 				}
-				setColorForVertex(gl, sand);
+				setColorForVertex(gl, vert);
 				gl.glTranslatef(x, y, 0f);
 				glu.gluDisk(quadric, 0.0, size, 8, 1);
 				gl.glLoadIdentity();
@@ -202,7 +213,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				if (changingVertexSize && !graph.isSink(vert)) {
 					size = Math.min(((float) sand + 1) / ((float) graph.degree(vert)), vertSize);
 				}
-				setColorForVertex(gl, sand);
+				setColorForVertex(gl, vert);
 				gl.glVertex2f(x - size, y + size);
 				gl.glVertex2f(x + size, y + size);
 				gl.glVertex2f(x + size, y - size);
@@ -259,11 +270,12 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		return canvas;
 	}
 
-	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, int selectedVertex) {
+	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, int selectedVertex) {
 		this.graph = graph;
 		this.vertexLocations = vertexLocations;
 		this.config = config;
 		this.selectedVertex = selectedVertex;
+		this.firings = firings;
 		canvas.display();
 	}
 
@@ -337,31 +349,67 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		//setGLDimensions(getOriginX(), getOriginY(), getWidth() + amount, getHeight() + amount);
 	}
 
-	private void setColorForVertex(GL gl, int sand) {
-		switch (sand) {
-			case 0:
-				gl.glColor3f(0.3f, 0.3f, 0.3f);
+	private void setColorForVertex(GL gl, int vert) {
+		switch (mode) {
+			case NUM_OF_GRAINS:
+				int sand = config.get(vert);
+				switch (sand) {
+					case 0:
+						gl.glColor3f(0.3f, 0.3f, 0.3f);
+						break;
+					case 1:
+						gl.glColor3f(0.0f, 0.0f, 1.0f);
+						break;
+					case 2:
+						gl.glColor3f(0.0f, 1.0f, 1.0f);
+						break;
+					case 3:
+						gl.glColor3f(0.0f, 1.0f, 0.0f);
+						break;
+					case 4:
+						gl.glColor3f(1.0f, 0.0f, 0.0f);
+						break;
+					case 5:
+						gl.glColor3f(1.0f, 0.5f, 0.0f);
+						break;
+					case 6:
+						gl.glColor3f(1.0f, 1.0f, 0.0f);
+						break;
+					default:
+						gl.glColor3f(1.0f, 1.0f, 1.0f);
+				}break;
+			case STABILITY:
+				if(config.get(vert)<graph.degree(vert))
+					gl.glColor3f(0.3f, 0.3f, 0.3f);
+				else
+					gl.glColor3f(1f, 1f, 0f);
 				break;
-			case 1:
-				gl.glColor3f(0.0f, 0.0f, 1.0f);
-				break;
-			case 2:
-				gl.glColor3f(0.0f, 1.0f, 1.0f);
-				break;
-			case 3:
-				gl.glColor3f(0.0f, 1.0f, 0.0f);
-				break;
-			case 4:
-				gl.glColor3f(1.0f, 0.0f, 0.0f);
-				break;
-			case 5:
-				gl.glColor3f(1.0f, 0.5f, 0.0f);
-				break;
-			case 6:
-				gl.glColor3f(1.0f, 1.0f, 0.0f);
-				break;
-			default:
-				gl.glColor3f(1.0f, 1.0f, 1.0f);
+			case FIRINGS:
+				switch (firings.get(vert)) {
+					case 0:
+						gl.glColor3f(0.3f, 0.3f, 0.3f);
+						break;
+					case 1:
+						gl.glColor3f(0.0f, 0.0f, 1.0f);
+						break;
+					case 2:
+						gl.glColor3f(0.0f, 1.0f, 1.0f);
+						break;
+					case 3:
+						gl.glColor3f(0.0f, 1.0f, 0.0f);
+						break;
+					case 4:
+						gl.glColor3f(1.0f, 0.0f, 0.0f);
+						break;
+					case 5:
+						gl.glColor3f(1.0f, 0.5f, 0.0f);
+						break;
+					case 6:
+						gl.glColor3f(1.0f, 1.0f, 0.0f);
+						break;
+					default:
+						gl.glColor3f(1.0f, 1.0f, 1.0f);
+				}break;
 		}
 	}
 

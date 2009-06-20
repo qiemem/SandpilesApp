@@ -30,6 +30,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private long lastRepaintTime = 0;
 	private SandpileGraph sg;
 	ArrayList<float[]> vertexData;
+	ArrayList<Integer> firings;
 	private int selectedVertex;
 	private long lastUpdate = System.currentTimeMillis();
 	public double fps = 0.0;
@@ -54,6 +55,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		//this.curState = ADD_VERT_STATE;
 		this.sg = sg;
 		vertexData = new ArrayList<float[]>();
+		firings = new ArrayList<Integer>();
 		currentConfig = new SandpileConfiguration();
 
 		Canvas canvas = drawer.getCanvas();
@@ -89,8 +91,27 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	 * Fires all unstable vertices and repaints.
 	 */
 	public void update() {
+		updateFirings();
 		SandpileConfiguration nextConfig = sg.updateConfig(currentConfig);
 		currentConfig = nextConfig;
+	}
+
+	public void resetFirings() {
+		firings = new ArrayList<Integer>();
+		for (Integer i : currentConfig) {
+			firings.add(0);
+		}
+	}
+
+	public void updateFirings() {
+		if (firings.size() != currentConfig.size()) {
+			resetFirings();
+		}
+		for (int vert = 0; vert < currentConfig.size(); vert++) {
+			if (currentConfig.get(vert) >= sg.degree(vert)) {
+				firings.set(vert, firings.get(vert) + 1);
+			}
+		}
 	}
 
 	public void run() {
@@ -107,7 +128,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void repaint() {
-		drawer.paintSandpileGraph(sg, vertexData, currentConfig, selectedVertex);
+		drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertex);
 	}
 
 	public void addVertexControl(float x, float y) {
@@ -308,7 +329,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		for (int i = 0; i < radius * 2 - 1; i++) {
 			for (int j = 0; j < curRowLength; j++) {
 				gridRef[i][j] = vertexData.size();
-				addVertex(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y - i * (gridSpacing * 5f/6f));
+				addVertex(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y - i * (gridSpacing * 5f / 6f));
 			}
 			if (i < radius - 1) {
 				curRowLength++;
@@ -623,17 +644,20 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		float[] newPos = {x, y};
 		vertexData.add(newPos);
 		currentConfig.add(0);
+		firings.add(0);
 	}
 
 	public void delVertex(int v) {
 		vertexData.remove(v);
 		currentConfig.remove(v);
+		firings.remove(v);
 		sg.removeVertex(v);
 	}
 
 	public void delAllVertices() {
 		vertexData.clear();
 		currentConfig.clear();
+		firings.clear();
 		sg.removeAllVertices();
 		this.selectedVertex = -1;
 		repaint();
@@ -659,9 +683,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		setSand(vert, currentConfig.get(vert) + amount);
 	}
 
-	public void addSandToRandom(int amount){
-		if(currentConfig.isEmpty())	return;
-		int v = (int)(Math.random()*currentConfig.size());
+	public void addSandToRandom(int amount) {
+		if (currentConfig.isEmpty()) {
+			return;
+		}
+		int v = (int) (Math.random() * currentConfig.size());
 		addSand(v, amount);
 	}
 
@@ -764,6 +790,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void setMinRepaintDelay(long delay) {
 		minRepaintDelay = delay;
 	}
+
 	public void setMinUpdateDelay(long delay) {
 		minUpdateDelay = delay;
 	}
