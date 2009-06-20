@@ -1253,6 +1253,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 
 	private void resetFiringsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiringsButtonActionPerformed
 		sandpileController.resetFirings();
+		sandpileController.repaint();
 	}//GEN-LAST:event_resetFiringsButtonActionPerformed
 
 	private void stabilizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stabilizeButtonActionPerformed

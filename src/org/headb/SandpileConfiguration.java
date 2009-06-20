@@ -33,4 +33,11 @@ public class SandpileConfiguration extends ArrayList<Integer>{
 			result.add(this.get(i)+other.get(i));
 		return result;
 	}
+
+	public SandpileConfiguration times(int scalar) {
+		SandpileConfiguration result = new SandpileConfiguration();
+		for(int i=0;i<this.size();i++)
+			result.add(this.get(i)*scalar);
+		return result;
+	}
 }
