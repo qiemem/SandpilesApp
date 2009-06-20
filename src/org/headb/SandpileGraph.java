@@ -185,16 +185,50 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Updates the graph untill all vertices stabilize.
+	 * Updates the graph until all vertices stabilize.
 	 * WARNING: If the graph does not have a global sink, this function may not end.
 	 */
 	public SandpileConfiguration stabilizeConfig(SandpileConfiguration config) {
-		SandpileConfiguration nextConfig = updateConfig(config);
+		/*SandpileConfiguration nextConfig = updateConfig(config);
 		while(!(nextConfig.equals(config))){
 			config = nextConfig;
 			nextConfig = updateConfig(config);
+		}*/
+		SandpileConfiguration newConfig = new SandpileConfiguration(config);
+		LinkedHashSet<Integer> unstables1 = getUnstableVertices(config);
+		while(!unstables1.isEmpty()){
+			LinkedHashSet<Integer> unstables2 = new LinkedHashSet<Integer>();
+			//System.err.println("Outer loop");
+			for(Integer sourceVert : unstables1){
+				//System.err.println("Going to next unstable");
+				while(newConfig.get(sourceVert)>=degree(sourceVert)){
+					//System.err.println("Stabilizing");
+					newConfig.set(sourceVert, newConfig.get(sourceVert)-degree(sourceVert));
+					for(Integer destVert : this.getOutgoingVertices(sourceVert)){
+						newConfig.set(destVert, newConfig.get(destVert)+weight(sourceVert,destVert));
+						if(newConfig.get(destVert)>=degree(destVert) && !isSink(destVert)){
+							//System.err.println("Adding new unstable");
+							unstables2.add(destVert);
+						}
+					}
+				}
+			}
+			unstables1 = unstables2;
 		}
-		return config;
+		return newConfig;
+	}
+
+
+	/**
+	 * Returns a set of the indices of the unstable vertices.
+	 */
+	public LinkedHashSet<Integer> getUnstableVertices(SandpileConfiguration config){
+		LinkedHashSet<Integer> unstables = new LinkedHashSet<Integer>();
+		for(int vert=0; vert<config.size(); vert++){
+			if(config.get(vert)>=this.degree(vert) && !isSink(vert))
+				unstables.add(vert);
+		}
+		return unstables;
 	}
         
     /**

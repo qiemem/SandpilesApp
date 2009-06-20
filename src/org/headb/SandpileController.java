@@ -639,6 +639,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
+	public void stabilize() {
+		currentConfig = sg.stabilizeConfig(currentConfig);
+	}
+
 	public void addVertex(float x, float y) {
 		sg.addVertex();
 		float[] newPos = {x, y};

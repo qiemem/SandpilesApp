@@ -166,6 +166,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         jToolBar1 = new javax.swing.JToolBar();
         runButton = new javax.swing.JToggleButton();
         stepButton = new javax.swing.JButton();
+        stabilizeButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         delayLabel = new javax.swing.JLabel();
         delaySlider = new javax.swing.JSlider();
@@ -837,6 +838,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 
         jSplitPane1.setRightComponent(jPanel1);
 
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         runButton.setText("Run"); // NOI18N
@@ -859,6 +861,17 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             }
         });
         jToolBar1.add(stepButton);
+
+        stabilizeButton.setText("Stabilize");
+        stabilizeButton.setFocusable(false);
+        stabilizeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        stabilizeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        stabilizeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stabilizeButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(stabilizeButton);
         jToolBar1.add(jSeparator1);
 
         delayLabel.setText("Delay:"); // NOI18N
@@ -943,7 +956,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
-            .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
+            .add(layout.createSequentialGroup()
+                .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1239,6 +1254,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		sandpileController.resetFirings();
 	}//GEN-LAST:event_resetFiringsButtonActionPerformed
 
+	private void stabilizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stabilizeButtonActionPerformed
+		sandpileController.stabilize();
+		sandpileController.repaint();
+	}//GEN-LAST:event_stabilizeButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConfigButton;
@@ -1328,6 +1348,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JScrollPane sandpileViewScrollPane;
     private javax.swing.JButton setConfigButton;
     private javax.swing.JRadioButton setSandRadioButton;
+    private javax.swing.JButton stabilizeButton;
     private javax.swing.JButton stepButton;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;
