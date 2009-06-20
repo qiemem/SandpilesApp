@@ -613,7 +613,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		currentConfig = sg.getIdentityConfig();
 		repaint();
 	}
-
+	
 	public void setSandEverywhere(int amount) {
 		currentConfig = sg.getUniformConfig(amount);
 		repaint();

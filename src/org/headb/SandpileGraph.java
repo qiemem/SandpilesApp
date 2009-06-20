@@ -326,7 +326,7 @@ public class SandpileGraph {
 	 * SECOND WARNING: If the graph does not have an identity (there is no global
 	 * sink or something), this function will never end!
 	 * @return A list representing the identity configuration.
-	 */
+	 *//*
 	public SandpileConfiguration getIdentityConfig() {
 		SandpileConfiguration config = new SandpileConfiguration(this.degrees.size());
 		SandpileConfiguration maxConfig = this.getMaxConfig();
@@ -335,6 +335,17 @@ public class SandpileGraph {
 		config = this.getDualConfig(config);
 		config = config.plus(maxConfig);
 		return stabilizeConfig(config);
+	}
+	*/
+	public SandpileConfiguration getIdentityConfig() {
+		SandpileConfiguration burning = getMinimalBurningConfig();
+		SandpileConfiguration config = new SandpileConfiguration(burning);
+		SandpileConfiguration nextConfig = stabilizeConfig(config.plus(burning));
+		while(!config.equals(nextConfig)){
+			config = nextConfig;
+			nextConfig = stabilizeConfig(config.plus(burning));
+		}
+		return config;
 	}
 	
 }

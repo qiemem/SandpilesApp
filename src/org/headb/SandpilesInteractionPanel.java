@@ -371,8 +371,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                     .add(jLabel8))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(addRandomSandButton)
             .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+            .add(addRandomSandButton)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1242,6 +1242,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 }//GEN-LAST:event_hexWBorderComboBoxActionPerformed
 
 	private void colorModeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorModeComboBoxActionPerformed
+		
 		switch(colorModeComboBox.getSelectedIndex()){
 			case 0: drawer.setColorMode(SandpileDrawer.ColorMode.NUM_OF_GRAINS); break;
 			case 1: drawer.setColorMode(SandpileDrawer.ColorMode.STABILITY); break;
@@ -1255,8 +1256,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 	}//GEN-LAST:event_resetFiringsButtonActionPerformed
 
 	private void stabilizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stabilizeButtonActionPerformed
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		sandpileController.stabilize();
 		sandpileController.repaint();
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}//GEN-LAST:event_stabilizeButtonActionPerformed
 
 
