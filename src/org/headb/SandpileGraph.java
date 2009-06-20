@@ -226,6 +226,32 @@ public class SandpileGraph {
 		return newConfig;
 	}
 
+	public SandpileConfiguration stabilizeStartingWith(SandpileConfiguration config, LinkedHashSet<Integer> unstables){
+		SandpileConfiguration newConfig = new SandpileConfiguration(config);
+		LinkedHashSet<Integer> unstables1 = unstables;
+		while (!unstables1.isEmpty()) {
+			LinkedHashSet<Integer> unstables2 = new LinkedHashSet<Integer>();
+			//System.err.println("Outer loop");
+			for (Integer sourceVert : unstables1) {
+				//System.err.println(sourceVert);
+				if(newConfig.get(sourceVert)>=degree(sourceVert)){
+					int multiple = newConfig.get(sourceVert) / degree(sourceVert);
+					//System.err.println("Stabilizing");
+					newConfig.set(sourceVert, newConfig.get(sourceVert) - multiple * degree(sourceVert));
+					for (Integer destVert : this.getOutgoingVertices(sourceVert)) {
+						newConfig.set(destVert, newConfig.get(destVert) + multiple * weight(sourceVert, destVert));
+						if (newConfig.get(destVert) >= degree(destVert) && !isSink(destVert)) {
+							//System.err.println("Adding new unstable");
+							unstables2.add(destVert);
+						}
+					}
+				}
+			}
+			unstables1 = unstables2;
+		}
+		return newConfig;
+	}
+
 	/**
 	 * Returns a set of the indices of the unstable vertices.
 	 */
@@ -372,11 +398,15 @@ public class SandpileGraph {
 
 	public SandpileConfiguration getIdentityConfig() {
 		SandpileConfiguration burning = getMinimalBurningConfig();
+		LinkedHashSet<Integer> burningVertices = new LinkedHashSet<Integer>();
+		for(int vert=0; vert<burning.size(); vert++)
+			if(burning.get(vert)>0)
+				burningVertices.add(vert);
 		SandpileConfiguration config = stabilizeConfig(burning);
-		SandpileConfiguration nextConfig = stabilizeConfig(config.plus(burning));
+		SandpileConfiguration nextConfig = stabilizeStartingWith(config.plus(burning), burningVertices);
 		while (!config.equals(nextConfig)) {
 			config = nextConfig;
-			nextConfig = stabilizeConfig(config.plus(config));
+			nextConfig = stabilizeStartingWith(config.plus(config), burningVertices);
 		}
 		return config;
 	}
