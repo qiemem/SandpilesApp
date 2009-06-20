@@ -167,6 +167,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         runButton = new javax.swing.JToggleButton();
         stepButton = new javax.swing.JButton();
         stabilizeButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        clearSandButton = new javax.swing.JButton();
+        deleteGraphButton = new javax.swing.JButton();
+        resetFiringsButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         delayLabel = new javax.swing.JLabel();
         delaySlider = new javax.swing.JSlider();
@@ -177,10 +181,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         zoomSlider = new javax.swing.JSlider();
         zoomTextField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
-        clearSandButton = new javax.swing.JButton();
-        deleteGraphButton = new javax.swing.JButton();
-        resetFiringsButton = new javax.swing.JButton();
 
         controlStateComboBox.setMaximumRowCount(16);
         controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { EDIT_GRAPH_STATE, CONFIG_MANAGER_STATE, MAKE_GRID_STATE, MAKE_HEX_GRID_STATE, MAKE_HONEYCOMB_STATE, VISUAL_OPTIONS_STATE}));
@@ -872,6 +872,31 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             }
         });
         jToolBar1.add(stabilizeButton);
+        jToolBar1.add(jSeparator3);
+
+        clearSandButton.setText("Clear Sand"); // NOI18N
+        clearSandButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearSandButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(clearSandButton);
+
+        deleteGraphButton.setText("Del. Graph"); // NOI18N
+        deleteGraphButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteGraphButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(deleteGraphButton);
+
+        resetFiringsButton.setText("Reset Firings Count");
+        resetFiringsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetFiringsButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(resetFiringsButton);
         jToolBar1.add(jSeparator1);
 
         delayLabel.setText("Delay:"); // NOI18N
@@ -925,31 +950,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 
         jLabel11.setText("%  "); // NOI18N
         jToolBar1.add(jLabel11);
-        jToolBar1.add(jSeparator3);
-
-        clearSandButton.setText("Clear Sand"); // NOI18N
-        clearSandButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearSandButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(clearSandButton);
-
-        deleteGraphButton.setText("Del. Graph"); // NOI18N
-        deleteGraphButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteGraphButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(deleteGraphButton);
-
-        resetFiringsButton.setText("Reset Firings Count");
-        resetFiringsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetFiringsButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(resetFiringsButton);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
