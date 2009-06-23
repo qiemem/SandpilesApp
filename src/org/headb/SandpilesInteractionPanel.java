@@ -48,7 +48,7 @@ import java.awt.CardLayout;
 import java.awt.Cursor;
 import javax.swing.Timer;
 
-public class SandpilesInteractionPanel extends javax.swing.JPanel implements RepaintListener {
+public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener {
 	private static final String MAKE_GRID_STATE = "Make Grid";
 	private static final String MAKE_HEX_GRID_STATE = "Make Hex Grid";
 	private static final String MAKE_HONEYCOMB_STATE = "Make Honeycomb";
@@ -83,7 +83,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(0);
-		sandpileController.setMinUpdateDelay(delaySlider.getValue());
+		updateDelayTextField();
 		CardLayout cl = (CardLayout)(optionsContainerPanel.getLayout());
 		//cl.show(optionsContainerPanel, (String)evt.getItem());
 		String currentState =  (String) controlStateComboBox.getSelectedItem();
@@ -101,9 +101,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		//spThread = new Thread(sandpileController);
     }
 
-	public void onRepaint(){
-		this.zoomSlider.setValue((int)(drawer.getZoom()*1000));
-
+	public void onReshape(){
+		updateZoomTextField();
 		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
 	}
 
@@ -202,14 +201,20 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         resetFiringsButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         delayLabel = new javax.swing.JLabel();
-        delaySlider = new javax.swing.JSlider();
         delayTextField = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
+        bigDecDelayButton = new javax.swing.JButton();
+        smallDevDelayButton = new javax.swing.JButton();
+        smallIncDelayButton = new javax.swing.JButton();
+        bigIncDelayButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jLabel2 = new javax.swing.JLabel();
-        zoomSlider = new javax.swing.JSlider();
         zoomTextField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
+        bigZoomOutButton = new javax.swing.JButton();
+        smallZoomOutButton = new javax.swing.JButton();
+        smallZoomInButton = new javax.swing.JButton();
+        bigZoomInButton = new javax.swing.JButton();
 
         controlStateComboBox.setMaximumRowCount(16);
         controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { EDIT_GRAPH_STATE, CONFIG_MANAGER_STATE, MAKE_GRID_STATE, MAKE_HEX_GRID_STATE, MAKE_HONEYCOMB_STATE, VISUAL_OPTIONS_STATE}));
@@ -312,7 +317,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                         .add(jLabel1)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
         editGraphPanelLayout.setVerticalGroup(
             editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -332,7 +337,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
                     .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(487, Short.MAX_VALUE))
+                .addContainerGap(505, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(EDIT_GRAPH_STATE, editGraphPanel);
@@ -390,7 +395,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
             .add(removeSandRadioButton)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 72, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 155, Short.MAX_VALUE)
                 .add(setConfigButton))
             .add(jLabel7)
             .add(addSandRadioButton)
@@ -400,7 +405,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                     .add(jLabel8))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
             .add(addRandomSandButton)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
@@ -425,7 +430,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                     .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(addRandomSandButton)
-                .addContainerGap(366, Short.MAX_VALUE))
+                .addContainerGap(384, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(CONFIG_MANAGER_STATE, configManagerOptionsPanel);
@@ -474,7 +479,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .add(makeHoneycombOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel9)
                     .add(makeHoneycombBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(609, Short.MAX_VALUE))
+                .addContainerGap(627, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(MAKE_HONEYCOMB_STATE, makeHoneycombOptionsPanel);
@@ -568,7 +573,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                         .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(eBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .add(37, 37, 37))
+                .add(120, 120, 120))
         );
         makeGridOptionsPanelLayout.setVerticalGroup(
             makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -594,7 +599,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel6)
                     .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(516, Short.MAX_VALUE))
+                .addContainerGap(534, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(MAKE_GRID_STATE, makeGridOptionsPanel);
@@ -688,7 +693,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                         .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(hexWBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(hexEBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .add(37, 37, 37))
+                .add(120, 120, 120))
         );
         makeHexGridOptionsPanelLayout.setVerticalGroup(
             makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -714,7 +719,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel17)
                     .add(hexWBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(516, Short.MAX_VALUE))
+                .addContainerGap(534, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(MAKE_HEX_GRID_STATE, makeHexGridOptionsPanel);
@@ -779,7 +784,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                     .add(printFPSCheckBox)
                     .add(jLabel18)
                     .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -797,7 +802,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .add(jLabel18)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(488, Short.MAX_VALUE))
+                .addContainerGap(506, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -807,15 +812,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(controlPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                .addContainerGap())
-            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .add(17, 17, 17)
+                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE))
+            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
-                .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
+                .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 711, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(quitButton)
                 .addContainerGap())
@@ -851,12 +855,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(619, Short.MAX_VALUE))
-            .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
+                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -931,17 +935,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         delayLabel.setText("Delay:"); // NOI18N
         jToolBar1.add(delayLabel);
 
-        delaySlider.setMaximum(1000);
-        delaySlider.setToolTipText("Adjusts the number of milliseconds between each update."); // NOI18N
-        delaySlider.setValue(100);
-        delaySlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                delaySliderStateChanged(evt);
-            }
-        });
-        jToolBar1.add(delaySlider);
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, delaySlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), delayTextField, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new javax.swing.JSlider(), org.jdesktop.beansbinding.ELProperty.create("${value}"), delayTextField, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         delayTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -949,30 +943,73 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
                 delayTextFieldActionPerformed(evt);
             }
         });
+        delayTextField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                delayTextFieldCaretUpdate(evt);
+            }
+        });
         jToolBar1.add(delayTextField);
 
-        jLabel12.setText("ms"); // NOI18N
+        jLabel12.setText("ms "); // NOI18N
         jToolBar1.add(jLabel12);
+
+        bigDecDelayButton.setText("--");
+        bigDecDelayButton.setFocusable(false);
+        bigDecDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bigDecDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bigDecDelayButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bigDecDelayButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(bigDecDelayButton);
+
+        smallDevDelayButton.setText("-");
+        smallDevDelayButton.setFocusable(false);
+        smallDevDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        smallDevDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        smallDevDelayButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                smallDevDelayButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(smallDevDelayButton);
+
+        smallIncDelayButton.setText("+");
+        smallIncDelayButton.setFocusable(false);
+        smallIncDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        smallIncDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        smallIncDelayButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                smallIncDelayButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(smallIncDelayButton);
+
+        bigIncDelayButton.setText("++");
+        bigIncDelayButton.setFocusable(false);
+        bigIncDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bigIncDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bigIncDelayButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bigIncDelayButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(bigIncDelayButton);
         jToolBar1.add(jSeparator2);
 
         jLabel2.setText("Zoom:"); // NOI18N
         jToolBar1.add(jLabel2);
 
-        zoomSlider.setMaximum(10000);
-        zoomSlider.setValue(1000);
-        zoomSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                zoomSliderStateChanged(evt);
-            }
-        });
-        jToolBar1.add(zoomSlider);
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, zoomSlider, org.jdesktop.beansbinding.ELProperty.create("${value/10.0}"), zoomTextField, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
+        zoomTextField.setText("100.0");
         zoomTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 zoomTextFieldActionPerformed(evt);
+            }
+        });
+        zoomTextField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                zoomTextFieldCaretUpdate(evt);
             }
         });
         jToolBar1.add(zoomTextField);
@@ -980,21 +1017,65 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
         jLabel11.setText("%  "); // NOI18N
         jToolBar1.add(jLabel11);
 
+        bigZoomOutButton.setText("--");
+        bigZoomOutButton.setFocusable(false);
+        bigZoomOutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bigZoomOutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bigZoomOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bigZoomOutButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(bigZoomOutButton);
+
+        smallZoomOutButton.setText("-");
+        smallZoomOutButton.setFocusable(false);
+        smallZoomOutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        smallZoomOutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        smallZoomOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                smallZoomOutButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(smallZoomOutButton);
+
+        smallZoomInButton.setText("+");
+        smallZoomInButton.setFocusable(false);
+        smallZoomInButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        smallZoomInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        smallZoomInButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                smallZoomInButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(smallZoomInButton);
+
+        bigZoomInButton.setText("++");
+        bigZoomInButton.setFocusable(false);
+        bigZoomInButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bigZoomInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bigZoomInButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bigZoomInButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(bigZoomInButton);
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
             .add(layout.createSequentialGroup()
-                .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
-                .addContainerGap())
+                .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1087, Short.MAX_VALUE)
+                .add(20, 20, 20))
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1107, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(layout.createSequentialGroup()
+                .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 743, Short.MAX_VALUE))
+                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1005,7 +1086,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 	}
 	private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
 		//runTimer.setDelay( delaySlider.getValue());
-		sandpileController.setMinUpdateDelay(delaySlider.getValue());
+		updateControllerDelay();
 		if(runTimer.isRunning()){
 			runTimer.stop();
 		}else{
@@ -1024,13 +1105,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		}*/
 }//GEN-LAST:event_runButtonActionPerformed
 
-	private void delaySliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySliderStateChanged
-		sandpileController.setMinUpdateDelay(delaySlider.getValue());
-		//sandpileController.setDelay(delaySlider.getValue());
-}//GEN-LAST:event_delaySliderStateChanged
-
 	private void delayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayTextFieldActionPerformed
-		// TODO add your handling code here:
+		updateControllerDelay();
 }//GEN-LAST:event_delayTextFieldActionPerformed
 
 	private void controlStateComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_controlStateComboBoxItemStateChanged
@@ -1074,11 +1150,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 	private void deleteGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGraphButtonActionPerformed
 		sandpileController.delAllVertices();
 }//GEN-LAST:event_deleteGraphButtonActionPerformed
-
-	private void zoomSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zoomSliderStateChanged
-
-		drawer.setZoom(zoomSlider.getValue()/1000f);
-}//GEN-LAST:event_zoomSliderStateChanged
 
 	private void makeHoneycombBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHoneycombBorderComboBoxActionPerformed
 		// TODO add your handling code here:
@@ -1232,10 +1303,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		// TODO add your handling code here:
 	}//GEN-LAST:event_canvasMouseReleased
 
-	private void zoomTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomTextFieldActionPerformed
-		// TODO add your handling code here:
-	}//GEN-LAST:event_zoomTextFieldActionPerformed
-
 	private void addRandomSandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRandomSandButtonActionPerformed
 		for(int i=0; i<Integer.valueOf(this.amountOfSandField.getText()); i++)
 			sandpileController.addSandToRandom(1);
@@ -1292,6 +1359,87 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}//GEN-LAST:event_stabilizeButtonActionPerformed
 
+	private void smallIncDelayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallIncDelayButtonActionPerformed
+		sandpileController.setMinUpdateDelay(sandpileController.getMinUpdateDelay()+5);
+		updateDelayTextField();
+	}//GEN-LAST:event_smallIncDelayButtonActionPerformed
+
+	private void bigIncDelayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigIncDelayButtonActionPerformed
+		sandpileController.setMinUpdateDelay(sandpileController.getMinUpdateDelay()+25);
+		updateDelayTextField();
+	}//GEN-LAST:event_bigIncDelayButtonActionPerformed
+
+	private void smallDevDelayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallDevDelayButtonActionPerformed
+		sandpileController.setMinUpdateDelay(sandpileController.getMinUpdateDelay()-5);
+		updateDelayTextField();
+	}//GEN-LAST:event_smallDevDelayButtonActionPerformed
+
+	private void bigDecDelayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigDecDelayButtonActionPerformed
+		sandpileController.setMinUpdateDelay(sandpileController.getMinUpdateDelay()-25);
+		updateDelayTextField();
+	}//GEN-LAST:event_bigDecDelayButtonActionPerformed
+
+	private void delayTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_delayTextFieldCaretUpdate
+		//updateControllerDelay();
+	}//GEN-LAST:event_delayTextFieldCaretUpdate
+
+	private void bigZoomInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigZoomInButtonActionPerformed
+		drawer.setZoom(drawer.getZoom()*1.25f);
+		updateZoomTextField();
+	}//GEN-LAST:event_bigZoomInButtonActionPerformed
+
+	private void smallZoomInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallZoomInButtonActionPerformed
+		drawer.setZoom(drawer.getZoom()*1.05f);
+		updateZoomTextField();
+	}//GEN-LAST:event_smallZoomInButtonActionPerformed
+
+	private void smallZoomOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallZoomOutButtonActionPerformed
+		drawer.setZoom(drawer.getZoom()*0.95f);
+		updateZoomTextField();
+	}//GEN-LAST:event_smallZoomOutButtonActionPerformed
+
+	private void bigZoomOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigZoomOutButtonActionPerformed
+		drawer.setZoom(drawer.getZoom()*0.75f);
+		updateZoomTextField();
+	}//GEN-LAST:event_bigZoomOutButtonActionPerformed
+
+	private void zoomTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_zoomTextFieldCaretUpdate
+		//updateDrawerZoom();
+	}//GEN-LAST:event_zoomTextFieldCaretUpdate
+
+	private void zoomTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomTextFieldActionPerformed
+		updateDrawerZoom();
+	}//GEN-LAST:event_zoomTextFieldActionPerformed
+
+	public void updateZoomTextField(){
+		zoomTextField.setText(String.valueOf(drawer.getZoom()*100.0f));
+	}
+
+	public boolean updateDrawerZoom(){
+		try{
+			drawer.setZoom(Float.valueOf(zoomTextField.getText())/100.0f);
+			return true;
+		}catch(NumberFormatException e){
+			return false;
+		}catch(NullPointerException e){
+			return false;
+		}
+	}
+
+	public void updateDelayTextField() {
+		delayTextField.setText(String.valueOf(sandpileController.getMinUpdateDelay()));
+	}
+
+	public boolean updateControllerDelay(){
+		try{
+			sandpileController.setMinUpdateDelay(Long.valueOf(delayTextField.getText()));
+			return true;
+		}catch(NumberFormatException e){
+			return false;
+		}catch(NullPointerException e){
+			return false;
+		}
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConfigButton;
@@ -1301,6 +1449,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JRadioButton addUndirectedEdgeRadioButton;
     private javax.swing.JRadioButton addVertexRadioButton;
     private javax.swing.JTextField amountOfSandField;
+    private javax.swing.JButton bigDecDelayButton;
+    private javax.swing.JButton bigIncDelayButton;
+    private javax.swing.JButton bigZoomInButton;
+    private javax.swing.JButton bigZoomOutButton;
     private javax.swing.JPanel blankOptionsPanel;
     private javax.media.opengl.GLCanvas canvas;
     private javax.swing.JLabel centerCoordLabel;
@@ -1312,7 +1464,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JPanel controlPanel;
     private javax.swing.JComboBox controlStateComboBox;
     private javax.swing.JLabel delayLabel;
-    private javax.swing.JSlider delaySlider;
     private javax.swing.JTextField delayTextField;
     private javax.swing.JButton deleteGraphButton;
     private javax.swing.JCheckBox drawEdgesCheckBox;
@@ -1381,11 +1532,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Rep
     private javax.swing.JScrollPane sandpileViewScrollPane;
     private javax.swing.JButton setConfigButton;
     private javax.swing.JRadioButton setSandRadioButton;
+    private javax.swing.JButton smallDevDelayButton;
+    private javax.swing.JButton smallIncDelayButton;
+    private javax.swing.JButton smallZoomInButton;
+    private javax.swing.JButton smallZoomOutButton;
     private javax.swing.JButton stabilizeButton;
     private javax.swing.JButton stepButton;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;
-    private javax.swing.JSlider zoomSlider;
     private javax.swing.JTextField zoomTextField;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

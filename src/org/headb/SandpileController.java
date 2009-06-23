@@ -48,7 +48,7 @@ import java.awt.Canvas;
 public class SandpileController implements ActionListener, Serializable, Runnable {
 
 	private float VERT_RADIUS = 1.0f;
-	private long minUpdateDelay = 0;
+	private long minUpdateDelay = 100;
 	private long lastUpdateTime = 0;
 	private long minRepaintDelay = 33;
 	private long lastRepaintTime = 0;
@@ -821,5 +821,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void setMinUpdateDelay(long delay) {
 		minUpdateDelay = delay;
+	}
+
+	public long getMinUpdateDelay() {
+		return minUpdateDelay;
 	}
 }
