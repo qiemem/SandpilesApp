@@ -127,9 +127,9 @@ public class SandpileGraph {
 		//this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert), weight);
 		this.edges.get(sourceVert).put(destVert, weight + this.weight(sourceVert, destVert));
 		this.degrees.set(sourceVert, this.degree(sourceVert) + weight);
-		if (weight(sourceVert, destVert) < 0) {
+		if (weight(sourceVert, destVert) <= 0) {
 			this.degrees.set(sourceVert, this.degree(sourceVert) - weight(sourceVert, destVert));
-			this.edges.get(sourceVert).put(destVert, 0);
+			this.edges.get(sourceVert).remove(destVert);
 		}
 	}
 
