@@ -61,11 +61,6 @@ public class SandpileGraph {
 	 * Removes a vertex from the graph.
 	 */
 	public void removeVertex(int i) {
-		//SandpileVertex vert = vertices.get(i);
-		//for(SandpileVertex v : vertices) {
-		//v.removeVertex(vert);
-		//}
-		//this.vertices.remove(i);
 		for (int j = 0; j < edges.size(); j++) {
 			Integer w = edges.get(i).remove(j);
 			if (w != null) {

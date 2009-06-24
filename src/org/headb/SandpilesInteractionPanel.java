@@ -137,7 +137,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				}
 			}
 			@Override public void mouseReleased(MouseEvent e){
-				drawer.clearSelectionBox();
+				if(mouseMode == MouseMode.SELECT)
+					drawer.clearSelectionBox();
 				selecting = false;
 				movingVertices = false;
 				sandpileController.repaint();
@@ -200,6 +201,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         removeUndirectedEdgeRadioButton = new javax.swing.JRadioButton();
         edgeWeightField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        deleteSelectedVerticesButton = new javax.swing.JButton();
         configManagerOptionsPanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         configSelectList = new javax.swing.JList();
@@ -371,6 +373,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
         jLabel1.setText("Edge Weight"); // NOI18N
 
+        deleteSelectedVerticesButton.setText("Delete Selected Vertices");
+        deleteSelectedVerticesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSelectedVerticesButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout editGraphPanelLayout = new org.jdesktop.layout.GroupLayout(editGraphPanel);
         editGraphPanel.setLayout(editGraphPanelLayout);
         editGraphPanelLayout.setHorizontalGroup(
@@ -386,8 +395,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(editGraphPanelLayout.createSequentialGroup()
                         .add(jLabel1)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(65, Short.MAX_VALUE))
+                        .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(deleteSelectedVerticesButton))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
         editGraphPanelLayout.setVerticalGroup(
             editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -407,7 +417,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
                     .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(482, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(deleteSelectedVerticesButton)
+                .addContainerGap(446, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(EDIT_GRAPH_STATE, editGraphPanel);
@@ -1563,6 +1575,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		drawer.scrollOnDrag = false;
 	}//GEN-LAST:event_editToggleButtonActionPerformed
 
+	private void deleteSelectedVerticesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedVerticesButtonActionPerformed
+		for(Integer v : sandpileController.getSelectedVertices()){
+			sandpileController.delVertex(v);
+		}
+	}//GEN-LAST:event_deleteSelectedVerticesButtonActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -1628,6 +1646,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JLabel delayLabel;
     private javax.swing.JTextField delayTextField;
     private javax.swing.JButton deleteGraphButton;
+    private javax.swing.JButton deleteSelectedVerticesButton;
     private javax.swing.JCheckBox drawEdgesCheckBox;
     private javax.swing.JComboBox eBorderComboBox;
     private javax.swing.JTextField edgeWeightField;

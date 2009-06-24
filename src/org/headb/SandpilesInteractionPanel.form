@@ -191,8 +191,9 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="edgeWeightField" min="-2" pref="36" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="deleteSelectedVerticesButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="65" max="32767" attributes="0"/>
+                              <EmptySpace pref="58" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -215,7 +216,9 @@
                                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="edgeWeightField" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="482" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="deleteSelectedVerticesButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="446" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -279,6 +282,14 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Edge Weight" noResource="true"/>
                       </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="deleteSelectedVerticesButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Delete Selected Vertices"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSelectedVerticesButtonActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

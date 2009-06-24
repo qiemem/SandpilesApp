@@ -709,6 +709,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		configs.clear();
 	}
 
+	public void delVertices(List<Integer> vertices) {
+		vertexData.removeAll(vertices);
+		currentConfig.removeAll(vertices);
+	}
+
 	public void delAllVertices() {
 		vertexData.clear();
 		currentConfig.clear();
