@@ -49,6 +49,7 @@ import java.awt.Cursor;
 import javax.swing.Timer;
 import java.util.Vector;
 import java.awt.event.*;
+import java.util.List;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -1576,7 +1577,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_editToggleButtonActionPerformed
 
 	private void deleteSelectedVerticesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedVerticesButtonActionPerformed
-		sandpileController.delVertices(sandpileController.getSelectedVertices());
+		List<Integer> verts = sandpileController.getSelectedVertices();
+		sandpileController.delVertices(verts);
+		sandpileController.unselectVertices();
 		sandpileController.repaint();
 	}//GEN-LAST:event_deleteSelectedVerticesButtonActionPerformed
 

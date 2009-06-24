@@ -73,7 +73,7 @@ public class SandpileGraph {
 				if(k==i){
 					int weight = edges.get(j).get(k);
 					if(j>i)
-						degrees.set(j-1, degree(j) - weight);
+						degrees.set(j-1, degree(j-1) - weight);
 					else
 						degrees.set(j, degree(j) - weight);
 				}else if(k>i){
@@ -125,6 +125,7 @@ public class SandpileGraph {
 	 */
 	public void addEdge(int sourceVert, int destVert, int weight) {
 		//this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert), weight);
+		if(sourceVert == destVert) return;
 		this.edges.get(sourceVert).put(destVert, weight + this.weight(sourceVert, destVert));
 		this.degrees.set(sourceVert, this.degree(sourceVert) + weight);
 		if (weight(sourceVert, destVert) <= 0) {

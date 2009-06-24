@@ -25,9 +25,9 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
+
 /**
  *
  * @author headb
@@ -64,9 +64,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public double fps = 0.0;
 	private SandpileConfiguration currentConfig;
 	private SandpileDrawer drawer;
-
-	private File projectFile=null;
-
+	private File projectFile = null;
 	private HashMap<String, SandpileConfiguration> configs;
 
 	public SandpileController() {
@@ -90,7 +88,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		firings = new ArrayList<Integer>();
 		currentConfig = new SandpileConfiguration();
 		selectedVertices = new ArrayList<Integer>();
-		configs=new HashMap<String,SandpileConfiguration>();
+		configs = new HashMap<String, SandpileConfiguration>();
 
 		Canvas canvas = drawer.getCanvas();
 		selectedVertices.clear();
@@ -154,13 +152,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void addVertexControl(float x, float y) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert < 0) {
-			if (selectedVertices.isEmpty()) {
-				addVertex(x, y);
-			} else {
-				selectedVertices.clear();
-			}
-		} else {
-			selectedVertices.add(touchVert);
+			addVertex(x, y);
 		}
 		repaint();
 	}
@@ -169,8 +161,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			delVertex(touchVert);
-		} else {
-			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -178,14 +168,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void addEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertices.isEmpty()) {
-				selectedVertices.add(touchVert);
-			} else if (!selectedVertices.contains(touchVert)) {
-				for(Integer v : selectedVertices)
-					addEdge(v, touchVert, weight);
+			for (Integer v : selectedVertices) {
+				addEdge(v, touchVert, weight);
 			}
-		} else {
-			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -193,14 +178,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void delEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertices.isEmpty()) {
-				selectedVertices.add(touchVert);
-			} else if (!selectedVertices.contains(touchVert)) {
-				for(Integer v : selectedVertices)
-					delEdge(v, touchVert, weight);
+			for (Integer v : selectedVertices) {
+				delEdge(v, touchVert, weight);
 			}
-		} else {
-			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -208,16 +188,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void addUndiEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertices.isEmpty()) {
-				selectedVertices.add(touchVert);
-			} else if (!selectedVertices.contains(touchVert)) {
-				for(Integer v : selectedVertices){
-					addEdge(v, touchVert, weight);
-					addEdge(touchVert, v, weight);
-				}
+			for (Integer v : selectedVertices) {
+				addEdge(v, touchVert, weight);
+				addEdge(touchVert, v, weight);
 			}
-		} else {
-			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -225,16 +199,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void delUndiEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertices.isEmpty()) {
-				selectedVertices.add(touchVert);
-			} else if (!selectedVertices.contains(touchVert)) {
-				for(Integer v : selectedVertices){
-					delEdge(v, touchVert, weight);
-					delEdge(touchVert, v, weight);
-				}
+			for (Integer v : selectedVertices) {
+				delEdge(v, touchVert, weight);
+				delEdge(touchVert, v, weight);
 			}
-		} else {
-			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -242,7 +210,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void addSandControl(float x, float y, int amount) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			selectedVertices.add(touchVert);
 			addSand(touchVert, amount);
 		}
 		repaint();
@@ -251,7 +218,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void setSandControl(float x, float y, int amount) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			selectedVertices.add(touchVert);
 			setSand(touchVert, amount);
 		}
 		repaint();
@@ -633,8 +599,8 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public SandpileConfiguration getIdentity(){
-		if(!configs.containsKey("Identity")){
+	public SandpileConfiguration getIdentity() {
+		if (!configs.containsKey("Identity")) {
 			configs.put("Identity", sg.getIdentityConfig());
 		}
 		return configs.get("Identity");
@@ -649,7 +615,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		currentConfig = getIdentity();
 		repaint();
 	}
-	
+
 	public void setSandEverywhere(int amount) {
 		currentConfig = sg.getUniformConfig(amount);
 		repaint();
@@ -670,16 +636,16 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public SandpileConfiguration getConfigByName(String name){
+	public SandpileConfiguration getConfigByName(String name) {
 		return configs.get(name);
 	}
 
-	public void addConfigNamed(String name){
+	public void addConfigNamed(String name) {
 		currentConfig = currentConfig.plus(getConfigByName(name));
 		repaint();
 	}
 
-	public void setConfigNamed(String name){
+	public void setConfigNamed(String name) {
 		currentConfig = getConfigByName(name);
 		repaint();
 	}
@@ -713,7 +679,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void delVertices(List<Integer> vertices) {
 		Collections.sort(vertices);
 		Collections.reverse(vertices);
-		for(int v : vertices){
+		for (int v : vertices) {
 			delVertex(v);
 		}
 	}
@@ -728,7 +694,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void clearEdgeDependentConfigs(){
+	public void clearEdgeDependentConfigs() {
 		configs.remove("Identity");
 		configs.remove("Burning");
 	}
@@ -767,38 +733,39 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		currentConfig.set(vert, amount);
 	}
 
-	public List<Integer>getVerticesInRect(float maxX, float maxY, float minX, float minY){
+	public List<Integer> getVerticesInRect(float maxX, float maxY, float minX, float minY) {
 		ArrayList<Integer> containedVertices = new ArrayList<Integer>();
-		for(int v=0; v<vertexData.size(); v++){
+		for (int v = 0; v < vertexData.size(); v++) {
 			float[] pos = vertexData.get(v);
-			if((pos[0]<=maxX&&pos[0]>=minX)&&(pos[1]<=maxY&&pos[1]>=minY))
+			if ((pos[0] <= maxX && pos[0] >= minX) && (pos[1] <= maxY && pos[1] >= minY)) {
 				containedVertices.add(v);
+			}
 		}
 		return containedVertices;
 	}
-	
-	public void unselectVertices(){
+
+	public void unselectVertices() {
 		selectedVertices.clear();
 	}
 
-	public void selectVertices(List<Integer> vertices){
+	public void selectVertices(List<Integer> vertices) {
 		selectedVertices.addAll(vertices);
 	}
 
-	public void setSelectedVertices(List<Integer> vertices){
+	public void setSelectedVertices(List<Integer> vertices) {
 		selectedVertices = vertices;
 	}
 
-	public void selectVertex(int vert){
+	public void selectVertex(int vert) {
 		selectedVertices.add(vert);
 	}
 
-	public List<Integer> getSelectedVertices(){
+	public List<Integer> getSelectedVertices() {
 		return selectedVertices;
 	}
 
-	public void moveVertices(List<Integer> vertices, float deltaX, float deltaY){
-		for(Integer v : vertices){
+	public void moveVertices(List<Integer> vertices, float deltaX, float deltaY) {
+		for (Integer v : vertices) {
 			vertexData.get(v)[0] += deltaX;
 			vertexData.get(v)[1] += deltaY;
 		}
@@ -847,51 +814,49 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public boolean hasProjectFile(){
-		return projectFile!=null;
+	public boolean hasProjectFile() {
+		return projectFile != null;
 	}
 
-	public void storeCurrentConfig(String name){
+	public void storeCurrentConfig(String name) {
 		configs.put(name, currentConfig);
 	}
 
-	public Set<String> getStoredConfigNames(){
+	public Set<String> getStoredConfigNames() {
 		return configs.keySet();
 	}
 
-	
-
-	public void saveGraphProject(){
+	public void saveGraphProject() {
 		saveGraphProject(projectFile);
 	}
 
-	public void saveGraphProject(File file){
+	public void saveGraphProject(File file) {
 		file.mkdir();
 		File graphFile = new File(file, "graph.sg");
 		saveGraph(graphFile);
-		for(String configName : configs.keySet()){
-			saveConfig(new File(file, configName+".sc"), configs.get(configName));
+		for (String configName : configs.keySet()) {
+			saveConfig(new File(file, configName + ".sc"), configs.get(configName));
 		}
 		saveConfig(new File(file, "current.sc"), currentConfig);
 		projectFile = file;
 	}
 
-	public boolean loadGraphProject(File file){
+	public boolean loadGraphProject(File file) {
 		File graphFile = new File(file, "graph.sg");
-		if(graphFile.exists()){
+		if (graphFile.exists()) {
 			loadGraph(graphFile);
 			String[] projectFileNames = file.list();
-			for(String s : projectFileNames){
-				if(s.equals("current.sc")){
+			for (String s : projectFileNames) {
+				if (s.equals("current.sc")) {
 					System.err.println("Loading current");
 					loadCurrentConfig(new File(file, "current.sc"));
-				}else if(s.endsWith(".sc")){
-					System.err.println("Loading "+s.substring(0, s.length()-3));
-					configs.put(s.substring(0, s.length()-3), loadConfig(new File(file, s)));
+				} else if (s.endsWith(".sc")) {
+					System.err.println("Loading " + s.substring(0, s.length() - 3));
+					configs.put(s.substring(0, s.length() - 3), loadConfig(new File(file, s)));
 				}
 			}
 			projectFile = file;
-		}else{
+		} else {
 			return false;
 		}
 		repaint();
@@ -918,7 +883,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		}
 	}
 
-	public void loadCurrentConfig(File file){
+	public void loadCurrentConfig(File file) {
 		currentConfig = loadConfig(file);
 	}
 
