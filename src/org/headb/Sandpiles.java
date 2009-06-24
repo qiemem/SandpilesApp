@@ -179,11 +179,13 @@ public class Sandpiles extends javax.swing.JFrame {
 	private void saveProjectAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectAsMenuItemActionPerformed
 		fileAction = SAVE_PROJECT;
 		this.projectFileChooser.showSaveDialog(this);
+		this.sandpilesInteractionPanel1.updateConfigSelectList();
 }//GEN-LAST:event_saveProjectAsMenuItemActionPerformed
 
 	private void loadGraphMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadGraphMenuItemActionPerformed
 		fileAction = LOAD_PROJECT;
 		this.projectFileChooser.showOpenDialog(this);
+		this.sandpilesInteractionPanel1.updateConfigSelectList();
 	}//GEN-LAST:event_loadGraphMenuItemActionPerformed
 
 	private void saveProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectMenuItemActionPerformed
@@ -192,6 +194,7 @@ public class Sandpiles extends javax.swing.JFrame {
 		}else{
 			saveProjectAsMenuItemActionPerformed(evt);
 		}
+		this.sandpilesInteractionPanel1.updateConfigSelectList();
 	}//GEN-LAST:event_saveProjectMenuItemActionPerformed
 
 	/**

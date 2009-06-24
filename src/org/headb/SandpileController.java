@@ -38,7 +38,7 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Set;
 
 import java.io.*;
 
@@ -659,6 +659,20 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
+	public SandpileConfiguration getConfigByName(String name){
+		return configs.get(name);
+	}
+
+	public void addConfigNamed(String name){
+		currentConfig = currentConfig.plus(getConfigByName(name));
+		repaint();
+	}
+
+	public void setConfigNamed(String name){
+		currentConfig = getConfigByName(name);
+		repaint();
+	}
+
 	public void clearSand() {
 		currentConfig = sg.getUniformConfig(0);
 		repaint();
@@ -781,6 +795,16 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		return projectFile!=null;
 	}
 
+	public void storeCurrentConfig(String name){
+		configs.put(name, currentConfig);
+	}
+
+	public Set<String> getStoredConfigNames(){
+		return configs.keySet();
+	}
+
+	
+
 	public void saveGraphProject(){
 		saveGraphProject(projectFile);
 	}
@@ -810,6 +834,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 					configs.put(s.substring(0, s.length()-3), loadConfig(new File(file, s)));
 				}
 			}
+			projectFile = file;
 		}else{
 			return false;
 		}

@@ -47,6 +47,7 @@ package org.headb;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import javax.swing.Timer;
+import java.util.Vector;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -62,6 +63,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private static final String BURNING_CONFIG = "Burning";
 	private static final String DUAL_CONFIG = "Dual of Current";
 	private static final String ONES_CONFIG = "Ones Everywhere";
+	private final String[] defaultConfigs = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, DUAL_CONFIG, ONES_CONFIG };
 	private SandpileController sandpileController;
 	private SandpileGLDrawer drawer;
 
@@ -147,6 +149,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         jLabel8 = new javax.swing.JLabel();
         amountOfSandField = new javax.swing.JTextField();
         addRandomSandButton = new javax.swing.JButton();
+        storeConfigButton = new javax.swing.JButton();
         makeHoneycombOptionsPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         makeHoneycombBorderComboBox = new javax.swing.JComboBox();
@@ -388,6 +391,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        storeConfigButton.setText("Store");
+        storeConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                storeConfigButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout configManagerOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(configManagerOptionsPanel);
         configManagerOptionsPanel.setLayout(configManagerOptionsPanelLayout);
         configManagerOptionsPanelLayout.setHorizontalGroup(
@@ -395,8 +405,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             .add(removeSandRadioButton)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 155, Short.MAX_VALUE)
-                .add(setConfigButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(setConfigButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 79, Short.MAX_VALUE)
+                .add(storeConfigButton))
             .add(jLabel7)
             .add(addSandRadioButton)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
@@ -405,17 +417,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(jLabel8))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
             .add(addRandomSandButton)
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 95, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 167, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(addConfigButton)
-                    .add(setConfigButton))
+                    .add(setConfigButton)
+                    .add(storeConfigButton))
                 .add(18, 18, 18)
                 .add(jLabel7)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -430,7 +443,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(addRandomSandButton)
-                .addContainerGap(384, Short.MAX_VALUE))
+                .addContainerGap(312, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(CONFIG_MANAGER_STATE, configManagerOptionsPanel);
@@ -1190,16 +1203,21 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private void addConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addConfigButtonActionPerformed
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
-		if(selection.equals(MAX_CONFIG)){
-			sandpileController.addMaxStableConfig();
-		}else if(selection.equals(DUAL_CONFIG)){
-			sandpileController.addDualConfig();
-		}else if(selection.equals(ONES_CONFIG)){
-			sandpileController.addSandEverywhere(1);
-		}else if(selection.equals(IDENTITY_CONFIG)){
-			sandpileController.addIdentity();
-		}else if(selection.equals(BURNING_CONFIG)){
-			sandpileController.addBurningConfig();
+		System.err.println(selection);
+		if(selection!=null){
+			if(selection.equals(MAX_CONFIG)){
+				sandpileController.addMaxStableConfig();
+			}else if(selection.equals(DUAL_CONFIG)){
+				sandpileController.addDualConfig();
+			}else if(selection.equals(ONES_CONFIG)){
+				sandpileController.addSandEverywhere(1);
+			}else if(selection.equals(IDENTITY_CONFIG)){
+				sandpileController.addIdentity();
+			}else if(selection.equals(BURNING_CONFIG)){
+				sandpileController.addBurningConfig();
+			}else{
+				sandpileController.addConfigNamed(selection);
+			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_addConfigButtonActionPerformed
@@ -1207,16 +1225,20 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private void setConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setConfigButtonActionPerformed
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
-		if(selection.equals(MAX_CONFIG)){
-			sandpileController.setToMaxStableConfig();
-		}else if(selection.equals(DUAL_CONFIG)){
-			sandpileController.setToDualConfig();
-		}else if(selection.equals(ONES_CONFIG)){
-			sandpileController.setSandEverywhere(1);
-		}else if(selection.equals(IDENTITY_CONFIG)){
-			sandpileController.setToIdentity();
-		}else if(selection.equals(BURNING_CONFIG)){
-			sandpileController.setToBurningConfig();
+		if(selection!=null){
+			if(selection.equals(MAX_CONFIG)){
+				sandpileController.setToMaxStableConfig();
+			}else if(selection.equals(DUAL_CONFIG)){
+				sandpileController.setToDualConfig();
+			}else if(selection.equals(ONES_CONFIG)){
+				sandpileController.setSandEverywhere(1);
+			}else if(selection.equals(IDENTITY_CONFIG)){
+				sandpileController.setToIdentity();
+			}else if(selection.equals(BURNING_CONFIG)){
+				sandpileController.setToBurningConfig();
+			}else{
+				sandpileController.setConfigNamed(selection);
+			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_setConfigButtonActionPerformed
@@ -1296,6 +1318,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				sandpileController.setSandControl(x,y, Integer.valueOf(amountOfSandField.getText()));
 			}
 		}
+		this.updateConfigSelectList();
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}//GEN-LAST:event_canvasMouseClicked
 
@@ -1410,6 +1433,21 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private void zoomTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zoomTextFieldActionPerformed
 		updateDrawerZoom();
 	}//GEN-LAST:event_zoomTextFieldActionPerformed
+
+	private void storeConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeConfigButtonActionPerformed
+		String name = javax.swing.JOptionPane.showInputDialog("Enter a name for the configuration:");
+		sandpileController.storeCurrentConfig(name);
+		updateConfigSelectList();
+	}//GEN-LAST:event_storeConfigButtonActionPerformed
+
+	public void updateConfigSelectList() {
+		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
+		for(String s : sandpileController.getStoredConfigNames()){
+			if(!s.equals(IDENTITY_CONFIG))
+				newList.add(s);
+		}
+		configSelectList.setListData(newList);
+	}
 
 	public void updateZoomTextField(){
 		zoomTextField.setText(String.valueOf(drawer.getZoom()*100.0f));
@@ -1538,6 +1576,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JButton smallZoomOutButton;
     private javax.swing.JButton stabilizeButton;
     private javax.swing.JButton stepButton;
+    private javax.swing.JButton storeConfigButton;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;
     private javax.swing.JTextField zoomTextField;

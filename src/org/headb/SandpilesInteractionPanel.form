@@ -297,8 +297,10 @@
                           <Component id="removeSandRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="addConfigButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="155" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="setConfigButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="79" max="32767" attributes="0"/>
+                              <Component id="storeConfigButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="addSandRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -310,18 +312,19 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="amountOfSandField" min="-2" pref="74" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane3" alignment="0" pref="305" max="32767" attributes="0"/>
                           <Component id="addRandomSandButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jScrollPane3" alignment="0" pref="305" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="jScrollPane3" min="-2" pref="95" max="-2" attributes="0"/>
+                              <Component id="jScrollPane3" min="-2" pref="167" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="addConfigButton" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="setConfigButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="storeConfigButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
@@ -338,7 +341,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addRandomSandButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="384" max="32767" attributes="0"/>
+                              <EmptySpace pref="312" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -422,6 +425,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addRandomSandButtonActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="storeConfigButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Store"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="storeConfigButtonActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
