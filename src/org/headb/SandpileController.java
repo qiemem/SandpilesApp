@@ -92,7 +92,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		configs=new HashMap<String,SandpileConfiguration>();
 
 		Canvas canvas = drawer.getCanvas();
-
 		selectedVertices.clear();
 	}
 
@@ -768,8 +767,35 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		}
 		return containedVertices;
 	}
+	
+	public void unselectVertices(){
+		selectedVertices.clear();
+	}
 
-	private int touchingVertex(float x, float y) {
+	public void selectVertices(List<Integer> vertices){
+		selectedVertices.addAll(vertices);
+	}
+
+	public void setSelectedVertices(List<Integer> vertices){
+		selectedVertices = vertices;
+	}
+
+	public void selectVertex(int vert){
+		selectedVertices.add(vert);
+	}
+
+	public List<Integer> getSelectedVertices(){
+		return selectedVertices;
+	}
+
+	public void moveVertices(List<Integer> vertices, float deltaX, float deltaY){
+		for(Integer v : vertices){
+			vertexData.get(v)[0] += deltaX;
+			vertexData.get(v)[1] += deltaY;
+		}
+	}
+
+	public int touchingVertex(float x, float y) {
 		for (int i = 0; i < vertexData.size(); i++) {
 			float[] v = vertexData.get(i);/*
 			if (Math.sqrt((x - v[0]) * (x - v[0]) + (y - v[1]) * (y - v[1])) <= VERT_RADIUS) {

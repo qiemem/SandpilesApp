@@ -46,5 +46,7 @@ public interface SandpileDrawer{
 	public void setColorMode(ColorMode cm);
 	public ColorMode getColorMode();
 	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, List<Integer> selectedVertices);
+	public void setSelectionBox(float maxX, float maxY, float minX, float minY);
+	public void clearSelectionBox();
 	public float[] transformCanvasCoords(int x, int y);
 }

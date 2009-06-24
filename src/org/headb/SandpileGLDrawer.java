@@ -67,6 +67,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	public boolean changingVertexSize = true;
 	public boolean drawCircles = false;
 	public boolean scrollOnDrag = true;
+	private float[] selectionBox = {0f,0f,0f,0f};
+	private boolean drawSelectionBox = false;
 	private long timeOfLastDisplay = 0;
 
 	private ArrayList<ReshapeListener> repaintListeners = new ArrayList<ReshapeListener>();
@@ -158,7 +160,10 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			drawVertexLabels(tr);
 			drawEdgeLabels(tr);
 		}
-		drawSelected(gl);
+		if(!selectedVertices.isEmpty())
+			drawSelected(gl);
+		if (drawSelectionBox)
+			drawSelectionBox(gl);
 
 		gl.glFlush();
 	}
@@ -260,29 +265,47 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	private void drawSelected(GL gl) {
-		if(selectedVertices.isEmpty())	return;
 		for(Integer selectedVertex : selectedVertices){
 			if (selectedVertex >= 0) {
 				gl.glBegin(gl.GL_LINES);
-				float x = vertexLocations.get(selectedVertex)[0];
-				float y = vertexLocations.get(selectedVertex)[1];
-				//GLUquadric quadric = glu.gluNewQuadric();
-				//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
-				gl.glColor3f(0f, 1f, .5f);
-				gl.glVertex2f(x - vertSize, y + vertSize);
-				gl.glVertex2f(x + vertSize, y + vertSize);
+					float x = vertexLocations.get(selectedVertex)[0];
+					float y = vertexLocations.get(selectedVertex)[1];
+					//GLUquadric quadric = glu.gluNewQuadric();
+					//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
+					gl.glColor3f(0f, 1f, .5f);
+					gl.glVertex2f(x - vertSize, y + vertSize);
+					gl.glVertex2f(x + vertSize, y + vertSize);
 
-				gl.glVertex2f(x + vertSize, y + vertSize);
-				gl.glVertex2f(x + vertSize, y - vertSize);
+					gl.glVertex2f(x + vertSize, y + vertSize);
+					gl.glVertex2f(x + vertSize, y - vertSize);
 
-				gl.glVertex2f(x + vertSize, y - vertSize);
-				gl.glVertex2f(x - vertSize, y - vertSize);
+					gl.glVertex2f(x + vertSize, y - vertSize);
+					gl.glVertex2f(x - vertSize, y - vertSize);
 
-				gl.glVertex2f(x - vertSize, y - vertSize);
-				gl.glVertex2f(x - vertSize, y + vertSize);
+					gl.glVertex2f(x - vertSize, y - vertSize);
+					gl.glVertex2f(x - vertSize, y + vertSize);
 				gl.glEnd();
 			}
 		}
+	}
+
+	private void drawSelectionBox(GL gl) {
+		gl.glColor3f(0f, 1f, .5f);
+		//System.err.println(selectionBox[0]+" "+selectionBox[1]+" "+selectionBox[2]+" "+selectionBox[3]);
+		gl.glBegin(gl.GL_LINES);
+			//top
+			gl.glVertex2f(selectionBox[2], selectionBox[1]);
+			gl.glVertex2f(selectionBox[0], selectionBox[1]);
+			//right
+			gl.glVertex2f(selectionBox[0], selectionBox[1]);
+			gl.glVertex2f(selectionBox[0], selectionBox[3]);
+			//bottom
+			gl.glVertex2f(selectionBox[0], selectionBox[3]);
+			gl.glVertex2f(selectionBox[2], selectionBox[3]);
+			//left
+			gl.glVertex2f(selectionBox[2], selectionBox[3]);
+			gl.glVertex2f(selectionBox[2], selectionBox[1]);
+		gl.glEnd();
 	}
 
 	/**
@@ -306,6 +329,18 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		this.selectedVertices = selectedVertices;
 		this.firings = firings;
 		canvas.display();
+	}
+
+	public void setSelectionBox(float maxX, float maxY, float minX, float minY){
+		selectionBox[0] = maxX;
+		selectionBox[1] = maxY;
+		selectionBox[2] = minX;
+		selectionBox[3] = minY;
+		drawSelectionBox = true;
+	}
+
+	public void clearSelectionBox(){
+		drawSelectionBox = false;
 	}
 
 	public float[] transformCanvasCoords(int x, int y) {
@@ -443,7 +478,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		}
 	}
 
-	public void addRepaintListener(ReshapeListener r){
+	public void addReshapeListener(ReshapeListener r){
 		repaintListeners.add(r);
 	}
 }
