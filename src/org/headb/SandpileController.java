@@ -39,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.List;
 
 import java.io.*;
 
@@ -57,7 +58,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private SandpileGraph sg;
 	ArrayList<float[]> vertexData;
 	ArrayList<Integer> firings;
-	private int selectedVertex;
+	private List<Integer> selectedVertices;
 	private long lastUpdate = System.currentTimeMillis();
 	public double fps = 0.0;
 	private SandpileConfiguration currentConfig;
@@ -87,11 +88,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		vertexData = new ArrayList<float[]>();
 		firings = new ArrayList<Integer>();
 		currentConfig = new SandpileConfiguration();
+		selectedVertices = new ArrayList<Integer>();
 		configs=new HashMap<String,SandpileConfiguration>();
 
 		Canvas canvas = drawer.getCanvas();
 
-		selectedVertex = -1;
+		selectedVertices.clear();
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -146,20 +148,19 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void repaint() {
-		drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertex);
+		drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertices);
 	}
 
 	public void addVertexControl(float x, float y) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert < 0) {
-			if (selectedVertex >= 0) {
-				selectedVertex = -1;
-			} else {
-				//System.out.println("Adding vertex "+x+" "+y);
+			if (selectedVertices.isEmpty()) {
 				addVertex(x, y);
+			} else {
+				selectedVertices.clear();
 			}
 		} else {
-			selectedVertex = touchVert;
+			selectedVertices.add(touchVert);
 		}
 		repaint();
 	}
@@ -169,7 +170,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		if (touchVert >= 0) {
 			delVertex(touchVert);
 		} else {
-			selectedVertex = -1;
+			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -177,13 +178,14 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void addEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertex < 0) {
-				selectedVertex = touchVert;
-			} else if (touchVert != selectedVertex) {
-				addEdge(selectedVertex, touchVert, weight);
+			if (selectedVertices.isEmpty()) {
+				selectedVertices.add(touchVert);
+			} else if (!selectedVertices.contains(touchVert)) {
+				for(Integer v : selectedVertices)
+					addEdge(v, touchVert, weight);
 			}
 		} else {
-			selectedVertex = -1;
+			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -191,13 +193,14 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void delEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertex < 0) {
-				selectedVertex = touchVert;
-			} else if (touchVert != selectedVertex) {
-				delEdge(selectedVertex, touchVert, weight);
+			if (selectedVertices.isEmpty()) {
+				selectedVertices.add(touchVert);
+			} else if (!selectedVertices.contains(touchVert)) {
+				for(Integer v : selectedVertices)
+					delEdge(v, touchVert, weight);
 			}
 		} else {
-			selectedVertex = -1;
+			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -205,12 +208,16 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void addUndiEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertex < 0) {
-				selectedVertex = touchVert;
-			} else if (touchVert != selectedVertex) {
-				addEdge(selectedVertex, touchVert, weight);
-				addEdge(touchVert, selectedVertex, weight);
+			if (selectedVertices.isEmpty()) {
+				selectedVertices.add(touchVert);
+			} else if (!selectedVertices.contains(touchVert)) {
+				for(Integer v : selectedVertices){
+					addEdge(v, touchVert, weight);
+					addEdge(touchVert, v, weight);
+				}
 			}
+		} else {
+			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -218,12 +225,16 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void delUndiEdgeControl(float x, float y, int weight) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			if (selectedVertex < 0) {
-				selectedVertex = touchVert;
-			} else if (touchVert != selectedVertex) {
-				delEdge(selectedVertex, touchVert, weight);
-				delEdge(touchVert, selectedVertex, weight);
+			if (selectedVertices.isEmpty()) {
+				selectedVertices.add(touchVert);
+			} else if (!selectedVertices.contains(touchVert)) {
+				for(Integer v : selectedVertices){
+					delEdge(v, touchVert, weight);
+					delEdge(touchVert, v, weight);
+				}
 			}
+		} else {
+			selectedVertices.clear();
 		}
 		repaint();
 	}
@@ -231,7 +242,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void addSandControl(float x, float y, int amount) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			selectedVertex = touchVert;
+			selectedVertices.add(touchVert);
 			addSand(touchVert, amount);
 		}
 		repaint();
@@ -240,7 +251,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void setSandControl(float x, float y, int amount) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			selectedVertex = touchVert;
+			selectedVertices.add(touchVert);
 			setSand(touchVert, amount);
 		}
 		repaint();
@@ -705,7 +716,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		firings.clear();
 		configs.clear();
 		sg.removeAllVertices();
-		this.selectedVertex = -1;
+		this.selectedVertices.clear();
 		repaint();
 	}
 
@@ -746,6 +757,16 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void setSand(int vert, int amount) {
 		currentConfig.set(vert, amount);
+	}
+
+	public List<Integer>getVerticesInRect(float maxX, float maxY, float minX, float minY){
+		ArrayList<Integer> containedVertices = new ArrayList<Integer>();
+		for(int v=0; v<vertexData.size(); v++){
+			float[] pos = vertexData.get(v);
+			if((pos[0]<=maxX&&pos[0]>=minX)&&(pos[1]<=maxY&&pos[1]>=minY))
+				containedVertices.add(v);
+		}
+		return containedVertices;
 	}
 
 	private int touchingVertex(float x, float y) {

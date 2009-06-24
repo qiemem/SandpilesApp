@@ -50,7 +50,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private List<float[]> vertexLocations = new ArrayList<float[]>();
 	private SandpileGraph graph = new SandpileGraph();
 	private SandpileConfiguration config = new SandpileConfiguration();
-	private int selectedVertex = -1;
+	private List<Integer> selectedVertices = new ArrayList<Integer>();
 	private float startingWidth=200.0f, startingHeight=200.0f, zoom=1f;
 	private float originX = 0.0f,  originY = 0.0f,  width = 200.0f,  height = 200.0f;
 	private int canvasX,  canvasY,  canvasW,  canvasH;
@@ -259,25 +259,28 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	private void drawSelected(GL gl) {
-		if (selectedVertex >= 0) {
-			gl.glBegin(gl.GL_LINES);
-			float x = vertexLocations.get(selectedVertex)[0];
-			float y = vertexLocations.get(selectedVertex)[1];
-			//GLUquadric quadric = glu.gluNewQuadric();
-			//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
-			gl.glColor3f(0f, 1f, .5f);
-			gl.glVertex2f(x - vertSize, y + vertSize);
-			gl.glVertex2f(x + vertSize, y + vertSize);
+		if(selectedVertices.isEmpty())	return;
+		for(Integer selectedVertex : selectedVertices){
+			if (selectedVertex >= 0) {
+				gl.glBegin(gl.GL_LINES);
+				float x = vertexLocations.get(selectedVertex)[0];
+				float y = vertexLocations.get(selectedVertex)[1];
+				//GLUquadric quadric = glu.gluNewQuadric();
+				//glu.gluDisk(quadric, 0.0, 1.0, 10, 1);
+				gl.glColor3f(0f, 1f, .5f);
+				gl.glVertex2f(x - vertSize, y + vertSize);
+				gl.glVertex2f(x + vertSize, y + vertSize);
 
-			gl.glVertex2f(x + vertSize, y + vertSize);
-			gl.glVertex2f(x + vertSize, y - vertSize);
+				gl.glVertex2f(x + vertSize, y + vertSize);
+				gl.glVertex2f(x + vertSize, y - vertSize);
 
-			gl.glVertex2f(x + vertSize, y - vertSize);
-			gl.glVertex2f(x - vertSize, y - vertSize);
+				gl.glVertex2f(x + vertSize, y - vertSize);
+				gl.glVertex2f(x - vertSize, y - vertSize);
 
-			gl.glVertex2f(x - vertSize, y - vertSize);
-			gl.glVertex2f(x - vertSize, y + vertSize);
-			gl.glEnd();
+				gl.glVertex2f(x - vertSize, y - vertSize);
+				gl.glVertex2f(x - vertSize, y + vertSize);
+				gl.glEnd();
+			}
 		}
 	}
 
@@ -295,11 +298,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		return canvas;
 	}
 
-	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, int selectedVertex) {
+	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, List<Integer> selectedVertices) {
 		this.graph = graph;
 		this.vertexLocations = vertexLocations;
 		this.config = config;
-		this.selectedVertex = selectedVertex;
+		this.selectedVertices = selectedVertices;
 		this.firings = firings;
 		canvas.display();
 	}
