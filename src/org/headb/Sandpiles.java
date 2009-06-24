@@ -65,6 +65,7 @@ public class Sandpiles extends javax.swing.JFrame {
         quitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
 
+        fileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         fileChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileChooserActionPerformed(evt);
@@ -146,16 +147,16 @@ public class Sandpiles extends javax.swing.JFrame {
 		if(evt.getActionCommand().equals(fileChooser.APPROVE_SELECTION)){
 			switch(fileAction){
 				case SAVE_GRAPH:
-					this.sandpilesInteractionPanel1.getSandpilePanel().saveGraph(fileChooser.getSelectedFile());
+					this.sandpilesInteractionPanel1.getSandpileController().saveGraphProject(fileChooser.getSelectedFile());
 					break;
 				case LOAD_GRAPH:
-					this.sandpilesInteractionPanel1.getSandpilePanel().loadGraph(fileChooser.getSelectedFile());
+					this.sandpilesInteractionPanel1.getSandpileController().loadGraphProject(fileChooser.getSelectedFile());
 					break;
 				case SAVE_CONFIG:
-					this.sandpilesInteractionPanel1.getSandpilePanel().saveConfig(fileChooser.getSelectedFile());
+					this.sandpilesInteractionPanel1.getSandpileController().saveConfig(fileChooser.getSelectedFile());
 					break;
 				case LOAD_CONFIG:
-					this.sandpilesInteractionPanel1.getSandpilePanel().loadConfig(fileChooser.getSelectedFile());
+					this.sandpilesInteractionPanel1.getSandpileController().loadCurrentConfig(fileChooser.getSelectedFile());
 					break;
 			}
 		}

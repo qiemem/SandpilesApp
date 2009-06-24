@@ -1081,7 +1081,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
-	public SandpileController getSandpilePanel() {
+	public SandpileController getSandpileController() {
 		return this.sandpileController;
 	}
 	private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed

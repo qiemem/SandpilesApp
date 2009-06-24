@@ -37,6 +37,8 @@ package org.headb;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.List;
 
 import java.io.*;
 
@@ -61,6 +63,8 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private SandpileConfiguration currentConfig;
 	private SandpileDrawer drawer;
 
+	private HashMap<String, SandpileConfiguration> configs;
+
 	public SandpileController() {
 		drawer = new SandpileGLDrawer();
 		initWithSandpileGraph(new SandpileGraph());
@@ -81,6 +85,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		vertexData = new ArrayList<float[]>();
 		firings = new ArrayList<Integer>();
 		currentConfig = new SandpileConfiguration();
+		configs=new HashMap<String,SandpileConfiguration>();
 
 		Canvas canvas = drawer.getCanvas();
 
@@ -628,13 +633,20 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
+	public SandpileConfiguration getIdentity(){
+		if(!configs.containsKey("Identity")){
+			configs.put("Identity", sg.getIdentityConfig());
+		}
+		return configs.get("Identity");
+	}
+
 	public void addIdentity() {
-		currentConfig = currentConfig.plus(sg.getIdentityConfig());
+		currentConfig = currentConfig.plus(getIdentity());
 		repaint();
 	}
 
 	public void setToIdentity() {
-		currentConfig = sg.getIdentityConfig();
+		currentConfig = getIdentity();
 		repaint();
 	}
 	
@@ -673,6 +685,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		vertexData.add(newPos);
 		currentConfig.add(0);
 		firings.add(0);
+		configs.clear();
 	}
 
 	public void delVertex(int v) {
@@ -680,15 +693,22 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		currentConfig.remove(v);
 		firings.remove(v);
 		sg.removeVertex(v);
+		configs.clear();
 	}
 
 	public void delAllVertices() {
 		vertexData.clear();
 		currentConfig.clear();
 		firings.clear();
+		configs.clear();
 		sg.removeAllVertices();
 		this.selectedVertex = -1;
 		repaint();
+	}
+
+	public void clearEdgeDependentConfigs(){
+		configs.remove("Identity");
+		configs.remove("Burning");
 	}
 
 	public void addEdge(int originVert, int destVert) {
@@ -697,6 +717,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void addEdge(int originVert, int destVert, int weight) {
 		sg.addEdge(originVert, destVert, weight);
+		clearEdgeDependentConfigs();
 	}
 
 	public void delEdge(int originVert, int destVert) {
@@ -705,6 +726,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void delEdge(int originVert, int destVert, int weight) {
 		sg.removeEdge(originVert, destVert, weight);
+		clearEdgeDependentConfigs();
 	}
 
 	public void addSand(int vert, int amount) {
@@ -766,8 +788,40 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
+	public void saveGraphProject(File file){
+		file.mkdir();
+		File graphFile = new File(file, "graph.sg");
+		saveGraph(graphFile);
+		for(String configName : configs.keySet()){
+			saveConfig(new File(file, configName+".sc"), configs.get(configName));
+		}
+		saveConfig(new File(file, "current.sc"), currentConfig);
+	}
+
+	public boolean loadGraphProject(File file){
+		File graphFile = new File(file, "graph.sg");
+		if(graphFile.exists()){
+			loadGraph(graphFile);
+			String[] projectFileNames = file.list();
+			for(String s : projectFileNames){
+				if(s.equals("current.sc")){
+					System.err.println("Loading current");
+					loadCurrentConfig(new File(file, "current.sc"));
+				}else if(s.endsWith(".sc")){
+					System.err.println(s.substring(0, s.length()-3));
+					configs.put(s.substring(0, s.length()-3), loadConfig(new File(file, s)));
+				}
+			}
+		}else{
+			System.err.println("Invalid project directory.");
+		}
+		repaint();
+		return true;
+	}
+
 	public void saveGraph(File file) {
 		try {
+			file.createNewFile();
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
 			for (float[] coords : vertexData) {
 				outBuffer.write("vertex " + coords[0] + " " + coords[1]);
@@ -785,26 +839,34 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		}
 	}
 
-	public void loadConfig(File file) {
+	public void loadCurrentConfig(File file){
+		currentConfig = loadConfig(file);
+	}
+
+	public SandpileConfiguration loadConfig(File file) {
+		SandpileConfiguration config = new SandpileConfiguration();
 		try {
 			BufferedReader inBuffer = new BufferedReader(new FileReader(file));
 			String line = inBuffer.readLine();
-			currentConfig.clear();
 			while (line != null) {
-				currentConfig.add(Integer.valueOf(line));
+				config.add(Integer.valueOf(line));
 				line = inBuffer.readLine();
 			}
 			inBuffer.close();
 		} catch (IOException e) {
 			System.err.println("Caught IOException while trying to load config: " + e.getMessage());
 		}
-		repaint();
+		return config;
 	}
 
 	public void saveConfig(File file) {
+		saveConfig(file, currentConfig);
+	}
+
+	public void saveConfig(File file, SandpileConfiguration config) {
 		try {
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
-			for (int v : currentConfig) {
+			for (int v : config) {
 				outBuffer.write(Integer.toString(v));
 				outBuffer.newLine();
 			}
@@ -812,7 +874,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		} catch (IOException e) {
 			System.err.println("Caught IOException while trying to save graph: " + e.getMessage());
 		}
-		repaint();
 	}
 
 	public void setMinRepaintDelay(long delay) {
