@@ -2,13 +2,18 @@
 
 <Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Component class="javax.swing.JFileChooser" name="fileChooser">
+    <Component class="javax.swing.JFileChooser" name="projectFileChooser">
       <Properties>
+        <Property name="acceptAllFileFilterUsed" type="boolean" value="false"/>
+        <Property name="dialogType" type="int" value="2"/>
         <Property name="fileSelectionMode" type="int" value="1"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileChooserActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="projectFileChooserActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="projectFileChooser.setFileFilter(new FileFilter(){&#xa;&#x9;public boolean accept(File file) {&#xa;&#x9;&#x9;if(file!=null &amp;&amp; file.isDirectory()){&#xa;&#x9;&#x9;&#x9;for(String s : file.list()){&#xa;&#x9;&#x9;&#x9;&#x9;if(s.equals(&quot;graph.sg&quot;))&#xa;&#x9;&#x9;&#x9;&#x9;&#x9;return true;&#xa;&#x9;&#x9;&#x9;}&#xa;&#x9;&#x9;}&#xa;&#x9;&#x9;return false;&#xa;&#x9;}&#xa;&#x9;public String getDescription(){&#xa;&#x9;&#x9;return &quot;Accepts directories that contain a graph.sg file.&quot;;&#xa;&#x9;}&#xa;});"/>
+      </AuxValues>
     </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
@@ -17,38 +22,28 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="saveGraphMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="saveProjectAsMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Save Graph"/>
+                <Property name="text" type="java.lang.String" value="Save Project as"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveGraphMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveProjectAsMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="saveProjectMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Save Project"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveProjectMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="loadGraphMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Load Graph"/>
+                <Property name="text" type="java.lang.String" value="Open Project"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadGraphMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator2">
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="saveConfigMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Save Config"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveConfigMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="loadConfigMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Load Config"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadConfigMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator1">

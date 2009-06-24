@@ -63,6 +63,8 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private SandpileConfiguration currentConfig;
 	private SandpileDrawer drawer;
 
+	private File projectFile=null;
+
 	private HashMap<String, SandpileConfiguration> configs;
 
 	public SandpileController() {
@@ -90,19 +92,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		Canvas canvas = drawer.getCanvas();
 
 		selectedVertex = -1;
-		canvas.addMouseListener(new MouseInputAdapter() {/*
-			@Override
-			public void mouseClicked(MouseEvent evt) { 
-			int x = evt.getX();
-			int y = evt.getY();
-			int touchVert = touchingVertex(x, y);
-			if (touchVert < 0) {
-			selectedVertex = -1;
-			}
-			repaint();
-			}*/
-
-		});
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -788,6 +777,14 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
+	public boolean hasProjectFile(){
+		return projectFile!=null;
+	}
+
+	public void saveGraphProject(){
+		saveGraphProject(projectFile);
+	}
+
 	public void saveGraphProject(File file){
 		file.mkdir();
 		File graphFile = new File(file, "graph.sg");
@@ -796,6 +793,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			saveConfig(new File(file, configName+".sc"), configs.get(configName));
 		}
 		saveConfig(new File(file, "current.sc"), currentConfig);
+		projectFile = file;
 	}
 
 	public boolean loadGraphProject(File file){
@@ -808,12 +806,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 					System.err.println("Loading current");
 					loadCurrentConfig(new File(file, "current.sc"));
 				}else if(s.endsWith(".sc")){
-					System.err.println(s.substring(0, s.length()-3));
+					System.err.println("Loading "+s.substring(0, s.length()-3));
 					configs.put(s.substring(0, s.length()-3), loadConfig(new File(file, s)));
 				}
 			}
 		}else{
-			System.err.println("Invalid project directory.");
+			return false;
 		}
 		repaint();
 		return true;

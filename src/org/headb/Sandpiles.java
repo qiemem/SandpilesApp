@@ -31,10 +31,12 @@ package org.headb;
 
 
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
+import java.io.File;
 
 public class Sandpiles extends javax.swing.JFrame {
 
-	private final int SAVE_GRAPH = 0, LOAD_GRAPH = 1, SAVE_CONFIG = 2, LOAD_CONFIG = 3;
+	private final int SAVE_PROJECT = 0, LOAD_PROJECT = 1, SAVE_CONFIG = 2, LOAD_CONFIG = 3;
 	private int fileAction=-1;
 
 
@@ -52,23 +54,37 @@ public class Sandpiles extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        fileChooser = new javax.swing.JFileChooser();
+        projectFileChooser = new javax.swing.JFileChooser();
         sandpilesInteractionPanel1 = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        saveGraphMenuItem = new javax.swing.JMenuItem();
+        saveProjectAsMenuItem = new javax.swing.JMenuItem();
+        saveProjectMenuItem = new javax.swing.JMenuItem();
         loadGraphMenuItem = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JSeparator();
-        saveConfigMenuItem = new javax.swing.JMenuItem();
-        loadConfigMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         quitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
 
-        fileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.addActionListener(new java.awt.event.ActionListener() {
+        projectFileChooser.setAcceptAllFileFilterUsed(false);
+        projectFileChooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
+        projectFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        projectFileChooser.setFileFilter(new FileFilter(){
+            public boolean accept(File file) {
+                if(file!=null && file.isDirectory()){
+                    for(String s : file.list()){
+                        if(s.equals("graph.sg"))
+                        return true;
+                    }
+                }
+                return false;
+            }
+            public String getDescription(){
+                return "Accepts directories that contain a graph.sg file.";
+            }
+        });
+        projectFileChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileChooserActionPerformed(evt);
+                projectFileChooserActionPerformed(evt);
             }
         });
 
@@ -76,38 +92,29 @@ public class Sandpiles extends javax.swing.JFrame {
 
         fileMenu.setText("File");
 
-        saveGraphMenuItem.setText("Save Graph");
-        saveGraphMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        saveProjectAsMenuItem.setText("Save Project as");
+        saveProjectAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveGraphMenuItemActionPerformed(evt);
+                saveProjectAsMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(saveGraphMenuItem);
+        fileMenu.add(saveProjectAsMenuItem);
 
-        loadGraphMenuItem.setText("Load Graph");
+        saveProjectMenuItem.setText("Save Project");
+        saveProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveProjectMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveProjectMenuItem);
+
+        loadGraphMenuItem.setText("Open Project");
         loadGraphMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadGraphMenuItemActionPerformed(evt);
             }
         });
         fileMenu.add(loadGraphMenuItem);
-        fileMenu.add(jSeparator2);
-
-        saveConfigMenuItem.setText("Save Config");
-        saveConfigMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveConfigMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(saveConfigMenuItem);
-
-        loadConfigMenuItem.setText("Load Config");
-        loadConfigMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadConfigMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(loadConfigMenuItem);
         fileMenu.add(jSeparator1);
 
         quitMenuItem.setText("Quit");
@@ -143,45 +150,49 @@ public class Sandpiles extends javax.swing.JFrame {
 		System.exit(0);
 	}//GEN-LAST:event_quitMenuItemActionPerformed
 
-	private void fileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserActionPerformed
-		if(evt.getActionCommand().equals(fileChooser.APPROVE_SELECTION)){
+	private void projectFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectFileChooserActionPerformed
+
+		if(evt.getActionCommand().equals(projectFileChooser.APPROVE_SELECTION)){
+			boolean success=true;
 			switch(fileAction){
-				case SAVE_GRAPH:
-					this.sandpilesInteractionPanel1.getSandpileController().saveGraphProject(fileChooser.getSelectedFile());
+				case SAVE_PROJECT:
+					this.sandpilesInteractionPanel1.getSandpileController().saveGraphProject(projectFileChooser.getSelectedFile());
 					break;
-				case LOAD_GRAPH:
-					this.sandpilesInteractionPanel1.getSandpileController().loadGraphProject(fileChooser.getSelectedFile());
+				case LOAD_PROJECT:
+					success=this.sandpilesInteractionPanel1.getSandpileController().loadGraphProject(projectFileChooser.getSelectedFile());
 					break;
 				case SAVE_CONFIG:
-					this.sandpilesInteractionPanel1.getSandpileController().saveConfig(fileChooser.getSelectedFile());
+					this.sandpilesInteractionPanel1.getSandpileController().saveConfig(projectFileChooser.getSelectedFile());
 					break;
 				case LOAD_CONFIG:
-					this.sandpilesInteractionPanel1.getSandpileController().loadCurrentConfig(fileChooser.getSelectedFile());
+					this.sandpilesInteractionPanel1.getSandpileController().loadCurrentConfig(projectFileChooser.getSelectedFile());
 					break;
 			}
+			if(!success)
+				javax.swing.JOptionPane.showMessageDialog(this,
+						"That's not a valid Sandpiles project. Sandpiles project directories must contain a graph.sg file.",
+						"Invalid Project Directory", javax.swing.JOptionPane.ERROR_MESSAGE);
 		}
 		fileAction = -1;
-}//GEN-LAST:event_fileChooserActionPerformed
+}//GEN-LAST:event_projectFileChooserActionPerformed
 
-	private void saveGraphMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveGraphMenuItemActionPerformed
-		fileAction = SAVE_GRAPH;
-		this.fileChooser.showSaveDialog(this);
-	}//GEN-LAST:event_saveGraphMenuItemActionPerformed
+	private void saveProjectAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectAsMenuItemActionPerformed
+		fileAction = SAVE_PROJECT;
+		this.projectFileChooser.showSaveDialog(this);
+}//GEN-LAST:event_saveProjectAsMenuItemActionPerformed
 
 	private void loadGraphMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadGraphMenuItemActionPerformed
-		fileAction = LOAD_GRAPH;
-		this.fileChooser.showOpenDialog(this);
+		fileAction = LOAD_PROJECT;
+		this.projectFileChooser.showOpenDialog(this);
 	}//GEN-LAST:event_loadGraphMenuItemActionPerformed
 
-	private void saveConfigMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveConfigMenuItemActionPerformed
-		fileAction = SAVE_CONFIG;
-		this.fileChooser.showSaveDialog(this);
-	}//GEN-LAST:event_saveConfigMenuItemActionPerformed
-
-	private void loadConfigMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadConfigMenuItemActionPerformed
-		fileAction = LOAD_CONFIG;
-		this.fileChooser.showOpenDialog(this);
-	}//GEN-LAST:event_loadConfigMenuItemActionPerformed
+	private void saveProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectMenuItemActionPerformed
+		if(this.sandpilesInteractionPanel1.getSandpileController().hasProjectFile()){
+			this.sandpilesInteractionPanel1.getSandpileController().saveGraphProject();
+		}else{
+			saveProjectAsMenuItemActionPerformed(evt);
+		}
+	}//GEN-LAST:event_saveProjectMenuItemActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -211,16 +222,14 @@ public class Sandpiles extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu editMenu;
-    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JMenuItem loadConfigMenuItem;
     private javax.swing.JMenuItem loadGraphMenuItem;
+    private javax.swing.JFileChooser projectFileChooser;
     private javax.swing.JMenuItem quitMenuItem;
     private org.headb.SandpilesInteractionPanel sandpilesInteractionPanel1;
-    private javax.swing.JMenuItem saveConfigMenuItem;
-    private javax.swing.JMenuItem saveGraphMenuItem;
+    private javax.swing.JMenuItem saveProjectAsMenuItem;
+    private javax.swing.JMenuItem saveProjectMenuItem;
     // End of variables declaration//GEN-END:variables
 }
