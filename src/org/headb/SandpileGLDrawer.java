@@ -66,6 +66,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	public boolean repaint = true;
 	public boolean changingVertexSize = true;
 	public boolean drawCircles = false;
+	public boolean scrollOnDrag = true;
 	private long timeOfLastDisplay = 0;
 
 	private ArrayList<ReshapeListener> repaintListeners = new ArrayList<ReshapeListener>();
@@ -362,6 +363,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if(!scrollOnDrag) return;
 		float[] coords = transformCanvasCoords(e.getX(), e.getY());
 		float deltaX = mouseX - coords[0];
 		float deltaY = mouseY - coords[1];

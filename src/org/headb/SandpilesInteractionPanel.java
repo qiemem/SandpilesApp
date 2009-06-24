@@ -218,6 +218,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         smallZoomOutButton = new javax.swing.JButton();
         smallZoomInButton = new javax.swing.JButton();
         bigZoomInButton = new javax.swing.JButton();
+        jToolBar2 = new javax.swing.JToolBar();
+        moveToggleButton = new javax.swing.JToggleButton();
+        selectToggleButton = new javax.swing.JToggleButton();
 
         controlStateComboBox.setMaximumRowCount(16);
         controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { EDIT_GRAPH_STATE, CONFIG_MANAGER_STATE, MAKE_GRID_STATE, MAKE_HEX_GRID_STATE, MAKE_HONEYCOMB_STATE, VISUAL_OPTIONS_STATE}));
@@ -320,7 +323,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .add(jLabel1)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         editGraphPanelLayout.setVerticalGroup(
             editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -340,7 +343,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
                     .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(505, Short.MAX_VALUE))
+                .addContainerGap(482, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(EDIT_GRAPH_STATE, editGraphPanel);
@@ -407,7 +410,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(addConfigButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(setConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 79, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(storeConfigButton))
             .add(jLabel7)
             .add(addSandRadioButton)
@@ -418,7 +421,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
             .add(addRandomSandButton)
-            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -443,7 +446,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(addRandomSandButton)
-                .addContainerGap(312, Short.MAX_VALUE))
+                .addContainerGap(289, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(CONFIG_MANAGER_STATE, configManagerOptionsPanel);
@@ -492,7 +495,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(makeHoneycombOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel9)
                     .add(makeHoneycombBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(627, Short.MAX_VALUE))
+                .addContainerGap(604, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(MAKE_HONEYCOMB_STATE, makeHoneycombOptionsPanel);
@@ -612,7 +615,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel6)
                     .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(534, Short.MAX_VALUE))
+                .addContainerGap(511, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(MAKE_GRID_STATE, makeGridOptionsPanel);
@@ -732,7 +735,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(makeHexGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel17)
                     .add(hexWBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(534, Short.MAX_VALUE))
+                .addContainerGap(511, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(MAKE_HEX_GRID_STATE, makeHexGridOptionsPanel);
@@ -797,7 +800,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(printFPSCheckBox)
                     .add(jLabel18)
                     .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -815,7 +818,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(jLabel18)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(506, Short.MAX_VALUE))
+                .addContainerGap(483, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -826,13 +829,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(controlPanelLayout.createSequentialGroup()
                 .add(17, 17, 17)
-                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE))
-            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
-                .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 711, Short.MAX_VALUE)
+                .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(quitButton)
                 .addContainerGap())
@@ -873,7 +876,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -1074,21 +1077,44 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         });
         jToolBar1.add(bigZoomInButton);
 
+        jToolBar2.setRollover(true);
+
+        moveToggleButton.setText("Move");
+        moveToggleButton.setFocusable(false);
+        moveToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        moveToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        moveToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveToggleButtonActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(moveToggleButton);
+
+        selectToggleButton.setText("Select");
+        selectToggleButton.setFocusable(false);
+        selectToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        selectToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(selectToggleButton);
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1087, Short.MAX_VALUE)
-                .add(20, 20, 20))
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1107, Short.MAX_VALUE)
+                .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jToolBar2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 118, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(2, 2, 2))
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jToolBar2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE))
+                .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1441,6 +1467,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		updateConfigSelectList();
 	}//GEN-LAST:event_storeConfigButtonActionPerformed
 
+	private void moveToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveToggleButtonActionPerformed
+		// TODO add your handling code here:
+}//GEN-LAST:event_moveToggleButtonActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -1549,12 +1579,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JCheckBox labelsCheckBox;
     private javax.swing.JPanel makeGridOptionsPanel;
     private javax.swing.JPanel makeHexGridOptionsPanel;
     private javax.swing.JComboBox makeHoneycombBorderComboBox;
     private javax.swing.JPanel makeHoneycombOptionsPanel;
     private javax.swing.JTextField makeHoneycombRadiusField;
+    private javax.swing.JToggleButton moveToggleButton;
     private javax.swing.JComboBox nBorderComboBox;
     private javax.swing.JPanel optionsContainerPanel;
     private javax.swing.JTabbedPane optionsTabbedPane;
@@ -1569,6 +1601,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JToggleButton runButton;
     private javax.swing.JComboBox sBorderComboBox;
     private javax.swing.JScrollPane sandpileViewScrollPane;
+    private javax.swing.JToggleButton selectToggleButton;
     private javax.swing.JButton setConfigButton;
     private javax.swing.JRadioButton setSandRadioButton;
     private javax.swing.JButton smallDevDelayButton;
