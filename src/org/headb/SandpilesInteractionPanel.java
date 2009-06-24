@@ -119,10 +119,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				mouseX = coords[0];
 				mouseY = coords[1];
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
-				if(vert<0){
-					sandpileController.unselectVertices();
-				}
-				if(sandpileController.getSelectedVertices().contains(vert)){
+				
+				if(sandpileController.getSelectedVertices().contains(vert)&&mouseMode!=MouseMode.MOVE){
 					movingVertices = true;
 				}else if(mouseMode == MouseMode.SELECT){
 					boxX = mouseX;
@@ -131,11 +129,21 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				}
 			}
 			@Override public void mouseClicked(MouseEvent e){
+				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
+				mouseX = coords[0];
+				mouseY = coords[1];
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
-				if(vert>-1&&mouseMode == MouseMode.SELECT){
+				System.err.println(vert);
+				if(vert>=0&&mouseMode == MouseMode.SELECT){
+					if(sandpileController.isSelected(vert)){
+						sandpileController.unselectVertex(vert);
+					}else{
+						sandpileController.selectVertex(vert);
+					}
+				}else if(mouseMode==MouseMode.SELECT){
 					sandpileController.unselectVertices();
-					sandpileController.selectVertex(vert);
 				}
+				sandpileController.repaint();
 			}
 			@Override public void mouseReleased(MouseEvent e){
 				if(mouseMode == MouseMode.SELECT)

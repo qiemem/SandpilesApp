@@ -748,6 +748,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		selectedVertices.clear();
 	}
 
+	public void unselectVertex(Integer vert) {
+		selectedVertices.remove((Object) vert);
+	}
+
 	public void selectVertices(List<Integer> vertices) {
 		selectedVertices.addAll(vertices);
 	}
@@ -758,6 +762,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void selectVertex(int vert) {
 		selectedVertices.add(vert);
+	}
+
+	public boolean isSelected(int vert) {
+		return selectedVertices.contains(vert);
 	}
 
 	public List<Integer> getSelectedVertices() {
