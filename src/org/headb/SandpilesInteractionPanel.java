@@ -1162,6 +1162,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private void deleteGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGraphButtonActionPerformed
 		sandpileController.delAllVertices();
+		this.updateConfigSelectList();
 }//GEN-LAST:event_deleteGraphButtonActionPerformed
 
 	private void makeHoneycombBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHoneycombBorderComboBoxActionPerformed
