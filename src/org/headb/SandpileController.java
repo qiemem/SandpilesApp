@@ -40,6 +40,7 @@ import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.List;
+import java.util.Collections;
 
 import java.io.*;
 
@@ -710,8 +711,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void delVertices(List<Integer> vertices) {
-		vertexData.removeAll(vertices);
-		currentConfig.removeAll(vertices);
+		Collections.sort(vertices);
+		Collections.reverse(vertices);
+		for(int v : vertices){
+			delVertex(v);
+		}
 	}
 
 	public void delAllVertices() {

@@ -61,13 +61,40 @@ public class SandpileGraph {
 	 * Removes a vertex from the graph.
 	 */
 	public void removeVertex(int i) {
+		ArrayList<HashMap<Integer,Integer>> newEdges = new ArrayList<HashMap<Integer,Integer>>(edges.size());
+		degrees.remove(i);
 		for (int j = 0; j < edges.size(); j++) {
-			Integer w = edges.get(i).remove(j);
+			/*Integer w = edges.get(i).remove(j);
 			if (w != null) {
 				degrees.set(i, degrees.get(i) - w);
+			}*/
+			HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
+			for(Integer k : edges.get(j).keySet()){
+				if(k==i){
+					int weight = edges.get(j).get(k);
+					if(j>i)
+						degrees.set(j-1, degree(j) - weight);
+					else
+						degrees.set(j, degree(j) - weight);
+				}else if(k>i){
+					map.put(k-1, edges.get(j).get(k));
+				}else{
+					map.put(k, edges.get(j).get(k));
+				}
 			}
+			if(j!=i)
+				newEdges.add( map);
 		}
-		this.edges.remove(i);
+		edges = newEdges;
+	}
+
+	public void removeVertices(List<Integer> vertices){
+		Collections.sort(vertices);
+		Collections.reverse(vertices);
+		for(Integer v : vertices){
+			System.err.println(v);
+			removeVertex(v);
+		}
 	}
 
 	public void removeAllVertices() {
