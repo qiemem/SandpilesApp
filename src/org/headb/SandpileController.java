@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.List;
 import java.util.Collections;
+import java.util.Collection;
 
 import java.io.*;
 
@@ -686,6 +687,14 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		saved = false;
 	}
 
+	public final SandpileGraph getGraph() {
+		return sg;
+	}
+
+	public SandpileConfiguration getConfig() {
+		return currentConfig;
+	}
+
 	public void addVertex(float x, float y) {
 		sg.addVertex();
 		float[] newPos = {x, y};
@@ -774,6 +783,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void setSand(int vert, int amount) {
 		currentConfig.set(vert, amount);
 		saved = false;
+	}
+
+	public Collection<Integer> getOutgoingVertices(int vert){
+		return sg.getOutgoingVertices(vert);
 	}
 
 	public List<Integer> getVerticesInRect(float maxX, float maxY, float minX, float minY) {

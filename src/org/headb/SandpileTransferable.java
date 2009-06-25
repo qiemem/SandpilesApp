@@ -35,11 +35,13 @@ import java.util.List;
 public class SandpileTransferable implements Transferable {
 	private final List<float[]> locationData;
 	private final List<Integer> configData;
+	private final List<int[]> edgeData;
 
 
-	public SandpileTransferable(List<float[]> locationData, List<Integer> configData){
+	public SandpileTransferable(List<float[]> locationData, List<Integer> configData, List<int[]> edgeData){
 		this.locationData  = locationData;
 		this.configData = configData;
+		this.edgeData = edgeData;
 	}
 
 	public List<float[]> getLocationData(){
@@ -50,8 +52,12 @@ public class SandpileTransferable implements Transferable {
 		return configData;
 	}
 
+	public List<int[]> getEdgeData(){
+		return edgeData;
+	}
+
 	public Object getTransferData(DataFlavor flavor){
-		List[] data = {locationData, configData};
+		List[] data = {locationData, edgeData, configData};
 		return data;
 	}
 	public DataFlavor[] getTransferDataFlavors(){
