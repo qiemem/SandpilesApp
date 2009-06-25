@@ -33,6 +33,7 @@ package org.headb;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
+import java.awt.event.KeyEvent;
 
 public class Sandpiles extends javax.swing.JFrame {
 
@@ -133,7 +134,6 @@ public class Sandpiles extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
-        copyMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_COPY, 0));
         copyMenuItem.setText("Copy");
         copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,7 +142,7 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         editMenu.add(copyMenuItem);
 
-        cutMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_CUT, 0));
+        cutMenuItem2.setMnemonic(KeyEvent.VK_X);
         cutMenuItem2.setText("Cut");
         cutMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,7 +151,7 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         editMenu.add(cutMenuItem2);
 
-        pasteMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PASTE, 0));
+        pasteMenuItem3.setMnemonic(KeyEvent.VK_V);
         pasteMenuItem3.setText("Paste");
         pasteMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

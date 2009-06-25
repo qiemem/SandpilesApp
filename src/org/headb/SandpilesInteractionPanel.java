@@ -109,21 +109,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(0);
 		updateDelayTextField();
-		/*CardLayout cl = (CardLayout)(optionsContainerPanel.getLayout());
-		//cl.show(optionsContainerPanel, (String)evt.getItem());
-		String currentState =  (String) controlStateComboBox.getSelectedItem();
-		if(currentState.equals(MAKE_GRID_STATE) || currentState.equals(MAKE_HEX_GRID_STATE)){
-			cl.show(optionsContainerPanel, MAKE_GRID_STATE);
-		}else if(currentState.equals(MAKE_HONEYCOMB_STATE)){
-			cl.show(optionsContainerPanel,MAKE_HONEYCOMB_STATE);
-		}else if(currentState.equals(CONFIG_MANAGER_STATE)){
-			cl.show(optionsContainerPanel, CONFIG_MANAGER_STATE);
-		}else if(currentState.equals(VISUAL_OPTIONS_STATE)){
-			cl.show(optionsContainerPanel, VISUAL_OPTIONS_STATE);
-		}else if(currentState.equals(EDIT_GRAPH_STATE)){
-			cl.show(optionsContainerPanel, EDIT_GRAPH_STATE);
-		}*/
-		//spThread = new Thread(sandpileController);
 
 		canvas.addKeyListener(new KeyAdapter(){
 			@Override public void keyPressed(KeyEvent e){
@@ -220,7 +205,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		ArrayList<int[]> edgeData = new ArrayList<int[]>();
 		int vert = 0;
 		for(int v : vertices){
-			locationData.add(sandpileController.getVertexLocation(v));
+			float x = sandpileController.getVertexLocation(v)[0]-drawer.getOriginX();
+			float y = sandpileController.getVertexLocation(v)[1]-drawer.getOriginY();
+			float[] pos = {x,y};
+			locationData.add(pos);
 			configData.add(sandpileController.getSand(v));
 			for(int w : sandpileController.getGraph().getOutgoingVertices(v)){
 				int destVert = vertices.indexOf(w);
@@ -242,6 +230,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}
 
 	public void pasteVertexDataFromClipboard(){
+		if(!localClipboard.isDataFlavorAvailable(DataFlavor.getTextPlainUnicodeFlavor())) return;
 		SandpileTransferable data = (SandpileTransferable) localClipboard.getContents(this);
 		List<float[]> locationData = data.getLocationData();
 		List<Integer> configData = data.getConfigData();
