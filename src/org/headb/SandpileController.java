@@ -696,6 +696,13 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		saved = false;
 	}
 
+	public float[] getVertexLocation(int vert){
+		return vertexData.get(vert);
+	}
+
+	public int getSand(int vert){
+		return currentConfig.get(vert);
+	}
 	public void delVertex(int v) {
 		vertexData.remove(v);
 		currentConfig.remove(v);

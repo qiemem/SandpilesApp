@@ -65,6 +65,9 @@ public class Sandpiles extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         quitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        copyMenuItem = new javax.swing.JMenuItem();
+        cutMenuItem2 = new javax.swing.JMenuItem();
+        pasteMenuItem3 = new javax.swing.JMenuItem();
 
         projectFileChooser.setAcceptAllFileFilterUsed(false);
         projectFileChooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
@@ -129,6 +132,34 @@ public class Sandpiles extends javax.swing.JFrame {
         jMenuBar1.add(fileMenu);
 
         editMenu.setText("Edit");
+
+        copyMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_COPY, 0));
+        copyMenuItem.setText("Copy");
+        copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(copyMenuItem);
+
+        cutMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_CUT, 0));
+        cutMenuItem2.setText("Cut");
+        cutMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cutMenuItem2ActionPerformed(evt);
+            }
+        });
+        editMenu.add(cutMenuItem2);
+
+        pasteMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_PASTE, 0));
+        pasteMenuItem3.setText("Paste");
+        pasteMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenuItem3ActionPerformed(evt);
+            }
+        });
+        editMenu.add(pasteMenuItem3);
+
         jMenuBar1.add(editMenu);
 
         setJMenuBar(jMenuBar1);
@@ -199,6 +230,18 @@ public class Sandpiles extends javax.swing.JFrame {
 		this.sandpilesIP.updateConfigSelectList();
 	}//GEN-LAST:event_saveProjectMenuItemActionPerformed
 
+	private void copyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuItemActionPerformed
+		sandpilesIP.copySelectedToClipboard();
+	}//GEN-LAST:event_copyMenuItemActionPerformed
+
+	private void cutMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItem2ActionPerformed
+		sandpilesIP.cutSelectedToClipBoard();
+	}//GEN-LAST:event_cutMenuItem2ActionPerformed
+
+	private void pasteMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuItem3ActionPerformed
+		sandpilesIP.pasteVertexDataFromClipboard();
+	}//GEN-LAST:event_pasteMenuItem3ActionPerformed
+
 	/**
 	 * @param args the command line arguments
 	 */
@@ -226,11 +269,14 @@ public class Sandpiles extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem copyMenuItem;
+    private javax.swing.JMenuItem cutMenuItem2;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JMenuItem openProjectMenuItem;
+    private javax.swing.JMenuItem pasteMenuItem3;
     private javax.swing.JFileChooser projectFileChooser;
     private javax.swing.JMenuItem quitMenuItem;
     private org.headb.SandpilesInteractionPanel sandpilesIP;

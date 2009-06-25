@@ -46,12 +46,14 @@ package org.headb;
  */
 import java.awt.CardLayout;
 import java.awt.Cursor;
+import java.awt.datatransfer.*;
 import javax.swing.Timer;
 import java.util.Vector;
 import java.awt.event.*;
 import java.util.List;
+import java.util.ArrayList;
 
-public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener {
+public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner {
 	private static final String MAKE_GRID_STATE = "Make Grid";
 	private static final String MAKE_HEX_GRID_STATE = "Make Hex Grid";
 	private static final String MAKE_HONEYCOMB_STATE = "Make Honeycomb";
@@ -78,6 +80,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private SandpileController sandpileController;
 	private SandpileGLDrawer drawer;
+
+	private Clipboard localClipboard = new Clipboard("Sandpile Clipboard");
 
 
 
@@ -179,6 +183,43 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	public void onReshape(){
 		updateZoomTextField();
 		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
+	}
+
+	public void copyVertexDataToClipboard(List<float[]> locationData, List<Integer> sandData){
+		localClipboard.setContents(new SandpileTransferable(locationData, sandData), this);
+	}
+	
+	public void copySelectedToClipboard(){
+		List<Integer> vertices = sandpileController.getSelectedVertices();
+		ArrayList<float[]> locationData = new ArrayList<float[]>();
+		ArrayList<Integer> configData = new ArrayList<Integer>();
+		for(int v : vertices){
+			locationData.add(sandpileController.getVertexLocation(v));
+			configData.add(sandpileController.getSand(v));
+		}
+		copyVertexDataToClipboard(locationData,configData);
+	}
+
+	public void cutSelectedToClipBoard(){
+		copySelectedToClipboard();
+		sandpileController.delVertices(sandpileController.getSelectedVertices());
+		sandpileController.unselectVertices();
+		sandpileController.repaint();
+	}
+
+	public void pasteVertexDataFromClipboard(){
+		SandpileTransferable data = (SandpileTransferable) localClipboard.getContents(this);
+		List<float[]> locationData = data.getLocationData();
+		List<Integer> configData = data.getConfigData();
+		for(int i=0; i<locationData.size(); i++){
+			sandpileController.addVertex(locationData.get(i)[0]+drawer.getOriginX(), locationData.get(i)[1]+drawer.getOriginY());
+			sandpileController.setSand(i, configData.get(i));
+		}
+		sandpileController.repaint();
+	}
+
+	public void lostOwnership(Clipboard clipboard, Transferable contents) {
+		System.err.println("Lost clipboard ownership");
 	}
 
     /** This method is called from within the constructor to
