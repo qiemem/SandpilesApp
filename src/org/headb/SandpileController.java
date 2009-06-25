@@ -65,7 +65,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private SandpileConfiguration currentConfig;
 	private SandpileDrawer drawer;
 	private File projectFile = null;
+	private boolean saved = false;
 	private HashMap<String, SandpileConfiguration> configs;
+
 
 	public SandpileController() {
 		drawer = new SandpileGLDrawer();
@@ -92,6 +94,17 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 		Canvas canvas = drawer.getCanvas();
 		selectedVertices.clear();
+	}
+
+	public String getProjectTitle() {
+		String title;
+		if(projectFile!=null)
+			title = projectFile.getName();
+		else
+			title = "Untitled";
+		if(!saved)
+			title += " *";
+		return title;
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -578,11 +591,13 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void setToDualConfig() {
 		currentConfig = sg.getDualConfig(currentConfig);
+		saved = false;
 		repaint();
 	}
 
 	public void addDualConfig() {
 		currentConfig = currentConfig.plus(sg.getDualConfig(currentConfig));
+		saved = false;
 		repaint();
 	}
 
@@ -591,11 +606,13 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	//}
 	public void setToMaxStableConfig() {
 		currentConfig = sg.getMaxConfig();
+		saved = false;
 		repaint();
 	}
 
 	public void addMaxStableConfig() {
 		currentConfig = currentConfig.plus(sg.getMaxConfig());
+		saved = false;
 		repaint();
 	}
 
@@ -608,31 +625,37 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void addIdentity() {
 		currentConfig = currentConfig.plus(getIdentity());
+		saved = false;
 		repaint();
 	}
 
 	public void setToIdentity() {
 		currentConfig = getIdentity();
+		saved = false;
 		repaint();
 	}
 
 	public void setSandEverywhere(int amount) {
 		currentConfig = sg.getUniformConfig(amount);
+		saved = false;
 		repaint();
 	}
 
 	public void addSandEverywhere(int amount) {
 		currentConfig = currentConfig.plus(sg.getUniformConfig(amount));
+		saved = false;
 		repaint();
 	}
 
 	public void setToBurningConfig() {
 		currentConfig = sg.getMinimalBurningConfig();
+		saved = false;
 		repaint();
 	}
 
 	public void addBurningConfig() {
 		currentConfig = currentConfig.plus(sg.getMinimalBurningConfig());
+		saved = false;
 		repaint();
 	}
 
@@ -642,21 +665,25 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void addConfigNamed(String name) {
 		currentConfig = currentConfig.plus(getConfigByName(name));
+		saved = false;
 		repaint();
 	}
 
 	public void setConfigNamed(String name) {
 		currentConfig = getConfigByName(name);
+		saved = false;
 		repaint();
 	}
 
 	public void clearSand() {
 		currentConfig = sg.getUniformConfig(0);
+		saved = false;
 		repaint();
 	}
 
 	public void stabilize() {
 		currentConfig = sg.stabilizeConfig(currentConfig);
+		saved = false;
 	}
 
 	public void addVertex(float x, float y) {
@@ -666,6 +693,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		currentConfig.add(0);
 		firings.add(0);
 		configs.clear();
+		saved = false;
 	}
 
 	public void delVertex(int v) {
@@ -674,6 +702,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		firings.remove(v);
 		sg.removeVertex(v);
 		configs.clear();
+		saved = false;
 	}
 
 	public void delVertices(List<Integer> vertices) {
@@ -691,6 +720,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		configs.clear();
 		sg.removeAllVertices();
 		this.selectedVertices.clear();
+		saved = false;
 		repaint();
 	}
 
@@ -701,24 +731,29 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void addEdge(int originVert, int destVert) {
 		addEdge(originVert, destVert, 1);
+		saved = false;
 	}
 
 	public void addEdge(int originVert, int destVert, int weight) {
 		sg.addEdge(originVert, destVert, weight);
 		clearEdgeDependentConfigs();
+		saved = false;
 	}
 
 	public void delEdge(int originVert, int destVert) {
 		this.delEdge(originVert, destVert, 1);
+		saved = false;
 	}
 
 	public void delEdge(int originVert, int destVert, int weight) {
 		sg.removeEdge(originVert, destVert, weight);
 		clearEdgeDependentConfigs();
+		saved = false;
 	}
 
 	public void addSand(int vert, int amount) {
 		setSand(vert, currentConfig.get(vert) + amount);
+		saved = false;
 	}
 
 	public void addSandToRandom(int amount) {
@@ -731,6 +766,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void setSand(int vert, int amount) {
 		currentConfig.set(vert, amount);
+		saved = false;
 	}
 
 	public List<Integer> getVerticesInRect(float maxX, float maxY, float minX, float minY) {
@@ -828,6 +864,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void storeCurrentConfig(String name) {
 		configs.put(name, currentConfig);
+		saved = false;
 	}
 
 	public Set<String> getStoredConfigNames() {
@@ -847,6 +884,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		}
 		saveConfig(new File(file, "current.sc"), currentConfig);
 		projectFile = file;
+		saved = true;
 	}
 
 	public boolean loadGraphProject(File file) {
@@ -868,6 +906,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			return false;
 		}
 		repaint();
+		saved = true;
 		return true;
 	}
 
@@ -886,6 +925,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 				}
 			}
 			outBuffer.close();
+			saved = true;
 		} catch (IOException e) {
 			System.err.println("Caught IOException while trying to save graph: " + e.getMessage());
 		}

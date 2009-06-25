@@ -43,6 +43,7 @@ public class Sandpiles extends javax.swing.JFrame {
 	/** Creates new form Sandpiles */
 	public Sandpiles() {
 		initComponents();
+		this.setTitle("Sandpiles - Untitled");
 	}
 
 	/** This method is called from within the constructor to
@@ -55,12 +56,12 @@ public class Sandpiles extends javax.swing.JFrame {
     private void initComponents() {
 
         projectFileChooser = new javax.swing.JFileChooser();
-        sandpilesInteractionPanel1 = new org.headb.SandpilesInteractionPanel();
+        sandpilesIP = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         saveProjectAsMenuItem = new javax.swing.JMenuItem();
         saveProjectMenuItem = new javax.swing.JMenuItem();
-        loadGraphMenuItem = new javax.swing.JMenuItem();
+        openProjectMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         quitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -108,13 +109,13 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         fileMenu.add(saveProjectMenuItem);
 
-        loadGraphMenuItem.setText("Open Project");
-        loadGraphMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        openProjectMenuItem.setText("Open Project");
+        openProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadGraphMenuItemActionPerformed(evt);
+                openProjectMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(loadGraphMenuItem);
+        fileMenu.add(openProjectMenuItem);
         fileMenu.add(jSeparator1);
 
         quitMenuItem.setText("Quit");
@@ -136,11 +137,11 @@ public class Sandpiles extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(sandpilesInteractionPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(sandpilesIP, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(sandpilesInteractionPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(sandpilesIP, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -156,16 +157,16 @@ public class Sandpiles extends javax.swing.JFrame {
 			boolean success=true;
 			switch(fileAction){
 				case SAVE_PROJECT:
-					this.sandpilesInteractionPanel1.getSandpileController().saveGraphProject(projectFileChooser.getSelectedFile());
+					this.sandpilesIP.getSandpileController().saveGraphProject(projectFileChooser.getSelectedFile());
 					break;
 				case LOAD_PROJECT:
-					success=this.sandpilesInteractionPanel1.getSandpileController().loadGraphProject(projectFileChooser.getSelectedFile());
+					success=this.sandpilesIP.getSandpileController().loadGraphProject(projectFileChooser.getSelectedFile());
 					break;
 				case SAVE_CONFIG:
-					this.sandpilesInteractionPanel1.getSandpileController().saveConfig(projectFileChooser.getSelectedFile());
+					this.sandpilesIP.getSandpileController().saveConfig(projectFileChooser.getSelectedFile());
 					break;
 				case LOAD_CONFIG:
-					this.sandpilesInteractionPanel1.getSandpileController().loadCurrentConfig(projectFileChooser.getSelectedFile());
+					this.sandpilesIP.getSandpileController().loadCurrentConfig(projectFileChooser.getSelectedFile());
 					break;
 			}
 			if(!success)
@@ -174,27 +175,28 @@ public class Sandpiles extends javax.swing.JFrame {
 						"Invalid Project Directory", javax.swing.JOptionPane.ERROR_MESSAGE);
 		}
 		fileAction = -1;
+		this.setTitle("Sandpiles - "+sandpilesIP.getSandpileController().getProjectTitle());
 }//GEN-LAST:event_projectFileChooserActionPerformed
 
 	private void saveProjectAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectAsMenuItemActionPerformed
 		fileAction = SAVE_PROJECT;
 		this.projectFileChooser.showSaveDialog(this);
-		this.sandpilesInteractionPanel1.updateConfigSelectList();
+		this.sandpilesIP.updateConfigSelectList();
 }//GEN-LAST:event_saveProjectAsMenuItemActionPerformed
 
-	private void loadGraphMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadGraphMenuItemActionPerformed
+	private void openProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openProjectMenuItemActionPerformed
 		fileAction = LOAD_PROJECT;
 		this.projectFileChooser.showOpenDialog(this);
-		this.sandpilesInteractionPanel1.updateConfigSelectList();
-	}//GEN-LAST:event_loadGraphMenuItemActionPerformed
+		this.sandpilesIP.updateConfigSelectList();
+}//GEN-LAST:event_openProjectMenuItemActionPerformed
 
 	private void saveProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectMenuItemActionPerformed
-		if(this.sandpilesInteractionPanel1.getSandpileController().hasProjectFile()){
-			this.sandpilesInteractionPanel1.getSandpileController().saveGraphProject();
+		if(this.sandpilesIP.getSandpileController().hasProjectFile()){
+			this.sandpilesIP.getSandpileController().saveGraphProject();
 		}else{
 			saveProjectAsMenuItemActionPerformed(evt);
 		}
-		this.sandpilesInteractionPanel1.updateConfigSelectList();
+		this.sandpilesIP.updateConfigSelectList();
 	}//GEN-LAST:event_saveProjectMenuItemActionPerformed
 
 	/**
@@ -228,10 +230,10 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JMenuItem loadGraphMenuItem;
+    private javax.swing.JMenuItem openProjectMenuItem;
     private javax.swing.JFileChooser projectFileChooser;
     private javax.swing.JMenuItem quitMenuItem;
-    private org.headb.SandpilesInteractionPanel sandpilesInteractionPanel1;
+    private org.headb.SandpilesInteractionPanel sandpilesIP;
     private javax.swing.JMenuItem saveProjectAsMenuItem;
     private javax.swing.JMenuItem saveProjectMenuItem;
     // End of variables declaration//GEN-END:variables
