@@ -281,6 +281,15 @@ public class SandpileGraph{
 		}
 		return newConfig;
 	}
+
+	public SandpileConfiguration fireVerticesInPlace(SandpileConfiguration config, Iterable<Integer> verts) {
+		for(int v : verts){
+			for(int[] e : getOutgoingEdges(v))
+				config.set(e[1], config.get(e[1])+e[2]);
+			config.set(v, config.get(v)-degree(v));
+		}
+		return config;
+	}
 	
 	
 	public List<Integer> getUnstables(SandpileConfiguration config){
@@ -304,24 +313,7 @@ public class SandpileGraph{
 	}
 
 	public Iterator<SandpileConfiguration> updater(final SandpileConfiguration config){
-		return new Iterator<SandpileConfiguration>(){
-			SandpileConfiguration curConfig = new SandpileConfiguration(config);
-			List<Integer> unstables = getUnstables(curConfig);
-
-			public boolean hasNext(){
-				return !unstables.isEmpty();
-			}
-
-			public SandpileConfiguration next(){
-				curConfig = fireVertices(curConfig, unstables);
-				unstables = getUnstables(curConfig, getOutgoingVertices(unstables));
-				return curConfig;
-			}
-
-			public void remove(){
-				throw new UnsupportedOperationException();
-			}
-		};
+		return updaterStartingWith(config, getUnstables(config));
 	}
 
 	public Iterator<SandpileConfiguration> updaterStartingWith(final SandpileConfiguration config, final List<Integer> startingVertices){
@@ -377,18 +369,17 @@ public class SandpileGraph{
 	 * WARNING: If the graph does not have a global sink, this function may not end.
 	 */
 	public SandpileConfiguration stabilizeConfig(SandpileConfiguration config) {
-		SandpileConfiguration newConfig = new SandpileConfiguration(config);
-		for(Iterator<SandpileConfiguration> updater = updater(config); updater.hasNext();)
-			newConfig = updater.next();
-
-		return newConfig;
+		return stabilizeConfigStartingWith(config, getUnstables(config));
 	}
 
 
 	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, List<Integer> starters) {
+		List<Integer> unstables = getUnstables(config, starters);
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
-		for(Iterator<SandpileConfiguration> updater = updaterStartingWith(config,starters); updater.hasNext();)
-			newConfig = updater.next();
+		while(!unstables.isEmpty()){
+			fireVerticesInPlace(newConfig, unstables);
+			unstables = getUnstables(newConfig, getOutgoingVertices(unstables));
+		}
 
 		return newConfig;
 	}
