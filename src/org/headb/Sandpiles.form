@@ -32,6 +32,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="saveProjectMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() )" type="code"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Save Project"/>
               </Properties>
               <Events>
@@ -40,6 +43,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="openProjectMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() )" type="code"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Open Project"/>
               </Properties>
               <Events>
@@ -63,8 +69,23 @@
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Undo"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Redo"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JSeparator" name="jSeparator2">
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="copyMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() )" type="code"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Copy"/>
               </Properties>
               <Events>
@@ -73,6 +94,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="cutMenuItem2">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() )" type="code"/>
+                </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="KeyEvent.VK_X" type="code"/>
                 </Property>
@@ -84,6 +108,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="pasteMenuItem3">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() )" type="code"/>
+                </Property>
                 <Property name="mnemonic" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="KeyEvent.VK_V" type="code"/>
                 </Property>

@@ -66,6 +66,9 @@ public class Sandpiles extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         quitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JSeparator();
         copyMenuItem = new javax.swing.JMenuItem();
         cutMenuItem2 = new javax.swing.JMenuItem();
         pasteMenuItem3 = new javax.swing.JMenuItem();
@@ -105,6 +108,7 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         fileMenu.add(saveProjectAsMenuItem);
 
+        saveProjectMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
         saveProjectMenuItem.setText("Save Project");
         saveProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,6 +117,7 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         fileMenu.add(saveProjectMenuItem);
 
+        openProjectMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
         openProjectMenuItem.setText("Open Project");
         openProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,6 +139,14 @@ public class Sandpiles extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
+        jMenuItem1.setText("Undo");
+        editMenu.add(jMenuItem1);
+
+        jMenuItem2.setText("Redo");
+        editMenu.add(jMenuItem2);
+        editMenu.add(jSeparator2);
+
+        copyMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
         copyMenuItem.setText("Copy");
         copyMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,6 +155,7 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         editMenu.add(copyMenuItem);
 
+        cutMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
         cutMenuItem2.setMnemonic(KeyEvent.VK_X);
         cutMenuItem2.setText("Cut");
         cutMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -151,6 +165,7 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         editMenu.add(cutMenuItem2);
 
+        pasteMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
         pasteMenuItem3.setMnemonic(KeyEvent.VK_V);
         pasteMenuItem3.setText("Paste");
         pasteMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -274,7 +289,10 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JMenuItem openProjectMenuItem;
     private javax.swing.JMenuItem pasteMenuItem3;
     private javax.swing.JFileChooser projectFileChooser;

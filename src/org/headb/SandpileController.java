@@ -32,23 +32,18 @@ package org.headb;
  *
  * @author headb
  */
-//import java.beans.*;
-//import java.io.Serializable;
-import javax.swing.event.MouseInputAdapter;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.List;
-import java.util.Collections;
 import java.util.Iterator;
 
 import java.io.*;
-
-//import java.lang.Math;
 import java.util.ArrayList;
 
 import java.awt.Canvas;
+import javax.swing.undo.*;
 
 public class SandpileController implements ActionListener, Serializable, Runnable {
 
@@ -69,6 +64,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private boolean saved = false;
 	private HashMap<String, SandpileConfiguration> configs;
 	private Iterator<SandpileConfiguration> updater=null;
+	public UndoManager undoManager = new UndoManager();
 
 
 	public SandpileController() {
@@ -167,10 +163,21 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertices);
 	}
 
-	public void addVertexControl(float x, float y) {
+	public void addVertexControl(final float x, final float y) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert < 0) {
-			addVertex(x, y);
+			final int addedVert = addVertex(x, y);
+			undoManager.addEdit(new AbstractUndoableEdit(){
+				@Override public String getPresentationName(){
+					return "add vertex";
+				}
+				@Override public void undo(){
+					delVertex(addedVert);
+				}
+				@Override public void redo(){
+					addVertex(x,y);
+				}
+			});
 		}
 		repaint();
 	}
@@ -695,7 +702,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		return currentConfig;
 	}
 
-	public void addVertex(float x, float y) {
+	public int addVertex(float x, float y) {
 		sg.addVertex();
 		float[] newPos = {x, y};
 		vertexData.add(newPos);
@@ -703,6 +710,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		firings.add(0);
 		configs.clear();
 		edit();
+		return currentConfig.size()-1;
 	}
 
 	public float[] getVertexLocation(int vert){
