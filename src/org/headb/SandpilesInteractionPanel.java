@@ -79,7 +79,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			scrollOnDrag = scroll;
 		}
 	}
-	private MouseMode mouseMode;
 	private float mouseX=0f, mouseY=0f;
 	private float boxX, boxY;
 	private boolean selecting = false;
@@ -110,22 +109,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		runTimer.setDelay(0);
 		updateDelayTextField();
 
-		this.addKeyListener(new KeyAdapter(){
-			@Override public void keyPressed(KeyEvent e){
-				switch(e.getKeyCode()){
-					case KeyEvent.VK_CONTROL: setMouseMode(MouseMode.MOVE); break;
-					case KeyEvent.VK_ALT: setMouseMode(MouseMode.SELECT); break;
-				}
-			}
-
-			@Override public void keyReleased(KeyEvent e){
-				switch(e.getKeyCode()){
-					case KeyEvent.VK_CONTROL: setMouseMode(getSelectedMouseMode()); break;
-					case KeyEvent.VK_ALT: setMouseMode(getSelectedMouseMode()); break;
-				}
-			}
-		});
-
 		canvas.addMouseListener(new MouseAdapter(){
 			@Override public void mousePressed(MouseEvent e){
 				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
@@ -133,9 +116,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				mouseY = coords[1];
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
 				
-				if(sandpileController.getSelectedVertices().contains(vert)&&mouseMode!=MouseMode.MOVE){
+				if(sandpileController.getSelectedVertices().contains(vert)&&getMouseMode(e)!=MouseMode.MOVE){
 					movingVertices = true;
-				}else if(mouseMode == MouseMode.SELECT){
+				}else if(getMouseMode(e) == MouseMode.SELECT){
 					boxX = mouseX;
 					boxY = mouseY;
 					selecting = true;
@@ -146,19 +129,19 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				mouseX = coords[0];
 				mouseY = coords[1];
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
-				if(vert>=0&&mouseMode == MouseMode.SELECT){
+				if(vert>=0&&getMouseMode(e) == MouseMode.SELECT){
 					if(sandpileController.isSelected(vert)){
 						sandpileController.unselectVertex(vert);
 					}else{
 						sandpileController.selectVertex(vert);
 					}
-				}else if(mouseMode==MouseMode.SELECT){
+				}else if(getMouseMode(e)==MouseMode.SELECT){
 					sandpileController.unselectVertices();
 				}
 				sandpileController.repaint();
 			}
 			@Override public void mouseReleased(MouseEvent e){
-				if(mouseMode == MouseMode.SELECT)
+				if(getMouseMode(e) == MouseMode.SELECT)
 					drawer.clearSelectionBox();
 				selecting = false;
 				movingVertices = false;
@@ -185,8 +168,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				mouseY = coords[1];
 			}
 		});
-
-		setMouseMode( this.getSelectedMouseMode());
     }
 
 	public void onReshape(){
@@ -1470,7 +1451,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
 
 	private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
-		if(mouseMode!=MouseMode.EDIT) return;
+		if(getMouseMode(evt)!=MouseMode.EDIT) return;
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String currentState = optionsTabbedPane.getTitleAt(optionsTabbedPane.getSelectedIndex());
 		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
@@ -1637,18 +1618,15 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_storeConfigButtonActionPerformed
 
 	private void navigateToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToggleButtonActionPerformed
-		mouseMode = getSelectedMouseMode();
-		drawer.scrollOnDrag = true;
+
 }//GEN-LAST:event_navigateToggleButtonActionPerformed
 
 	private void selectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectToggleButtonActionPerformed
-		mouseMode = getSelectedMouseMode();
-		drawer.scrollOnDrag = false;
+
 	}//GEN-LAST:event_selectToggleButtonActionPerformed
 
 	private void editToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editToggleButtonActionPerformed
-		mouseMode = getSelectedMouseMode();
-		drawer.scrollOnDrag = true;
+
 	}//GEN-LAST:event_editToggleButtonActionPerformed
 
 	private MouseMode getSelectedMouseMode(){
@@ -1661,9 +1639,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		return MouseMode.MOVE;
 	}
 
-	public void setMouseMode(MouseMode m){
-		mouseMode = m;
-		drawer.scrollOnDrag = m.scrollOnDrag;
+	public MouseMode getMouseMode(MouseEvent evt){
+		MouseMode mm;
+		if(evt.isAltDown())
+			mm=MouseMode.SELECT;
+		else if(evt.isShiftDown())
+			mm=MouseMode.MOVE;
+		else
+			mm=getSelectedMouseMode();
+		drawer.scrollOnDrag = mm.scrollOnDrag;
+		return mm;
 	}
 
 	private void deleteSelectedVerticesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedVerticesButtonActionPerformed
