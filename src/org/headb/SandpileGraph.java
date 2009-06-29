@@ -25,8 +25,7 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
 
 //
@@ -38,12 +37,13 @@ package org.headb;
 //
 import java.util.*;
 
-public class SandpileGraph{
+public class SandpileGraph {
 
 	private ArrayList<ArrayList<int[]>> adj;
 	private ArrayList<Integer> degrees;
 
-	private enum Vertex{}
+	private enum Vertex {
+	}
 
 	public SandpileGraph() {
 		this.adj = new ArrayList<ArrayList<int[]>>();
@@ -58,11 +58,13 @@ public class SandpileGraph{
 	 * @param dest The index of the destination vertex
 	 * @return If the edge exists, the return value will be {source, dest, weight}. Otherwise, returns null.
 	 */
-	public int[] getEdge(int source, int dest){
+	public int[] getEdge(int source, int dest) {
 		ArrayList<int[]> edgeList = adj.get(source);
-		for(int[] e : edgeList)
-			if(e[1]==dest)
+		for (int[] e : edgeList) {
+			if (e[1] == dest) {
 				return e;
+			}
+		}
 		return null;
 	}
 
@@ -83,20 +85,25 @@ public class SandpileGraph{
 
 	public final Iterable<Integer> getOutgoingVertices(int vert) {
 		final List<int[]> edgeList = getOutgoingEdges(vert);
-		final Iterator<Integer> vertIter = new Iterator<Integer>(){
+		final Iterator<Integer> vertIter = new Iterator<Integer>() {
+
 			Iterator<int[]> edgeIter = edgeList.iterator();
-			public boolean hasNext(){
+
+			public boolean hasNext() {
 				return edgeIter.hasNext();
 			}
-			public Integer next(){
+
+			public Integer next() {
 				return edgeIter.next()[1];
 			}
-			public void remove(){
+
+			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
-		return new Iterable<Integer>(){
-			public Iterator<Integer> iterator(){
+		return new Iterable<Integer>() {
+
+			public Iterator<Integer> iterator() {
 				return vertIter;
 			}
 		};
@@ -105,36 +112,41 @@ public class SandpileGraph{
 	/**
 	 * Retrieves the list of edges which begin with any of the edges in the given list.
 	 */
-	public final List<int[]> getOutgoingEdges(final Iterable<Integer> verts){
+	public final List<int[]> getOutgoingEdges(final Iterable<Integer> verts) {
 		ArrayList<int[]> edgeList = new ArrayList<int[]>();
 		boolean[] alreadyAdded = new boolean[degrees.size()];
-		for(int vert : verts){
-			for(int[] e : getOutgoingEdges(vert)){
-				if(!alreadyAdded[e[1]]){
+		for (int vert : verts) {
+			for (int[] e : getOutgoingEdges(vert)) {
+				if (!alreadyAdded[e[1]]) {
 					edgeList.add(e);
-					alreadyAdded[e[1]]=true;
+					alreadyAdded[e[1]] = true;
 				}
 			}
 		}
 		return edgeList;
 	}
 
-	public final Iterable<Integer> getOutgoingVertices(final Iterable<Integer> verts){
+	public final Iterable<Integer> getOutgoingVertices(final Iterable<Integer> verts) {
 		final List<int[]> edgeList = getOutgoingEdges(verts);
-		final Iterator<Integer> vertIter = new Iterator<Integer>(){
+		final Iterator<Integer> vertIter = new Iterator<Integer>() {
+
 			Iterator<int[]> edgeIter = edgeList.iterator();
-			public boolean hasNext(){
+
+			public boolean hasNext() {
 				return edgeIter.hasNext();
 			}
-			public Integer next(){
+
+			public Integer next() {
 				return edgeIter.next()[1];
 			}
-			public void remove(){
+
+			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
-		return new Iterable<Integer>(){
-			public Iterator<Integer> iterator(){
+		return new Iterable<Integer>() {
+
+			public Iterator<Integer> iterator() {
 				return vertIter;
 			}
 		};
@@ -145,15 +157,14 @@ public class SandpileGraph{
 	 * Runs in linear time, proportional to the number of vertices in the graph.
 	 */
 	/*public Set<Integer> getIncomingVertices(int vert) {
-		Set<Integer> incVerts = new HashSet<Integer>();
-		for (int i = 0; i < this.edges.size(); i++) {
-			if (weight(i, vert) > 0) {
-				incVerts.add(i);
-			}
-		}
-		return incVerts;
+	Set<Integer> incVerts = new HashSet<Integer>();
+	for (int i = 0; i < this.edges.size(); i++) {
+	if (weight(i, vert) > 0) {
+	incVerts.add(i);
+	}
+	}
+	return incVerts;
 	}*/
-
 	/**
 	 * Adds a vertex to the graph.
 	 */
@@ -166,15 +177,15 @@ public class SandpileGraph{
 	 * Removes a vertex from the graph. Runs in time linear to the number of edges plus the number of vertices.
 	 */
 	public void removeVertex(int toDelete) {
-		for(ArrayList<int[]> edgeList : adj){
-			for(Iterator<int[]> edgeIter = edgeList.iterator(); edgeIter.hasNext();){
+		for (ArrayList<int[]> edgeList : adj) {
+			for (Iterator<int[]> edgeIter = edgeList.iterator(); edgeIter.hasNext();) {
 				int[] e = edgeIter.next();
-				if(e[1]==toDelete){
+				if (e[1] == toDelete) {
 					degrees.set(e[0], degree(e[0]) - e[2]);
 					edgeIter.remove();
-				}else{
-					e[0]-= e[0]>toDelete ? 1 : 0;
-					e[1]-= e[1]>toDelete ? 1 : 0;
+				} else {
+					e[0] -= e[0] > toDelete ? 1 : 0;
+					e[1] -= e[1] > toDelete ? 1 : 0;
 				}
 			}
 		}
@@ -184,18 +195,63 @@ public class SandpileGraph{
 
 	/**
 	 * Removes the vertices in the list from the graph.
-	 * Runs in time n * (V+E), just as calling removeVertex on each index would. However,
-	 * it manages the indices of the vertices for you. It is highly recommended you
-	 * use this function to delete vertices, or else you may be deleting the wrong vertices.
+	 * Know idea what the running time of this is, but I spent a lot of time trying
+	 * to optimize this code.
 	 *
 	 * @param vertices A list of the vertices to remove.
 	 */
-	public void removeVertices(List<Integer> vertices){
-		Collections.sort(vertices);
-		Collections.reverse(vertices);
-		for(Integer v : vertices){
-			System.err.println(v);
-			removeVertex(v);
+	public void removeVertices(List<Integer> vertices) {
+		//Collections.sort(vertices);
+		//Collections.reverse(vertices);
+		//Remove all edges containing any vertices to delete.
+		for (List<int[]> edgeList : adj) {
+			for (Iterator<int[]> edgeIter = edgeList.iterator(); edgeIter.hasNext();) {
+				int[] e = edgeIter.next();
+				for (Integer toDelete : vertices) {
+					if (e[1] == toDelete) {
+						degrees.set(e[0], degree(e[0]) - e[2]);
+						edgeIter.remove();
+						break;
+					}
+				}
+			}
+		}
+		//Because deleting one vertex affects the index of all the other vertices
+		//one must delete the vertices in descending order. This requires either
+		//sorting the vertices to be deleted which takes n*lg(n), or making a bit
+		//array that we can descend, which takes n. Thus, though this is messy,
+		//it should be noticeably when vertices.size() is big. Also, since remove
+		//from an ArrayList is linear and adding is constant, it should also be
+		//faster to create new versions of adj and degrees, omitting the unwanted
+		//vertices.
+		ArrayList<ArrayList<int[]>> newAdj = new ArrayList<ArrayList<int[]>>();
+		ArrayList<Integer> newDegrees = new ArrayList<Integer>();
+		boolean[] toRemove = new boolean[adj.size()];
+		for(int v : vertices)
+			toRemove[v]=true;
+
+		for(int v = 0; v<adj.size();v++){
+			if(!toRemove[v]){
+				newAdj.add(adj.get(v));
+				newDegrees.add(degrees.get(v));
+			}
+		}
+		adj=newAdj;
+		degrees=newDegrees;
+		//Fix indices. This is done seperately so as not to screw up indexing with degrees.
+		for (List<int[]> edgeList : adj) {
+			for (int[] e : edgeList) {
+				//Here, we calculate how much each index needs to be lowered.
+				//This is equal to the number of deleted vertices that originally had a lower index.
+				int e0Adjust = 0;
+				int e1Adjust = 0;
+				for (Integer toDelete : vertices) {
+					e0Adjust += e[0] > toDelete ? 1 : 0;
+					e1Adjust += e[1] > toDelete ? 1 : 0;
+				}
+				e[0]-=e0Adjust;
+				e[1]-=e1Adjust;
+			}
 		}
 	}
 
@@ -229,19 +285,19 @@ public class SandpileGraph{
 	 */
 	public void addEdge(int sourceVert, int destVert, int weight) {
 		int[] e = getEdge(sourceVert, destVert);
-		if(e==null&&weight>0){
+		if (e == null && weight > 0) {
 			e = new int[3];
 			e[0] = sourceVert;
 			e[1] = destVert;
 			e[2] = weight;
 			adj.get(sourceVert).add(e);
-			degrees.set(sourceVert, degree(sourceVert)+weight);
-		}else if(weight+e[2]>0){
-			e[2]+=weight;
-			degrees.set(sourceVert, degree(sourceVert)+weight);
-		}else{
+			degrees.set(sourceVert, degree(sourceVert) + weight);
+		} else if (weight + e[2] > 0) {
+			e[2] += weight;
+			degrees.set(sourceVert, degree(sourceVert) + weight);
+		} else {
 			adj.remove(e);
-			degrees.set(sourceVert, degree(sourceVert)-e[2]);
+			degrees.set(sourceVert, degree(sourceVert) - e[2]);
 		}
 	}
 
@@ -259,7 +315,6 @@ public class SandpileGraph{
 		this.addEdge(sourceVert, destVert, -weight);
 	}
 
-
 	/**
 	 * Returns true if the indicated vertex has no outgoing vertices, false otherwise.
 	 *
@@ -274,64 +329,68 @@ public class SandpileGraph{
 
 	public SandpileConfiguration fireVertices(SandpileConfiguration config, Iterable<Integer> verts) {
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
-		for(int v : verts){
-			for(int[] e : getOutgoingEdges(v))
-				newConfig.set(e[1], newConfig.get(e[1])+e[2]);
-			newConfig.set(v, newConfig.get(v)-degree(v));
+		for (int v : verts) {
+			for (int[] e : getOutgoingEdges(v)) {
+				newConfig.set(e[1], newConfig.get(e[1]) + e[2]);
+			}
+			newConfig.set(v, newConfig.get(v) - degree(v));
 		}
 		return newConfig;
 	}
 
 	public SandpileConfiguration fireVerticesInPlace(SandpileConfiguration config, Iterable<Integer> verts) {
-		for(int v : verts){
-			for(int[] e : getOutgoingEdges(v))
-				config.set(e[1], config.get(e[1])+e[2]);
-			config.set(v, config.get(v)-degree(v));
+		for (int v : verts) {
+			for (int[] e : getOutgoingEdges(v)) {
+				config.set(e[1], config.get(e[1]) + e[2]);
+			}
+			config.set(v, config.get(v) - degree(v));
 		}
 		return config;
 	}
-	
-	
-	public List<Integer> getUnstables(SandpileConfiguration config){
+
+	public List<Integer> getUnstables(SandpileConfiguration config) {
 		ArrayList<Integer> unstables = new ArrayList<Integer>();
-		for(int v = 0; v<adj.size(); v++){
-			if(config.get(v)>=degree(v))
+		for (int v = 0; v < adj.size(); v++) {
+			if (config.get(v) >= degree(v)) {
 				unstables.add(v);
-		}
-		return unstables;
-	}
-	
-	public List<Integer> getUnstables(SandpileConfiguration config, Iterable<Integer> verts){
-		ArrayList<Integer> unstables = new ArrayList<Integer>();
-		//System.err.println("getUnstables");
-		for(int v : verts){
-			//System.err.println(v);
-			if(config.get(v)>=degree(v))
-				unstables.add(v);
+			}
 		}
 		return unstables;
 	}
 
-	public Iterator<SandpileConfiguration> updater(final SandpileConfiguration config){
+	public List<Integer> getUnstables(SandpileConfiguration config, Iterable<Integer> verts) {
+		ArrayList<Integer> unstables = new ArrayList<Integer>();
+		//System.err.println("getUnstables");
+		for (int v : verts) {
+			//System.err.println(v);
+			if (config.get(v) >= degree(v)) {
+				unstables.add(v);
+			}
+		}
+		return unstables;
+	}
+
+	public Iterator<SandpileConfiguration> updater(final SandpileConfiguration config) {
 		return updaterStartingWith(config, getUnstables(config));
 	}
 
-	public Iterator<SandpileConfiguration> updaterStartingWith(final SandpileConfiguration config, final List<Integer> startingVertices){
-		return new Iterator<SandpileConfiguration>(){
+	public Iterator<SandpileConfiguration> updaterStartingWith(final SandpileConfiguration config, final List<Integer> startingVertices) {
+		return new Iterator<SandpileConfiguration>() {
+
 			SandpileConfiguration curConfig = new SandpileConfiguration(config);
 			List<Integer> unstables = getUnstables(config, startingVertices);
 
-			public boolean hasNext(){
+			public boolean hasNext() {
 				return !unstables.isEmpty();
 			}
 
-			public SandpileConfiguration next(){
+			public SandpileConfiguration next() {
 				curConfig = fireVertices(curConfig, unstables);
 				unstables = getUnstables(curConfig, getOutgoingVertices(unstables));
 				return curConfig;
 			}
 
-			public void remove(){
+			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
@@ -340,10 +399,9 @@ public class SandpileGraph{
 	/**
 	 * Takes in a configuration and outputs the resulting configuration
 	 */
-	public SandpileConfiguration updateConfig(SandpileConfiguration config) {
-		return fireVertices(config, getUnstables(config));
-	}
-
+	//public SandpileConfiguration updateConfig(SandpileConfiguration config) {
+	//	return fireVertices(config, getUnstables(config));
+	//}
 	public SandpileConfiguration reverseFireVertex(SandpileConfiguration config, int vert) {
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
 		newConfig.set(vert, config.get(vert) + degree(vert));
@@ -372,11 +430,10 @@ public class SandpileGraph{
 		return stabilizeConfigStartingWith(config, getUnstables(config));
 	}
 
-
 	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, List<Integer> starters) {
 		List<Integer> unstables = getUnstables(config, starters);
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
-		while(!unstables.isEmpty()){
+		while (!unstables.isEmpty()) {
 			fireVerticesInPlace(newConfig, unstables);
 			unstables = getUnstables(newConfig, getOutgoingVertices(unstables));
 		}
@@ -388,9 +445,11 @@ public class SandpileGraph{
 	 * Returns the number of edges from the first vertex to the second.
 	 */
 	public int weight(int originVert, int destVert) {
-		for(int[] e : getOutgoingEdges(originVert))
-			if(e[1]==destVert)
+		for (int[] e : getOutgoingEdges(originVert)) {
+			if (e[1] == destVert) {
 				return e[2];
+			}
+		}
 		return 0;
 	}
 
@@ -476,21 +535,22 @@ public class SandpileGraph{
 	 * Calculates whether or not the given configuration is stable.
 	 */
 	public boolean isStable(SandpileConfiguration config) {
-		for(int vert=0; vert<config.size(); vert++){
-			if(config.get(vert)>=degree(vert))
+		for (int vert = 0; vert < config.size(); vert++) {
+			if (config.get(vert) >= degree(vert)) {
 				return true;
+			}
 		}
 		return false;
 	}
-/*
+	/*
 	public SandpileConfiguration fireEverything(SandpileConfiguration config, int times){
-		SandpileConfiguration newConfig = new SandpileConfiguration(config);
-		for(int sourceVert=0; sourceVert<config.size(); sourceVert++){
-			newConfig.set(sourceVert, newConfig.get(sourceVert) - times*degree(sourceVert));
-			for(Integer destVert : this.getOutgoingVertices(sourceVert))
-				newConfig.set(destVert, newConfig.get(destVert)+times*weight(sourceVert,destVert));
-		}
-		return newConfig;
+	SandpileConfiguration newConfig = new SandpileConfiguration(config);
+	for(int sourceVert=0; sourceVert<config.size(); sourceVert++){
+	newConfig.set(sourceVert, newConfig.get(sourceVert) - times*degree(sourceVert));
+	for(Integer destVert : this.getOutgoingVertices(sourceVert))
+	newConfig.set(destVert, newConfig.get(destVert)+times*weight(sourceVert,destVert));
+	}
+	return newConfig;
 	}*/
 
 	/**
@@ -526,9 +586,11 @@ public class SandpileGraph{
 	public SandpileConfiguration getIdentityConfig() {
 		SandpileConfiguration burning = getMinimalBurningConfig();
 		ArrayList<Integer> burningVertices = new ArrayList<Integer>();
-		for(int vert=0; vert<burning.size(); vert++)
-			if(burning.get(vert)>0)
+		for (int vert = 0; vert < burning.size(); vert++) {
+			if (burning.get(vert) > 0) {
 				burningVertices.add(vert);
+			}
+		}
 		SandpileConfiguration config = stabilizeConfig(burning);
 		SandpileConfiguration nextConfig = stabilizeConfigStartingWith(config.plus(burning), burningVertices);
 		while (!config.equals(nextConfig)) {

@@ -110,7 +110,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		runTimer.setDelay(0);
 		updateDelayTextField();
 
-		canvas.addKeyListener(new KeyAdapter(){
+		this.addKeyListener(new KeyAdapter(){
 			@Override public void keyPressed(KeyEvent e){
 				switch(e.getKeyCode()){
 					case KeyEvent.VK_CONTROL: setMouseMode(MouseMode.MOVE); break;

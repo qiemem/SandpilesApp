@@ -128,8 +128,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		if(updater == null)
 			updater = sg.updater(currentConfig);
 		if(updater.hasNext()){
-			SandpileConfiguration nextConfig = sg.updateConfig(currentConfig);
-			currentConfig = nextConfig;
+			currentConfig = updater.next();
 		}
 	}
 
@@ -723,11 +722,19 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void delVertices(List<Integer> vertices) {
-		Collections.sort(vertices);
-		Collections.reverse(vertices);
-		for (int v : vertices) {
-			delVertex(v);
+		sg.removeVertices(vertices);
+		configs.clear();
+		boolean[] toRemove = new boolean[currentConfig.size()];
+		for(int v : vertices)
+			toRemove[v]=true;
+		for(int v=currentConfig.size()-1; v>=0; v--){
+			if(toRemove[v]){
+				vertexData.remove(v);
+				currentConfig.remove(v);
+			}
 		}
+		//System.err.println(vertexData.size() + " " + currentConfig.size());
+		edit();
 	}
 
 	public void delAllVertices() {
