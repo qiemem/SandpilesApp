@@ -203,41 +203,38 @@ public class SandpileGraph {
 	public void removeVertices(List<Integer> vertices) {
 		//Collections.sort(vertices);
 		//Collections.reverse(vertices);
+		boolean[] toRemove = new boolean[adj.size()];
+		for (int v : vertices) {
+			toRemove[v] = true;
+		}
 		//Remove all edges containing any vertices to delete.
-		for (List<int[]> edgeList : adj) {
+		for (int v = 0; v < adj.size(); v++) {
+			if (toRemove[v]) {
+				continue;
+			}
+			List<int[]> edgeList = adj.get(v);
 			for (Iterator<int[]> edgeIter = edgeList.iterator(); edgeIter.hasNext();) {
 				int[] e = edgeIter.next();
-				for (Integer toDelete : vertices) {
-					if (e[1] == toDelete) {
-						degrees.set(e[0], degree(e[0]) - e[2]);
-						edgeIter.remove();
-						break;
-					}
+				if (toRemove[e[1]]) {
+					degrees.set(e[0], degree(e[0]) - e[2]);
+					edgeIter.remove();
 				}
 			}
 		}
-		//Because deleting one vertex affects the index of all the other vertices
-		//one must delete the vertices in descending order. This requires either
-		//sorting the vertices to be deleted which takes n*lg(n), or making a bit
-		//array that we can descend, which takes n. Thus, though this is messy,
-		//it should be noticeably when vertices.size() is big. Also, since remove
-		//from an ArrayList is linear and adding is constant, it should also be
-		//faster to create new versions of adj and degrees, omitting the unwanted
-		//vertices.
+
+		//Since removal from an ArrayList is linear and add is constant (amortized),
+		//it's actually faster to build new copies of adj and degrees omitting what
+		//we don't want.
 		ArrayList<ArrayList<int[]>> newAdj = new ArrayList<ArrayList<int[]>>();
 		ArrayList<Integer> newDegrees = new ArrayList<Integer>();
-		boolean[] toRemove = new boolean[adj.size()];
-		for(int v : vertices)
-			toRemove[v]=true;
-
-		for(int v = 0; v<adj.size();v++){
-			if(!toRemove[v]){
+		for (int v = 0; v < adj.size(); v++) {
+			if (!toRemove[v]) {
 				newAdj.add(adj.get(v));
 				newDegrees.add(degrees.get(v));
 			}
 		}
-		adj=newAdj;
-		degrees=newDegrees;
+		adj = newAdj;
+		degrees = newDegrees;
 		//Fix indices. This is done seperately so as not to screw up indexing with degrees.
 		for (List<int[]> edgeList : adj) {
 			for (int[] e : edgeList) {
@@ -249,8 +246,8 @@ public class SandpileGraph {
 					e0Adjust += e[0] > toDelete ? 1 : 0;
 					e1Adjust += e[1] > toDelete ? 1 : 0;
 				}
-				e[0]-=e0Adjust;
-				e[1]-=e1Adjust;
+				e[0] -= e0Adjust;
+				e[1] -= e1Adjust;
 			}
 		}
 	}
