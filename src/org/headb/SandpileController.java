@@ -647,10 +647,41 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		}
 	}
 
-	public void makeHexGrid(final int rows, final int cols,
+	public void makeHexGridControl(final int rows, final int cols,
 			final float x, final float y,
 			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
 		final int startingIndex = currentConfig.size();
+		makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+		final int endingIndex = currentConfig.size()-1;
+		undoManager.addEdit(new AbstractUndoableEdit() {
+
+			@Override
+			public String getPresentationName() {
+				return "make hex grid";
+			}
+
+			@Override
+			public void undo() {
+				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				for(int i=startingIndex;i<=endingIndex;i++){
+					vertices.add(i);
+				}
+				delVertices(vertices);
+				repaint();
+			}
+
+			@Override
+			public void redo() {
+				makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+				repaint();
+			}
+		});
+		this.repaint();
+	}
+
+	public void makeHexGrid(final int rows, final int cols,
+			final float x, final float y,
+			final int nBorder, final int sBorder, final int eBorder, final int wBorder){
 		float gridSpacing = VERT_RADIUS * 2;
 		//int curVertDataSize = vertexData.size();
 
@@ -808,31 +839,6 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 			}
 		}
-		final int endingIndex = currentConfig.size();
-		undoManager.addEdit(new AbstractUndoableEdit() {
-
-			@Override
-			public String getPresentationName() {
-				return "make hex grid";
-			}
-
-			@Override
-			public void undo() {
-				ArrayList<Integer> vertices = new ArrayList<Integer>();
-				for(int i=startingIndex;i<=endingIndex;i++){
-					vertices.add(i);
-				}
-				delVertices(vertices);
-				repaint();
-			}
-
-			@Override
-			public void redo() {
-				makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
-				repaint();
-			}
-		});
-		this.repaint();
 	}
 
 	public void setToDualConfig() {

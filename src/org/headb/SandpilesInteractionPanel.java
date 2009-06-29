@@ -1464,7 +1464,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 					eBorderComboBox.getSelectedIndex(),
 					wBorderComboBox.getSelectedIndex());
 		}else if(currentState.equals(MAKE_HEX_GRID_STATE)){
-			sandpileController.makeHexGrid(Integer.valueOf(hexGridRowsField.getText()), Integer.valueOf(hexGridColsField.getText()), x, y,
+			sandpileController.makeHexGridControl(Integer.valueOf(hexGridRowsField.getText()), Integer.valueOf(hexGridColsField.getText()), x, y,
 					hexNBorderComboBox.getSelectedIndex(),
 					hexSBorderComboBox.getSelectedIndex(),
 					hexEBorderComboBox.getSelectedIndex(),
