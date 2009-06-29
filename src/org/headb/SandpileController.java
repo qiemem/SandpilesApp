@@ -172,20 +172,38 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 					return "add vertex";
 				}
 				@Override public void undo(){
+					System.err.println("undo");
 					delVertex(addedVert);
+					repaint();
 				}
 				@Override public void redo(){
+					System.err.println("redo");
 					addVertex(x,y);
+					repaint();
 				}
 			});
 		}
 		repaint();
 	}
 
-	public void delVertexControl(float x, float y) {
-		int touchVert = touchingVertex(x, y);
+	public void delVertexControl(final float x, final float y) {
+		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			delVertex(touchVert);
+			undoManager.addEdit(new AbstractUndoableEdit(){
+				private int vertIndex = touchVert;
+				@Override public String getPresentationName(){
+					return "delete vertex";
+				}
+				@Override public void undo(){
+					vertIndex=addVertex(x,y);
+					repaint();
+				}
+				@Override public void redo(){
+					delVertex(vertIndex);
+					repaint();
+				}
+			});
 		}
 		repaint();
 	}

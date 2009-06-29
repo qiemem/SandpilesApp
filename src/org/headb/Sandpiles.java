@@ -66,8 +66,8 @@ public class Sandpiles extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         quitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         copyMenuItem = new javax.swing.JMenuItem();
         cutMenuItem2 = new javax.swing.JMenuItem();
@@ -139,11 +139,23 @@ public class Sandpiles extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
-        jMenuItem1.setText("Undo");
-        editMenu.add(jMenuItem1);
+        undoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoMenuItem);
 
-        jMenuItem2.setText("Redo");
-        editMenu.add(jMenuItem2);
+        redoMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(redoMenuItem);
         editMenu.add(jSeparator2);
 
         copyMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C,java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
@@ -257,6 +269,22 @@ public class Sandpiles extends javax.swing.JFrame {
 		sandpilesIP.pasteVertexDataFromClipboard();
 	}//GEN-LAST:event_pasteMenuItem3ActionPerformed
 
+	private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
+		try{
+			sandpilesIP.getSandpileController().undoManager.undo();
+		}catch(javax.swing.undo.CannotUndoException e){
+			java.awt.Toolkit.getDefaultToolkit().beep();
+		}
+	}//GEN-LAST:event_undoMenuItemActionPerformed
+
+	private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
+		try{
+			sandpilesIP.getSandpileController().undoManager.redo();
+		}catch(javax.swing.undo.CannotRedoException e){
+			java.awt.Toolkit.getDefaultToolkit().beep();
+		}
+	}//GEN-LAST:event_redoMenuItemActionPerformed
+
 	/**
 	 * @param args the command line arguments
 	 */
@@ -289,16 +317,16 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JMenuItem openProjectMenuItem;
     private javax.swing.JMenuItem pasteMenuItem3;
     private javax.swing.JFileChooser projectFileChooser;
     private javax.swing.JMenuItem quitMenuItem;
+    private javax.swing.JMenuItem redoMenuItem;
     private org.headb.SandpilesInteractionPanel sandpilesIP;
     private javax.swing.JMenuItem saveProjectAsMenuItem;
     private javax.swing.JMenuItem saveProjectMenuItem;
+    private javax.swing.JMenuItem undoMenuItem;
     // End of variables declaration//GEN-END:variables
 }
