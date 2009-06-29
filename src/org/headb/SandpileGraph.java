@@ -42,9 +42,6 @@ public class SandpileGraph {
 	private ArrayList<ArrayList<int[]>> adj;
 	private ArrayList<Integer> degrees;
 
-	private enum Vertex {
-	}
-
 	public SandpileGraph() {
 		this.adj = new ArrayList<ArrayList<int[]>>();
 		this.degrees = new ArrayList<Integer>();
@@ -293,9 +290,10 @@ public class SandpileGraph {
 			e[2] += weight;
 			degrees.set(sourceVert, degree(sourceVert) + weight);
 		} else {
-			adj.remove(e);
+			adj.get(sourceVert).remove(e);
 			degrees.set(sourceVert, degree(sourceVert) - e[2]);
 		}
+		System.err.println(e[2]);
 	}
 
 	/**

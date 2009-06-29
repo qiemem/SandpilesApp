@@ -208,44 +208,120 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void addEdgeControl(float x, float y, int weight) {
-		int touchVert = touchingVertex(x, y);
+	public void addEdgeControl(float x, float y, final int weight) {
+		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			for (Integer v : selectedVertices) {
 				addEdge(v, touchVert, weight);
 			}
+			undoManager.addEdit(new AbstractUndoableEdit(){
+				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				@Override public String getPresentationName(){
+					return "add edge(s)";
+				}
+				@Override public void undo(){
+					for(Integer v : sourceVertices){
+						delEdge(v, touchVert, weight);
+					}
+					repaint();
+				}
+				@Override public void redo(){
+					for(Integer v : sourceVertices){
+						addEdge(v, touchVert, weight);
+					}
+					repaint();
+				}
+			});
 		}
 		repaint();
 	}
 
-	public void delEdgeControl(float x, float y, int weight) {
-		int touchVert = touchingVertex(x, y);
+	public void delEdgeControl(float x, float y, final int weight) {
+		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			for (Integer v : selectedVertices) {
 				delEdge(v, touchVert, weight);
 			}
+			undoManager.addEdit(new AbstractUndoableEdit(){
+				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				@Override public String getPresentationName(){
+					return "delete edge(s)";
+				}
+				@Override public void undo(){
+					for(Integer v : sourceVertices){
+						addEdge(v, touchVert, weight);
+					}
+					repaint();
+				}
+				@Override public void redo(){
+					for(Integer v : sourceVertices){
+						delEdge(v, touchVert, weight);
+					}
+					repaint();
+				}
+			});
 		}
 		repaint();
 	}
 
-	public void addUndiEdgeControl(float x, float y, int weight) {
-		int touchVert = touchingVertex(x, y);
+	public void addUndiEdgeControl(float x, float y, final int weight) {
+		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			for (Integer v : selectedVertices) {
 				addEdge(v, touchVert, weight);
 				addEdge(touchVert, v, weight);
 			}
+			undoManager.addEdit(new AbstractUndoableEdit(){
+				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				@Override public String getPresentationName(){
+					return "add undirected edge(s)";
+				}
+				@Override public void undo(){
+					for(Integer v : sourceVertices){
+						delEdge(v, touchVert, weight);
+						delEdge(touchVert, v, weight);
+					}
+					repaint();
+				}
+				@Override public void redo(){
+					for(Integer v : sourceVertices){
+						addEdge(v, touchVert, weight);
+						addEdge(touchVert, v, weight);
+					}
+					repaint();
+				}
+			});
 		}
 		repaint();
 	}
 
-	public void delUndiEdgeControl(float x, float y, int weight) {
-		int touchVert = touchingVertex(x, y);
+	public void delUndiEdgeControl(float x, float y, final int weight) {
+		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			for (Integer v : selectedVertices) {
 				delEdge(v, touchVert, weight);
 				delEdge(touchVert, v, weight);
 			}
+			undoManager.addEdit(new AbstractUndoableEdit(){
+				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				@Override public String getPresentationName(){
+					return "delete undirected edge(s)";
+				}
+				@Override public void undo(){
+					for(Integer v : sourceVertices){
+						addEdge(v, touchVert, weight);
+						addEdge(touchVert, v, weight);
+					}
+					repaint();
+				}
+				@Override public void redo(){
+					for(Integer v : sourceVertices){
+						delEdge(v, touchVert, weight);
+						delEdge(touchVert, v, weight);
+					}
+					repaint();
+				}
+			});
 		}
 		repaint();
 	}
