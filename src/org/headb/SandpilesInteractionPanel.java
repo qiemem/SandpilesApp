@@ -1458,7 +1458,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		float x = coords[0];
 		float y = coords[1];
 		if(currentState.equals(MAKE_GRID_STATE)){
-			sandpileController.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
+			sandpileController.makeGridControl(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
 					nBorderComboBox.getSelectedIndex(),
 					sBorderComboBox.getSelectedIndex(),
 					eBorderComboBox.getSelectedIndex(),
@@ -1485,7 +1485,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			}
 
 		}else if(currentState.equals(MAKE_HONEYCOMB_STATE)){
-			sandpileController.makeHoneycomb(Integer.valueOf(makeHoneycombRadiusField.getText()),x, y,  makeHoneycombBorderComboBox.getSelectedIndex());
+			sandpileController.makeHoneycombControl(Integer.valueOf(makeHoneycombRadiusField.getText()),x, y,  makeHoneycombBorderComboBox.getSelectedIndex());
 		}else if(currentState.equals(CONFIG_MANAGER_STATE)){
 			if(editConfigButtonGroup.isSelected(addSandRadioButton.getModel())){
 				sandpileController.addSandControl(x,y, Integer.valueOf(amountOfSandField.getText() ) );

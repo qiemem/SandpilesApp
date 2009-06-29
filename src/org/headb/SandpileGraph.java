@@ -293,7 +293,6 @@ public class SandpileGraph {
 			adj.get(sourceVert).remove(e);
 			degrees.set(sourceVert, degree(sourceVert) - e[2]);
 		}
-		System.err.println(e[2]);
 	}
 
 	/**

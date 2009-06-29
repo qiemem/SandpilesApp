@@ -63,9 +63,8 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private File projectFile = null;
 	private boolean saved = false;
 	private HashMap<String, SandpileConfiguration> configs;
-	private Iterator<SandpileConfiguration> updater=null;
+	private Iterator<SandpileConfiguration> updater = null;
 	public UndoManager undoManager = new UndoManager();
-
 
 	public SandpileController() {
 		drawer = new SandpileGLDrawer();
@@ -96,12 +95,14 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public String getProjectTitle() {
 		String title;
-		if(projectFile!=null)
+		if (projectFile != null) {
 			title = projectFile.getName();
-		else
+		} else {
 			title = "Untitled";
-		if(!saved)
+		}
+		if (!saved) {
 			title += " *";
+		}
 		return title;
 	}
 
@@ -121,9 +122,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	 */
 	public void update() {
 		updateFirings();
-		if(updater == null)
+		if (updater == null) {
 			updater = sg.updater(currentConfig);
-		if(updater.hasNext()){
+		}
+		if (updater.hasNext()) {
 			currentConfig = updater.next();
 		}
 	}
@@ -167,18 +169,24 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		int touchVert = touchingVertex(x, y);
 		if (touchVert < 0) {
 			final int addedVert = addVertex(x, y);
-			undoManager.addEdit(new AbstractUndoableEdit(){
-				@Override public String getPresentationName(){
+			undoManager.addEdit(new AbstractUndoableEdit() {
+
+				@Override
+				public String getPresentationName() {
 					return "add vertex";
 				}
-				@Override public void undo(){
+
+				@Override
+				public void undo() {
 					System.err.println("undo");
 					delVertex(addedVert);
 					repaint();
 				}
-				@Override public void redo(){
+
+				@Override
+				public void redo() {
 					System.err.println("redo");
-					addVertex(x,y);
+					addVertex(x, y);
 					repaint();
 				}
 			});
@@ -190,16 +198,23 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			delVertex(touchVert);
-			undoManager.addEdit(new AbstractUndoableEdit(){
+			undoManager.addEdit(new AbstractUndoableEdit() {
+
 				private int vertIndex = touchVert;
-				@Override public String getPresentationName(){
+
+				@Override
+				public String getPresentationName() {
 					return "delete vertex";
 				}
-				@Override public void undo(){
-					vertIndex=addVertex(x,y);
+
+				@Override
+				public void undo() {
+					vertIndex = addVertex(x, y);
 					repaint();
 				}
-				@Override public void redo(){
+
+				@Override
+				public void redo() {
 					delVertex(vertIndex);
 					repaint();
 				}
@@ -214,19 +229,26 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			for (Integer v : selectedVertices) {
 				addEdge(v, touchVert, weight);
 			}
-			undoManager.addEdit(new AbstractUndoableEdit(){
+			undoManager.addEdit(new AbstractUndoableEdit() {
+
 				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
-				@Override public String getPresentationName(){
+
+				@Override
+				public String getPresentationName() {
 					return "add edge(s)";
 				}
-				@Override public void undo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void undo() {
+					for (Integer v : sourceVertices) {
 						delEdge(v, touchVert, weight);
 					}
 					repaint();
 				}
-				@Override public void redo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void redo() {
+					for (Integer v : sourceVertices) {
 						addEdge(v, touchVert, weight);
 					}
 					repaint();
@@ -242,19 +264,26 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			for (Integer v : selectedVertices) {
 				delEdge(v, touchVert, weight);
 			}
-			undoManager.addEdit(new AbstractUndoableEdit(){
+			undoManager.addEdit(new AbstractUndoableEdit() {
+
 				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
-				@Override public String getPresentationName(){
+
+				@Override
+				public String getPresentationName() {
 					return "delete edge(s)";
 				}
-				@Override public void undo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void undo() {
+					for (Integer v : sourceVertices) {
 						addEdge(v, touchVert, weight);
 					}
 					repaint();
 				}
-				@Override public void redo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void redo() {
+					for (Integer v : sourceVertices) {
 						delEdge(v, touchVert, weight);
 					}
 					repaint();
@@ -271,20 +300,27 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 				addEdge(v, touchVert, weight);
 				addEdge(touchVert, v, weight);
 			}
-			undoManager.addEdit(new AbstractUndoableEdit(){
+			undoManager.addEdit(new AbstractUndoableEdit() {
+
 				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
-				@Override public String getPresentationName(){
+
+				@Override
+				public String getPresentationName() {
 					return "add undirected edge(s)";
 				}
-				@Override public void undo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void undo() {
+					for (Integer v : sourceVertices) {
 						delEdge(v, touchVert, weight);
 						delEdge(touchVert, v, weight);
 					}
 					repaint();
 				}
-				@Override public void redo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void redo() {
+					for (Integer v : sourceVertices) {
 						addEdge(v, touchVert, weight);
 						addEdge(touchVert, v, weight);
 					}
@@ -302,20 +338,27 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 				delEdge(v, touchVert, weight);
 				delEdge(touchVert, v, weight);
 			}
-			undoManager.addEdit(new AbstractUndoableEdit(){
+			undoManager.addEdit(new AbstractUndoableEdit() {
+
 				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
-				@Override public String getPresentationName(){
+
+				@Override
+				public String getPresentationName() {
 					return "delete undirected edge(s)";
 				}
-				@Override public void undo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void undo() {
+					for (Integer v : sourceVertices) {
 						addEdge(v, touchVert, weight);
 						addEdge(touchVert, v, weight);
 					}
 					repaint();
 				}
-				@Override public void redo(){
-					for(Integer v : sourceVertices){
+
+				@Override
+				public void redo() {
+					for (Integer v : sourceVertices) {
 						delEdge(v, touchVert, weight);
 						delEdge(touchVert, v, weight);
 					}
@@ -342,17 +385,49 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void edit(){
+	public void edit() {
 		saved = false;
 		updater = null;
 	}
 
-	public void editCurConfig(SandpileConfiguration newConfig){
+	public void editCurConfig(SandpileConfiguration newConfig) {
 		currentConfig = newConfig;
 		edit();
 	}
 
-	public void makeGrid(int rows, int cols, float x, float y, int nBorder, int sBorder, int eBorder, int wBorder) {
+	public void makeGridControl(final int rows, final int cols,
+			final float x, final float y,
+			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
+		final int startingIndex = currentConfig.size();
+		makeGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+		final int endingIndex = currentConfig.size()-1;
+		undoManager.addEdit(new AbstractUndoableEdit() {
+
+			@Override
+			public String getPresentationName() {
+				return "make gride";
+			}
+
+			@Override
+			public void undo() {
+				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				for(int i=startingIndex;i<=endingIndex;i++){
+					vertices.add(i);
+				}
+				delVertices(vertices);
+				repaint();
+			}
+
+			@Override
+			public void redo() {
+				makeGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+				repaint();
+			}
+		});
+		repaint();
+	}
+
+	public void makeGrid(int rows, int cols, float x, float y, int nBorder, int sBorder, int eBorder, int wBorder){
 		float gridSpacing = VERT_RADIUS * 2;
 		//int curVertDataSize = vertexData.size();
 		int[][] gridRef = new int[rows][cols];
@@ -438,15 +513,45 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 			}
 		}
-		repaint();
 	}
 
-	public void makeHoneycomb(int radius, float x, float y, int borders) {
+	public void makeHoneycombControl(final int radius, final float x, final float y, final int borders) {
 		/*
 		 * for borders:
 		 * 0 - directed
 		 * 1 - undirected
 		 **/
+		final int startingIndex = currentConfig.size();
+		makeHoneycomb(radius, x, y, borders);
+		final int endingIndex = currentConfig.size()-1;
+		undoManager.addEdit(new AbstractUndoableEdit() {
+
+			@Override
+			public String getPresentationName() {
+				return "make honeycomb";
+			}
+
+			@Override
+			public void undo() {
+				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				for(int i=startingIndex;i<=endingIndex;i++){
+					vertices.add(i);
+				}
+				delVertices(vertices);
+				repaint();
+			}
+
+			@Override
+			public void redo() {
+				makeHoneycomb(radius, x, y, borders);
+				repaint();
+			}
+		});
+		this.repaint();
+
+	}
+
+	public void makeHoneycomb(final int radius, final float x, final float y, final int borders){
 		float gridSpacing = VERT_RADIUS * 2;
 		int curRowLength = radius;
 		int[][] gridRef = new int[radius * 2 - 1][radius * 2 - 1];
@@ -540,11 +645,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			addEdge(gridRef[radius - 1][2 * radius - 2], gridRef[radius][2 * radius - 3]);
 			addEdge(gridRef[radius - 1][2 * radius - 2], gridRef[radius - 1][2 * radius - 3]);
 		}
-		this.repaint();
-
 	}
 
-	public void makeHexGrid(int rows, int cols, float x, float y, int nBorder, int sBorder, int eBorder, int wBorder) {
+	public void makeHexGrid(final int rows, final int cols,
+			final float x, final float y,
+			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
+		final int startingIndex = currentConfig.size();
 		float gridSpacing = VERT_RADIUS * 2;
 		//int curVertDataSize = vertexData.size();
 
@@ -702,6 +808,30 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 			}
 		}
+		final int endingIndex = currentConfig.size();
+		undoManager.addEdit(new AbstractUndoableEdit() {
+
+			@Override
+			public String getPresentationName() {
+				return "make hex grid";
+			}
+
+			@Override
+			public void undo() {
+				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				for(int i=startingIndex;i<=endingIndex;i++){
+					vertices.add(i);
+				}
+				delVertices(vertices);
+				repaint();
+			}
+
+			@Override
+			public void redo() {
+				makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+				repaint();
+			}
+		});
 		this.repaint();
 	}
 
@@ -736,32 +866,32 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void addIdentity() {
-		editCurConfig( currentConfig.plus(getIdentity()));
+		editCurConfig(currentConfig.plus(getIdentity()));
 		repaint();
 	}
 
 	public void setToIdentity() {
-		editCurConfig( getIdentity());
+		editCurConfig(getIdentity());
 		repaint();
 	}
 
 	public void setSandEverywhere(int amount) {
-		editCurConfig( sg.getUniformConfig(amount));
+		editCurConfig(sg.getUniformConfig(amount));
 		repaint();
 	}
 
 	public void addSandEverywhere(int amount) {
-		editCurConfig( currentConfig.plus(sg.getUniformConfig(amount)));
+		editCurConfig(currentConfig.plus(sg.getUniformConfig(amount)));
 		repaint();
 	}
 
 	public void setToBurningConfig() {
-		editCurConfig( sg.getMinimalBurningConfig());
+		editCurConfig(sg.getMinimalBurningConfig());
 		repaint();
 	}
 
 	public void addBurningConfig() {
-		editCurConfig( currentConfig.plus(sg.getMinimalBurningConfig()));
+		editCurConfig(currentConfig.plus(sg.getMinimalBurningConfig()));
 		repaint();
 	}
 
@@ -770,22 +900,22 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void addConfigNamed(String name) {
-		editCurConfig( currentConfig.plus(getConfigByName(name)));
+		editCurConfig(currentConfig.plus(getConfigByName(name)));
 		repaint();
 	}
 
 	public void setConfigNamed(String name) {
-		editCurConfig( getConfigByName(name));
+		editCurConfig(getConfigByName(name));
 		repaint();
 	}
 
 	public void clearSand() {
-		editCurConfig( sg.getUniformConfig(0));
+		editCurConfig(sg.getUniformConfig(0));
 		repaint();
 	}
 
 	public void stabilize() {
-		editCurConfig( sg.stabilizeConfig(currentConfig));
+		editCurConfig(sg.stabilizeConfig(currentConfig));
 	}
 
 	public final SandpileGraph getGraph() {
@@ -804,16 +934,17 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		firings.add(0);
 		configs.clear();
 		edit();
-		return currentConfig.size()-1;
+		return currentConfig.size() - 1;
 	}
 
-	public float[] getVertexLocation(int vert){
+	public float[] getVertexLocation(int vert) {
 		return vertexData.get(vert);
 	}
 
-	public int getSand(int vert){
+	public int getSand(int vert) {
 		return currentConfig.get(vert);
 	}
+
 	public void delVertex(int v) {
 		vertexData.remove(v);
 		currentConfig.remove(v);
@@ -827,10 +958,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		sg.removeVertices(vertices);
 		configs.clear();
 		boolean[] toRemove = new boolean[currentConfig.size()];
-		for(int v : vertices)
-			toRemove[v]=true;
-		for(int v=currentConfig.size()-1; v>=0; v--){
-			if(toRemove[v]){
+		for (int v : vertices) {
+			toRemove[v] = true;
+		}
+		for (int v = currentConfig.size() - 1; v >= 0; v--) {
+			if (toRemove[v]) {
 				vertexData.remove(v);
 				currentConfig.remove(v);
 			}
@@ -895,7 +1027,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		edit();
 	}
 
-	public Iterable<Integer> getOutgoingVertices(int vert){
+	public Iterable<Integer> getOutgoingVertices(int vert) {
 		return sg.getOutgoingVertices(vert);
 	}
 
@@ -1062,7 +1194,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void loadCurrentConfig(File file) {
-		editCurConfig( loadConfig(file) );
+		editCurConfig(loadConfig(file));
 		saved = true;
 	}
 
