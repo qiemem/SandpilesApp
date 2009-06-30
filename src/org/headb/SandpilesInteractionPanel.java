@@ -175,7 +175,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		});
 
 		final SandpilesInteractionPanel me = this;
-		serverMsgChecker = new Timer(10, new ActionListener(){
+		serverMsgChecker = new Timer(0, new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				try{
 					sandpileController.receiveMessage();
@@ -1535,9 +1535,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_canvasMouseReleased
 
 	private void addRandomSandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRandomSandButtonActionPerformed
-		for(int i=0; i<Integer.valueOf(this.amountOfSandField.getText()); i++)
-			sandpileController.addSandToRandom(1);
-		sandpileController.repaint();
+		sandpileController.addSandToRandomControl(Integer.valueOf(this.amountOfSandField.getText()),1);
 }//GEN-LAST:event_addRandomSandButtonActionPerformed
 
 	private void hexGridRowsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexGridRowsFieldActionPerformed

@@ -345,7 +345,7 @@ public class SandpileGraph {
 	public List<Integer> getUnstables(SandpileConfiguration config) {
 		ArrayList<Integer> unstables = new ArrayList<Integer>();
 		for (int v = 0; v < adj.size(); v++) {
-			if (config.get(v) >= degree(v)) {
+			if (!isSink(v) && config.get(v) >= degree(v)) {
 				unstables.add(v);
 			}
 		}
@@ -357,7 +357,7 @@ public class SandpileGraph {
 		//System.err.println("getUnstables");
 		for (int v : verts) {
 			//System.err.println(v);
-			if (config.get(v) >= degree(v)) {
+			if (!isSink(v) && config.get(v) >= degree(v)) {
 				unstables.add(v);
 			}
 		}
@@ -381,6 +381,7 @@ public class SandpileGraph {
 			public SandpileConfiguration next() {
 				curConfig = fireVertices(curConfig, unstables);
 				unstables = getUnstables(curConfig, getOutgoingVertices(unstables));
+				unstables.addAll(getUnstables(curConfig, unstables));
 				return curConfig;
 			}
 

@@ -39,12 +39,19 @@ public class SandpileProtocol {
 		this.sc = sc;
 	}
 	public String processInput(String input){
-		System.err.println("input received: " + input);
+		//System.err.println("input received: " + input);
 		String output = "done";
-		if(input.equals("update"))
+		String[] command = input.split(" ");
+		if(command[0].equals("update"))
 			sc.update();
+		else if(command[0].equals("addvertex"))
+			sc.addVertexControl(Integer.valueOf(command[1]), Integer.valueOf(command[2]));
+		else if(command[0].equals("getnumunstables"))
+			output = String.valueOf(sc.getGraph().getUnstables(sc.getConfig()).size());
+		else if(command[0].equals("addrandomsand"))
+			sc.addSandToRandomControl(Integer.valueOf(command[1]),1);
 		else
-			System.err.println("did not receive update");
+			System.err.println("Could not understand message: " + input);
 		return output;
 	}
 }

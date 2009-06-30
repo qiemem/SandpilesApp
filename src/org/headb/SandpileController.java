@@ -103,13 +103,13 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void startServer(int port) throws IOException{
 		server = new ServerSocket(port, 5);
-		System.err.println("Created server socket");
+		//System.err.println("Created server socket");
 		protocol = new SandpileProtocol(this);
 	}
 
 	public void acceptClient() throws IOException{
 		incoming = server.accept();
-		System.err.println("Accepted incoming socket");
+		//System.err.println("Accepted incoming socket");
 		in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
 		out = new PrintWriter(incoming.getOutputStream(), true);
 	}
@@ -124,7 +124,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void receiveMessage() throws IOException{
 		String msg = checkForMessage();
 		if(msg!=null)
-			protocol.processInput(msg);
+			out.println(protocol.processInput(msg));
 	}
 
 	public void stopServer() throws IOException{
@@ -428,6 +428,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		if (touchVert >= 0) {
 			setSand(touchVert, amount);
 		}
+		repaint();
+	}
+
+	public void addSandToRandomControl(int times, int amount){
+		for(int i=0; i<times; i++)
+			addSandToRandom(amount);
 		repaint();
 	}
 
