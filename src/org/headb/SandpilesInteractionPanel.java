@@ -53,6 +53,8 @@ import java.util.HashSet;
 import java.awt.event.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.*;
+import javax.swing.*;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -69,6 +71,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private static final String DUAL_CONFIG = "Dual of Current";
 	private static final String ONES_CONFIG = "Ones Everywhere";
 	private final String[] defaultConfigs = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, DUAL_CONFIG, ONES_CONFIG };
+
+	private final int PORT = 7236;
 
 	public static enum MouseMode {
 		SELECT(false), MOVE(true), EDIT(true);
@@ -94,6 +98,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private boolean running = false;
 	//private Thread spThread;
     private Timer runTimer;
+	private Timer serverMsgChecker;
 
 
     /** Creates new form SandpilesInteractionPanel */
@@ -168,6 +173,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				mouseY = coords[1];
 			}
 		});
+
+		final SandpilesInteractionPanel me = this;
+		serverMsgChecker = new Timer(10, new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				try{
+					sandpileController.receiveMessage();
+				}catch(IOException error){
+					JOptionPane.showMessageDialog(me, "Error while checking for messages from client: " + error.getMessage(), "Socket Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		serverMsgChecker.stop();
     }
 
 	public void onReshape(){
@@ -341,6 +358,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         smallZoomOutButton = new javax.swing.JButton();
         smallZoomInButton = new javax.swing.JButton();
         bigZoomInButton = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
+        serverToggleButton = new javax.swing.JToggleButton();
         mouseToolBar = new javax.swing.JToolBar();
         navigateToggleButton = new javax.swing.JToggleButton();
         selectToggleButton = new javax.swing.JToggleButton();
@@ -1207,6 +1226,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
         controlToolBar.add(bigZoomInButton);
+        controlToolBar.add(jSeparator5);
+
+        serverToggleButton.setText("Server");
+        serverToggleButton.setFocusable(false);
+        serverToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        serverToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        serverToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serverToggleButtonActionPerformed(evt);
+            }
+        });
+        controlToolBar.add(serverToggleButton);
 
         mouseToolBar.setFloatable(false);
         mouseToolBar.setRollover(true);
@@ -1658,6 +1689,37 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		sandpileController.repaint();
 	}//GEN-LAST:event_deleteSelectedVerticesButtonActionPerformed
 
+	private void serverToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverToggleButtonActionPerformed
+		if(serverToggleButton.isSelected()){
+			try{
+				sandpileController.startServer(7236);
+				int answer = JOptionPane.showConfirmDialog(this, "Server created. Sandpiles will now wait for a client to connect.\nThe program will not respond until a client connects. Would you like to continue?");
+				if(answer == JOptionPane.YES_OPTION){
+					sandpileController.acceptClient();
+					JOptionPane.showMessageDialog(this, "Client accepted! Celebration!");
+					serverMsgChecker.start();
+				}else{
+					serverToggleButton.setSelected(false);
+					try{
+						sandpileController.stopServer();
+					}catch(IOException e){
+						JOptionPane.showMessageDialog(this, "Error stopping server on port 7236: "+e.getMessage(), "Socket Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}catch(IOException e){
+				JOptionPane.showMessageDialog(this, "Could not start server on port 7236: "+e.getMessage(), "Socket Error", JOptionPane.ERROR_MESSAGE);
+				serverToggleButton.setSelected(false);
+			}
+		}else{
+			try{
+				sandpileController.stopServer();
+			}catch(IOException e){
+				System.err.println("Error while stopping server: "+e.getMessage());
+			}
+			serverMsgChecker.stop();
+		}
+	}//GEN-LAST:event_serverToggleButtonActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -1767,6 +1829,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JCheckBox labelsCheckBox;
     private javax.swing.JPanel makeGridOptionsPanel;
@@ -1792,6 +1855,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JComboBox sBorderComboBox;
     private javax.swing.JScrollPane sandpileViewScrollPane;
     private javax.swing.JToggleButton selectToggleButton;
+    private javax.swing.JToggleButton serverToggleButton;
     private javax.swing.JButton setConfigButton;
     private javax.swing.JRadioButton setSandRadioButton;
     private javax.swing.JButton smallDevDelayButton;

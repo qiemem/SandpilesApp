@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.awt.Canvas;
 import javax.swing.undo.*;
 
+import java.net.*;
+
 public class SandpileController implements ActionListener, Serializable, Runnable {
 
 	private float VERT_RADIUS = 1.0f;
@@ -65,6 +67,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private HashMap<String, SandpileConfiguration> configs;
 	private Iterator<SandpileConfiguration> updater = null;
 	public UndoManager undoManager = new UndoManager();
+
+	private ServerSocket server;
+	private Socket incoming;
+	private SandpileProtocol protocol;
+	private BufferedReader in;
+	private PrintWriter out;
 
 	public SandpileController() {
 		drawer = new SandpileGLDrawer();
@@ -91,6 +99,43 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 		Canvas canvas = drawer.getCanvas();
 		selectedVertices.clear();
+	}
+
+	public void startServer(int port) throws IOException{
+		server = new ServerSocket(port, 5);
+		System.err.println("Created server socket");
+		protocol = new SandpileProtocol(this);
+	}
+
+	public void acceptClient() throws IOException{
+		incoming = server.accept();
+		System.err.println("Accepted incoming socket");
+		in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
+		out = new PrintWriter(incoming.getOutputStream(), true);
+	}
+
+	public String checkForMessage() throws IOException{
+		if(in.ready())
+			return in.readLine();
+		else
+			return null;
+	}
+
+	public void receiveMessage() throws IOException{
+		String msg = checkForMessage();
+		if(msg!=null)
+			protocol.processInput(msg);
+	}
+
+	public void stopServer() throws IOException{
+		if(incoming!=null){
+			incoming.close();
+			incoming=null;
+		}
+		in = null;
+		out = null;
+		protocol = null;
+		server.close();
 	}
 
 	public String getProjectTitle() {
@@ -128,6 +173,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		if (updater.hasNext()) {
 			currentConfig = updater.next();
 		}
+		repaint();
 	}
 
 	public void resetFirings() {
