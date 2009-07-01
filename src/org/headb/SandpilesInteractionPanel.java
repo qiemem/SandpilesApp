@@ -157,7 +157,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			@Override public void mouseDragged(MouseEvent e){
 				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
-				if(sandpileController.getSelectedVertices().contains(vert) && movingVertices){
+				if(movingVertices){
 					sandpileController.moveVertices(sandpileController.getSelectedVertices(), coords[0]-mouseX, coords[1]-mouseY);
 					sandpileController.repaint();
 				}else if(selecting){
@@ -1691,7 +1691,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		if(serverToggleButton.isSelected()){
 			try{
 				sandpileController.startServer(7236);
-				int answer = JOptionPane.showConfirmDialog(this, "Server created. Sandpiles will now wait for a client to connect.\nThe program will not respond until a client connects. Would you like to continue?");
+				int answer = JOptionPane.showConfirmDialog(this, "Server created on port 7236. Sandpiles will now wait for a client to connect.\nThe program will not respond until a client connects.\nWould you like to continue?");
 				if(answer == JOptionPane.YES_OPTION){
 					sandpileController.acceptClient();
 					JOptionPane.showMessageDialog(this, "Client accepted! Celebration!");
@@ -1728,7 +1728,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}
 
 	public void updateZoomTextField(){
-		zoomTextField.setText(String.valueOf(drawer.getZoom()*100.0f));
+		zoomTextField.setText(String.format("%.2f",(drawer.getZoom()*100.0f)));
 	}
 
 	public boolean updateDrawerZoom(){

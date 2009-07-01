@@ -42,16 +42,34 @@ public class SandpileProtocol {
 		//System.err.println("input received: " + input);
 		String output = "done";
 		String[] command = input.split(" ");
-		if(command[0].equals("update"))
+		if(command[0].equals("update")){
 			sc.update();
-		else if(command[0].equals("addvertex"))
-			sc.addVertexControl(Integer.valueOf(command[1]), Integer.valueOf(command[2]));
-		else if(command[0].equals("getnumunstables"))
+		}
+		else if(command[0].equals("stabilize")){
+			sc.stabilize();
+		}
+		else if(command[0].equals("addvertex")){
+			sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
+			sc.repaint();
+		}
+		else if(command[0].equals("addvertices")){
+			for(int i=1; i<command.length-1; i+=1){
+				sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
+			}
+			sc.repaint();
+		}
+		else if(command[0].equals("addsand")){
+			sc.addSand(Integer.valueOf(command[1]),Integer.valueOf(command[2]));
+		}
+		else if(command[0].equals("getnumunstables")){
 			output = String.valueOf(sc.getGraph().getUnstables(sc.getConfig()).size());
-		else if(command[0].equals("addrandomsand"))
+		}
+		else if(command[0].equals("addrandomsand")){
 			sc.addSandToRandomControl(Integer.valueOf(command[1]),1);
-		else
+		}
+		else{
 			System.err.println("Could not understand message: " + input);
+		}
 		return output;
 	}
 }
