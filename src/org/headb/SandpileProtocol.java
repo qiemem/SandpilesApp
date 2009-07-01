@@ -41,6 +41,7 @@ public class SandpileProtocol {
 	public String processInput(String input){
 		//System.err.println("input received: " + input);
 		String output = "done";
+		System.err.println(input);
 		String[] command = input.split(" ");
 		if(command[0].equals("update")){
 			sc.update();
@@ -48,11 +49,36 @@ public class SandpileProtocol {
 		else if(command[0].equals("stabilize")){
 			sc.stabilize();
 		}
-		else if(command[0].equals("addvertex")){
+		else if(command[0].equals("get_vertices")){
+			if(sc.vertexData.isEmpty())
+				output="";
+			else{
+				float[] v = sc.vertexData.get(0);
+				output = String.format("%f %f", v[0], v[1]);
+				for(int i=0; i<sc.vertexData.size(); i++){
+					v = sc.vertexData.get(i);
+					output += String.format(",%f %f", v[0], v[1]);
+				}
+			}
+		}
+		else if(command[0].equals("get_edges")){
+			output = "";
+			for(int v=0; v<sc.getConfig().size(); v++){
+				boolean needsComma = false;
+				for(int[] e : sc.getGraph().getOutgoingEdges(v)){
+					if(needsComma)
+						output+=",";
+					else
+						needsComma=true;
+					output += String.format("%i %i %i", e[0], e[1], e[2]);
+				}
+			}
+		}
+		else if(command[0].equals("add_vertex")){
 			sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
 			sc.repaint();
 		}
-		else if(command[0].equals("addvertices")){
+		else if(command[0].equals("add_vertices")){
 			for(int i=1; i<command.length-1; i+=1){
 				sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
 			}
@@ -60,6 +86,9 @@ public class SandpileProtocol {
 		}
 		else if(command[0].equals("addsand")){
 			sc.addSand(Integer.valueOf(command[1]),Integer.valueOf(command[2]));
+		}
+		else if(command[0].equals("set_sand")){
+			//sc.setSand(Integer.valueOF, amount)
 		}
 		else if(command[0].equals("getnumunstables")){
 			output = String.valueOf(sc.getGraph().getUnstables(sc.getConfig()).size());

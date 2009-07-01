@@ -269,15 +269,15 @@ public class SandpileGraph {
 	/**
 	 * Adds an edge from the first vertex to the second.
 	 */
-	public void addEdge(int sourceVert, int destVert) {
+	public int[] addEdge(int sourceVert, int destVert) {
 		//this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert));
-		this.addEdge(sourceVert, destVert, 1);
+		return this.addEdge(sourceVert, destVert, 1);
 	}
 
 	/**
 	 * Adds an edge of the given weight.
 	 */
-	public void addEdge(int sourceVert, int destVert, int weight) {
+	public int[] addEdge(int sourceVert, int destVert, int weight) {
 		int[] e = getEdge(sourceVert, destVert);
 		if (e == null && weight > 0) {
 			e = new int[3];
@@ -292,7 +292,9 @@ public class SandpileGraph {
 		} else {
 			adj.get(sourceVert).remove(e);
 			degrees.set(sourceVert, degree(sourceVert) - e[2]);
+			return null;
 		}
+		return e;
 	}
 
 	/**
@@ -373,15 +375,29 @@ public class SandpileGraph {
 
 			SandpileConfiguration curConfig = new SandpileConfiguration(config);
 			List<Integer> unstables = getUnstables(config, startingVertices);
-
+			boolean[] added = new boolean[adj.size()];
 			public boolean hasNext() {
 				return !unstables.isEmpty();
 			}
 
 			public SandpileConfiguration next() {
 				curConfig = fireVertices(curConfig, unstables);
-				unstables = getUnstables(curConfig, getOutgoingVertices(unstables));
-				unstables.addAll(getUnstables(curConfig, unstables));
+				ArrayList<Integer> newUnstables = new ArrayList<Integer>();
+				for(int v : getUnstables(curConfig, unstables)){
+					if(!added[v]){
+						newUnstables.add(v);
+						added[v]=true;
+					}
+				}
+				for(int v : getUnstables(curConfig, getOutgoingVertices(unstables))){
+					if(!added[v]){
+						newUnstables.add(v);
+						added[v]=true;
+					}
+				}
+				unstables = newUnstables;
+				for(int v : unstables)
+					added[v]=false;
 				return curConfig;
 			}
 
