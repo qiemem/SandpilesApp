@@ -41,9 +41,8 @@ public class SandpileProtocol {
 	}
 
 	public String processInput(String input) {
-		//System.err.println("input received: " + input);
 		String output = "done";
-		System.err.println(input);
+		System.err.println("Received input");
 		String[] command = input.split(" ");
 		if (command[0].equals("update")) {
 			sc.update();
@@ -59,24 +58,27 @@ public class SandpileProtocol {
 			if (sc.vertexData.isEmpty()) {
 				output = "";
 			} else {
+				StringBuilder sb = new StringBuilder();
 				float[] v = sc.vertexData.get(0);
-				output = String.format("%f %f", v[0], v[1]);
-				for (int i = 0; i < sc.vertexData.size(); i++) {
+				sb.append(v[0]+" "+v[1]);
+				for (int i = 1; i < sc.vertexData.size(); i++) {
 					v = sc.vertexData.get(i);
-					output += String.format(",%f %f", v[0], v[1]);
+					sb.append("," + v[0] + " " + v[1]);
 				}
+				output = sb.toString();
 			}
 		} else if (command[0].equals("get_edges")) {
 			output = "";
 			for (int v = 0; v < sc.getConfig().size(); v++) {
+				StringBuilder sb = new StringBuilder();
 				boolean needsComma = false;
 				for (int[] e : sc.getGraph().getOutgoingEdges(v)) {
 					if (needsComma) {
-						output += ",";
+						sb.append(",");
 					} else {
 						needsComma = true;
 					}
-					output += String.format("%i %i %i", e[0], e[1], e[2]);
+					sb.append(e[0]+" "+e[1]+" "+e[2]);
 				}
 			}
 		} else if (command[0].equals("add_vertex")) {
@@ -138,19 +140,18 @@ public class SandpileProtocol {
 		} else {
 			System.err.println("Could not understand message: " + input);
 		}
+		System.err.println("Sending output");
 		return output;
 	}
 
 	public String configToString(SandpileConfiguration config) {
-		String output;
-		if (config.isEmpty()) {
-			output = "";
-		} else {
-			output = String.valueOf(config.get(0));
+		StringBuilder sb = new StringBuilder();
+		if (!config.isEmpty()) {
+			sb.append(config.get(0));
 			for (int v = 1; v < config.size(); v++) {
-				output += String.format(" %i", config.get(v));
+				sb.append(" "+config.get(v));
 			}
 		}
-		return output;
+		return sb.toString();
 	}
 }

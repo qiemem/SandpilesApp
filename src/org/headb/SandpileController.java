@@ -265,14 +265,12 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void undo() {
-					System.err.println("undo");
 					delVertex(addedVert);
 					repaint();
 				}
 
 				@Override
 				public void redo() {
-					System.err.println("redo");
 					addVertex(x, y);
 					repaint();
 				}
