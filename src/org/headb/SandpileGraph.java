@@ -47,6 +47,10 @@ public class SandpileGraph {
 		this.degrees = new ArrayList<Integer>();
 	}
 
+	public int numVertices(){
+		return adj.size();
+	}
+
 	/**
 	 * Retrieves the edge beginning with source and ending with dest.
 	 * Runs in time linear to the number of source' outgoing edges.
@@ -111,7 +115,7 @@ public class SandpileGraph {
 	 */
 	public final List<int[]> getOutgoingEdges(final Iterable<Integer> verts) {
 		ArrayList<int[]> edgeList = new ArrayList<int[]>();
-		boolean[] alreadyAdded = new boolean[degrees.size()];
+		boolean[] alreadyAdded = new boolean[numVertices()];
 		for (int vert : verts) {
 			for (int[] e : getOutgoingEdges(vert)) {
 				if (!alreadyAdded[e[1]]) {
@@ -200,12 +204,12 @@ public class SandpileGraph {
 	public void removeVertices(List<Integer> vertices) {
 		//Collections.sort(vertices);
 		//Collections.reverse(vertices);
-		boolean[] toRemove = new boolean[adj.size()];
+		boolean[] toRemove = new boolean[numVertices()];
 		for (int v : vertices) {
 			toRemove[v] = true;
 		}
 		//Remove all edges containing any vertices to delete.
-		for (int v = 0; v < adj.size(); v++) {
+		for (int v = 0; v < numVertices(); v++) {
 			if (toRemove[v]) {
 				continue;
 			}
@@ -224,7 +228,7 @@ public class SandpileGraph {
 		//we don't want.
 		ArrayList<ArrayList<int[]>> newAdj = new ArrayList<ArrayList<int[]>>();
 		ArrayList<Integer> newDegrees = new ArrayList<Integer>();
-		for (int v = 0; v < adj.size(); v++) {
+		for (int v = 0; v < numVertices(); v++) {
 			if (!toRemove[v]) {
 				newAdj.add(adj.get(v));
 				newDegrees.add(degrees.get(v));
@@ -323,6 +327,24 @@ public class SandpileGraph {
 		return false;
 	}
 
+	public List<Integer> getNonSinks() {
+		ArrayList<Integer> nonsinks = new ArrayList<Integer>();
+		for(int v=0; v<numVertices(); v++){
+			if(!isSink(v))
+				nonsinks.add(v);
+		}
+		return nonsinks;
+	}
+
+	public List<Integer> getSinks() {
+		ArrayList<Integer> sinks = new ArrayList<Integer>();
+		for(int v=0; v<numVertices(); v++){
+			if(isSink(v))
+				sinks.add(v);
+		}
+		return sinks;
+	}
+
 	public SandpileConfiguration fireVertices(SandpileConfiguration config, Iterable<Integer> verts) {
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
 		for (int v : verts) {
@@ -346,7 +368,7 @@ public class SandpileGraph {
 
 	public List<Integer> getUnstables(SandpileConfiguration config) {
 		ArrayList<Integer> unstables = new ArrayList<Integer>();
-		for (int v = 0; v < adj.size(); v++) {
+		for (int v = 0; v < numVertices(); v++) {
 			if (!isSink(v) && config.get(v) >= degree(v)) {
 				unstables.add(v);
 			}
@@ -375,7 +397,7 @@ public class SandpileGraph {
 
 			SandpileConfiguration curConfig = new SandpileConfiguration(config);
 			List<Integer> unstables = getUnstables(config, startingVertices);
-			boolean[] added = new boolean[adj.size()];
+			boolean[] added = new boolean[numVertices()];
 			public boolean hasNext() {
 				return !unstables.isEmpty();
 			}
@@ -477,8 +499,8 @@ public class SandpileGraph {
 	}*/
 
 	public SandpileConfiguration getUniformConfig(int amount) {
-		SandpileConfiguration config = new SandpileConfiguration(this.degrees.size());
-		for (int i = 0; i < degrees.size(); i++) {
+		SandpileConfiguration config = new SandpileConfiguration(this.numVertices());
+		for (int i = 0; i < numVertices(); i++) {
 			config.add(amount);
 		}
 		return config;
@@ -491,7 +513,7 @@ public class SandpileGraph {
 	 * @return Returns a list of integers, where getMaxConfig()[i] = the amount of sand on vertex i.
 	 */
 	public SandpileConfiguration getMaxConfig() {
-		SandpileConfiguration maxConfig = new SandpileConfiguration(this.degrees.size());
+		SandpileConfiguration maxConfig = new SandpileConfiguration(this.numVertices());
 		for (Integer d : degrees) {
 			maxConfig.add(d - 1);
 		}
@@ -505,7 +527,7 @@ public class SandpileGraph {
 	 * @return Returns a list representing the configuration.
 	 */
 	public SandpileConfiguration getDualConfig(SandpileConfiguration config) {
-		SandpileConfiguration dualConfig = new SandpileConfiguration(this.degrees.size());
+		SandpileConfiguration dualConfig = new SandpileConfiguration(this.numVertices());
 		for (int i = 0; i < config.size(); i++) {
 			dualConfig.add(degree(i) - 1 - config.get(i));
 		}
@@ -574,7 +596,7 @@ public class SandpileGraph {
 	 * @return A list representing the identity configuration.
 	 *//*
 	public SandpileConfiguration getIdentityConfig() {
-	SandpileConfiguration config = new SandpileConfiguration(this.degrees.size());
+	SandpileConfiguration config = new SandpileConfiguration(this.numVertices());
 	SandpileConfiguration maxConfig = this.getMaxConfig();
 	config = maxConfig.plus(maxConfig);
 	config = stabilizeConfig(config);

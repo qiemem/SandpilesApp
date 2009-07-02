@@ -52,6 +52,12 @@ public class SandpileProtocol {
 		else if(command[0].equals("repaint")){
 			sc.repaint();
 		}
+		else if(command[0].equals("delete_graph")){
+			sc.delAllVertices();
+		}
+		else if(command[0].equals("clear_sand")){
+			sc.clearSand();
+		}
 		else if(command[0].equals("get_vertices")){
 			if(sc.vertexData.isEmpty())
 				output="";
@@ -86,15 +92,41 @@ public class SandpileProtocol {
 			}
 		}
 		else if(command[0].equals("add_sand")){
-			sc.addSand(Integer.valueOf(command[1]),Integer.valueOf(command[2]));
+			int vertex = Integer.valueOf(command[1]);
+			int sand = Integer.valueOf(command[2]);
+			sc.addSand(vertex,sand);
 		}
 		else if(command[0].equals("set_sand")){
-			sc.setSand(Integer.valueOf(command[1]), Integer.valueOf(command[2]));
+			int vertex = Integer.valueOf(command[1]);
+			int sand = Integer.valueOf(command[2]);
+			sc.setSand(vertex,sand);
+		}
+		else if(command[0].equals("add_config")){
+			SandpileConfiguration config = new SandpileConfiguration();
+			for(int v = 1; v<command.length; v++)
+				config.add(Integer.valueOf(command[v]));
+			sc.addConfig(config);
+		}
+		else if(command[0].equals("set_config")){
+			SandpileConfiguration config = new SandpileConfiguration();
+			for(int v = 1; v<command.length; v++)
+				config.add(Integer.valueOf(command[v]));
+			sc.setConfig(config);
+		}
+		else if(command[0].equals("get_config")){
+			if(sc.configSize()==0){
+				output="";
+			}else{
+				output=String.valueOf(sc.getSand(0));
+				for(int v=1; v<sc.configSize(); v++){
+					output+=String.format(" %i", sc.getSand(v));
+				}
+			}
 		}
 		else if(command[0].equals("get_num_unstables")){
 			output = String.valueOf(sc.getGraph().getUnstables(sc.getConfig()).size());
 		}
-		else if(command[0].equals("addrandomsand")){
+		else if(command[0].equals("add_random_sand")){
 			sc.addSandToRandomControl(Integer.valueOf(command[1]),1);
 		}
 		else{

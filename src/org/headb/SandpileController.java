@@ -123,7 +123,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void receiveMessage() throws IOException{
-		String msg = checkForMessage();
+		String msg = null;
+		try{
+			msg = checkForMessage();
+		}catch(Exception e){
+			out.println(e.getMessage());
+		}
 		if(msg!=null)
 			out.println(protocol.processInput(msg));
 	}
@@ -150,6 +155,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 			title += " *";
 		}
 		return title;
+	}
+
+	public int configSize(){
+		return currentConfig.size();
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -190,10 +199,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void updateFirings() {
-		if (firings.size() != currentConfig.size()) {
+		if (firings.size() != configSize()) {
 			resetFirings();
 		}
-		for (int vert = 0; vert < currentConfig.size(); vert++) {
+		for (int vert = 0; vert < configSize(); vert++) {
 			if (currentConfig.get(vert) >= sg.degree(vert)) {
 				firings.set(vert, firings.get(vert) + 1);
 			}
@@ -215,6 +224,25 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void repaint() {
 		drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertices);
+	}
+
+	public void setConfig(SandpileConfiguration config){
+		if(config.size() == configSize())
+			currentConfig = config;
+		else
+			throw new IndexOutOfBoundsException("Tried to set the current sandpile " +
+					"configuration to a configuration of an incorrect size. The correct" +
+					" size is "+ configSize()+" while the new configuration had size" +
+					config.size()+ ".");
+	}
+	public void addConfig(SandpileConfiguration config){
+		if(config.size() == configSize())
+			currentConfig = currentConfig.plus(config);
+		else
+			throw new IndexOutOfBoundsException("Tried to add the current sandpile " +
+					"configuration to a configuration of an incorrect size. The correct" +
+					" size is "+ configSize()+" while the new configuration had size" +
+					config.size()+ ".");
 	}
 
 	public void addVertexControl(final float x, final float y) {
@@ -456,9 +484,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void makeGridControl(final int rows, final int cols,
 			final float x, final float y,
 			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
-		final int startingIndex = currentConfig.size();
+		final int startingIndex = configSize();
 		makeGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
-		final int endingIndex = currentConfig.size()-1;
+		final int endingIndex = configSize()-1;
 		undoManager.addEdit(new AbstractUndoableEdit() {
 
 			@Override
@@ -579,9 +607,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		 * 0 - directed
 		 * 1 - undirected
 		 **/
-		final int startingIndex = currentConfig.size();
+		final int startingIndex = configSize();
 		makeHoneycomb(radius, x, y, borders);
-		final int endingIndex = currentConfig.size()-1;
+		final int endingIndex = configSize()-1;
 		undoManager.addEdit(new AbstractUndoableEdit() {
 
 			@Override
@@ -708,9 +736,9 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void makeHexGridControl(final int rows, final int cols,
 			final float x, final float y,
 			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
-		final int startingIndex = currentConfig.size();
+		final int startingIndex = configSize();
 		makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
-		final int endingIndex = currentConfig.size()-1;
+		final int endingIndex = configSize()-1;
 		undoManager.addEdit(new AbstractUndoableEdit() {
 
 			@Override
@@ -998,7 +1026,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		firings.add(0);
 		configs.clear();
 		edit();
-		return currentConfig.size() - 1;
+		return configSize() - 1;
 	}
 
 	public float[] getVertexLocation(int vert) {
@@ -1021,17 +1049,17 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	public void delVertices(List<Integer> vertices) {
 		sg.removeVertices(vertices);
 		configs.clear();
-		boolean[] toRemove = new boolean[currentConfig.size()];
+		boolean[] toRemove = new boolean[configSize()];
 		for (int v : vertices) {
 			toRemove[v] = true;
 		}
-		for (int v = currentConfig.size() - 1; v >= 0; v--) {
+		for (int v = configSize() - 1; v >= 0; v--) {
 			if (toRemove[v]) {
 				vertexData.remove(v);
 				currentConfig.remove(v);
 			}
 		}
-		//System.err.println(vertexData.size() + " " + currentConfig.size());
+		//System.err.println(vertexData.size() + " " + configSize());
 		edit();
 	}
 
@@ -1082,7 +1110,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		if (currentConfig.isEmpty()) {
 			return;
 		}
-		int v = (int) (Math.random() * currentConfig.size());
+		int v = (int) (Math.random() * configSize());
 		addSand(v, amount);
 	}
 
