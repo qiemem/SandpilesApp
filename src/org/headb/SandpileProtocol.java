@@ -49,6 +49,9 @@ public class SandpileProtocol {
 		else if(command[0].equals("stabilize")){
 			sc.stabilize();
 		}
+		else if(command[0].equals("repaint")){
+			sc.repaint();
+		}
 		else if(command[0].equals("get_vertices")){
 			if(sc.vertexData.isEmpty())
 				output="";
@@ -76,21 +79,19 @@ public class SandpileProtocol {
 		}
 		else if(command[0].equals("add_vertex")){
 			sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
-			sc.repaint();
 		}
 		else if(command[0].equals("add_vertices")){
 			for(int i=1; i<command.length-1; i+=1){
 				sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
 			}
-			sc.repaint();
 		}
-		else if(command[0].equals("addsand")){
+		else if(command[0].equals("add_sand")){
 			sc.addSand(Integer.valueOf(command[1]),Integer.valueOf(command[2]));
 		}
 		else if(command[0].equals("set_sand")){
-			//sc.setSand(Integer.valueOF, amount)
+			sc.setSand(Integer.valueOf(command[1]), Integer.valueOf(command[2]));
 		}
-		else if(command[0].equals("getnumunstables")){
+		else if(command[0].equals("get_num_unstables")){
 			output = String.valueOf(sc.getGraph().getUnstables(sc.getConfig()).size());
 		}
 		else if(command[0].equals("addrandomsand")){

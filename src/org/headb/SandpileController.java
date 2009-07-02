@@ -54,6 +54,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	private long lastUpdateTime = 0;
 	private long minRepaintDelay = 33;
 	private long lastRepaintTime = 0;
+	private boolean repaintOnEveryUpdate = false;
 	private SandpileGraph sg;
 	ArrayList<float[]> vertexData;
 	ArrayList<Integer> firings;
@@ -152,13 +153,18 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-		if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
-			lastUpdateTime = System.currentTimeMillis();
-			this.update();
-		}
-		if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay) {
-			lastRepaintTime = System.currentTimeMillis();
-			this.repaint();
+		if(repaintOnEveryUpdate){
+			update();
+			repaint();
+		}else{
+			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+				lastUpdateTime = System.currentTimeMillis();
+				this.update();
+			}
+			if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay) {
+				lastRepaintTime = System.currentTimeMillis();
+				this.repaint();
+			}
 		}
 	}
 
@@ -173,7 +179,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		if (updater.hasNext()) {
 			currentConfig = updater.next();
 		}
-		repaint();
+		//repaint();
 	}
 
 	public void resetFirings() {
@@ -1295,6 +1301,10 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void setMinUpdateDelay(long delay) {
 		minUpdateDelay = delay;
+	}
+
+	public void setRepaintOnEveryUpdate(boolean value){
+		repaintOnEveryUpdate = value;
 	}
 
 	public long getMinUpdateDelay() {

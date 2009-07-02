@@ -940,10 +940,11 @@
                                   <Component id="changingNodeSizeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="drawEdgesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="printFPSCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="repaintOnEveryUpdateCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel18" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="colorModeComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="91" max="32767" attributes="0"/>
+                              <EmptySpace pref="68" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -959,11 +960,13 @@
                               <Component id="drawEdgesCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="printFPSCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="repaintOnEveryUpdateCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="colorModeComboBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="483" max="32767" attributes="0"/>
+                              <EmptySpace pref="473" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1029,6 +1032,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colorModeComboBoxActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="repaintOnEveryUpdateCheckBox">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Repaint on Every Update"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintOnEveryUpdateCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

@@ -329,6 +329,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         printFPSCheckBox = new javax.swing.JCheckBox();
         jLabel18 = new javax.swing.JLabel();
         colorModeComboBox = new javax.swing.JComboBox();
+        repaintOnEveryUpdateCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         canvas = new javax.media.opengl.GLCanvas();
         jLabel13 = new javax.swing.JLabel();
@@ -940,6 +941,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        repaintOnEveryUpdateCheckBox.setText("Repaint on Every Update");
+        repaintOnEveryUpdateCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repaintOnEveryUpdateCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -951,9 +959,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(changingNodeSizeCheckBox)
                     .add(drawEdgesCheckBox)
                     .add(printFPSCheckBox)
+                    .add(repaintOnEveryUpdateCheckBox)
                     .add(jLabel18)
                     .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -967,11 +976,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(drawEdgesCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(printFPSCheckBox)
-                .add(18, 18, 18)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(repaintOnEveryUpdateCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel18)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(483, Short.MAX_VALUE))
+                .addContainerGap(473, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -1718,6 +1729,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		}
 	}//GEN-LAST:event_serverToggleButtonActionPerformed
 
+	private void repaintOnEveryUpdateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintOnEveryUpdateCheckBoxActionPerformed
+		sandpileController.setRepaintOnEveryUpdate(repaintOnEveryUpdateCheckBox.isSelected());
+	}//GEN-LAST:event_repaintOnEveryUpdateCheckBoxActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -1848,6 +1863,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JRadioButton removeUndirectedEdgeRadioButton;
     private javax.swing.JRadioButton removeVertexRadioButton;
     private javax.swing.JCheckBox repaintCheckBox;
+    private javax.swing.JCheckBox repaintOnEveryUpdateCheckBox;
     private javax.swing.JButton resetFiringsButton;
     private javax.swing.JToggleButton runButton;
     private javax.swing.JComboBox sBorderComboBox;
