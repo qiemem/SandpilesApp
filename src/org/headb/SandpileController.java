@@ -47,7 +47,7 @@ import javax.swing.undo.*;
 
 import java.net.*;
 
-public class SandpileController implements ActionListener, Serializable, Runnable {
+public class SandpileController implements ActionListener, Serializable{
 
 	private float VERT_RADIUS = 1.0f;
 	private long minUpdateDelay = 100;
@@ -209,36 +209,43 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		}
 	}
 
-	public void run() {
-		while (!Thread.interrupted()) {
-			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
-				lastUpdateTime = System.currentTimeMillis();
-				this.update();
-			}
-			if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay) {
-				lastRepaintTime = System.currentTimeMillis();
-				this.repaint();
-			}
-		}
-	}
-
 	public void repaint() {
 		drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertices);
 	}
 
+	public void onGraphChange(){
+		onEdit();
+	}
+
+	public void onConfigChange() {
+		onEdit();
+	}
+
+	public void clearEdgeDependentConfigs() {
+		configs.remove("Identity");
+		configs.remove("Burning");
+	}
+
+	public void onEdit() {
+		saved = false;
+		updater = null;
+	}
+
 	public void setConfig(SandpileConfiguration config){
-		if(config.size() == configSize())
+		if(config.size() == configSize()){
 			currentConfig = config;
-		else
+			onConfigChange();
+		}else
 			throw new IndexOutOfBoundsException("Tried to set the current sandpile " +
 					"configuration to a configuration of an incorrect size. The correct" +
 					" size is "+ configSize()+" while the new configuration had size" +
 					config.size()+ ".");
 	}
 	public void addConfig(SandpileConfiguration config){
-		if(config.size() == configSize())
+		if(config.size() == configSize()){
 			currentConfig = currentConfig.plus(config);
-		else
+			onConfigChange();
+		}else
 			throw new IndexOutOfBoundsException("Tried to add the current sandpile " +
 					"configuration to a configuration of an incorrect size. The correct" +
 					" size is "+ configSize()+" while the new configuration had size" +
@@ -465,21 +472,11 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		repaint();
 	}
 
-	public void addSandToRandomControl(int times, int amount){
-		for(int i=0; i<times; i++)
-			addSandToRandom(amount);
+	public void addSandToRandomControl(int amount){
+		addSandToRandom(sg.getNonSinks(),amount);
 		repaint();
 	}
 
-	public void edit() {
-		saved = false;
-		updater = null;
-	}
-
-	public void editCurConfig(SandpileConfiguration newConfig) {
-		currentConfig = newConfig;
-		edit();
-	}
 
 	public void makeGridControl(final int rows, final int cols,
 			final float x, final float y,
@@ -928,12 +925,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void setToDualConfig() {
-		editCurConfig(sg.getDualConfig(currentConfig));
+		setConfig(sg.getDualConfig(currentConfig));
 		repaint();
 	}
 
 	public void addDualConfig() {
-		editCurConfig(currentConfig.plus(sg.getDualConfig(currentConfig)));
+		setConfig(currentConfig.plus(sg.getDualConfig(currentConfig)));
 		repaint();
 	}
 
@@ -941,12 +938,12 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	//curState = controlState;
 	//}
 	public void setToMaxStableConfig() {
-		editCurConfig(sg.getMaxConfig());
+		setConfig(sg.getMaxConfig());
 		repaint();
 	}
 
 	public void addMaxStableConfig() {
-		editCurConfig(currentConfig.plus(sg.getMaxConfig()));
+		setConfig(currentConfig.plus(sg.getMaxConfig()));
 		repaint();
 	}
 
@@ -958,32 +955,32 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void addIdentity() {
-		editCurConfig(currentConfig.plus(getIdentity()));
+		setConfig(currentConfig.plus(getIdentity()));
 		repaint();
 	}
 
 	public void setToIdentity() {
-		editCurConfig(getIdentity());
+		setConfig(getIdentity());
 		repaint();
 	}
 
 	public void setSandEverywhere(int amount) {
-		editCurConfig(sg.getUniformConfig(amount));
+		setConfig(sg.getUniformConfig(amount));
 		repaint();
 	}
 
 	public void addSandEverywhere(int amount) {
-		editCurConfig(currentConfig.plus(sg.getUniformConfig(amount)));
+		setConfig(currentConfig.plus(sg.getUniformConfig(amount)));
 		repaint();
 	}
 
 	public void setToBurningConfig() {
-		editCurConfig(sg.getMinimalBurningConfig());
+		setConfig(sg.getMinimalBurningConfig());
 		repaint();
 	}
 
 	public void addBurningConfig() {
-		editCurConfig(currentConfig.plus(sg.getMinimalBurningConfig()));
+		setConfig(currentConfig.plus(sg.getMinimalBurningConfig()));
 		repaint();
 	}
 
@@ -992,22 +989,22 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void addConfigNamed(String name) {
-		editCurConfig(currentConfig.plus(getConfigByName(name)));
+		setConfig(currentConfig.plus(getConfigByName(name)));
 		repaint();
 	}
 
 	public void setConfigNamed(String name) {
-		editCurConfig(getConfigByName(name));
+		setConfig(getConfigByName(name));
 		repaint();
 	}
 
 	public void clearSand() {
-		editCurConfig(sg.getUniformConfig(0));
+		setConfig(sg.getUniformConfig(0));
 		repaint();
 	}
 
 	public void stabilize() {
-		editCurConfig(sg.stabilizeConfig(currentConfig));
+		setConfig(sg.stabilizeConfig(currentConfig));
 	}
 
 	public final SandpileGraph getGraph() {
@@ -1025,7 +1022,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		currentConfig.add(0);
 		firings.add(0);
 		configs.clear();
-		edit();
+		onGraphChange();
 		return configSize() - 1;
 	}
 
@@ -1043,7 +1040,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		firings.remove(v);
 		sg.removeVertex(v);
 		configs.clear();
-		edit();
+		onGraphChange();
 	}
 
 	public void delVertices(List<Integer> vertices) {
@@ -1059,8 +1056,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 				currentConfig.remove(v);
 			}
 		}
-		//System.err.println(vertexData.size() + " " + configSize());
-		edit();
+		onGraphChange();
 	}
 
 	public void delAllVertices() {
@@ -1070,53 +1066,49 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 		configs.clear();
 		sg.removeAllVertices();
 		this.selectedVertices.clear();
-		edit();
+		onGraphChange();
 		repaint();
-	}
-
-	public void clearEdgeDependentConfigs() {
-		configs.remove("Identity");
-		configs.remove("Burning");
 	}
 
 	public void addEdge(int originVert, int destVert) {
 		addEdge(originVert, destVert, 1);
-		edit();
+		onGraphChange();
 	}
 
 	public void addEdge(int originVert, int destVert, int weight) {
 		sg.addEdge(originVert, destVert, weight);
 		clearEdgeDependentConfigs();
-		edit();
+		onGraphChange();
 	}
 
 	public void delEdge(int originVert, int destVert) {
 		this.delEdge(originVert, destVert, 1);
-		edit();
+		onGraphChange();
 	}
 
 	public void delEdge(int originVert, int destVert, int weight) {
 		sg.removeEdge(originVert, destVert, weight);
 		clearEdgeDependentConfigs();
-		edit();
+		onGraphChange();
 	}
 
 	public void addSand(int vert, int amount) {
 		setSand(vert, currentConfig.get(vert) + amount);
-		edit();
+		onConfigChange();
 	}
 
-	public void addSandToRandom(int amount) {
-		if (currentConfig.isEmpty()) {
+	public void addSandToRandom(List<Integer> vertices, int amount){
+		if(vertices.isEmpty())
 			return;
+		for(int i=0; i<amount; i++){
+			int v = (int) (Math.random() * configSize());
+			addSand(vertices.get(v),1);
 		}
-		int v = (int) (Math.random() * configSize());
-		addSand(v, amount);
 	}
 
 	public void setSand(int vert, int amount) {
 		currentConfig.set(vert, amount);
-		edit();
+		onConfigChange();
 	}
 
 	public Iterable<Integer> getOutgoingVertices(int vert) {
@@ -1218,7 +1210,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 
 	public void storeCurrentConfig(String name) {
 		configs.put(name, currentConfig);
-		edit();
+		onEdit();
 	}
 
 	public Set<String> getStoredConfigNames() {
@@ -1286,7 +1278,7 @@ public class SandpileController implements ActionListener, Serializable, Runnabl
 	}
 
 	public void loadCurrentConfig(File file) {
-		editCurConfig(loadConfig(file));
+		setConfig(loadConfig(file));
 		saved = true;
 	}
 

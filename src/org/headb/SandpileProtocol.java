@@ -127,7 +127,7 @@ public class SandpileProtocol {
 			output = String.valueOf(sc.getGraph().getUnstables(sc.getConfig()).size());
 		}
 		else if(command[0].equals("add_random_sand")){
-			sc.addSandToRandomControl(Integer.valueOf(command[1]),1);
+			sc.addSandToRandom(sc.getGraph().getNonSinks(), Integer.valueOf(command[1]));
 		}
 		else{
 			System.err.println("Could not understand message: " + input);
