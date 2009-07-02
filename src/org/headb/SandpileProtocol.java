@@ -81,6 +81,10 @@ public class SandpileProtocol {
 					sb.append(e[0]+" "+e[1]+" "+e[2]);
 				}
 			}
+		} else if (command[0].equals("add_edge")){
+			sc.addEdge(Integer.valueOf(command[1]),Integer.valueOf(command[2]), Integer.valueOf(command[3]));
+		} else if (command[0].equals("add_edges")){
+			
 		} else if (command[0].equals("add_vertex")) {
 			sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
 		} else if (command[0].equals("add_vertices")) {
@@ -95,6 +99,12 @@ public class SandpileProtocol {
 			int vertex = Integer.valueOf(command[1]);
 			int sand = Integer.valueOf(command[2]);
 			sc.setSand(vertex, sand);
+		} else if (command[0].equals("get_sand")) {
+			int vertex = Integer.valueOf(command[1]);
+			output = String.valueOf(sc.getSand(vertex));
+		} else if (command[0].equals("is_sink")) {
+			int vertex = Integer.valueOf(command[1]);
+			output = String.valueOf(sc.getGraph().isSink(vertex));
 		} else if (command[0].equals("add_config")) {
 			SandpileConfiguration config = new SandpileConfiguration();
 			for (int v = 1; v < command.length; v++) {
