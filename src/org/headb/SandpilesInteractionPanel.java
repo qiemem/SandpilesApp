@@ -263,6 +263,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         editGraphButtonGroup = new javax.swing.ButtonGroup();
         sandpileViewScrollPane = new javax.swing.JScrollPane();
         mouseButtonGroup = new javax.swing.ButtonGroup();
+        repaintOptionsButtonGroup = new javax.swing.ButtonGroup();
         jSplitPane1 = new javax.swing.JSplitPane();
         controlPanel = new javax.swing.JPanel();
         quitButton = new javax.swing.JButton();
@@ -329,7 +330,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         printFPSCheckBox = new javax.swing.JCheckBox();
         jLabel18 = new javax.swing.JLabel();
         colorModeComboBox = new javax.swing.JComboBox();
-        repaintOnEveryUpdateCheckBox = new javax.swing.JCheckBox();
+        repaintDelayRadioButton = new javax.swing.JRadioButton();
+        repaintOnUpdateRadioButton = new javax.swing.JRadioButton();
+        repaintDelayTextField = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         canvas = new javax.media.opengl.GLCanvas();
         jLabel13 = new javax.swing.JLabel();
@@ -941,10 +944,27 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
-        repaintOnEveryUpdateCheckBox.setText("Repaint on Every Update");
-        repaintOnEveryUpdateCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        repaintOptionsButtonGroup.add(repaintDelayRadioButton);
+        repaintDelayRadioButton.setSelected(true);
+        repaintDelayRadioButton.setText("Repaint Every:");
+        repaintDelayRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                repaintOnEveryUpdateCheckBoxActionPerformed(evt);
+                repaintDelayRadioButtonActionPerformed(evt);
+            }
+        });
+
+        repaintOptionsButtonGroup.add(repaintOnUpdateRadioButton);
+        repaintOnUpdateRadioButton.setText("Repaint On Update");
+        repaintOnUpdateRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repaintOnUpdateRadioButtonActionPerformed(evt);
+            }
+        });
+
+        repaintDelayTextField.setText("30");
+        repaintDelayTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repaintDelayTextFieldActionPerformed(evt);
             }
         });
 
@@ -959,10 +979,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(changingNodeSizeCheckBox)
                     .add(drawEdgesCheckBox)
                     .add(printFPSCheckBox)
-                    .add(repaintOnEveryUpdateCheckBox)
+                    .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel18)
-                    .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(68, Short.MAX_VALUE))
+                    .add(visualOptionsPanelLayout.createSequentialGroup()
+                        .add(repaintDelayRadioButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(repaintOnUpdateRadioButton))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -976,13 +1000,17 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(drawEdgesCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(printFPSCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(repaintDelayRadioButton)
+                    .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(repaintOnEveryUpdateCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(repaintOnUpdateRadioButton)
+                .add(25, 25, 25)
                 .add(jLabel18)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(473, Short.MAX_VALUE))
+                .addContainerGap(410, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -1546,7 +1574,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_canvasMouseReleased
 
 	private void addRandomSandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRandomSandButtonActionPerformed
-		sandpileController.addSandToRandomControl(Integer.valueOf(this.amountOfSandField.getText()),1);
+		sandpileController.addSandToRandomControl(Integer.valueOf(this.amountOfSandField.getText()));
 }//GEN-LAST:event_addRandomSandButtonActionPerformed
 
 	private void hexGridRowsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexGridRowsFieldActionPerformed
@@ -1729,9 +1757,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		}
 	}//GEN-LAST:event_serverToggleButtonActionPerformed
 
-	private void repaintOnEveryUpdateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintOnEveryUpdateCheckBoxActionPerformed
-		sandpileController.setRepaintOnEveryUpdate(repaintOnEveryUpdateCheckBox.isSelected());
-	}//GEN-LAST:event_repaintOnEveryUpdateCheckBoxActionPerformed
+	private void repaintDelayRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintDelayRadioButtonActionPerformed
+		sandpileController.setMinRepaintDelay(Integer.valueOf(repaintDelayTextField.getText()));
+		sandpileController.setRepaintOnEveryUpdate(!repaintDelayRadioButton.isSelected());
+	}//GEN-LAST:event_repaintDelayRadioButtonActionPerformed
+
+	private void repaintOnUpdateRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintOnUpdateRadioButtonActionPerformed
+		sandpileController.setRepaintOnEveryUpdate(repaintOnUpdateRadioButton.isSelected());
+	}//GEN-LAST:event_repaintOnUpdateRadioButtonActionPerformed
+
+	private void repaintDelayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintDelayTextFieldActionPerformed
+		sandpileController.setMinRepaintDelay(Integer.valueOf(repaintDelayTextField.getText()));
+	}//GEN-LAST:event_repaintDelayTextFieldActionPerformed
 
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
@@ -1863,7 +1900,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JRadioButton removeUndirectedEdgeRadioButton;
     private javax.swing.JRadioButton removeVertexRadioButton;
     private javax.swing.JCheckBox repaintCheckBox;
-    private javax.swing.JCheckBox repaintOnEveryUpdateCheckBox;
+    private javax.swing.JRadioButton repaintDelayRadioButton;
+    private javax.swing.JTextField repaintDelayTextField;
+    private javax.swing.JRadioButton repaintOnUpdateRadioButton;
+    private javax.swing.ButtonGroup repaintOptionsButtonGroup;
     private javax.swing.JButton resetFiringsButton;
     private javax.swing.JToggleButton runButton;
     private javax.swing.JComboBox sBorderComboBox;
