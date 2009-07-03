@@ -68,10 +68,9 @@ public class SandpileProtocol {
 				output = sb.toString();
 			}
 		} else if (command[0].equals("get_edges")) {
-			output = "";
-			for (int v = 0; v < sc.getConfig().size(); v++) {
-				StringBuilder sb = new StringBuilder();
-				boolean needsSpace = false;
+			StringBuilder sb = new StringBuilder();
+			boolean needsSpace = false;
+			for (int v = 0; v < sc.configSize(); v++) {								
 				for (int[] e : sc.getGraph().getOutgoingEdges(v)) {
 					if (needsSpace) {
 						sb.append(" ");
@@ -81,6 +80,7 @@ public class SandpileProtocol {
 					sb.append(e[0]+","+e[1]+","+e[2]);
 				}
 			}
+			output=sb.toString();
 		} else if (command[0].equals("add_edge")){
 			sc.addEdge(Integer.valueOf(command[1]),Integer.valueOf(command[2]), Integer.valueOf(command[3]));
 		} else if (command[0].equals("add_edges")){
@@ -89,11 +89,11 @@ public class SandpileProtocol {
 				sc.addEdge(Integer.valueOf(edgeData[0]), Integer.valueOf(edgeData[1]), Integer.valueOf(edgeData[2]));
 			}
 		} else if (command[0].equals("add_vertex")) {
-			sc.addVertex(Integer.valueOf(command[0]), Integer.valueOf(command[1]));
+			sc.addVertex(Float.valueOf(command[1]), Float.valueOf(command[2]));
 		} else if (command[0].equals("add_vertices")) {
 			for (int i = 1; i < command.length ; i ++) {
 				String[] vertData = command[i].split(",");
-				sc.addVertex(Integer.valueOf(vertData[0]), Integer.valueOf(vertData[1]));
+				sc.addVertex(Float.valueOf(vertData[0]), Float.valueOf(vertData[1]));
 			}
 		} else if (command[0].equals("add_sand")) {
 			int vertex = Integer.valueOf(command[1]);
