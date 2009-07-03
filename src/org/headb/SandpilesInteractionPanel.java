@@ -291,6 +291,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         amountOfSandField = new javax.swing.JTextField();
         addRandomSandButton = new javax.swing.JButton();
         storeConfigButton = new javax.swing.JButton();
+        removeConfigButton = new javax.swing.JButton();
         makeHoneycombOptionsPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         makeHoneycombBorderComboBox = new javax.swing.JComboBox();
@@ -507,11 +508,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
         configManagerOptionsPanel.setPreferredSize(new java.awt.Dimension(150, 600));
 
-        configSelectList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, DUAL_CONFIG, ONES_CONFIG };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        DefaultListModel configSelectListModel = new DefaultListModel();
+        configSelectListModel.addElement(MAX_CONFIG);
+        configSelectListModel.addElement(IDENTITY_CONFIG);
+        configSelectListModel.addElement(BURNING_CONFIG);
+        configSelectListModel.addElement(ONES_CONFIG);
+        configSelectList.setModel(configSelectListModel);
         jScrollPane3.setViewportView(configSelectList);
 
         addConfigButton.setText("Add"); // NOI18N
@@ -539,6 +541,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
         editConfigButtonGroup.add(setSandRadioButton);
         setSandRadioButton.setText("Set Sand"); // NOI18N
+        setSandRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setSandRadioButtonActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Amount:"); // NOI18N
 
@@ -558,38 +565,59 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        removeConfigButton.setText("Remove");
+        removeConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeConfigButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout configManagerOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(configManagerOptionsPanel);
         configManagerOptionsPanel.setLayout(configManagerOptionsPanelLayout);
         configManagerOptionsPanelLayout.setHorizontalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(removeSandRadioButton)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(setConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 26, Short.MAX_VALUE)
-                .add(storeConfigButton))
-            .add(jLabel7)
-            .add(addSandRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 102, Short.MAX_VALUE)
+                .add(setConfigButton))
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(storeConfigButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 83, Short.MAX_VALUE)
+                .add(removeConfigButton))
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(jLabel7)
+                .addContainerGap())
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(addSandRadioButton)
+                .addContainerGap())
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(removeSandRadioButton)
+                .addContainerGap())
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(setSandRadioButton)
                     .add(jLabel8))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(addRandomSandButton)
+                .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(86, Short.MAX_VALUE))
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(addRandomSandButton)
+                .addContainerGap())
             .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(storeConfigButton)
+                    .add(removeConfigButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 167, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(addConfigButton)
-                    .add(setConfigButton)
-                    .add(storeConfigButton))
-                .add(18, 18, 18)
+                    .add(setConfigButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel7)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(addSandRadioButton)
@@ -597,13 +625,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(removeSandRadioButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(setSandRadioButton)
-                .add(4, 4, 4)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel8)
                     .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(addRandomSandButton)
-                .addContainerGap(289, Short.MAX_VALUE))
+                .addContainerGap(259, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(CONFIG_MANAGER_STATE, configManagerOptionsPanel);
@@ -1770,6 +1798,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		sandpileController.setMinRepaintDelay(Integer.valueOf(repaintDelayTextField.getText()));
 	}//GEN-LAST:event_repaintDelayTextFieldActionPerformed
 
+	private void setSandRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSandRadioButtonActionPerformed
+		// TODO add your handling code here:
+	}//GEN-LAST:event_setSandRadioButtonActionPerformed
+
+	private void removeConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeConfigButtonActionPerformed
+		String selection = (String)configSelectList.getSelectedValue();
+		sandpileController.removeConfigNamed(selection);
+		updateConfigSelectList();
+	}//GEN-LAST:event_removeConfigButtonActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -1895,6 +1933,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JTabbedPane optionsTabbedPane;
     private javax.swing.JCheckBox printFPSCheckBox;
     private javax.swing.JButton quitButton;
+    private javax.swing.JButton removeConfigButton;
     private javax.swing.JRadioButton removeEdgeRadioButton;
     private javax.swing.JRadioButton removeSandRadioButton;
     private javax.swing.JRadioButton removeUndirectedEdgeRadioButton;

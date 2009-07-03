@@ -989,6 +989,10 @@ public class SandpileController implements ActionListener, Serializable{
 		return configs.get(name);
 	}
 
+	public SandpileConfiguration removeConfigNamed(String name) {
+		return configs.remove(name);
+	}
+
 	public void addConfigNamed(String name) {
 		setConfig(currentConfig.plus(getConfigByName(name)));
 		repaint();
