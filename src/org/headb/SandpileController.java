@@ -163,8 +163,11 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void actionPerformed(ActionEvent evt) {
 		if(repaintOnEveryUpdate){
-			update();
-			repaint();
+			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+				lastUpdateTime = System.currentTimeMillis();
+				this.update();
+				this.repaint();
+			}
 		}else{
 			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
 				lastUpdateTime = System.currentTimeMillis();

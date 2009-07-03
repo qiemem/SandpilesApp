@@ -42,7 +42,6 @@ public class SandpileProtocol {
 
 	public String processInput(String input) {
 		String output = "done";
-		System.err.println("Received input");
 		String[] command = input.split(" ");
 		if (command[0].equals("update")) {
 			sc.update();
@@ -116,9 +115,10 @@ public class SandpileProtocol {
 			}
 			sc.addConfig(config);
 		} else if (command[0].equals("set_config")) {
+			String[] confRep = command[1].split(",");
 			SandpileConfiguration config = new SandpileConfiguration();
-			for (int v = 1; v < command.length; v++) {
-				config.add(Integer.valueOf(command[v]));
+			for (int v = 0; v < confRep.length; v++) {
+				config.add(Integer.valueOf(confRep[v]));
 			}
 			sc.setConfig(config);
 		} else if (command[0].equals("get_config")) {
@@ -154,7 +154,6 @@ public class SandpileProtocol {
 		} else {
 			System.err.println("Could not understand message: " + input);
 		}
-		System.err.println("Sending output");
 		return output;
 	}
 
@@ -163,7 +162,7 @@ public class SandpileProtocol {
 		if (!config.isEmpty()) {
 			sb.append(config.get(0));
 			for (int v = 1; v < config.size(); v++) {
-				sb.append(" "+config.get(v));
+				sb.append(","+config.get(v));
 			}
 		}
 		return sb.toString();
