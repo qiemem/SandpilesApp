@@ -464,14 +464,12 @@ public class SandpileGraph {
 	}
 
 	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, List<Integer> starters) {
-		List<Integer> unstables = getUnstables(config, starters);
-		SandpileConfiguration newConfig = new SandpileConfiguration(config);
-		while (!unstables.isEmpty()) {
-			fireVerticesInPlace(newConfig, unstables);
-			unstables = getUnstables(newConfig, getOutgoingVertices(unstables));
+		SandpileConfiguration stableConfig = config;
+		Iterator<SandpileConfiguration> updater = this.updaterStartingWith(config, starters);
+		for(;updater.hasNext();){
+			stableConfig = updater.next();
 		}
-
-		return newConfig;
+		return stableConfig;
 	}
 
 	/**
