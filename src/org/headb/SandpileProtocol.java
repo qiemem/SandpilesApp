@@ -28,6 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.headb;
 
+
 /**
  *
  * @author headb
@@ -66,7 +67,10 @@ public class SandpileProtocol {
 				}
 				output = sb.toString();
 			}
-		} else if (command[0].equals("get_edges")) {
+		} else if (command[0].equals("get_vertex")){
+			int vert = Integer.valueOf(command[1]);
+			output = String.valueOf(sc.getVertexLocation(vert)[0]) + "," + String.valueOf(sc.getVertexLocation(vert)[1]);
+		}else if (command[0].equals("get_edges")) {
 			StringBuilder sb = new StringBuilder();
 			boolean needsSpace = false;
 			for (int v = 0; v < sc.configSize(); v++) {								
@@ -110,8 +114,9 @@ public class SandpileProtocol {
 			output = String.valueOf(sc.getGraph().isSink(vertex));
 		} else if (command[0].equals("add_config")) {
 			SandpileConfiguration config = new SandpileConfiguration();
-			for (int v = 1; v < command.length; v++) {
-				config.add(Integer.valueOf(command[v]));
+			String[] confRep = command[1].split(",");
+			for (int v = 0; v < confRep.length; v++) {
+				config.add(Integer.valueOf(confRep[v]));
 			}
 			sc.addConfig(config);
 		} else if (command[0].equals("set_config")) {
@@ -125,6 +130,16 @@ public class SandpileProtocol {
 			output = configToString(sc.getConfig());
 		} else if (command[0].equals("get_num_unstables")) {
 			output = String.valueOf(sc.getGraph().getUnstables(sc.getConfig()).size());
+		} else if (command[0].equals("get_unstables")){
+			output = formatSeq(sc.getGraph().getUnstables(sc.getConfig()));
+		} else if (command[0].equals("get_selected")){
+			output = formatSeq(sc.getSelectedVertices());
+		} else if (command[0].equals("get_sinks")){
+			output = formatSeq(sc.getGraph().getSinks());
+		} else if (command[0].equals("get_nonsinks")){
+			output = formatSeq(sc.getGraph().getNonSinks());
+		} else if (command[0].equals("get_config_named")){
+			output = configToString(sc.getConfigByName(command[1]));
 		} else if (command[0].equals("add_random_sand")) {
 			sc.addSandToRandom(sc.getGraph().getNonSinks(), Integer.valueOf(command[1]));
 		} else if (command[0].equals("set_to_max_stable")) {
@@ -158,12 +173,18 @@ public class SandpileProtocol {
 	}
 
 	public String configToString(SandpileConfiguration config) {
+		return formatSeq(config);
+	}
+
+	public String formatSeq(Iterable seq){
 		StringBuilder sb = new StringBuilder();
-		if (!config.isEmpty()) {
-			sb.append(config.get(0));
-			for (int v = 1; v < config.size(); v++) {
-				sb.append(","+config.get(v));
-			}
+		boolean needsComma = false;
+		for(Object o : seq){
+			if(needsComma)
+				sb.append(",");
+			else
+				needsComma = true;
+			sb.append(o.toString());
 		}
 		return sb.toString();
 	}
