@@ -1106,7 +1106,7 @@ public class SandpileController implements ActionListener, Serializable{
 		if(vertices.isEmpty())
 			return;
 		for(int i=0; i<amount; i++){
-			int v = (int) (Math.random() * configSize());
+			int v = (int) (Math.random() * vertices.size());
 			addSand(vertices.get(v),1);
 		}
 	}
