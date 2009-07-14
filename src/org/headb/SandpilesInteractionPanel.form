@@ -128,9 +128,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="17" pref="17" max="17" attributes="0"/>
-                      <Component id="quitButton" pref="281" max="32767" attributes="0"/>
+                      <Component id="quitButton" pref="183" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="optionsTabbedPane" alignment="0" pref="298" max="32767" attributes="0"/>
+                  <Component id="optionsTabbedPane" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -195,7 +195,7 @@
                                   </Group>
                                   <Component id="deleteSelectedVerticesButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="58" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -316,12 +316,12 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="addConfigButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="102" max="32767" attributes="0"/>
+                              <EmptySpace pref="36" max="32767" attributes="0"/>
                               <Component id="setConfigButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="storeConfigButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="83" max="32767" attributes="0"/>
+                              <EmptySpace pref="17" max="32767" attributes="0"/>
                               <Component id="removeConfigButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -343,13 +343,13 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="amountOfSandField" min="-2" pref="74" max="-2" attributes="0"/>
-                              <EmptySpace pref="86" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="addRandomSandButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane3" alignment="0" pref="252" max="32767" attributes="0"/>
+                          <Component id="jScrollPane3" alignment="0" pref="186" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -985,7 +985,7 @@
                                   </Group>
                                   <Component id="repaintOnUpdateRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="78" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1133,9 +1133,9 @@
                       <Component id="centerCoordLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSeparator4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="589" max="32767" attributes="0"/>
+                      <EmptySpace pref="687" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="canvas" alignment="1" pref="714" max="32767" attributes="0"/>
+                  <Component id="canvas" alignment="1" pref="812" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

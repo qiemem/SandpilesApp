@@ -479,7 +479,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(deleteSelectedVerticesButton))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         editGraphPanelLayout.setVerticalGroup(
             editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -578,11 +578,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 102, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 36, Short.MAX_VALUE)
                 .add(setConfigButton))
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(storeConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 17, Short.MAX_VALUE)
                 .add(removeConfigButton))
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(jLabel7)
@@ -599,11 +599,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(jLabel8))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addRandomSandButton)
                 .addContainerGap())
-            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1014,7 +1014,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(repaintOnUpdateRadioButton))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1049,8 +1049,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(controlPanelLayout.createSequentialGroup()
                 .add(17, 17, 17)
-                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
-            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
+            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1090,8 +1090,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(centerCoordLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(589, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
+                .addContainerGap(687, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1376,7 +1376,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		updateControllerDelay();
 		if(runTimer.isRunning()){
 			runTimer.stop();
+			runButton.setText("Run");
 		}else{
+			runButton.setText("Pause");
 			runTimer.start();
 		}
 		/*if(spThread.isAlive()) {
