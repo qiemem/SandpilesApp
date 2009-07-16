@@ -258,8 +258,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		tr.setColor(.8f, .5f, .6f, 1f);
 		tr.begin3DRendering();
 		for (int vert = 0; vert < vertexLocations.size(); vert++) {
-			String str = Integer.toString(config.get(vert));
-			tr.draw3D(str, vertexLocations.get(vert)[0] - vertSize, vertexLocations.get(vert)[1] - .9f * vertSize, 0f, .15f * vertSize / str.length());
+			int amount = config.get(vert);
+			if(amount!=0){
+				String str = Integer.toString(amount);
+				tr.draw3D(str, vertexLocations.get(vert)[0] - vertSize, vertexLocations.get(vert)[1] - .9f * vertSize, 0f, .15f * vertSize / str.length());
+			}
 		}
 		tr.end3DRendering();
 	}

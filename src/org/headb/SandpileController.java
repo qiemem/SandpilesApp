@@ -49,6 +49,12 @@ import java.net.*;
 
 public class SandpileController implements ActionListener, Serializable{
 
+	public static final int SINKS_BORDER = 0;
+	public static final int REFLECTIVE_BORDER = 1;
+	public static final int NO_BORDER = 2;
+	public static final int LOOP_BORDER = 3;
+	public static final int LOOP_REVERSE_BORDER = 4;
+
 	private float VERT_RADIUS = 1.0f;
 	private long minUpdateDelay = 100;
 	private long lastUpdateTime = 0;
@@ -529,22 +535,22 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 
 		for (int i = 0; i < cols; i++) {
-			if (nBorder < 2) {
+			if (nBorder == SINKS_BORDER || nBorder == REFLECTIVE_BORDER) {
 				nBorderRef[i] = vertexData.size();
 				addVertex(x + i * gridSpacing, y + gridSpacing);
 			}
-			if (sBorder < 2) {
+			if (sBorder == SINKS_BORDER || sBorder == REFLECTIVE_BORDER) {
 				sBorderRef[i] = vertexData.size();
 				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
 			}
 
 		}
 		for (int i = 0; i < rows; i++) {
-			if (wBorder < 2) {
+			if (wBorder == SINKS_BORDER || wBorder == REFLECTIVE_BORDER) {
 				wBorderRef[i] = vertexData.size();
 				addVertex(x - gridSpacing, y - i * gridSpacing);
 			}
-			if (eBorder < 2) {
+			if (eBorder == SINKS_BORDER || eBorder == REFLECTIVE_BORDER) {
 				eBorderRef[i] = vertexData.size();
 				addVertex(x + (cols) * gridSpacing, y - i * gridSpacing);
 			}
@@ -553,43 +559,79 @@ public class SandpileController implements ActionListener, Serializable{
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				if (i == 0) {
-					if (nBorder == 0) {
-						addEdge(gridRef[i][j], nBorderRef[j], 1);
-					} else if (nBorder == 1) {
-						addEdge(gridRef[i][j], nBorderRef[j], 1);
-						addEdge(nBorderRef[j], gridRef[i][j], 1);
+					switch(nBorder){
+						case SINKS_BORDER:
+							addEdge(gridRef[i][j], nBorderRef[j], 1);
+							break;
+						case REFLECTIVE_BORDER:
+							addEdge(gridRef[i][j], nBorderRef[j], 1);
+							addEdge(nBorderRef[j], gridRef[i][j], 1);
+							break;
+						case LOOP_BORDER:
+							addEdge(gridRef[i][j], gridRef[rows-1][j], 1);
+							break;
+						case LOOP_REVERSE_BORDER:
+							addEdge(gridRef[i][j], gridRef[rows-1][cols-1 - j], 1);
+							break;
 					}
 				} else {
 					addEdge(gridRef[i][j], gridRef[i - 1][j]);
 				}
 
 				if (i == rows - 1) {
-					if (sBorder == 0) {
-						addEdge(gridRef[i][j], sBorderRef[j], 1);
-					} else if (sBorder == 1) {
-						addEdge(gridRef[i][j], sBorderRef[j], 1);
-						addEdge(sBorderRef[j], gridRef[i][j], 1);
+					switch(sBorder){
+						case SINKS_BORDER:
+							addEdge(gridRef[i][j], sBorderRef[j], 1);
+							break;
+						case REFLECTIVE_BORDER:
+							addEdge(gridRef[i][j], sBorderRef[j], 1);
+							addEdge(sBorderRef[j], gridRef[i][j], 1);
+							break;
+						case LOOP_BORDER:
+							addEdge(gridRef[rows-1][j], gridRef[0][j], 1);
+							break;
+						case LOOP_REVERSE_BORDER:
+							addEdge(gridRef[rows-1][j], gridRef[0][cols-1-j], 1);
+							break;
 					}
 				} else {
 					addEdge(gridRef[i][j], gridRef[i + 1][j]);
 				}
 				if (j == cols - 1) {
-					if (eBorder == 0) {
-						addEdge(gridRef[i][j], eBorderRef[i], 1);
-					} else if (eBorder == 1) {
-						addEdge(gridRef[i][j], eBorderRef[i], 1);
-						addEdge(eBorderRef[i], gridRef[i][j], 1);
+					switch(eBorder){
+						case SINKS_BORDER:
+							addEdge(gridRef[i][j], eBorderRef[i], 1);
+							break;
+						case REFLECTIVE_BORDER:
+							addEdge(gridRef[i][j], eBorderRef[i], 1);
+							addEdge(eBorderRef[i], gridRef[i][j], 1);
+							break;
+						case LOOP_BORDER:
+							addEdge(gridRef[i][j], gridRef[i][0], 1);
+							break;
+						case LOOP_REVERSE_BORDER:
+							addEdge(gridRef[i][j], gridRef[rows-1-i][0], 1);
+							break;
 					}
 				} else {
 					addEdge(gridRef[i][j], gridRef[i][j + 1]);
 				}
 
 				if (j == 0) {
-					if (wBorder == 0) {
-						addEdge(gridRef[i][j], wBorderRef[i], 1);
-					} else if (wBorder == 1) {
-						addEdge(gridRef[i][j], wBorderRef[i], 1);
-						addEdge(wBorderRef[i], gridRef[i][j], 1);
+					switch(wBorder){
+						case SINKS_BORDER:
+							addEdge(gridRef[i][j], wBorderRef[i], 1);
+							break;
+						case REFLECTIVE_BORDER:
+							addEdge(gridRef[i][j], wBorderRef[i], 1);
+							addEdge(wBorderRef[i], gridRef[i][j], 1);
+							break;
+						case LOOP_BORDER:
+							addEdge(gridRef[i][j], gridRef[i][cols-1], 1);
+							break;
+						case LOOP_REVERSE_BORDER:
+							addEdge(gridRef[i][j], gridRef[rows-1-i][cols-1], 1);
+							break;
 					}
 				} else {
 					addEdge(gridRef[i][j], gridRef[i][j - 1]);
@@ -600,11 +642,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void makeHoneycombControl(final int radius, final float x, final float y, final int borders) {
-		/*
-		 * for borders:
-		 * 0 - directed
-		 * 1 - undirected
-		 **/
+		
 		final int startingIndex = configSize();
 		makeHoneycomb(radius, x, y, borders);
 		final int endingIndex = configSize()-1;

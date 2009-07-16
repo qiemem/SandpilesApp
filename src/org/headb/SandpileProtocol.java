@@ -67,7 +67,9 @@ public class SandpileProtocol {
 				}
 				output = sb.toString();
 			}
-		} else if (command[0].equals("get_vertex")){
+		} else if (command[0].equals("get_num_of_vertices")){
+			output = String.valueOf(sc.configSize());
+		}else if (command[0].equals("get_vertex")){
 			int vert = Integer.valueOf(command[1]);
 			output = String.valueOf(sc.getVertexLocation(vert)[0]) + "," + String.valueOf(sc.getVertexLocation(vert)[1]);
 		}else if (command[0].equals("get_edges")) {

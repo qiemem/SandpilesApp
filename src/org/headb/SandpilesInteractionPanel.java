@@ -297,19 +297,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         makeHoneycombBorderComboBox = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
         makeHoneycombRadiusField = new javax.swing.JTextField();
-        makeGridOptionsPanel = new javax.swing.JPanel();
-        gridSizeLabel = new javax.swing.JLabel();
-        gridRowsField = new javax.swing.JTextField();
-        gridSizeCrossLabel = new javax.swing.JLabel();
-        gridColsField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        nBorderComboBox = new javax.swing.JComboBox();
-        jLabel4 = new javax.swing.JLabel();
-        sBorderComboBox = new javax.swing.JComboBox();
-        jLabel5 = new javax.swing.JLabel();
-        eBorderComboBox = new javax.swing.JComboBox();
-        jLabel6 = new javax.swing.JLabel();
-        wBorderComboBox = new javax.swing.JComboBox();
         makeHexGridOptionsPanel = new javax.swing.JPanel();
         gridSizeLabel1 = new javax.swing.JLabel();
         hexGridRowsField = new javax.swing.JTextField();
@@ -334,6 +321,19 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         repaintDelayRadioButton = new javax.swing.JRadioButton();
         repaintOnUpdateRadioButton = new javax.swing.JRadioButton();
         repaintDelayTextField = new javax.swing.JTextField();
+        makeGridOptionsPanel = new javax.swing.JPanel();
+        gridSizeLabel = new javax.swing.JLabel();
+        gridRowsField = new javax.swing.JTextField();
+        gridSizeCrossLabel = new javax.swing.JLabel();
+        gridColsField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        nBorderComboBox = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        sBorderComboBox = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
+        eBorderComboBox = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        wBorderComboBox = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
         canvas = new javax.media.opengl.GLCanvas();
         jLabel13 = new javax.swing.JLabel();
@@ -479,7 +479,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(deleteSelectedVerticesButton))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
         editGraphPanelLayout.setVerticalGroup(
             editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -578,11 +578,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 102, Short.MAX_VALUE)
                 .add(setConfigButton))
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(storeConfigButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 17, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 83, Short.MAX_VALUE)
                 .add(removeConfigButton))
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(jLabel7)
@@ -599,11 +599,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(jLabel8))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
             .add(configManagerOptionsPanelLayout.createSequentialGroup()
                 .add(addRandomSandButton)
                 .addContainerGap())
-            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -684,126 +684,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         );
 
         optionsTabbedPane.addTab(MAKE_HONEYCOMB_STATE, makeHoneycombOptionsPanel);
-
-        gridSizeLabel.setText("Grid Size:"); // NOI18N
-
-        gridRowsField.setText("5"); // NOI18N
-        gridRowsField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gridRowsFieldActionPerformed(evt);
-            }
-        });
-        gridRowsField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                gridRowsFieldPropertyChange(evt);
-            }
-        });
-
-        gridSizeCrossLabel.setText("X"); // NOI18N
-
-        gridColsField.setText("5"); // NOI18N
-        gridColsField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gridColsFieldActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("N Border:"); // NOI18N
-
-        nBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
-        nBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nBorderComboBoxActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("S Border:"); // NOI18N
-
-        sBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
-        sBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sBorderComboBoxActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setText("E Border:"); // NOI18N
-
-        eBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
-        eBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eBorderComboBoxActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setText("W Border:"); // NOI18N
-
-        wBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None" }));
-        wBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                wBorderComboBoxActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout makeGridOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(makeGridOptionsPanel);
-        makeGridOptionsPanel.setLayout(makeGridOptionsPanelLayout);
-        makeGridOptionsPanelLayout.setHorizontalGroup(
-            makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                        .add(gridSizeLabel)
-                        .add(2, 2, 2)
-                        .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(gridSizeCrossLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                        .add(jLabel4)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(sBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                        .add(jLabel3)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(nBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                        .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel5)
-                            .add(jLabel6))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(eBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .add(120, 120, 120))
-        );
-        makeGridOptionsPanelLayout.setVerticalGroup(
-            makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(gridSizeLabel)
-                    .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(gridSizeCrossLabel)
-                    .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel3)
-                    .add(nBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel4)
-                    .add(sBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel5)
-                    .add(eBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel6)
-                    .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(511, Short.MAX_VALUE))
-        );
-
-        optionsTabbedPane.addTab(MAKE_GRID_STATE, makeGridOptionsPanel);
 
         gridSizeLabel1.setText("Grid Size:"); // NOI18N
 
@@ -1014,7 +894,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(repaintOnUpdateRadioButton))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1043,14 +923,127 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
 
+        gridSizeLabel.setText("Grid Size:"); // NOI18N
+
+        gridRowsField.setText("5"); // NOI18N
+        gridRowsField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gridRowsFieldActionPerformed(evt);
+            }
+        });
+        gridRowsField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                gridRowsFieldPropertyChange(evt);
+            }
+        });
+
+        gridSizeCrossLabel.setText("X"); // NOI18N
+
+        gridColsField.setText("5"); // NOI18N
+        gridColsField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gridColsFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("N Border:"); // NOI18N
+
+        nBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None", "Looped to S", "Looped to S Rev." }));
+        nBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("S Border:"); // NOI18N
+
+        sBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None", "Looped to N", "Looped to N Rev." }));
+        sBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("E Border:"); // NOI18N
+
+        eBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None", "Looped to W", "Looped to W Rev." }));
+        eBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("W Border:"); // NOI18N
+
+        wBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None", "Looped to E", "Looped to E Rev." }));
+        wBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wBorderComboBoxActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout makeGridOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(makeGridOptionsPanel);
+        makeGridOptionsPanel.setLayout(makeGridOptionsPanelLayout);
+        makeGridOptionsPanelLayout.setHorizontalGroup(
+            makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(makeGridOptionsPanelLayout.createSequentialGroup()
+                .add(gridSizeLabel)
+                .add(2, 2, 2)
+                .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(gridSizeCrossLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(makeGridOptionsPanelLayout.createSequentialGroup()
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel3)
+                    .add(jLabel4)
+                    .add(jLabel6)
+                    .add(jLabel5))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, sBorderComboBox, 0, 188, Short.MAX_VALUE)
+                    .add(nBorderComboBox, 0, 188, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, eBorderComboBox, 0, 188, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, wBorderComboBox, 0, 188, Short.MAX_VALUE)))
+        );
+        makeGridOptionsPanelLayout.setVerticalGroup(
+            makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(makeGridOptionsPanelLayout.createSequentialGroup()
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(gridSizeLabel)
+                    .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(gridSizeCrossLabel)
+                    .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel3)
+                    .add(nBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel4)
+                    .add(sBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel5)
+                    .add(eBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel6)
+                    .add(wBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(511, Short.MAX_VALUE))
+        );
+
+        optionsTabbedPane.addTab(MAKE_GRID_STATE, makeGridOptionsPanel);
+
         org.jdesktop.layout.GroupLayout controlPanelLayout = new org.jdesktop.layout.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(controlPanelLayout.createSequentialGroup()
                 .add(17, 17, 17)
-                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
-            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
+            .add(optionsTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1090,8 +1083,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(centerCoordLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(687, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE)
+                .addContainerGap(589, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
