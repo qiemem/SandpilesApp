@@ -187,10 +187,10 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float dx = vertexLocations.get(dest)[0];
 				float dy = vertexLocations.get(dest)[1];
 				//Only draw the edges that aren't covered by vertices
-				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
+				//if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
 					gl.glVertex2f(sx, sy);
 					gl.glVertex2f(dx, dy);
-				}
+				//}
 			}
 		}
 		gl.glEnd();
@@ -207,12 +207,12 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float dx = vertexLocations.get(dest)[0];
 				float dy = vertexLocations.get(dest)[1];
 				//Only draw the edges that aren't covered by vertices
-				if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
+				//if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
 					float x = (1f - textPlacement) * sx + textPlacement * dx;
 					float y = (1f - textPlacement) * sy + textPlacement * dy;
 					String str = Integer.toString(graph.weight(source, dest));
 					tr.draw3D(str, x, y, 0f, .15f * vertSize / str.length());
-				}
+				//}
 			}
 		}
 		tr.end3DRendering();
@@ -225,9 +225,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float x = vertexLocations.get(vert)[0];
 				float y = vertexLocations.get(vert)[1];
 				float size = vertSize;
-				int sand = config.get(vert);
+				int sand = Math.max(config.get(vert),0);
 				if (changingVertexSize && !graph.isSink(vert)) {
-					size = Math.min(((float) sand + 1) / ((float) graph.degree(vert)), vertSize);
+					size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)+1f), vertSize);
 				}
 				setColorForVertex(gl, vert);
 				gl.glTranslatef(x, y, 0f);
@@ -240,9 +240,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float x = vertexLocations.get(vert)[0];
 				float y = vertexLocations.get(vert)[1];
 				float size = vertSize;
-				int sand = config.get(vert);
+				int sand = Math.max(config.get(vert), 0);
 				if (changingVertexSize && !graph.isSink(vert)) {
-					size = Math.min(((float) sand + 1) / ((float) graph.degree(vert)), vertSize);
+					size = Math.min(((float) sand +1f) / ((float) graph.degree(vert)+1f), vertSize);
 				}
 				setColorForVertex(gl, vert);
 				gl.glVertex2f(x - size, y + size);
@@ -420,8 +420,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private void setColorForVertex(GL gl, int vert) {
 		switch (mode) {
 			case NUM_OF_GRAINS:
-				int sand = config.get(vert);
+				int sand = Math.max(config.get(vert), -1);
 				switch (sand) {
+					case -1:
+						gl.glColor3f(0.3f, 0.0f, 0.0f);
+						break;
 					case 0:
 						gl.glColor3f(0.3f, 0.3f, 0.3f);
 						break;
