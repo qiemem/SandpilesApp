@@ -227,7 +227,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float size = vertSize;
 				int sand = Math.max(config.get(vert),0);
 				if (changingVertexSize && !graph.isSink(vert)) {
-					size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)+1f), vertSize);
+					size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)), vertSize);
 				}
 				setColorForVertex(gl, vert);
 				gl.glTranslatef(x, y, 0f);
@@ -242,7 +242,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float size = vertSize;
 				int sand = Math.max(config.get(vert), 0);
 				if (changingVertexSize && !graph.isSink(vert)) {
-					size = Math.min(((float) sand +1f) / ((float) graph.degree(vert)+1f), vertSize);
+					size = Math.min(((float) sand +1f) / ((float) graph.degree(vert)), vertSize);
 				}
 				setColorForVertex(gl, vert);
 				gl.glVertex2f(x - size, y + size);

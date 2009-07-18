@@ -626,7 +626,7 @@ public class SandpileGraph {
 		SandpileConfiguration nextConfig = stabilizeConfigStartingWith(config.plus(burning), burningVertices);
 		while (!config.equals(nextConfig)) {
 			config = nextConfig;
-			nextConfig = stabilizeConfigStartingWith(config.plus(config), burningVertices);
+			nextConfig = stabilizeConfigStartingWith(config.plus(burning), burningVertices);
 		}
 		return config;
 	}
