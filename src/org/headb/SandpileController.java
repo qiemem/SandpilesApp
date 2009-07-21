@@ -108,6 +108,10 @@ public class SandpileController implements ActionListener, Serializable{
 		selectedVertices.clear();
 	}
 
+	public void setDrawer(SandpileDrawer sd){
+		drawer = sd;
+	}
+
 	public void startServer(int port) throws IOException{
 		server = new ServerSocket(port, 5);
 		//System.err.println("Created server socket");

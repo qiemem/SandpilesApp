@@ -346,7 +346,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 
-	public Canvas getCanvas() {
+	public GLCanvas getCanvas() {
 		return canvas;
 	}
 

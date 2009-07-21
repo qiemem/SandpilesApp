@@ -40,7 +40,8 @@ public interface SandpileDrawer{
 	public enum ColorMode {
 		NUM_OF_GRAINS,
 		STABILITY,
-		FIRINGS
+		FIRINGS,
+		DIFFERENCE
 	}
 	public Canvas getCanvas();
 	public void setColorMode(ColorMode cm);

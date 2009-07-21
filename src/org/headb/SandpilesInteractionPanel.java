@@ -89,6 +89,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private final int PORT = 7236;
 
+
+
 	public static enum MouseMode {
 		SELECT(false), MOVE(true), EDIT(true);
 
@@ -105,6 +107,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private SandpileController sandpileController;
 	private SandpileGLDrawer drawer;
+	private Sandpile3dDrawer drawer3d;
 
 	private Clipboard localClipboard = new Clipboard("Sandpile Clipboard");
 
@@ -124,6 +127,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		canvas.addMouseListener(drawer);
 		canvas.addMouseMotionListener(drawer);
 		drawer.addReshapeListener(this);
+
+		drawer3d = new Sandpile3dDrawer(canvas3d);
 
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(0);
@@ -273,6 +278,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        canvas = new javax.media.opengl.GLCanvas();
         controlStateComboBox = new javax.swing.JComboBox();
         optionsContainerPanel = new javax.swing.JPanel();
         blankOptionsPanel = new javax.swing.JPanel();
@@ -281,6 +287,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         sandpileViewScrollPane = new javax.swing.JScrollPane();
         mouseButtonGroup = new javax.swing.ButtonGroup();
         repaintOptionsButtonGroup = new javax.swing.ButtonGroup();
+        canvas3d = new javax.media.opengl.GLCanvas();
         jSplitPane1 = new javax.swing.JSplitPane();
         controlPanel = new javax.swing.JPanel();
         quitButton = new javax.swing.JButton();
@@ -352,8 +359,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         repaintOnUpdateRadioButton = new javax.swing.JRadioButton();
         repaintDelayTextField = new javax.swing.JTextField();
         vertexLabelsCheckBox = new javax.swing.JCheckBox();
+        dimensionToggleButton = new javax.swing.JToggleButton();
         jPanel1 = new javax.swing.JPanel();
-        canvas = new javax.media.opengl.GLCanvas();
+        canvasHolderPanel = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         centerCoordLabel = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
@@ -381,12 +389,23 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         smallZoomOutButton = new javax.swing.JButton();
         smallZoomInButton = new javax.swing.JButton();
         bigZoomInButton = new javax.swing.JButton();
-        jSeparator5 = new javax.swing.JToolBar.Separator();
         serverToggleButton = new javax.swing.JToggleButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
         mouseToolBar = new javax.swing.JToolBar();
         navigateToggleButton = new javax.swing.JToggleButton();
         selectToggleButton = new javax.swing.JToggleButton();
         editToggleButton = new javax.swing.JToggleButton();
+
+        canvas.setPreferredSize(new java.awt.Dimension(1,1));
+        canvas.setMinimumSize(new java.awt.Dimension(1,1));
+        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                canvasMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canvasMouseClicked(evt);
+            }
+        });
 
         controlStateComboBox.setMaximumRowCount(16);
         controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { EDIT_GRAPH_STATE, CONFIG_MANAGER_STATE, MAKE_GRID_STATE, MAKE_HEX_GRID_STATE, MAKE_HONEYCOMB_STATE, VISUAL_OPTIONS_STATE}));
@@ -1014,6 +1033,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        dimensionToggleButton.setText("3d");
+        dimensionToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dimensionToggleButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -1032,8 +1058,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .add(repaintDelayRadioButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(repaintOnUpdateRadioButton))
-                .addContainerGap(90, Short.MAX_VALUE))
+                    .add(repaintOnUpdateRadioButton)
+                    .add(dimensionToggleButton))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1059,7 +1086,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(jLabel18)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(387, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(dimensionToggleButton)
+                .addContainerGap(357, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -1084,16 +1113,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
         jSplitPane1.setLeftComponent(controlPanel);
 
-        canvas.setPreferredSize(new java.awt.Dimension(1,1));
-        canvas.setMinimumSize(new java.awt.Dimension(1,1));
-        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                canvasMouseReleased(evt);
-            }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                canvasMouseClicked(evt);
-            }
-        });
+        canvasHolderPanel.setLayout(new java.awt.CardLayout());
+        canvasHolderPanel.add(canvas3d,"3d");
+        canvasHolderPanel.add(canvas,"2d");
 
         jLabel13.setText("Center:");
 
@@ -1112,18 +1134,22 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(589, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(canvasHolderPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .add(canvas, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .addContainerGap(718, Short.MAX_VALUE)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(jLabel13)
                         .add(centerCoordLabel))
                     .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jPanel1Layout.createSequentialGroup()
+                    .add(canvasHolderPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 711, Short.MAX_VALUE)
+                    .add(23, 23, 23)))
         );
 
         jSplitPane1.setRightComponent(jPanel1);
@@ -1314,7 +1340,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
         controlToolBar.add(bigZoomInButton);
-        controlToolBar.add(jSeparator5);
 
         serverToggleButton.setText("Server");
         serverToggleButton.setFocusable(false);
@@ -1326,6 +1351,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
         controlToolBar.add(serverToggleButton);
+        controlToolBar.add(jSeparator5);
 
         mouseToolBar.setFloatable(false);
         mouseToolBar.setRollover(true);
@@ -1372,9 +1398,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE)
+                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 898, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 118, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(2, 2, 2))
             .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
         );
@@ -1383,7 +1409,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             .add(layout.createSequentialGroup()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(controlToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE))
         );
@@ -1836,6 +1862,22 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		sandpileController.repaint();
 	}//GEN-LAST:event_vertexLabelsCheckBoxActionPerformed
 
+	private void dimensionToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dimensionToggleButtonActionPerformed
+		if(dimensionToggleButton.isSelected()){
+			dimensionToggleButton.setText("2d");
+			drawer3d.triangulate(sandpileController.vertexData);
+			CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
+			cl.show(canvasHolderPanel,"3d");
+			sandpileController.setDrawer(drawer3d);
+		}else{
+			dimensionToggleButton.setText("3d");
+			CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
+			cl.show(canvasHolderPanel,"2d");
+			sandpileController.setDrawer(drawer);
+		}
+		sandpileController.repaint();
+	}//GEN-LAST:event_dimensionToggleButtonActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -1904,6 +1946,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JButton bigZoomOutButton;
     private javax.swing.JPanel blankOptionsPanel;
     private javax.media.opengl.GLCanvas canvas;
+    private javax.media.opengl.GLCanvas canvas3d;
+    private javax.swing.JPanel canvasHolderPanel;
     private javax.swing.JLabel centerCoordLabel;
     private javax.swing.JCheckBox changingNodeSizeCheckBox;
     private javax.swing.JButton clearSandButton;
@@ -1917,6 +1961,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JTextField delayTextField;
     private javax.swing.JButton deleteGraphButton;
     private javax.swing.JButton deleteSelectedVerticesButton;
+    private javax.swing.JToggleButton dimensionToggleButton;
     private javax.swing.JCheckBox drawEdgesCheckBox;
     private javax.swing.JComboBox eBorderComboBox;
     private javax.swing.JCheckBox edgeLabelsCheckBox;

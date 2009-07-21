@@ -2,6 +2,15 @@
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <NonVisualComponents>
+    <Component class="javax.media.opengl.GLCanvas" name="canvas">
+      <Events>
+        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="canvasMouseReleased"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="canvasMouseClicked"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="canvas.setPreferredSize(new java.awt.Dimension(1,1));&#xa;canvas.setMinimumSize(new java.awt.Dimension(1,1));"/>
+      </AuxValues>
+    </Component>
     <Component class="javax.swing.JComboBox" name="controlStateComboBox">
       <Properties>
         <Property name="maximumRowCount" type="int" value="16"/>
@@ -59,6 +68,8 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="repaintOptionsButtonGroup">
     </Component>
+    <Component class="javax.media.opengl.GLCanvas" name="canvas3d">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -82,9 +93,9 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Component id="controlToolBar" pref="904" max="32767" attributes="0"/>
+              <Component id="controlToolBar" pref="898" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="mouseToolBar" min="-2" pref="118" max="-2" attributes="0"/>
+              <Component id="mouseToolBar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
           </Group>
           <Component id="jSplitPane1" alignment="0" pref="1024" max="32767" attributes="0"/>
@@ -95,7 +106,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="controlToolBar" min="-2" pref="30" max="-2" attributes="0"/>
-                  <Component id="mouseToolBar" min="-2" pref="25" max="-2" attributes="0"/>
+                  <Component id="mouseToolBar" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jSplitPane1" pref="738" max="32767" attributes="0"/>
@@ -982,6 +993,7 @@
                                       <Component id="repaintDelayTextField" min="-2" pref="47" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="repaintOnUpdateRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="dimensionToggleButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="78" max="32767" attributes="0"/>
                           </Group>
@@ -1012,7 +1024,9 @@
                               <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="colorModeComboBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="387" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="dimensionToggleButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="357" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1119,6 +1133,14 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="vertexLabelsCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
+                    <Component class="javax.swing.JToggleButton" name="dimensionToggleButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="3d"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dimensionToggleButtonActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
               </SubComponents>
@@ -1143,14 +1165,15 @@
                       <Component id="jSeparator4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="589" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="canvas" alignment="1" pref="714" max="32767" attributes="0"/>
+                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                      <Component id="canvasHolderPanel" alignment="0" pref="714" max="32767" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="canvas" pref="708" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="718" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1159,19 +1182,23 @@
                           <Component id="jSeparator4" min="-2" pref="16" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="canvasHolderPanel" pref="711" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.media.opengl.GLCanvas" name="canvas">
-              <Events>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="canvasMouseReleased"/>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="canvasMouseClicked"/>
-              </Events>
+            <Container class="javax.swing.JPanel" name="canvasHolderPanel">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="canvas.setPreferredSize(new java.awt.Dimension(1,1));&#xa;canvas.setMinimumSize(new java.awt.Dimension(1,1));"/>
+                <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="canvasHolderPanel.add(canvas3d,&quot;3d&quot;);&#xa;canvasHolderPanel.add(canvas,&quot;2d&quot;);"/>
               </AuxValues>
-            </Component>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
+            </Container>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Center:"/>
@@ -1380,8 +1407,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bigZoomInButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JToolBar$Separator" name="jSeparator5">
-        </Component>
         <Component class="javax.swing.JToggleButton" name="serverToggleButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Server"/>
@@ -1392,6 +1417,8 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serverToggleButtonActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JToolBar$Separator" name="jSeparator5">
         </Component>
       </SubComponents>
     </Container>
