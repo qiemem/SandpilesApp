@@ -969,7 +969,8 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="repaintCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="labelsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="edgeLabelsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="vertexLabelsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="changingNodeSizeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="drawEdgesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="printFPSCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -991,7 +992,9 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="repaintCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="labelsCheckBox" min="-2" max="-2" attributes="0"/>
+                              <Component id="edgeLabelsCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="vertexLabelsCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="changingNodeSizeCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -1009,7 +1012,7 @@
                               <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="colorModeComboBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="410" max="32767" attributes="0"/>
+                              <EmptySpace pref="387" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1024,12 +1027,12 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JCheckBox" name="labelsCheckBox">
+                    <Component class="javax.swing.JCheckBox" name="edgeLabelsCheckBox">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Draw Labels" noResource="true"/>
+                        <Property name="text" type="java.lang.String" value="Draw Edge Labels" noResource="true"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="labelsCheckBoxActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="edgeLabelsCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="changingNodeSizeCheckBox">
@@ -1106,6 +1109,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintDelayTextFieldActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="vertexLabelsCheckBox">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Draw Vertex Labels"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="vertexLabelsCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

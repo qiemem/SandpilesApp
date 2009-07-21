@@ -15,6 +15,18 @@
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="projectFileChooser.setFileFilter(new FileFilter(){&#xa;&#x9;public boolean accept(File file) {&#xa;&#x9;&#x9;if(file!=null &amp;&amp; file.isDirectory()){&#xa;&#x9;&#x9;&#x9;for(String s : file.list()){&#xa;&#x9;&#x9;&#x9;&#x9;if(s.equals(&quot;graph.sg&quot;))&#xa;&#x9;&#x9;&#x9;&#x9;&#x9;return true;&#xa;&#x9;&#x9;&#x9;}&#xa;&#x9;&#x9;}&#xa;&#x9;&#x9;return false;&#xa;&#x9;}&#xa;&#x9;public String getDescription(){&#xa;&#x9;&#x9;return &quot;Accepts directories that contain a graph.sg file.&quot;;&#xa;&#x9;}&#xa;});"/>
       </AuxValues>
     </Component>
+    <Component class="javax.swing.JFileChooser" name="imageFileChooser">
+      <Properties>
+        <Property name="dialogTitle" type="java.lang.String" value="Save Image"/>
+        <Property name="dialogType" type="int" value="1"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="imageFileChooserActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="imageFileChooser.setFileFilter(new FileFilter() {&#xa;    @Override public boolean accept(File f){&#xa;        return f.getName().endsWith(&quot;.png&quot;);&#xa;    }&#xa;    @Override public String getDescription(){&#xa;        return &quot;PNG Image&quot;;&#xa;    }&#xa;});"/>
+      </AuxValues>
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="fileMenu">
@@ -53,6 +65,14 @@
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator1">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Save as Image"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="quitMenuItem">
               <Properties>

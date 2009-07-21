@@ -44,6 +44,7 @@ package org.headb;
  *
  * @author headb
  */
+import java.awt.AWTException;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import java.awt.datatransfer.*;
@@ -55,6 +56,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.*;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.awt.Robot;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -325,7 +330,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         hexWBorderComboBox = new javax.swing.JComboBox();
         visualOptionsPanel = new javax.swing.JPanel();
         repaintCheckBox = new javax.swing.JCheckBox();
-        labelsCheckBox = new javax.swing.JCheckBox();
+        edgeLabelsCheckBox = new javax.swing.JCheckBox();
         changingNodeSizeCheckBox = new javax.swing.JCheckBox();
         drawEdgesCheckBox = new javax.swing.JCheckBox();
         printFPSCheckBox = new javax.swing.JCheckBox();
@@ -334,6 +339,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         repaintDelayRadioButton = new javax.swing.JRadioButton();
         repaintOnUpdateRadioButton = new javax.swing.JRadioButton();
         repaintDelayTextField = new javax.swing.JTextField();
+        vertexLabelsCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         canvas = new javax.media.opengl.GLCanvas();
         jLabel13 = new javax.swing.JLabel();
@@ -926,10 +932,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
-        labelsCheckBox.setText("Draw Labels"); // NOI18N
-        labelsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        edgeLabelsCheckBox.setText("Draw Edge Labels"); // NOI18N
+        edgeLabelsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                labelsCheckBoxActionPerformed(evt);
+                edgeLabelsCheckBoxActionPerformed(evt);
             }
         });
 
@@ -989,6 +995,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        vertexLabelsCheckBox.setText("Draw Vertex Labels");
+        vertexLabelsCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                vertexLabelsCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -996,7 +1009,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             .add(visualOptionsPanelLayout.createSequentialGroup()
                 .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(repaintCheckBox)
-                    .add(labelsCheckBox)
+                    .add(edgeLabelsCheckBox)
+                    .add(vertexLabelsCheckBox)
                     .add(changingNodeSizeCheckBox)
                     .add(drawEdgesCheckBox)
                     .add(printFPSCheckBox)
@@ -1007,14 +1021,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(repaintOnUpdateRadioButton))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(visualOptionsPanelLayout.createSequentialGroup()
                 .add(repaintCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(labelsCheckBox)
+                .add(edgeLabelsCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(vertexLabelsCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(changingNodeSizeCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1031,7 +1047,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(jLabel18)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(410, Short.MAX_VALUE))
+                .addContainerGap(387, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -1516,10 +1532,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		drawer.repaint = repaintCheckBox.isSelected();
 }//GEN-LAST:event_repaintCheckBoxActionPerformed
 
-	private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelsCheckBoxActionPerformed
-		drawer.drawLabels=labelsCheckBox.isSelected();
+	private void edgeLabelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edgeLabelsCheckBoxActionPerformed
+		drawer.drawEdgeLabels=edgeLabelsCheckBox.isSelected();
 		sandpileController.repaint();
-}//GEN-LAST:event_labelsCheckBoxActionPerformed
+}//GEN-LAST:event_edgeLabelsCheckBoxActionPerformed
 
 	private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changingNodeSizeCheckBoxActionPerformed
 		drawer.changingVertexSize = changingNodeSizeCheckBox.isSelected();
@@ -1803,6 +1819,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		updateConfigSelectList();
 	}//GEN-LAST:event_removeConfigButtonActionPerformed
 
+	private void vertexLabelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vertexLabelsCheckBoxActionPerformed
+		drawer.drawVertexLabels=vertexLabelsCheckBox.isSelected();
+		sandpileController.repaint();
+	}//GEN-LAST:event_vertexLabelsCheckBoxActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -1842,6 +1863,21 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		}
 	}
 
+	public BufferedImage getCanvasShot(){
+		int height = canvas.getHeight();
+		int width = canvas.getWidth();
+		int x = canvas.getLocationOnScreen().x;
+		int y = canvas.getLocationOnScreen().y;
+		Rectangle rect = new Rectangle(x,y,width,height);
+		try{
+			Robot robot = new Robot();
+			return robot.createScreenCapture(rect);
+		}catch(java.awt.AWTException e){
+			javax.swing.JOptionPane.showInternalMessageDialog(this, "Error creating robot: "+e.getMessage());
+			return null;
+		}
+	}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConfigButton;
     private javax.swing.JRadioButton addEdgeRadioButton;
@@ -1871,6 +1907,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JButton deleteSelectedVerticesButton;
     private javax.swing.JCheckBox drawEdgesCheckBox;
     private javax.swing.JComboBox eBorderComboBox;
+    private javax.swing.JCheckBox edgeLabelsCheckBox;
     private javax.swing.JTextField edgeWeightField;
     private javax.swing.ButtonGroup editConfigButtonGroup;
     private javax.swing.ButtonGroup editGraphButtonGroup;
@@ -1914,7 +1951,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JCheckBox labelsCheckBox;
     private javax.swing.JPanel makeGridOptionsPanel;
     private javax.swing.JPanel makeHexGridOptionsPanel;
     private javax.swing.JComboBox makeHoneycombBorderComboBox;
@@ -1953,6 +1989,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JButton stabilizeButton;
     private javax.swing.JButton stepButton;
     private javax.swing.JButton storeConfigButton;
+    private javax.swing.JCheckBox vertexLabelsCheckBox;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;
     private javax.swing.JTextField zoomTextField;

@@ -34,6 +34,10 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+import java.io.IOException;
 
 public class Sandpiles extends javax.swing.JFrame {
 
@@ -57,6 +61,7 @@ public class Sandpiles extends javax.swing.JFrame {
     private void initComponents() {
 
         projectFileChooser = new javax.swing.JFileChooser();
+        imageFileChooser = new javax.swing.JFileChooser();
         sandpilesIP = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -64,6 +69,7 @@ public class Sandpiles extends javax.swing.JFrame {
         saveProjectMenuItem = new javax.swing.JMenuItem();
         openProjectMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
+        jMenuItem1 = new javax.swing.JMenuItem();
         quitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
@@ -93,6 +99,22 @@ public class Sandpiles extends javax.swing.JFrame {
         projectFileChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 projectFileChooserActionPerformed(evt);
+            }
+        });
+
+        imageFileChooser.setDialogTitle("Save Image");
+        imageFileChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        imageFileChooser.setFileFilter(new FileFilter() {
+            @Override public boolean accept(File f){
+                return f.getName().endsWith(".png");
+            }
+            @Override public String getDescription(){
+                return "PNG Image";
+            }
+        });
+        imageFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imageFileChooserActionPerformed(evt);
             }
         });
 
@@ -126,6 +148,14 @@ public class Sandpiles extends javax.swing.JFrame {
         });
         fileMenu.add(openProjectMenuItem);
         fileMenu.add(jSeparator1);
+
+        jMenuItem1.setText("Save as Image");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem1);
 
         quitMenuItem.setText("Quit");
         quitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -285,6 +315,22 @@ public class Sandpiles extends javax.swing.JFrame {
 		}
 	}//GEN-LAST:event_redoMenuItemActionPerformed
 
+	private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+		imageFileChooser.showSaveDialog(this);
+	}//GEN-LAST:event_jMenuItem1ActionPerformed
+
+	private void imageFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageFileChooserActionPerformed
+		if(evt.getActionCommand().equals(imageFileChooser.APPROVE_SELECTION)){
+			BufferedImage image = sandpilesIP.getCanvasShot();
+			File file = imageFileChooser.getSelectedFile();
+			try{
+				ImageIO.write(image, "png", file);
+			}catch(IOException e){
+				JOptionPane.showInternalMessageDialog(this, "Unable to write image: "+e.getMessage());
+			}
+		}
+	}//GEN-LAST:event_imageFileChooserActionPerformed
+
 	/**
 	 * @param args the command line arguments
 	 */
@@ -316,7 +362,9 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JMenuItem cutMenuItem2;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JFileChooser imageFileChooser;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JMenuItem openProjectMenuItem;
