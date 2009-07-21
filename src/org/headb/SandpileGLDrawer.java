@@ -104,7 +104,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 		// Setup the drawing area and shading mode
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
+		gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
 		//gl.glDepthFunc(gl.GL_LEQUAL);

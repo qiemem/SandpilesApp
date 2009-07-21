@@ -135,6 +135,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		updateDelayTextField();
 
 		drawer.setColors(Arrays.asList(colors), Arrays.asList(inDebtColors));
+		drawer3d.setColors(Arrays.asList(colors), Arrays.asList(inDebtColors));
 
 		canvas.addMouseListener(new MouseAdapter(){
 			@Override public void mousePressed(MouseEvent e){
@@ -1918,10 +1919,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}
 
 	public BufferedImage getCanvasShot(){
-		int height = canvas.getHeight();
-		int width = canvas.getWidth();
-		int x = canvas.getLocationOnScreen().x;
-		int y = canvas.getLocationOnScreen().y;
+		int height = canvasHolderPanel.getHeight();
+		int width = canvasHolderPanel.getWidth();
+		int x = canvasHolderPanel.getLocationOnScreen().x;
+		int y = canvasHolderPanel.getLocationOnScreen().y;
 		Rectangle rect = new Rectangle(x,y,width,height);
 		try{
 			Robot robot = new Robot();
