@@ -59,7 +59,7 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.awt.Robot;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.util.Arrays;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -76,6 +76,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private static final String DUAL_CONFIG = "Dual of Current";
 	private static final String ONES_CONFIG = "Ones Everywhere";
 	private final String[] defaultConfigs = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, DUAL_CONFIG, ONES_CONFIG };
+
+	private float[][] colors ={{0.2f, 0.2f, 0.2f},
+							   {0f, 0f, 1f},
+							   {0f, 1f, 1f},
+							   {0f, 1f, 0f},
+							   {1f, 0f, 0f},
+							   {1f, .5f, 0f},
+							   {1f, 1f, 0f},
+							   {1f, 1f, 1f}};
+	private float[][] inDebtColors = {{0.2f, 0f, 0f}};
 
 	private final int PORT = 7236;
 
@@ -118,6 +128,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(0);
 		updateDelayTextField();
+
+		drawer.setColors(Arrays.asList(colors), Arrays.asList(inDebtColors));
 
 		canvas.addMouseListener(new MouseAdapter(){
 			@Override public void mousePressed(MouseEvent e){

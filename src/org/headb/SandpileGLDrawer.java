@@ -57,6 +57,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private float mouseX = 0f, mouseY = 0f;
 	private float vertSize = 1f;
 	private ColorMode mode = SandpileDrawer.ColorMode.NUM_OF_GRAINS;
+	private ArrayList<float[]> colors;
+	private ArrayList<float[]> inDebtColors;
 	private List<Integer> firings = new ArrayList<Integer>();
 	public boolean drawEdgeLabels = false;
 	public boolean drawVertexLabels = false;
@@ -85,6 +87,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		this.canvas.addMouseWheelListener(this);
 	}
 
+	public void setColors(List<float[]> colors, List<float[]> inDebtColors){
+		this.colors = new ArrayList<float[]>(colors);
+		this.inDebtColors = new ArrayList<float[]>(inDebtColors);
+	}
+
 	public void init(GLAutoDrawable drawable) {
 		// Use debug pipeline
 		// drawable.setGL(new DebugGL(drawable.getGL()));
@@ -97,7 +104,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 		// Setup the drawing area and shading mode
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
+		gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
 		//gl.glDepthFunc(gl.GL_LEQUAL);
@@ -438,73 +445,28 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	private void setColorForVertex(GL gl, int vert) {
+		float[] color = {0f, 0f, 0f};
 		switch (mode) {
 			case NUM_OF_GRAINS:
 				int sand = Math.max(config.get(vert), -1);
-				switch (sand) {
-					case -1:
-						gl.glColor3f(0.3f, 0.0f, 0.0f);
-						break;
-					case 0:
-						gl.glColor3f(0.3f, 0.3f, 0.3f);
-						break;
-					case 1:
-						gl.glColor3f(0.0f, 0.0f, 1.0f);
-						break;
-					case 2:
-						gl.glColor3f(0.0f, 1.0f, 1.0f);
-						break;
-					case 3:
-						gl.glColor3f(0.0f, 1.0f, 0.0f);
-						break;
-					case 4:
-						gl.glColor3f(1.0f, 0.0f, 0.0f);
-						break;
-					case 5:
-						gl.glColor3f(1.0f, 0.5f, 0.0f);
-						break;
-					case 6:
-						gl.glColor3f(1.0f, 1.0f, 0.0f);
-						break;
-					default:
-						gl.glColor3f(1.0f, 1.0f, 1.0f);
-				}
+				if(sand<0)
+					color = inDebtColors.get(Math.min(-sand-1, inDebtColors.size()-1));
+				else
+					color = colors.get(Math.min(sand, colors.size()-1));
 				break;
 			case STABILITY:
 				if (config.get(vert) < graph.degree(vert)) {
-					gl.glColor3f(0.3f, 0.3f, 0.3f);
+					color = colors.get(0);
 				} else {
-					gl.glColor3f(1f, 1f, 0f);
+					color[0] = 1f;
+					color[1] = 1f;
 				}
 				break;
 			case FIRINGS:
-				switch (firings.get(vert)) {
-					case 0:
-						gl.glColor3f(0.3f, 0.3f, 0.3f);
-						break;
-					case 1:
-						gl.glColor3f(0.0f, 0.0f, 1.0f);
-						break;
-					case 2:
-						gl.glColor3f(0.0f, 1.0f, 1.0f);
-						break;
-					case 3:
-						gl.glColor3f(0.0f, 1.0f, 0.0f);
-						break;
-					case 4:
-						gl.glColor3f(1.0f, 0.0f, 0.0f);
-						break;
-					case 5:
-						gl.glColor3f(1.0f, 0.5f, 0.0f);
-						break;
-					case 6:
-						gl.glColor3f(1.0f, 1.0f, 0.0f);
-						break;
-					default:
-						gl.glColor3f(1.0f, 1.0f, 1.0f);
-				}
+				color = colors.get(Math.min(firings.get(vert),colors.size()-1));
 				break;
 		}
+		gl.glColor3f(color[0], color[1], color[2]);
 	}
 
 	public void addReshapeListener(ReshapeListener r) {

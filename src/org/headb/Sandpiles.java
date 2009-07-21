@@ -104,6 +104,7 @@ public class Sandpiles extends javax.swing.JFrame {
 
         imageFileChooser.setDialogTitle("Save Image");
         imageFileChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        imageFileChooser.setSelectedFile(new java.io.File("/sandpile.png"));
         imageFileChooser.setFileFilter(new FileFilter() {
             @Override public boolean accept(File f){
                 return f.getName().endsWith(".png");
