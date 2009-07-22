@@ -154,6 +154,8 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	}
 
 	public void triangulate(List<float[]> vertexLocations) {
+		if(vertexLocations.equals(tris.points()))
+			return;
 		pointsToVerts = new HashMap<float[], Integer>();
 		int v = 0;
 		for (float[] p : vertexLocations) {
@@ -343,9 +345,9 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
 	private float getHeightForVertex(int vert) {
 		if (graph.isSink(vert)) {
-			return -heightMultiplier;
+			return -2f*heightMultiplier;
 		} else {
-			return heightMultiplier * ((float) config.get(vert) - 1f);
+			return heightMultiplier * ((float) config.get(vert) - 2f);
 		}
 	}
 
