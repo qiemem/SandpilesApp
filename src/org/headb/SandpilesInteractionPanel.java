@@ -89,6 +89,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private final int PORT = 7236;
 
+	SandpileDrawer currentDrawer;
+
 
 
 	public static enum MouseMode {
@@ -129,6 +131,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		drawer.addReshapeListener(this);
 
 		drawer3d = new Sandpile3dDrawer(canvas3d);
+
+		currentDrawer = drawer;
 
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(0);
@@ -361,6 +365,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         repaintDelayTextField = new javax.swing.JTextField();
         vertexLabelsCheckBox = new javax.swing.JCheckBox();
         dimensionToggleButton = new javax.swing.JToggleButton();
+        heightSmoothingSpinner = new javax.swing.JSpinner();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        colorSmoothingSpinner = new javax.swing.JSpinner();
+        heightScalarSpinner = new javax.swing.JSpinner();
         jPanel1 = new javax.swing.JPanel();
         canvasHolderPanel = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
@@ -1041,6 +1051,33 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        heightSmoothingSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(3), null, null, Integer.valueOf(1)));
+        heightSmoothingSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                heightSmoothingSpinnerStateChanged(evt);
+            }
+        });
+
+        jLabel19.setText("Height Smoothing:");
+
+        jLabel20.setText("Color Smoothing:");
+
+        jLabel21.setText("Height Scalar:");
+
+        colorSmoothingSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(3), null, null, Integer.valueOf(1)));
+        colorSmoothingSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                colorSmoothingSpinnerStateChanged(evt);
+            }
+        });
+
+        heightScalarSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(3.0f), null, null, Float.valueOf(0.5f)));
+        heightScalarSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                heightScalarSpinnerStateChanged(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -1060,8 +1097,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(repaintOnUpdateRadioButton)
-                    .add(dimensionToggleButton))
-                .addContainerGap(78, Short.MAX_VALUE))
+                    .add(visualOptionsPanelLayout.createSequentialGroup()
+                        .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(dimensionToggleButton)
+                            .add(jLabel19)
+                            .add(jLabel20)
+                            .add(jLabel21))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                            .add(heightSmoothingSpinner, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                            .add(colorSmoothingSpinner)
+                            .add(heightScalarSpinner))))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1089,7 +1136,19 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(dimensionToggleButton)
-                .addContainerGap(357, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel19)
+                    .add(heightSmoothingSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel20)
+                    .add(colorSmoothingSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel21)
+                    .add(heightScalarSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -1117,6 +1176,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         canvasHolderPanel.setLayout(new java.awt.CardLayout());
         canvasHolderPanel.add(canvas3d,"3d");
         canvasHolderPanel.add(canvas,"2d");
+        CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
+        cl.show(canvasHolderPanel, "2d");
 
         jLabel13.setText("Center:");
 
@@ -1686,9 +1747,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private void colorModeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorModeComboBoxActionPerformed
 		
 		switch(colorModeComboBox.getSelectedIndex()){
-			case 0: drawer.setColorMode(SandpileDrawer.ColorMode.NUM_OF_GRAINS); break;
-			case 1: drawer.setColorMode(SandpileDrawer.ColorMode.STABILITY); break;
-			case 2: drawer.setColorMode(SandpileDrawer.ColorMode.FIRINGS); break;
+			case 0: 
+				drawer.setColorMode(SandpileDrawer.ColorMode.NUM_OF_GRAINS);
+				drawer3d.setColorMode(SandpileDrawer.ColorMode.NUM_OF_GRAINS);
+				break;
+			case 1:
+				drawer.setColorMode(SandpileDrawer.ColorMode.STABILITY);
+				drawer3d.setColorMode(SandpileDrawer.ColorMode.STABILITY);
+				break;
+			case 2:
+				drawer.setColorMode(SandpileDrawer.ColorMode.FIRINGS);
+				drawer3d.setColorMode(SandpileDrawer.ColorMode.FIRINGS);
+				break;
 		}
 		sandpileController.repaint();
 }//GEN-LAST:event_colorModeComboBoxActionPerformed
@@ -1730,23 +1800,35 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_delayTextFieldCaretUpdate
 
 	private void bigZoomInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigZoomInButtonActionPerformed
-		drawer.setZoom(drawer.getZoom()*1.25f);
+		float amount = drawer.getZoom()*1.25f;
+		drawer.setZoom(amount);
+		drawer3d.setZoom(amount);
 		updateZoomTextField();
+		sandpileController.repaint();
 	}//GEN-LAST:event_bigZoomInButtonActionPerformed
 
 	private void smallZoomInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallZoomInButtonActionPerformed
-		drawer.setZoom(drawer.getZoom()*1.05f);
+		float amount = drawer.getZoom()*1.05f;
+		drawer.setZoom(amount);
+		drawer3d.setZoom(amount);
 		updateZoomTextField();
+		sandpileController.repaint();
 	}//GEN-LAST:event_smallZoomInButtonActionPerformed
 
 	private void smallZoomOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallZoomOutButtonActionPerformed
-		drawer.setZoom(drawer.getZoom()*0.95f);
+		float amount = drawer.getZoom()*0.95f;
+		drawer.setZoom(amount);
+		drawer3d.setZoom(amount);
 		updateZoomTextField();
+		sandpileController.repaint();
 	}//GEN-LAST:event_smallZoomOutButtonActionPerformed
 
 	private void bigZoomOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigZoomOutButtonActionPerformed
-		drawer.setZoom(drawer.getZoom()*0.75f);
+		float amount = drawer.getZoom()*0.75f;
+		drawer.setZoom(amount);
+		drawer3d.setZoom(amount);
 		updateZoomTextField();
+		sandpileController.repaint();
 	}//GEN-LAST:event_bigZoomOutButtonActionPerformed
 
 	private void zoomTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_zoomTextFieldCaretUpdate
@@ -1867,6 +1949,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		if(dimensionToggleButton.isSelected()){
 			dimensionToggleButton.setText("2d");
 			drawer3d.triangulate(sandpileController.vertexData);
+			drawer3d.setCamera(drawer.getOriginX(), drawer.getOriginX());
 			CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
 			cl.show(canvasHolderPanel,"3d");
 			sandpileController.setDrawer(drawer3d);
@@ -1878,6 +1961,21 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		}
 		sandpileController.repaint();
 	}//GEN-LAST:event_dimensionToggleButtonActionPerformed
+
+	private void heightSmoothingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_heightSmoothingSpinnerStateChanged
+		drawer3d.setHeightSmoothing((Integer)heightSmoothingSpinner.getValue());
+		sandpileController.repaint();
+	}//GEN-LAST:event_heightSmoothingSpinnerStateChanged
+
+	private void colorSmoothingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_colorSmoothingSpinnerStateChanged
+		drawer3d.setColorSmoothing((Integer)colorSmoothingSpinner.getValue());
+		sandpileController.repaint();
+	}//GEN-LAST:event_colorSmoothingSpinnerStateChanged
+
+	private void heightScalarSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_heightScalarSpinnerStateChanged
+		drawer3d.setHeightScalar((Float)heightScalarSpinner.getValue());
+		sandpileController.repaint();
+	}//GEN-LAST:event_heightScalarSpinnerStateChanged
 
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
@@ -1895,6 +1993,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	public boolean updateDrawerZoom(){
 		try{
 			drawer.setZoom(Float.valueOf(zoomTextField.getText())/100.0f);
+			drawer3d.setZoom(Float.valueOf(zoomTextField.getText())/100.0f);
 			return true;
 		}catch(NumberFormatException e){
 			return false;
@@ -1953,6 +2052,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JCheckBox changingNodeSizeCheckBox;
     private javax.swing.JButton clearSandButton;
     private javax.swing.JComboBox colorModeComboBox;
+    private javax.swing.JSpinner colorSmoothingSpinner;
     private javax.swing.JPanel configManagerOptionsPanel;
     private javax.swing.JList configSelectList;
     private javax.swing.JPanel controlPanel;
@@ -1977,6 +2077,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JLabel gridSizeCrossLabel1;
     private javax.swing.JLabel gridSizeLabel;
     private javax.swing.JLabel gridSizeLabel1;
+    private javax.swing.JSpinner heightScalarSpinner;
+    private javax.swing.JSpinner heightSmoothingSpinner;
     private javax.swing.JComboBox hexEBorderComboBox;
     private javax.swing.JTextField hexGridColsField;
     private javax.swing.JTextField hexGridRowsField;
@@ -1993,7 +2095,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

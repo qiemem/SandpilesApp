@@ -105,13 +105,13 @@ public class DelaunayTriangulation {
 		return "(" + p[0] + ", " + p[1] + ")";
 	}
 
-	public void assignHeights(List<Float> heights){
-		int i = 0;
-		for(float h : heights){
-			points.get(i)[2]=h;
-			i++;
-		}
-	}
+//	public void assignHeights(List<Float> heights){
+//		int i = 0;
+//		for(float h : heights){
+//			points.get(i)[2]=h;
+//			i++;
+//		}
+//	}
 
 	private float dist(float[] p1, float[] p2) {
 		float d = (float) Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]));
@@ -194,7 +194,7 @@ public class DelaunayTriangulation {
 		float maxX = Math.max(p1[0], p2[0]);
 		float minY = Math.min(p1[1], p2[1]);
 		float maxY = Math.max(p1[1], p2[1]);
-		if (p[0] < minX - ERROR_TOLERANCE || p[0] > maxX + ERROR_TOLERANCE || p[1] < minY - ERROR_TOLERANCE || p[2] < maxY + ERROR_TOLERANCE) {
+		if (p[0] < minX - ERROR_TOLERANCE || p[0] > maxX + ERROR_TOLERANCE || p[1] < minY - ERROR_TOLERANCE || p[1] < maxY + ERROR_TOLERANCE) {
 			return false;
 		}
 		float[] vec1 = {p[0] - p1[0], p[1] - p1[1]};

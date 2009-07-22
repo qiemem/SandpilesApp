@@ -35,10 +35,15 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener  {
 	private ArrayList<float[]> colors;
 	private ArrayList<float[]> inDebtColors;
 
+	private int heightSmoothing = 3;
+	private int colorSmoothing = 3;
+	private float heightMultiplier = 3f;
+
 
 	private int mouseX, mouseY;
 	private float xRot = 0f, yRot = 0f;
-	private float cameraX = 0f, cameraY = 0f, cameraZ = 100f;
+	private float startingZ = 200f;
+	private float cameraX = 0f, cameraY = 0f, cameraZ = startingZ;
 
 	public Sandpile3dDrawer(GLCanvas canvas){
 		colorMode = ColorMode.NUM_OF_GRAINS;
@@ -80,6 +85,15 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener  {
 		canvas.repaint();
 	}
 
+	public void setCamera(float x, float y){
+		cameraX = x;
+		cameraY = y;
+	}
+
+	public void setZoom(float amount){
+		cameraZ = startingZ/amount;
+	}
+
 	public void keyPressed(KeyEvent evt){
 		switch(evt.getKeyCode()){
 			case KeyEvent.VK_UP:
@@ -96,6 +110,18 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener  {
 				break;
 		}
 		canvas.repaint();
+	}
+
+	public void setHeightSmoothing(int n){
+		heightSmoothing = n;
+	}
+
+	public void setColorSmoothing(int n){
+		colorSmoothing = n;
+	}
+
+	public void setHeightScalar(float s){
+		heightMultiplier = s;
 	}
 
 	public GLCanvas getCanvas() {
@@ -117,27 +143,23 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener  {
 
 	public void triangulate(List<float[]> vertexLocations){
 		pointsToVerts = new HashMap<float[], Integer>();
-		ArrayList<float[]> locations3d = new ArrayList<float[]>();
 		int v = 0;
 		for(float[] p : vertexLocations){
-			float[] newP = {p[0], p[1], 0f};
-			locations3d.add(newP);
-			pointsToVerts.put(newP, v);
+			pointsToVerts.put(p, v);
 			v++;
 		}
-		tris = new DelaunayTriangulation(locations3d);
-		System.err.println(tris.points().size());
+		tris = new DelaunayTriangulation(vertexLocations);
 	}
 
 	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, List<Integer> selectedVertices) {
-		ArrayList<Float> heights = new ArrayList<Float>();
-		for(int v : config){
-			heights.add((float)v);
-		}
+//		ArrayList<Float> heights = new ArrayList<Float>();
+//		for(int v : config){
+//			heights.add((float)v);
+//		}
 		this.config = config;
 		this.firings = firings;
 		this.graph = graph;
-		tris.assignHeights(heights);
+		//tris.assignHeights(heights);
 		canvas.repaint();
 	}
 
@@ -168,44 +190,51 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener  {
 
 	public void drawTriangulation(GL gl, DelaunayTriangulation tris){
 		//System.err.println("Drawing tris");
+		float[] h = calcHeights();
+		for(int i=0; i<heightSmoothing; i++){
+			h = smoothHeights(h);
+		}
+
+		float[][] c = calcColors();
+		for(int i=0; i<colorSmoothing; i++){
+			c = smoothColors(c);
+		}
+
 		for(float[][] tri : tris.triangles()){
 			int v0 = pointsToVerts.get(tri[0]);
 			int v1 = pointsToVerts.get(tri[1]);
 			int v2 = pointsToVerts.get(tri[2]);
-			float h0 = getHeightForVertex(v0);
-			float h1 = getHeightForVertex(v1);
-			float h2 = getHeightForVertex(v2);
-			float[] n = normalizedCross(tri[1][0]-tri[0][0], tri[1][1]-tri[0][1], h1-h0,
-										tri[2][0]-tri[0][0], tri[2][1]-tri[0][1], h2-h0);
-
+			float[] n = normalizedCross(tri[1][0]-tri[0][0], tri[1][1]-tri[0][1], h[v1]-h[v0],
+										tri[2][0]-tri[0][0], tri[2][1]-tri[0][1], h[v2]-h[v0]);
+			//System.err.println(c[v0][0]+" "+c[v0][1]+" "+c[v0][2]);
 			gl.glBegin(gl.GL_TRIANGLES);
 			gl.glNormal3f(n[0], n[1], n[2]);
-			setColorForVertex(gl,pointsToVerts.get(tri[0]));
-			gl.glVertex3f(tri[0][0], tri[0][1], h0);
-			setColorForVertex(gl,pointsToVerts.get(tri[1]));
-			gl.glVertex3f(tri[1][0], tri[1][1], h1);
-			setColorForVertex(gl, pointsToVerts.get(tri[2]));
-			gl.glVertex3f(tri[2][0], tri[2][1], h2);
+			gl.glColor3f(c[v0][0],c[v0][1],c[v0][2]);
+			gl.glVertex3f(tri[0][0], tri[0][1], h[v0]);
+			gl.glColor3f(c[v1][0],c[v1][1],c[v1][2]);
+			gl.glVertex3f(tri[1][0], tri[1][1], h[v1]);
+			gl.glColor3f(c[v2][0],c[v2][1],c[v2][2]);
+			gl.glVertex3f(tri[2][0], tri[2][1], h[v2]);
 			//gl.glVertex3f(tri[0][0], tri[0][1], tri[0][2]);
 			gl.glEnd();
 		}
-		for(float[][] tri : tris.triangles()){
-			int v0 = pointsToVerts.get(tri[0]);
-			int v1 = pointsToVerts.get(tri[1]);
-			int v2 = pointsToVerts.get(tri[2]);
-			float h0 = getHeightForVertex(v0);
-			float h1 = getHeightForVertex(v1);
-			float h2 = getHeightForVertex(v2);
-			gl.glColor3f(0f,1f,0f);
-			gl.glBegin(gl.GL_LINES);
-			gl.glVertex3f(tri[0][0], tri[0][1], h0);
-			gl.glVertex3f(tri[1][0], tri[1][1], h1);
-			gl.glVertex3f(tri[1][0], tri[1][1], h1);
-			gl.glVertex3f(tri[2][0], tri[2][1], h2);
-			gl.glVertex3f(tri[2][0], tri[2][1], h2);
-			gl.glVertex3f(tri[0][0], tri[0][1], h0);
-			gl.glEnd();
-		}
+//		for(float[][] tri : tris.triangles()){
+//			int v0 = pointsToVerts.get(tri[0]);
+//			int v1 = pointsToVerts.get(tri[1]);
+//			int v2 = pointsToVerts.get(tri[2]);
+//			float h0 = getHeightForVertex(v0);
+//			float h1 = getHeightForVertex(v1);
+//			float h2 = getHeightForVertex(v2);
+//			gl.glColor3f(0f,1f,0f);
+//			gl.glBegin(gl.GL_LINES);
+//			gl.glVertex3f(tri[0][0], tri[0][1], h0);
+//			gl.glVertex3f(tri[1][0], tri[1][1], h1);
+//			gl.glVertex3f(tri[1][0], tri[1][1], h1);
+//			gl.glVertex3f(tri[2][0], tri[2][1], h2);
+//			gl.glVertex3f(tri[2][0], tri[2][1], h2);
+//			gl.glVertex3f(tri[0][0], tri[0][1], h0);
+//			gl.glEnd();
+//		}
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -272,7 +301,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener  {
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 
-	private void setColorForVertex(GL gl, int vert) {
+	private float[] getColorForVertex(int vert) {
 		//System.err.println(vert);
 		float[] color = {0f, 0f, 0f};
 		switch (colorMode) {
@@ -295,13 +324,66 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener  {
 				color = colors.get(Math.min(firings.get(vert),colors.size()-1));
 				break;
 		}
-		gl.glColor3f(color[0], color[1], color[2]);
+		return color;
 	}
 
 	private float getHeightForVertex(int vert) {
 		if(graph.isSink(vert))
-			return 0f;
-		else
-			return 2f*(float) config.get(vert);
+			return -heightMultiplier;
+		else{
+			return heightMultiplier*((float)config.get(vert)-1f);
+		}
+	}
+
+	private float[] calcHeights(){
+		float[] heights = new float[config.size()];
+		for(int v=0; v<config.size(); v++){
+			heights[v] = getHeightForVertex(v);
+		}
+		return heights;
+	}
+
+	private float[] smoothHeights(float[] heights){
+		float[] newHeights = new float[config.size()];
+
+		for(int v=0; v<config.size(); v++){
+			float avg = heights[v];
+			for(int vert : graph.getOutgoingVertices(v)){
+				avg+=heights[vert];
+			}
+			avg/=(float)(graph.degree(v)+1);
+			//avg*=1.5f;
+			newHeights[v] = avg;
+		}
+		return newHeights;
+	}
+
+	private float[][] calcColors() {
+		float[][] clrs = new float[config.size()][3];
+		for(int v=0; v<config.size(); v++){
+			clrs[v] = getColorForVertex(v);
+		}
+		return clrs;
+	}
+
+	private float[][] smoothColors(float[][] clrs) {
+		float[][] newClrs = new float[config.size()][3];
+		for(int v=0; v<config.size(); v++){
+			float[] avg = new float[3];
+			avg[0] = clrs[v][0];
+			avg[1] = clrs[v][1];
+			avg[2] = clrs[v][2];
+			for(int vert : graph.getOutgoingVertices(v)){
+				avg[0]+=clrs[vert][0];
+				avg[1]+=clrs[vert][1];
+				avg[2]+=clrs[vert][2];
+			}
+			avg[0]/=(float)(graph.degree(v)+1);
+			avg[1]/=(float)(graph.degree(v)+1);
+			avg[2]/=(float)(graph.degree(v)+1);
+			//avg*=1.5f;
+			newClrs[v] = avg;
+		}
+		return newClrs;
 	}
 }
