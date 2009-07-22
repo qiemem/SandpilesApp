@@ -1198,6 +1198,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
         jSplitPane1.setLeftComponent(controlPanel);
 
+        canvasHolderPanel.setBackground(new java.awt.Color(51, 51, 51));
         canvasHolderPanel.setLayout(new java.awt.CardLayout());
         canvasHolderPanel.add(canvas3d,"3d");
         canvasHolderPanel.add(canvas,"2d");
@@ -1615,17 +1616,17 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		String selection = (String)configSelectList.getSelectedValue();
 		if(selection!=null){
 			if(selection.equals(MAX_CONFIG)){
-				sandpileController.addMaxStableConfig();
+				sandpileController.addMaxStableConfig(Integer.valueOf(amountOfSandField.getText()));
 			}else if(selection.equals(DUAL_CONFIG)){
-				sandpileController.addDualConfig();
+				sandpileController.addDualConfig(Integer.valueOf(amountOfSandField.getText()));
 			}else if(selection.equals(ONES_CONFIG)){
 				sandpileController.addSandEverywhere(1);
 			}else if(selection.equals(IDENTITY_CONFIG)){
-				sandpileController.addIdentity();
+				sandpileController.addIdentity(Integer.valueOf(amountOfSandField.getText()));
 			}else if(selection.equals(BURNING_CONFIG)){
-				sandpileController.addBurningConfig();
+				sandpileController.addBurningConfig(Integer.valueOf(amountOfSandField.getText()));
 			}else{
-				sandpileController.addConfigNamed(selection);
+				sandpileController.addConfigNamed(selection,Integer.valueOf(amountOfSandField.getText()));
 			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -1636,17 +1637,17 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		String selection = (String)configSelectList.getSelectedValue();
 		if(selection!=null){
 			if(selection.equals(MAX_CONFIG)){
-				sandpileController.setToMaxStableConfig();
+				sandpileController.setToMaxStableConfig(Integer.valueOf(amountOfSandField.getText()));
 			}else if(selection.equals(DUAL_CONFIG)){
-				sandpileController.setToDualConfig();
+				sandpileController.setToDualConfig(Integer.valueOf(amountOfSandField.getText()));
 			}else if(selection.equals(ONES_CONFIG)){
-				sandpileController.setSandEverywhere(1);
+				sandpileController.setSandEverywhere(Integer.valueOf(amountOfSandField.getText()));
 			}else if(selection.equals(IDENTITY_CONFIG)){
-				sandpileController.setToIdentity();
+				sandpileController.setToIdentity(Integer.valueOf(amountOfSandField.getText()));
 			}else if(selection.equals(BURNING_CONFIG)){
-				sandpileController.setToBurningConfig();
+				sandpileController.setToBurningConfig(Integer.valueOf(amountOfSandField.getText()));
 			}else{
-				sandpileController.setConfigNamed(selection);
+				sandpileController.setConfigNamed(selection,Integer.valueOf(amountOfSandField.getText()));
 			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

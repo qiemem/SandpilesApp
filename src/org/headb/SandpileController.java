@@ -967,26 +967,26 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 	}
 
-	public void setToDualConfig() {
-		setConfig(sg.getDualConfig(currentConfig));
+	public void setToDualConfig(int times) {
+		setConfig(sg.getDualConfig(currentConfig).times(times));
 		repaint();
 	}
 
-	public void addDualConfig() {
-		setConfig(currentConfig.plus(sg.getDualConfig(currentConfig)));
+	public void addDualConfig(int times) {
+		setConfig(currentConfig.plus(sg.getDualConfig(currentConfig).times(times)));
 		repaint();
 	}
 
 	//public void setControlState(int controlState) {
 	//curState = controlState;
 	//}
-	public void setToMaxStableConfig() {
-		setConfig(sg.getMaxConfig());
+	public void setToMaxStableConfig(int times) {
+		setConfig(sg.getMaxConfig().times(times));
 		repaint();
 	}
 
-	public void addMaxStableConfig() {
-		setConfig(currentConfig.plus(sg.getMaxConfig()));
+	public void addMaxStableConfig(int times) {
+		setConfig(currentConfig.plus(sg.getMaxConfig().times(times)));
 		repaint();
 	}
 
@@ -997,13 +997,13 @@ public class SandpileController implements ActionListener, Serializable{
 		return configs.get("Identity");
 	}
 
-	public void addIdentity() {
-		setConfig(currentConfig.plus(getIdentity()));
+	public void addIdentity(int times) {
+		setConfig(currentConfig.plus(getIdentity().times(times)));
 		repaint();
 	}
 
-	public void setToIdentity() {
-		setConfig(getIdentity());
+	public void setToIdentity(int times) {
+		setConfig(getIdentity().times(times));
 		repaint();
 	}
 
@@ -1017,13 +1017,13 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
-	public void setToBurningConfig() {
-		setConfig(sg.getMinimalBurningConfig());
+	public void setToBurningConfig(int times) {
+		setConfig(sg.getMinimalBurningConfig().times(times));
 		repaint();
 	}
 
-	public void addBurningConfig() {
-		setConfig(currentConfig.plus(sg.getMinimalBurningConfig()));
+	public void addBurningConfig(int times) {
+		setConfig(currentConfig.plus(sg.getMinimalBurningConfig().times(times)));
 		repaint();
 	}
 
@@ -1035,13 +1035,13 @@ public class SandpileController implements ActionListener, Serializable{
 		return configs.remove(name);
 	}
 
-	public void addConfigNamed(String name) {
-		setConfig(currentConfig.plus(getConfigByName(name)));
+	public void addConfigNamed(String name, int times) {
+		setConfig(currentConfig.plus(getConfigByName(name).times(times)));
 		repaint();
 	}
 
-	public void setConfigNamed(String name) {
-		setConfig(getConfigByName(name));
+	public void setConfigNamed(String name, int times) {
+		setConfig(getConfigByName(name).times(times));
 		repaint();
 	}
 

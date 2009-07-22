@@ -145,27 +145,27 @@ public class SandpileProtocol {
 		} else if (command[0].equals("add_random_sand")) {
 			sc.addSandToRandom(sc.getGraph().getNonSinks(), Integer.valueOf(command[1]));
 		} else if (command[0].equals("set_to_max_stable")) {
-			sc.setToMaxStableConfig();
+			sc.setToMaxStableConfig(1);
 		} else if (command[0].equals("add_max_stable")) {
-			sc.addMaxStableConfig();
+			sc.addMaxStableConfig(1);
 		}else if (command[0].equals("get_max_stable")){
 			output = configToString(sc.getGraph().getMaxConfig());
 		} else if (command[0].equals("set_to_identity")) {
-			sc.setToIdentity();
+			sc.setToIdentity(1);
 		} else if (command[0].equals("add_identity")) {
-			sc.addIdentity();
+			sc.addIdentity(1);
 		}else if (command[0].equals("get_identity")){
 			output = configToString(sc.getIdentity());
 		} else if (command[0].equals("set_to_burning")) {
-			sc.setToBurningConfig();
+			sc.setToBurningConfig(1);
 		} else if (command[0].equals("add_burning")) {
-			sc.addBurningConfig();
+			sc.addBurningConfig(1);
 		}else if (command[0].equals("get_burning")){
 			output = configToString(sc.getGraph().getMinimalBurningConfig());
 		} else if (command[0].equals("set_to_dual")) {
-			sc.setToDualConfig();
+			sc.setToDualConfig(1);
 		} else if (command[0].equals("add_dual")) {
-			sc.addDualConfig();
+			sc.addDualConfig(1);
 		}else if (command[0].equals("get_dual")){
 			output = configToString(sc.getGraph().getDualConfig(sc.getConfig()));
 		} else {

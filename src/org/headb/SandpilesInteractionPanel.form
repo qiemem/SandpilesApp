@@ -1285,6 +1285,11 @@
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JPanel" name="canvasHolderPanel">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="33" green="33" red="33" type="rgb"/>
+                </Property>
+              </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="canvasHolderPanel.add(canvas3d,&quot;3d&quot;);&#xa;canvasHolderPanel.add(canvas,&quot;2d&quot;);&#xa;CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();&#xa;cl.show(canvasHolderPanel, &quot;2d&quot;);"/>
               </AuxValues>
