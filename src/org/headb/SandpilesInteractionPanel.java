@@ -371,6 +371,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         jLabel21 = new javax.swing.JLabel();
         colorSmoothingSpinner = new javax.swing.JSpinner();
         heightScalarSpinner = new javax.swing.JSpinner();
+        drawShapeCheckBox = new javax.swing.JCheckBox();
+        drawWireCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         canvasHolderPanel = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
@@ -1078,6 +1080,20 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        drawShapeCheckBox.setText("Draw Shape");
+        drawShapeCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drawShapeCheckBoxActionPerformed(evt);
+            }
+        });
+
+        drawWireCheckBox.setText("Draw Wire");
+        drawWireCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drawWireCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -1107,7 +1123,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                         .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                             .add(heightSmoothingSpinner, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
                             .add(colorSmoothingSpinner)
-                            .add(heightScalarSpinner))))
+                            .add(heightScalarSpinner)))
+                    .add(drawShapeCheckBox)
+                    .add(drawWireCheckBox))
                 .addContainerGap(62, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
@@ -1148,7 +1166,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel21)
                     .add(heightScalarSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(drawShapeCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(drawWireCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(202, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -1977,6 +1999,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		sandpileController.repaint();
 	}//GEN-LAST:event_heightScalarSpinnerStateChanged
 
+	private void drawShapeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawShapeCheckBoxActionPerformed
+		drawer3d.setDrawShape(drawShapeCheckBox.isSelected());
+		sandpileController.repaint();
+	}//GEN-LAST:event_drawShapeCheckBoxActionPerformed
+
+	private void drawWireCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawWireCheckBoxActionPerformed
+		drawer3d.setDrawWire(drawWireCheckBox.isSelected());
+		sandpileController.repaint();
+	}//GEN-LAST:event_drawWireCheckBoxActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -2064,6 +2096,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JButton deleteSelectedVerticesButton;
     private javax.swing.JToggleButton dimensionToggleButton;
     private javax.swing.JCheckBox drawEdgesCheckBox;
+    private javax.swing.JCheckBox drawShapeCheckBox;
+    private javax.swing.JCheckBox drawWireCheckBox;
     private javax.swing.JComboBox eBorderComboBox;
     private javax.swing.JCheckBox edgeLabelsCheckBox;
     private javax.swing.JTextField edgeWeightField;

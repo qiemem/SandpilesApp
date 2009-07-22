@@ -1007,6 +1007,8 @@
                                           <Component id="heightScalarSpinner" alignment="1" max="32767" attributes="1"/>
                                       </Group>
                                   </Group>
+                                  <Component id="drawShapeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="drawWireCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="62" max="32767" attributes="0"/>
                           </Group>
@@ -1054,7 +1056,11 @@
                                   <Component id="jLabel21" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="heightScalarSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="252" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="drawShapeCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="drawWireCheckBox" min="-2" pref="23" max="-2" attributes="0"/>
+                              <EmptySpace pref="202" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1212,6 +1218,22 @@
                       </Properties>
                       <Events>
                         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="heightScalarSpinnerStateChanged"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="drawShapeCheckBox">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Draw Shape"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawShapeCheckBoxActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="drawWireCheckBox">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Draw Wire"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawWireCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
