@@ -1020,9 +1020,9 @@ public class SandpileController implements ActionListener, Serializable{
 			}
 		}
 
+				for(int i=0; i<vectors.size(); i++){
 		for(int x=0; x<cols; x++){
 			for(int y=0; y<rows; y++){
-				for(int i=0; i<vectors.size(); i++){
 					int[] vec = vectors.get(i);
 					int w = weight.get(i);
 					boolean d = directed.get(i);
@@ -1035,16 +1035,18 @@ public class SandpileController implements ActionListener, Serializable{
 						if (!d)
 							addEdge(gridRef[x + vec[0]][y + vec[1]], gridRef[x][y], w);
 						addEdge(gridRef[x][y], gridRef[x+vec[0]][y+vec[1]],w);
-					} else if (xf == 0 && x == xs && (y >= ys && (y - ys) % yf == 0) && x + vec[0] < cols && y + vec[1] < rows && x + vec[0] >= 0 && y + vec[1] >= 0) {
+					}else if (xf == 0 && x == xs && (y >= ys && (y - ys) % yf == 0) && x + vec[0] < cols && y + vec[1] < rows && x + vec[0] >= 0 && y + vec[1] >= 0) {
 						if (!d)
 							addEdge(gridRef[x + vec[0]][y + vec[1]], gridRef[x][y], w);
 						addEdge(gridRef[x][y], gridRef[x + vec[0]][y + vec[1]], w);
-					} else if (xf == 0 || yf == 0) {
+					}  else if (xf==0){
 						continue;
 					} else if (yf == 0 && y == ys && (x >= xs && (x - xs) % xf == 0) && x + vec[0] < cols && y + vec[1] < rows && x + vec[0] >= 0 && y + vec[1] >= 0) {
 						if (!d)
 							addEdge(gridRef[x + vec[0]][y + vec[1]], gridRef[x][y], w);
 						addEdge(gridRef[x][y], gridRef[x+vec[0]][y+vec[1]],w);
+					} else if (yf == 0){
+						continue;
 					} else if ((x >= xs && (x - xs) % xf == 0) && (y >= ys && (y - ys) % yf == 0) && x + vec[0] < cols && y + vec[1] < rows && x + vec[0] >= 0 && y + vec[1] >= 0) {
 						if(!d)
 							addEdge(gridRef[x+vec[0]][y+vec[1]],gridRef[x][y],w);

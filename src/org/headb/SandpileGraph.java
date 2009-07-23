@@ -290,7 +290,9 @@ public class SandpileGraph {
 			e[2] = weight;
 			adj.get(sourceVert).add(e);
 			degrees.set(sourceVert, degree(sourceVert) + weight);
-		} else if (weight + e[2] > 0) {
+		} else if(e == null){
+			return null;
+		}else if (weight + e[2] > 0) {
 			e[2] += weight;
 			degrees.set(sourceVert, degree(sourceVert) + weight);
 		} else {
