@@ -972,6 +972,76 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 	}
 
+	public void buildLatticeControl(final float xCoord, final float yCoord, final int rows, final int cols,
+			final int spacing, final List<int[]> vectors,
+			final List<Integer> xStartingWith, final List<Integer> xFreq, final List<Integer> yStartingWith, final List<Integer> yFreq,
+			final List<Boolean> directed, final List<Integer> weight, final List<Integer> borders){
+		final int startingIndex = configSize();
+		buildLattice(xCoord,yCoord,rows,cols,spacing,vectors,xStartingWith,xFreq,yStartingWith,yFreq,directed,weight,borders);
+		final int endingIndex = configSize()-1;
+		undoManager.addEdit(new AbstractUndoableEdit() {
+
+			@Override
+			public String getPresentationName() {
+				return "make hex grid";
+			}
+
+			@Override
+			public void undo() {
+				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				for(int i=startingIndex;i<=endingIndex;i++){
+					vertices.add(i);
+				}
+				delVertices(vertices);
+				repaint();
+			}
+
+			@Override
+			public void redo() {
+				buildLattice(xCoord,yCoord,rows,cols,spacing,vectors,xStartingWith,xFreq,yStartingWith,yFreq,directed,weight,borders);
+				repaint();
+			}
+		});
+		this.repaint();
+	}
+
+	public void buildLattice(final float xCoord, final float yCoord, final int rows, final int cols,
+			final int spacing, final List<int[]> vectors,
+			final List<Integer> xStartingWith, final List<Integer> xFreq, final List<Integer> yStartingWith, final List<Integer> yFreq,
+			final List<Boolean> directed, final List<Integer> weight, final List<Integer> borders) {
+		float gridSpacing = VERT_RADIUS * (spacing+1);
+		int[][] gridRef = new int[rows][cols];
+
+		//create vertices
+		for (int x = 0; x < cols; x++) {
+			for (int y = 0; y < rows; y++) {
+				gridRef[x][y] = vertexData.size();
+				addVertex(xCoord + x * gridSpacing, yCoord + y * gridSpacing);
+			}
+		}
+
+		for(int x=0; x<cols; x++){
+			for(int y=0; y<rows; y++){
+				for(int i=0; i<vectors.size(); i++){
+					int[] vec = vectors.get(i);
+					int w = weight.get(i);
+					boolean d = directed.get(i);
+					int xs = xStartingWith.get(i);
+					int xf = xFreq.get(i);
+					int ys = yStartingWith.get(i);
+					int yf = yFreq.get(i);
+
+					if(x%xf==xs && y%yf==ys && x+vec[0]<cols && y+vec[1]<rows && x+vec[0]>=0 && y+vec[1]>=0){
+						if(!d)
+							addEdge(gridRef[x+vec[0]][y+vec[1]],gridRef[x][y],w);
+						addEdge(gridRef[x][y], gridRef[x+vec[0]][y+vec[1]],w);
+					}
+
+				}
+			}
+		}
+	}
+
 	public void setToDualConfig(int times) {
 		setConfig(sg.getDualConfig(currentConfig).times(times));
 		repaint();
