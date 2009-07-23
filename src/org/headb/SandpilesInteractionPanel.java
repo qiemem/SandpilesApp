@@ -1845,6 +1845,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			ArrayList<Integer> yFreqs = new ArrayList<Integer>();
 			ArrayList<Boolean> dirs = new ArrayList<Boolean>();
 			ArrayList<Integer> weights = new ArrayList<Integer>();
+			ArrayList<Integer> borders = new ArrayList<Integer>();
 
 			for(int r=0; r<buildLatticeTable.getRowCount(); r++){
 				Integer xCoord = (Integer)buildLatticeTable.getValueAt(r, 0);
@@ -1882,12 +1883,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 						weights.add(1);
 					else
 						weights.add(weight);
+					borders.add(SandpileController.NO_BORDER);
 				}
 			}
 			if(!vectors.isEmpty()){
 				sandpileController.buildLatticeControl(x, y, (Integer)rowSpinner.getValue(), (Integer)colSpinner.getValue(), 
 						(Integer)latticeSpacingSpinner.getValue(), vectors,
-						xStarts, xFreqs, yStarts, yFreqs, dirs, weights, null);
+						xStarts, xFreqs, yStarts, yFreqs, dirs, weights, borders);
 			}
 		}
 		this.updateConfigSelectList();

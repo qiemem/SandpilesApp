@@ -1030,12 +1030,40 @@ public class SandpileController implements ActionListener, Serializable{
 					int xf = xFreq.get(i);
 					int ys = yStartingWith.get(i);
 					int yf = yFreq.get(i);
-
-					if(x%xf==xs && y%yf==ys && x+vec[0]<cols && y+vec[1]<rows && x+vec[0]>=0 && y+vec[1]>=0){
+					int b = borders.get(i);
+					if(xf==0 && x == xs && yf == 0 && y == ys && x+vec[0]<cols && y+vec[1]<rows && x+vec[0]>=0 && y+vec[1]>=0){
+						if (!d)
+							addEdge(gridRef[x + vec[0]][y + vec[1]], gridRef[x][y], w);
+						addEdge(gridRef[x][y], gridRef[x+vec[0]][y+vec[1]],w);
+					} else if (xf == 0 && x == xs && (y >= ys && (y - ys) % yf == 0) && x + vec[0] < cols && y + vec[1] < rows && x + vec[0] >= 0 && y + vec[1] >= 0) {
+						if (!d)
+							addEdge(gridRef[x + vec[0]][y + vec[1]], gridRef[x][y], w);
+						addEdge(gridRef[x][y], gridRef[x + vec[0]][y + vec[1]], w);
+					} else if (xf == 0 || yf == 0) {
+						continue;
+					} else if (yf == 0 && y == ys && (x >= xs && (x - xs) % xf == 0) && x + vec[0] < cols && y + vec[1] < rows && x + vec[0] >= 0 && y + vec[1] >= 0) {
+						if (!d)
+							addEdge(gridRef[x + vec[0]][y + vec[1]], gridRef[x][y], w);
+						addEdge(gridRef[x][y], gridRef[x+vec[0]][y+vec[1]],w);
+					} else if ((x >= xs && (x - xs) % xf == 0) && (y >= ys && (y - ys) % yf == 0) && x + vec[0] < cols && y + vec[1] < rows && x + vec[0] >= 0 && y + vec[1] >= 0) {
 						if(!d)
 							addEdge(gridRef[x+vec[0]][y+vec[1]],gridRef[x][y],w);
 						addEdge(gridRef[x][y], gridRef[x+vec[0]][y+vec[1]],w);
 					}
+//					if(x%xf==xs && y%yf==ys && (x+vec[0]>=cols || y+vec[1]>=rows || x+vec[0]<0 || y+vec[1]<0) && (b == SINKS_BORDER || b == REFLECTIVE_BORDER)){
+//						int destVert = this.configSize();
+//						addVertex(xCoord + (x+vec[0]) * gridSpacing, yCoord + (y+vec[0]) * gridSpacing);
+//						if(b==REFLECTIVE_BORDER)
+//							addEdge(destVert,gridRef[x][y],w);
+//						addEdge(gridRef[x][y], destVert,w);
+//					}
+//					if(x%xf==xs && y%yf==ys && (x-vec[0]>=cols || y-vec[1]>=rows || x-vec[0]<0 || y-vec[1]<0) && (b == SINKS_BORDER || b == REFLECTIVE_BORDER)){
+//						int destVert = this.configSize();
+//						addVertex(xCoord + (x-vec[0]) * gridSpacing, yCoord + (y-vec[0]) * gridSpacing);
+//						if(b==REFLECTIVE_BORDER)
+//							addEdge(destVert,gridRef[x][y],w);
+//						addEdge(gridRef[x][y], destVert,w);
+//					}
 
 				}
 			}
