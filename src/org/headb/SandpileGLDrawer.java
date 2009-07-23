@@ -104,7 +104,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 		// Setup the drawing area and shading mode
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
+		gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
 		//gl.glDepthFunc(gl.GL_LEQUAL);
@@ -152,7 +152,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
 		}
-		GLU glu = new GLU();
+		//GLU glu = new GLU();
 		// Clear the drawing area
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		// Reset the current matrix to the "identity"
@@ -161,7 +161,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			drawEdges(gl);
 		}
 		if (drawVertices) {
-			drawVertices(gl, glu);
+			drawVertices(gl);
 		}
 		if (drawVertexLabels) {
 			drawVertexLabels(tr);
@@ -228,40 +228,39 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		tr.end3DRendering();
 	}
 
-	private void drawVertices(GL gl, GLU glu) {
-		if (drawCircles) {
-			GLUquadric quadric = glu.gluNewQuadric();
-			for (int vert = 0; vert < vertexLocations.size(); vert++) {
-				float x = vertexLocations.get(vert)[0];
-				float y = vertexLocations.get(vert)[1];
-				float size = vertSize;
+	private void drawVertices(GL gl) {
+//		if (drawCircles) {
+//			GLUquadric quadric = glu.gluNewQuadric();
+//			for (int vert = 0; vert < vertexLocations.size(); vert++) {
+//				float x = vertexLocations.get(vert)[0];
+//				float y = vertexLocations.get(vert)[1];
+//				float size = vertSize;
+//				int sand = Math.max(config.get(vert), 0);
+//				if (changingVertexSize && !graph.isSink(vert)) {
+//					size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)), vertSize);
+//				}
+//				setColorForVertex(gl, vert);
+//				gl.glTranslatef(x, y, 0f);
+//				glu.gluDisk(quadric, 0.0, size, 8, 1);
+//				gl.glLoadIdentity();
+//			}
+//		}
+		gl.glBegin(gl.GL_QUADS);
+		for (int vert = 0; vert < vertexLocations.size(); vert++) {
+			float x = vertexLocations.get(vert)[0];
+			float y = vertexLocations.get(vert)[1];
+			float size = vertSize;
+			if (changingVertexSize && !graph.isSink(vert)) {
 				int sand = Math.max(config.get(vert), 0);
-				if (changingVertexSize && !graph.isSink(vert)) {
-					size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)), vertSize);
-				}
-				setColorForVertex(gl, vert);
-				gl.glTranslatef(x, y, 0f);
-				glu.gluDisk(quadric, 0.0, size, 8, 1);
-				gl.glLoadIdentity();
+				size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)), vertSize);
 			}
-		} else {
-			gl.glBegin(gl.GL_QUADS);
-			for (int vert = 0; vert < vertexLocations.size(); vert++) {
-				float x = vertexLocations.get(vert)[0];
-				float y = vertexLocations.get(vert)[1];
-				float size = vertSize;
-				int sand = Math.max(config.get(vert), 0);
-				if (changingVertexSize && !graph.isSink(vert)) {
-					size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)), vertSize);
-				}
-				setColorForVertex(gl, vert);
-				gl.glVertex2f(x - size, y + size);
-				gl.glVertex2f(x + size, y + size);
-				gl.glVertex2f(x + size, y - size);
-				gl.glVertex2f(x - size, y - size);
-			}
-			gl.glEnd();
+			setColorForVertex(gl, vert);
+			gl.glVertex2f(x - size, y + size);
+			gl.glVertex2f(x + size, y + size);
+			gl.glVertex2f(x + size, y - size);
+			gl.glVertex2f(x - size, y - size);
 		}
+		gl.glEnd();
 	}
 
 	private void drawVertexLabels(TextRenderer tr) {

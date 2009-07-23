@@ -81,6 +81,8 @@ public class SandpileController implements ActionListener, Serializable{
 	private BufferedReader in;
 	private PrintWriter out;
 
+	private boolean needsRepaint = false;
+
 	public SandpileController() {
 		drawer = new SandpileGLDrawer();
 		initWithSandpileGraph(new SandpileGraph());
@@ -182,10 +184,12 @@ public class SandpileController implements ActionListener, Serializable{
 			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
 				lastUpdateTime = System.currentTimeMillis();
 				this.update();
+				needsRepaint = true;
 			}
-			if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay) {
+			if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay && needsRepaint) {
 				lastRepaintTime = System.currentTimeMillis();
 				this.repaint();
+				needsRepaint = false;
 			}
 		}
 	}
@@ -194,12 +198,13 @@ public class SandpileController implements ActionListener, Serializable{
 	 * Fires all unstable vertices and repaints.
 	 */
 	public void update() {
-		updateFirings();
+		if(drawer.getColorMode()==SandpileDrawer.ColorMode.FIRINGS)
+			updateFirings();
 		if (updater == null) {
-			updater = sg.updater(currentConfig);
+			updater = sg.inPlaceUpdater(currentConfig);
 		}
 		if (updater.hasNext()) {
-			currentConfig = updater.next();
+			updater.next();
 		}
 		//repaint();
 	}
