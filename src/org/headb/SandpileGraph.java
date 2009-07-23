@@ -421,7 +421,7 @@ public class SandpileGraph {
 			boolean[] added = new boolean[numVertices()];
 
 			public boolean hasNext() {
-				return unstables.length!=0 && unstables[0]!=-1;
+				return unstables.length>0 && unstables[0]!=-1;
 			}
 			public SandpileConfiguration next() {
 				for(int i=0; unstables[i]!=-1; i++){
@@ -436,7 +436,7 @@ public class SandpileGraph {
 						j++;
 					}
 					for(int w : getOutgoingVertices(v)){
-						if(!added[w] && curConfig.get(w)>=degree(w) && !isSink(v)){
+						if(!added[w] && curConfig.get(w)>=degree(w) && !isSink(w)){
 							newUnstables[j]=w;
 							added[w]=true;
 							j++;
@@ -555,10 +555,27 @@ public class SandpileGraph {
 	}
 
 	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, List<Integer> starters) {
-		SandpileConfiguration stableConfig = config;
-		Iterator<SandpileConfiguration> updater = this.updaterStartingWith(config, starters);
+		SandpileConfiguration stableConfig = new SandpileConfiguration(config);
+		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(stableConfig, starters);
 		for(;updater.hasNext();){
-			stableConfig = updater.next();
+			updater.next();
+		}
+		return stableConfig;
+	}
+
+	/**
+	 * Updates the graph until all vertices stabilize.
+	 * WARNING: If the graph does not have a global sink, this function may not end.
+	 */
+	public SandpileConfiguration stabilizeConfigInPlace(SandpileConfiguration config) {
+		return stabilizeConfigInPlaceStartingWith(config, getUnstables(config));
+	}
+
+	public SandpileConfiguration stabilizeConfigInPlaceStartingWith(SandpileConfiguration config, List<Integer> starters) {
+		SandpileConfiguration stableConfig = config;
+		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(config, starters);
+		for(;updater.hasNext();){
+			updater.next();
 		}
 		return stableConfig;
 	}
