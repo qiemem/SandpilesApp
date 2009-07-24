@@ -1122,13 +1122,20 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
+	public SandpileConfiguration getBurningConfig(){
+		if(!configs.containsKey("Burning")){
+			configs.put("Burning", sg.getMinimalBurningConfig());
+		}
+		return configs.get("Burning");
+	}
+
 	public void setToBurningConfig(int times) {
-		setConfig(sg.getMinimalBurningConfig().times(times));
+		setConfig(getBurningConfig().times(times));
 		repaint();
 	}
 
 	public void addBurningConfig(int times) {
-		setConfig(currentConfig.plus(sg.getMinimalBurningConfig().times(times)));
+		setConfig(currentConfig.plus(getBurningConfig().times(times)));
 		repaint();
 	}
 
