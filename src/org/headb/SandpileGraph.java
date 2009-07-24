@@ -202,53 +202,29 @@ public class SandpileGraph {
 	 * @param vertices A list of the vertices to remove.
 	 */
 	public void removeVertices(List<Integer> vertices) {
-		//Collections.sort(vertices);
-		//Collections.reverse(vertices);
+		int[] translator = new int[numVertices()];
+		ArrayList<ArrayList<int[]>> oldAdj = new ArrayList<ArrayList<int[]>>(adj);
 		boolean[] toRemove = new boolean[numVertices()];
 		for (int v : vertices) {
 			toRemove[v] = true;
 		}
-		//Remove all edges containing any vertices to delete.
-		for (int v = 0; v < numVertices(); v++) {
+		this.removeAllVertices();
+		int w=0;
+		for (int v=0; v<oldAdj.size(); v++){
+			if(!toRemove[v]){
+				translator[v] = w;
+				w++;
+			}
+		}
+		addVertices(w);
+		for (int v = 0; v < oldAdj.size(); v++) {
 			if (toRemove[v]) {
 				continue;
 			}
-			List<int[]> edgeList = adj.get(v);
-			for (Iterator<int[]> edgeIter = edgeList.iterator(); edgeIter.hasNext();) {
-				int[] e = edgeIter.next();
-				if (toRemove[e[1]]) {
-					degrees.set(e[0], degree(e[0]) - e[2]);
-					edgeIter.remove();
+			for (int[] e : oldAdj.get(v)) {
+				if (!toRemove[e[1]]) {
+					addEdge(translator[e[0]], translator[e[1]], e[2]);
 				}
-			}
-		}
-
-		//Since removal from an ArrayList is linear and add is constant (amortized),
-		//it's actually faster to build new copies of adj and degrees omitting what
-		//we don't want.
-		ArrayList<ArrayList<int[]>> newAdj = new ArrayList<ArrayList<int[]>>();
-		ArrayList<Integer> newDegrees = new ArrayList<Integer>();
-		for (int v = 0; v < numVertices(); v++) {
-			if (!toRemove[v]) {
-				newAdj.add(adj.get(v));
-				newDegrees.add(degrees.get(v));
-			}
-		}
-		adj = newAdj;
-		degrees = newDegrees;
-		//Fix indices. This is done seperately so as not to screw up indexing with degrees.
-		for (List<int[]> edgeList : adj) {
-			for (int[] e : edgeList) {
-				//Here, we calculate how much each index needs to be lowered.
-				//This is equal to the number of deleted vertices that originally had a lower index.
-				int e0Adjust = 0;
-				int e1Adjust = 0;
-				for (Integer toDelete : vertices) {
-					e0Adjust += e[0] > toDelete ? 1 : 0;
-					e1Adjust += e[1] > toDelete ? 1 : 0;
-				}
-				e[0] -= e0Adjust;
-				e[1] -= e1Adjust;
 			}
 		}
 	}

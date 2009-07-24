@@ -2091,10 +2091,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}
 
 	private void deleteSelectedVerticesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedVerticesButtonActionPerformed
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		List<Integer> verts = sandpileController.getSelectedVertices();
 		sandpileController.delVertices(verts);
 		sandpileController.unselectVertices();
 		sandpileController.repaint();
+		this.setCursor(Cursor.getDefaultCursor());
 	}//GEN-LAST:event_deleteSelectedVerticesButtonActionPerformed
 
 	private void serverToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serverToggleButtonActionPerformed
