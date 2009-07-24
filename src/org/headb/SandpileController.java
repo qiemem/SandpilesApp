@@ -488,11 +488,6 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
-	public void addSandToRandomControl(int amount){
-		addSandToRandom(sg.getNonSinks(),amount);
-		repaint();
-	}
-
 
 	public void makeGridControl(final int rows, final int cols,
 			final float x, final float y,
@@ -1139,6 +1134,27 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
+	public void setToRandomConfig(int times) {
+		this.clearSand();
+		this.addSandToRandom(sg.getNonSinks(), times);
+		repaint();
+	}
+
+	public void addRandomConfig(int times) {
+		addSandToRandom(sg.getNonSinks(), times);
+		repaint();
+	}
+
+	public void setToCurrentConfig(int times) {
+		setConfig(currentConfig.times(times));
+		repaint();
+	}
+
+	public void addCurrentConfig(int times) {
+		addConfig(currentConfig.times(times));
+		repaint();
+	}
+
 	public SandpileConfiguration getConfigByName(String name) {
 		return configs.get(name);
 	}
@@ -1148,12 +1164,18 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addConfigNamed(String name, int times) {
-		setConfig(currentConfig.plus(getConfigByName(name).times(times)));
+		SandpileConfiguration config = getConfigByName(name);
+		if(config==null)
+			return;
+		setConfig(currentConfig.plus(config.times(times)));
 		repaint();
 	}
 
 	public void setConfigNamed(String name, int times) {
-		setConfig(getConfigByName(name).times(times));
+		SandpileConfiguration config = getConfigByName(name);
+		if(config==null)
+			return;
+		setConfig(config.times(times));
 		repaint();
 	}
 
@@ -1257,11 +1279,17 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addSandToRandom(List<Integer> vertices, int amount){
+		int sign = 1;
+		if(amount<0){
+			sign = -1;
+			amount = -amount;
+		}
+
 		if(vertices.isEmpty())
 			return;
 		for(int i=0; i<amount; i++){
 			int v = (int) (Math.random() * vertices.size());
-			addSand(vertices.get(v),1);
+			addSand(vertices.get(v),sign);
 		}
 	}
 
