@@ -67,7 +67,7 @@
 <entry key="2_profiler.settings.instrumentation.filter.selectedprofiler.simple.filter.value"></entry>
 <entry key="1_profiler.settings.cpu.quick.filterprofiler.simple.filter.type">1</entry>
 <entry key="1_profiler.settings.cpu.profiling.type">0</entry>
-<entry key="1_profiler.settings.istrumentation.root.methods-0">org.headb.SandpileGLDrawer,display,(Ljavax/media/opengl/GLAutoDrawable;)V</entry>
+<entry key="1_profiler.settings.istrumentation.root.methods-0">org.headb.DelaunayTriangulation,*,</entry>
 <entry key="1_profiler.settings.override.jvm.args"></entry>
 <entry key="2_profiler.settings.obj.alloc.stack.sampling.depth">0</entry>
 <entry key="1_profiler.settings.instrument.empty.methods">false</entry>
