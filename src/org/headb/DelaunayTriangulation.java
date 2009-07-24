@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Collection;
 
 /**
  *
@@ -17,12 +18,12 @@ import java.util.HashMap;
 public class DelaunayTriangulation {
 	//private ArrayList<float[]> points;
 
-	private ArrayList<float[][]> triangles;
+	private Collection<float[][]> triangles;
 	private float[][] parentTri;
 	private HashMap<float[], ArrayList<float[][]>> pointsToTris;
 	private final float PI = (float) Math.PI;
 	private Iterator<float[]> ptsToAdd;
-	private HashMap<float[][], ArrayList<float[][]>> triTree;
+	private HashMap<float[][], float[][][]> triTree;
 	private final float ERROR_TOLERANCE = 0.00001f;
 
 	private ArrayList<float[]> points;
@@ -32,7 +33,7 @@ public class DelaunayTriangulation {
 		//this.points = new ArrayList<float[]>(pts);
 		triangles = new ArrayList<float[][]>();
 		pointsToTris = new HashMap<float[], ArrayList<float[][]>>();
-		triTree = new HashMap<float[][], ArrayList<float[][]>>();
+		triTree = new HashMap<float[][], float[][][]>();
 		if(points.isEmpty())
 			return;
 
@@ -73,8 +74,6 @@ public class DelaunayTriangulation {
 
 		parentTri = addTriangle(startPt, tl, br);
 		for (float[] p : points) {
-			//if(p==startPt)
-			//	continue;
 			try {
 				addPoint(p);
 			} catch (RuntimeException e) {
@@ -91,8 +90,7 @@ public class DelaunayTriangulation {
 		removePoint(tl);
 		removePoint(br);
 		removePoint(startPt);
-////		System.err.println("done");
-//		ptsToAdd = points.iterator();
+		triangles = new ArrayList<float[][]>(triangles);
 	}
 //
 //	public boolean addNext(){
@@ -124,18 +122,12 @@ public class DelaunayTriangulation {
 		return p1[0] == p2[0] && p1[1] == p2[1];
 	}
 
-	public final ArrayList<float[][]> triangles() {
+	public final Collection<float[][]> triangles() {
 		return triangles;
 	}
 
 	public List<float[]> points() {
 		return points;
-	}
-
-	private float angleBetween(float[] vec1, float[] vec2) {
-		float angle = Math.abs(atan2(vec1) - atan2(vec2));
-		angle = angle > PI ? 2f * PI - angle : angle;
-		return angle;
 	}
 
 	private float fixAngle(float angle) {
@@ -172,7 +164,7 @@ public class DelaunayTriangulation {
 	public float[][] getContainingTriangle(float[] p) {
 		float[][] curTri = parentTri;
 
-		while (!triTree.get(curTri).isEmpty()) {
+		while (triTree.containsKey(curTri)) {
 			float[][] lastTri = curTri;
 			for (float[][] tri : triTree.get(curTri)) {
 				if (triangleContains(tri, p)) {
@@ -220,7 +212,7 @@ public class DelaunayTriangulation {
 		pointsToTris.get(p1).add(tri);
 		pointsToTris.get(p2).add(tri);
 		pointsToTris.get(p3).add(tri);
-		triTree.put(tri, new ArrayList<float[][]>());
+		//triTree.put(tri, new ArrayList<float[][]>());
 		return tri;
 	}
 
@@ -264,8 +256,8 @@ public class DelaunayTriangulation {
 				break;
 			}
 		}
-		triTree.get(tri1).add(addTriangle(p, p1, p3));
-		triTree.get(tri1).add(addTriangle(p, p2, p3));
+		float[][][] children1 = {addTriangle(p, p1, p3), addTriangle(p, p2, p3)};
+		triTree.put(tri1, children1);
 		removeTriangle(tri1);
 		legalizeEdge(p, p1, p3);
 		legalizeEdge(p, p2, p3);
@@ -278,8 +270,8 @@ public class DelaunayTriangulation {
 				break;
 			}
 		}
-		triTree.get(tri2).add(addTriangle(p, p1, p4));
-		triTree.get(tri2).add(addTriangle(p, p2, p4));
+		float[][][] children2 = {addTriangle(p, p1, p4), addTriangle(p, p2, p4)};
+		triTree.put(tri2, children2);
 		removeTriangle(tri2);
 		legalizeEdge(p, p1, p4);
 		legalizeEdge(p, p2, p4);
@@ -319,10 +311,9 @@ public class DelaunayTriangulation {
 			//System.err.println("Swapping");
 			float[][] newTri1 = addTriangle(p, p1, otherPt);
 			float[][] newTri2 = addTriangle(p, otherPt, p2);
-			triTree.get(incTris.get(1)).add(newTri1);
-			triTree.get(incTris.get(0)).add(newTri1);
-			triTree.get(incTris.get(1)).add(newTri2);
-			triTree.get(incTris.get(0)).add(newTri2);
+			float[][][] children = {newTri1, newTri2};
+			triTree.put(incTris.get(0), children);
+			triTree.put(incTris.get(1), children);
 			removeTriangle(incTris.get(1));
 			removeTriangle(incTris.get(0));
 			legalizeEdge(p, p1, otherPt);
@@ -351,10 +342,10 @@ public class DelaunayTriangulation {
 		} else if (lineContains(tri[2], tri[0], p)) {
 			splitTrisWithPointOnLine(tri[2], tri[0], p);
 		} else {
-			ArrayList<float[][]> triList = triTree.get(tri);
-			triList.add(addTriangle(p, tri[0], tri[1]));
-			triList.add(addTriangle(p, tri[1], tri[2]));
-			triList.add(addTriangle(p, tri[2], tri[0]));
+			float[][][] children = {addTriangle(p, tri[0], tri[1]),
+				addTriangle(p, tri[1], tri[2]),
+				addTriangle(p, tri[2], tri[0])};
+			triTree.put(tri, children);
 			removeTriangle(tri);
 			legalizeEdge(p, tri[0], tri[1]);
 			legalizeEdge(p, tri[1], tri[2]);

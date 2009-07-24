@@ -320,8 +320,9 @@ public class Sandpiles extends javax.swing.JFrame {
 	}//GEN-LAST:event_jMenuItem1ActionPerformed
 
 	private void imageFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageFileChooserActionPerformed
+		BufferedImage image = sandpilesIP.getCanvasShot();
 		if(evt.getActionCommand().equals(imageFileChooser.APPROVE_SELECTION)){
-			BufferedImage image = sandpilesIP.getCanvasShot();
+			
 			File file = imageFileChooser.getSelectedFile();
 			try{
 				ImageIO.write(image, "png", file);

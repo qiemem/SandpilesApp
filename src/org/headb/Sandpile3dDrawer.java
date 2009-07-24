@@ -195,10 +195,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		x /= l;
 		y /= l;
 		z /= l;
-		float[] normal = new float[3];
-		normal[0] = x;
-		normal[1] = y;
-		normal[2] = z;
+		float[] normal = {x,y,z};
 		return normal;
 	}
 
@@ -214,6 +211,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 				c = smoothColors(c);
 			}
 
+			gl.glBegin(gl.GL_TRIANGLES);
 			for (float[][] tri : tris.triangles()) {
 				int v0 = pointsToVerts.get(tri[0]);
 				int v1 = pointsToVerts.get(tri[1]);
@@ -221,17 +219,17 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 				float[] n = normalizedCross(tri[1][0] - tri[0][0], tri[1][1] - tri[0][1], h[v1] - h[v0],
 						tri[2][0] - tri[0][0], tri[2][1] - tri[0][1], h[v2] - h[v0]);
 				//System.err.println(c[v0][0]+" "+c[v0][1]+" "+c[v0][2]);
-				gl.glBegin(gl.GL_TRIANGLES);
-				gl.glNormal3f(n[0], n[1], n[2]);
-				gl.glColor3f(c[v0][0], c[v0][1], c[v0][2]);
+				gl.glNormal3fv(n, 0);
+				gl.glColor3fv(c[v0],0);
 				gl.glVertex3f(tri[0][0], tri[0][1], h[v0]);
-				gl.glColor3f(c[v1][0], c[v1][1], c[v1][2]);
+				gl.glColor3fv(c[v1],0);
 				gl.glVertex3f(tri[1][0], tri[1][1], h[v1]);
-				gl.glColor3f(c[v2][0], c[v2][1], c[v2][2]);
+				gl.glColor3fv(c[v2],0);
 				gl.glVertex3f(tri[2][0], tri[2][1], h[v2]);
 				//gl.glVertex3f(tri[0][0], tri[0][1], tri[0][2]);
-				gl.glEnd();
+				
 			}
+			gl.glEnd();
 		}
 
 		if (drawWire) {
