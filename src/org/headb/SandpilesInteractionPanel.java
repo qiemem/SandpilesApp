@@ -616,27 +616,35 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         editGraphButtonGroup.add(addVertexRadioButton);
         addVertexRadioButton.setSelected(true);
         addVertexRadioButton.setText("Add Vertex"); // NOI18N
+        addVertexRadioButton.setToolTipText("Clicking on the canvas will create a new vertex.");
 
         editGraphButtonGroup.add(removeVertexRadioButton);
         removeVertexRadioButton.setText("Remove Vertex"); // NOI18N
+        removeVertexRadioButton.setToolTipText("Click on a vertex to remove it.");
 
         editGraphButtonGroup.add(addEdgeRadioButton);
         addEdgeRadioButton.setText("Add Edge"); // NOI18N
+        addEdgeRadioButton.setToolTipText("Clicking on a vertex will create an edge from any selected vertices to the clicked on vertex.");
 
         editGraphButtonGroup.add(removeEdgeRadioButton);
         removeEdgeRadioButton.setText("Remove Edge"); // NOI18N
+        removeEdgeRadioButton.setToolTipText("Clicking on a vertex will decrease the weight between any selected vertices and this vertex.");
 
         editGraphButtonGroup.add(addUndirectedEdgeRadioButton);
         addUndirectedEdgeRadioButton.setText("Add Undirected Edge"); // NOI18N
+        addUndirectedEdgeRadioButton.setToolTipText("Clicking on a vertex will create an undirected edge between it and any selected vertices.");
 
         editGraphButtonGroup.add(removeUndirectedEdgeRadioButton);
         removeUndirectedEdgeRadioButton.setText("Remove Undirected Edge"); // NOI18N
+        removeUndirectedEdgeRadioButton.setToolTipText("Clicking on a vertex will decrease the weight of any edge between it and any selected vertices (no matter which way the edges go).");
 
         edgeWeightField.setText("1"); // NOI18N
+        edgeWeightField.setToolTipText("The amount to increase or decrease the weight of edges modified with the above tools.");
 
         jLabel1.setText("Edge Weight"); // NOI18N
 
         deleteSelectedVerticesButton.setText("Delete Selected Vertices");
+        deleteSelectedVerticesButton.setToolTipText("Deletes the selected vertices; this can be slow if deleting hundreds of vertices.");
         deleteSelectedVerticesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteSelectedVerticesButtonActionPerformed(evt);
@@ -2132,6 +2140,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_vertexLabelsCheckBoxActionPerformed
 
 	private void dimensionToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dimensionToggleButtonActionPerformed
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		if(dimensionToggleButton.isSelected()){
 			dimensionToggleButton.setText("2d");
 			drawer3d.triangulate(sandpileController.vertexData);
@@ -2145,6 +2154,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			cl.show(canvasHolderPanel,"2d");
 			sandpileController.setDrawer(drawer);
 		}
+		this.setCursor(Cursor.getDefaultCursor());
 		sandpileController.repaint();
 	}//GEN-LAST:event_dimensionToggleButtonActionPerformed
 

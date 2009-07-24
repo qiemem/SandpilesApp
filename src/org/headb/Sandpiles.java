@@ -61,7 +61,7 @@ public class Sandpiles extends javax.swing.JFrame {
     private void initComponents() {
 
         projectFileChooser = new javax.swing.JFileChooser();
-        imageFileChooser = new javax.swing.JFileChooser();
+        imageFileChooser = new javax.swing.JFileChooser(new File(System.getProperty("user.home")));
         sandpilesIP = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -104,7 +104,6 @@ public class Sandpiles extends javax.swing.JFrame {
 
         imageFileChooser.setDialogTitle("Save Image");
         imageFileChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
-        imageFileChooser.setSelectedFile(new java.io.File("/sandpile.png"));
         imageFileChooser.setFileFilter(new FileFilter() {
             @Override public boolean accept(File f){
                 return f.getName().endsWith(".png");
@@ -327,7 +326,7 @@ public class Sandpiles extends javax.swing.JFrame {
 			try{
 				ImageIO.write(image, "png", file);
 			}catch(IOException e){
-				JOptionPane.showInternalMessageDialog(this, "Unable to write image: "+e.getMessage());
+				JOptionPane.showMessageDialog(this, "Unable to write image: "+e.getMessage());
 			}
 		}
 	}//GEN-LAST:event_imageFileChooserActionPerformed

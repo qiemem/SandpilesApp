@@ -430,6 +430,7 @@
                         </Property>
                         <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Add Vertex" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Clicking on the canvas will create a new vertex."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="removeVertexRadioButton">
@@ -438,6 +439,7 @@
                           <ComponentRef name="editGraphButtonGroup"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Remove Vertex" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Click on a vertex to remove it."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="addEdgeRadioButton">
@@ -446,6 +448,7 @@
                           <ComponentRef name="editGraphButtonGroup"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Add Edge" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Clicking on a vertex will create an edge from any selected vertices to the clicked on vertex."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="removeEdgeRadioButton">
@@ -454,6 +457,7 @@
                           <ComponentRef name="editGraphButtonGroup"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Remove Edge" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Clicking on a vertex will decrease the weight between any selected vertices and this vertex."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="addUndirectedEdgeRadioButton">
@@ -462,6 +466,7 @@
                           <ComponentRef name="editGraphButtonGroup"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Add Undirected Edge" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Clicking on a vertex will create an undirected edge between it and any selected vertices."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="removeUndirectedEdgeRadioButton">
@@ -470,11 +475,13 @@
                           <ComponentRef name="editGraphButtonGroup"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Remove Undirected Edge" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Clicking on a vertex will decrease the weight of any edge between it and any selected vertices (no matter which way the edges go)."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="edgeWeightField">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="1" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="The amount to increase or decrease the weight of edges modified with the above tools."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel1">
@@ -485,6 +492,7 @@
                     <Component class="javax.swing.JButton" name="deleteSelectedVerticesButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Delete Selected Vertices"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Deletes the selected vertices; this can be slow if deleting hundreds of vertices."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSelectedVerticesButtonActionPerformed"/>
