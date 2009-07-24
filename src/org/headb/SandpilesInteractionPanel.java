@@ -2057,10 +2057,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	public MouseMode getMouseMode(MouseEvent evt){
 		MouseMode mm;
-		if(evt.isAltDown())
+		if(evt.isShiftDown())
 			mm=MouseMode.SELECT;
-		else if(evt.isShiftDown())
-			mm=MouseMode.MOVE;
 		else
 			mm=getSelectedMouseMode();
 		drawer.scrollOnDrag = mm.scrollOnDrag;
