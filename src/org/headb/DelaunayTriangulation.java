@@ -27,31 +27,32 @@ public class DelaunayTriangulation {
 
 	private ArrayList<float[]> points;
 
-	public DelaunayTriangulation(List<float[]> pts) {
+	public DelaunayTriangulation(List<float[]> points) {
 		//System.err.println("init");
-		this.points = new ArrayList<float[]>(pts);
+		//this.points = new ArrayList<float[]>(pts);
 		triangles = new ArrayList<float[][]>();
 		pointsToTris = new HashMap<float[], ArrayList<float[][]>>();
 		triTree = new HashMap<float[][], ArrayList<float[][]>>();
-		if(pts.isEmpty())
+		if(points.isEmpty())
 			return;
 
-		float[] startPt = points.get(0);
+		float[] trPt = points.get(0);
 
 		for (float[] p : points) {
-			if (p[1] > startPt[1]) {
-				startPt = p;
-			} else if (p[1] == startPt[1] && p[0] > startPt[0]) {
-				startPt = p;
+			if (p[1] > trPt[1]) {
+				trPt = p;
+			} else if (p[1] == trPt[1] && p[0] > trPt[0]) {
+				trPt = p;
 			}
 		}
+		float[] startPt = {trPt[0]+1f, trPt[1]+1f};
 		//Calculate the bounding triangle with top right at startPt.
 		float largestAngle = PI;
 		float smallestAngle = 2 * PI;
 		float largestDist = 0f;
 		for (float[] p : points) {
-			if(p==startPt)
-				continue;
+			//if(p==startPt)
+			//	continue;
 			largestAngle = Math.max(atan2(p, startPt), largestAngle);
 			smallestAngle = Math.min(atan2(p, startPt), smallestAngle);
 			largestDist = Math.max(largestDist, dist(startPt, p));
@@ -72,8 +73,8 @@ public class DelaunayTriangulation {
 
 		parentTri = addTriangle(startPt, tl, br);
 		for (float[] p : points) {
-			if(p==startPt)
-				continue;
+			//if(p==startPt)
+			//	continue;
 			try {
 				addPoint(p);
 			} catch (RuntimeException e) {
@@ -89,6 +90,7 @@ public class DelaunayTriangulation {
 		}
 		removePoint(tl);
 		removePoint(br);
+		removePoint(startPt);
 ////		System.err.println("done");
 //		ptsToAdd = points.iterator();
 	}
