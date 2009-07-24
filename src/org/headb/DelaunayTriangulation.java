@@ -22,7 +22,7 @@ public class DelaunayTriangulation {
 	private float[][] parentTri;
 	private HashMap<float[], ArrayList<float[][]>> pointsToTris;
 	private final float PI = (float) Math.PI;
-	private Iterator<float[]> ptsToAdd;
+	//private Iterator<float[]> ptsToAdd;
 	private HashMap<float[][], float[][][]> triTree;
 	private final float ERROR_TOLERANCE = 0.00001f;
 
@@ -91,6 +91,7 @@ public class DelaunayTriangulation {
 		removePoint(br);
 		removePoint(startPt);
 		triangles = new ArrayList<float[][]>(triangles);
+		triTree = null;
 	}
 //
 //	public boolean addNext(){
@@ -149,7 +150,7 @@ public class DelaunayTriangulation {
 		return fixAngle((float) Math.atan2(p[1], p[0]));
 	}
 
-	public boolean sameSide(float[] p1, float[] p2, float[] a, float[] b) {
+	protected boolean sameSide(float[] p1, float[] p2, float[] a, float[] b) {
 		float[] lineVec = {b[0] - a[0], b[1] - a[1]};
 		float[] p1Vec = {p1[0] - a[0], p1[1] - a[1]};
 		float[] p2Vec = {p2[0] - a[0], p2[1] - a[1]};
@@ -157,11 +158,11 @@ public class DelaunayTriangulation {
 		return get2dCross(lineVec, p1Vec) * get2dCross(lineVec, p2Vec) >= 0;
 	}
 
-	public boolean triangleContains(float[][] tri, float[] p) {
+	protected boolean triangleContains(float[][] tri, float[] p) {
 		return sameSide(p, tri[0], tri[1], tri[2]) && sameSide(p, tri[1], tri[2], tri[0]) && sameSide(p, tri[2], tri[0],tri[1]);
 	}
 
-	public float[][] getContainingTriangle(float[] p) {
+	protected float[][] getContainingTriangle(float[] p) {
 		float[][] curTri = parentTri;
 
 		while (triTree.containsKey(curTri)) {
@@ -179,11 +180,11 @@ public class DelaunayTriangulation {
 		return curTri;
 	}
 
-	public float get2dCross(float[] vec1, float[] vec2) {
+	protected float get2dCross(float[] vec1, float[] vec2) {
 		return vec1[0] * vec2[1] - vec1[1] * vec2[0];
 	}
 
-	public boolean lineContains(float[] p1, float[] p2, float[] p) {
+	protected boolean lineContains(float[] p1, float[] p2, float[] p) {
 		float minX = Math.min(p1[0], p2[0]);
 		float maxX = Math.max(p1[0], p2[0]);
 		float minY = Math.min(p1[1], p2[1]);
@@ -197,7 +198,7 @@ public class DelaunayTriangulation {
 		return (Math.abs(get2dCross(vec1, vec2)) < ERROR_TOLERANCE);
 	}
 
-	public float[][] addTriangle(float[] p1, float[] p2, float[] p3) {
+	protected float[][] addTriangle(float[] p1, float[] p2, float[] p3) {
 		float[][] tri = {p1, p2, p3};
 		triangles.add(tri);
 		if (!pointsToTris.containsKey(p1)) {
@@ -216,7 +217,7 @@ public class DelaunayTriangulation {
 		return tri;
 	}
 
-	public boolean removeTriangle(float[][] tri) {
+	protected boolean removeTriangle(float[][] tri) {
 		if (triangles.remove(tri)) {
 			pointsToTris.get(tri[0]).remove(tri);
 			if (pointsToTris.get(tri[0]).isEmpty()) {
@@ -236,7 +237,7 @@ public class DelaunayTriangulation {
 		}
 	}
 
-	public ArrayList<float[][]> getIncidentTriangles(float[] p1, float p2[]) {
+	protected ArrayList<float[][]> getIncidentTriangles(float[] p1, float p2[]) {
 		ArrayList<float[][]> incTris = new ArrayList<float[][]>();
 		for (float[][] tri : pointsToTris.get(p1)) {
 			if (pointsToTris.get(p2).contains(tri)) {
@@ -278,7 +279,7 @@ public class DelaunayTriangulation {
 
 	}
 
-	public float[] calcCenter(float[] p1, float[] p2, float[] p3) {
+	protected float[] calcCenter(float[] p1, float[] p2, float[] p3) {
 		float ma = (p2[1] - p1[1]) / (p2[0] - p1[0]);
 		float mb = (p3[1] - p2[1]) / (p3[0] - p2[0]);
 		float x = (ma * mb * (p1[1] - p3[1]) + mb * (p1[0] + p2[0]) - ma * (p2[0] + p3[0])) / (2f * (mb - ma));
@@ -287,7 +288,7 @@ public class DelaunayTriangulation {
 		return c;
 	}
 
-	public void legalizeEdge(float[] p, float[] p1, float[] p2) {
+	protected void legalizeEdge(float[] p, float[] p1, float[] p2) {
 		ArrayList<float[][]> incTris = getIncidentTriangles(p1, p2);
 		//System.err.println(incTris.size());
 		if (incTris.size() <= 1) {
@@ -321,7 +322,7 @@ public class DelaunayTriangulation {
 		}
 	}
 
-	public void addPoint(float[] p) {
+	protected void addPoint(float[] p) {
 		//System.err.println("Adding point");
 //		System.err.println("Adding point: "+toString(p));
 		float[][] tri = getContainingTriangle(p);
@@ -353,7 +354,7 @@ public class DelaunayTriangulation {
 		}
 	}
 
-	public void removePoint(float[] p) {
+	protected void removePoint(float[] p) {
 		ArrayList<float[][]> tris = new ArrayList<float[][]>(pointsToTris.get(p));
 		for (float[][] tri : tris) {
 			removeTriangle(tri);
