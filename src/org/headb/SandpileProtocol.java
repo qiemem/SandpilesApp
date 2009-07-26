@@ -29,6 +29,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb;
 
 
+
+import gnu.trove.TIntArrayList;
+
+
 /**
  *
  * @author headb
@@ -187,6 +191,19 @@ public class SandpileProtocol {
 			else
 				needsComma = true;
 			sb.append(o.toString());
+		}
+		return sb.toString();
+	}
+
+	public String formatSeq(TIntArrayList seq){
+		StringBuilder sb = new StringBuilder();
+		boolean needsComma = false;
+		for(int i=0; i<seq.size(); i++){
+			if(needsComma)
+				sb.append(",");
+			else
+				needsComma = true;
+			sb.append(String.valueOf(seq.get(i)));
 		}
 		return sb.toString();
 	}

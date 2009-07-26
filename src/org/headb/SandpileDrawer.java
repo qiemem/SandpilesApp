@@ -31,6 +31,7 @@ package org.headb;
 
 import java.awt.Canvas;
 import java.util.List;
+import gnu.trove.TIntArrayList;
 
 /**
  *
@@ -47,7 +48,7 @@ public interface SandpileDrawer{
 	public void setColorMode(ColorMode cm);
 	public void setColors(List<float[]> colors, List<float[]> inDebtColors);
 	public ColorMode getColorMode();
-	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, List<Integer> selectedVertices);
+	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices);
 	public void setSelectionBox(float maxX, float maxY, float minX, float minY);
 	public void clearSelectionBox();
 	public float[] transformCanvasCoords(int x, int y);

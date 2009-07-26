@@ -61,6 +61,7 @@ import java.awt.Robot;
 import java.awt.Rectangle;
 import java.util.Arrays;
 import java.awt.Dimension;
+import gnu.trove.TIntArrayList;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -223,17 +224,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
 	}
 
-	public void copyVertexDataToClipboard(List<float[]> locationData, List<Integer> sandData, List<int[]> edgeData){
+	public void copyVertexDataToClipboard(List<float[]> locationData, TIntArrayList sandData, List<int[]> edgeData){
 		localClipboard.setContents(new SandpileTransferable(locationData, sandData, edgeData), this);
 	}
 	
 	public void copySelectedToClipboard(){
-		List<Integer> vertices = sandpileController.getSelectedVertices();
+		TIntArrayList vertices = sandpileController.getSelectedVertices();
 		ArrayList<float[]> locationData = new ArrayList<float[]>();
-		ArrayList<Integer> configData = new ArrayList<Integer>();
+		TIntArrayList configData = new TIntArrayList();
 		ArrayList<int[]> edgeData = new ArrayList<int[]>();
 		int vert = 0;
-		for(int v : vertices){
+		for(int i=0; i< vertices.size(); i++){
+			int v = vertices.get(i);
 			float x = sandpileController.getVertexLocation(v)[0]-drawer.getOriginX();
 			float y = sandpileController.getVertexLocation(v)[1]-drawer.getOriginY();
 			float[] pos = {x,y};
@@ -262,7 +264,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		if(!localClipboard.isDataFlavorAvailable(DataFlavor.getTextPlainUnicodeFlavor())) return;
 		SandpileTransferable data = (SandpileTransferable) localClipboard.getContents(this);
 		List<float[]> locationData = data.getLocationData();
-		List<Integer> configData = data.getConfigData();
+		TIntArrayList configData = data.getConfigData();
 		int startingIndex = sandpileController.getConfig().size();
 		for(int i=0; i<locationData.size(); i++){
 			sandpileController.addVertex(locationData.get(i)[0]+drawer.getOriginX(), locationData.get(i)[1]+drawer.getOriginY());
@@ -1868,13 +1870,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			}
 		}else if(currentState.equals(BUILD_LATTICE_STATE)){
 			ArrayList<int[]> vectors = new ArrayList<int[]>();
-			ArrayList<Integer> xStarts = new ArrayList<Integer>();
-			ArrayList<Integer> xFreqs = new ArrayList<Integer>();
-			ArrayList<Integer> yStarts = new ArrayList<Integer>();
-			ArrayList<Integer> yFreqs = new ArrayList<Integer>();
+			TIntArrayList xStarts = new TIntArrayList();
+			TIntArrayList xFreqs = new TIntArrayList();
+			TIntArrayList yStarts = new TIntArrayList();
+			TIntArrayList yFreqs = new TIntArrayList();
 			ArrayList<Boolean> dirs = new ArrayList<Boolean>();
-			ArrayList<Integer> weights = new ArrayList<Integer>();
-			ArrayList<Integer> borders = new ArrayList<Integer>();
+			TIntArrayList weights = new TIntArrayList();
+			TIntArrayList borders = new TIntArrayList();
 
 			for(int r=0; r<buildLatticeTable.getRowCount(); r++){
 				Integer xCoord = (Integer)buildLatticeTable.getValueAt(r, 0);
@@ -2092,7 +2094,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private void deleteSelectedVerticesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedVerticesButtonActionPerformed
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		List<Integer> verts = sandpileController.getSelectedVertices();
+		TIntArrayList verts = sandpileController.getSelectedVertices();
 		sandpileController.delVertices(verts);
 		sandpileController.unselectVertices();
 		sandpileController.repaint();

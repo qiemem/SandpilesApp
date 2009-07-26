@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import gnu.trove.TIntArrayList;
 
 /**
  *
@@ -28,7 +29,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	private float[] lightPosition = {5.0f, 0.0f, 0.0f, 1.0f};
 	private DelaunayTriangulation tris;
 	private SandpileConfiguration config;
-	private List<Integer> firings;
+	private TIntArrayList firings;
 	private SandpileGraph graph;
 	private HashMap<float[], Integer> pointsToVerts;
 	private ArrayList<float[]> colors;
@@ -49,7 +50,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		this.canvas.addGLEventListener(this);
 		tris = new DelaunayTriangulation(new ArrayList<float[]>());
 		config = new SandpileConfiguration();
-		firings = new ArrayList<Integer>();
+		firings = new TIntArrayList();
 		graph = new SandpileGraph();
 		pointsToVerts = new HashMap<float[], Integer>();
 		final Sandpile3dDrawer me = this;
@@ -165,7 +166,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		tris = new DelaunayTriangulation(vertexLocations);
 	}
 
-	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, List<Integer> selectedVertices) {
+	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices) {
 //		ArrayList<Float> heights = new ArrayList<Float>();
 //		for(int v : config){
 //			heights.add((float)v);

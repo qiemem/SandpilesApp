@@ -40,15 +40,16 @@ package org.headb;
  */
 
 import java.util.ArrayList;
+import gnu.trove.TIntArrayList;
 
-public class SandpileConfiguration extends ArrayList<Integer>{
+public class SandpileConfiguration extends TIntArrayList{
 
 	public SandpileConfiguration() {
 		super();
 	}
 
 	public SandpileConfiguration(SandpileConfiguration other) {
-		super(other);
+		super(other._data);
 	}
 
 	public SandpileConfiguration(int size) {

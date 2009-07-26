@@ -36,15 +36,16 @@ package org.headb;
 //  Copyright 2008 Reed College. All rights reserved.
 //
 import java.util.*;
+import gnu.trove.TIntArrayList;
 
 public class SandpileGraph {
 
 	private ArrayList<ArrayList<int[]>> adj;
-	private ArrayList<Integer> degrees;
+	private TIntArrayList degrees;
 
 	public SandpileGraph() {
 		this.adj = new ArrayList<ArrayList<int[]>>();
-		this.degrees = new ArrayList<Integer>();
+		this.degrees = new TIntArrayList();
 	}
 
 	public int numVertices(){
@@ -201,11 +202,12 @@ public class SandpileGraph {
 	 *
 	 * @param vertices A list of the vertices to remove.
 	 */
-	public void removeVertices(List<Integer> vertices) {
+	public void removeVertices(TIntArrayList vertices) {
 		int[] translator = new int[numVertices()];
 		ArrayList<ArrayList<int[]>> oldAdj = new ArrayList<ArrayList<int[]>>(adj);
 		boolean[] toRemove = new boolean[numVertices()];
-		for (int v : vertices) {
+		for (int i=0; i<vertices.size(); i++) {
+			int v = vertices.get(i);
 			toRemove[v] = true;
 		}
 		this.removeAllVertices();
@@ -305,8 +307,8 @@ public class SandpileGraph {
 		return false;
 	}
 
-	public List<Integer> getNonSinks() {
-		ArrayList<Integer> nonsinks = new ArrayList<Integer>();
+	public TIntArrayList getNonSinks() {
+		TIntArrayList nonsinks = new TIntArrayList();
 		for(int v=0; v<numVertices(); v++){
 			if(!isSink(v))
 				nonsinks.add(v);
@@ -314,8 +316,8 @@ public class SandpileGraph {
 		return nonsinks;
 	}
 
-	public List<Integer> getSinks() {
-		ArrayList<Integer> sinks = new ArrayList<Integer>();
+	public TIntArrayList getSinks() {
+		TIntArrayList sinks = new TIntArrayList();
 		for(int v=0; v<numVertices(); v++){
 			if(isSink(v))
 				sinks.add(v);
@@ -353,8 +355,8 @@ public class SandpileGraph {
 		config.set(vert, config.get(vert)-degree(vert));
 	}
 
-	public List<Integer> getUnstables(SandpileConfiguration config) {
-		ArrayList<Integer> unstables = new ArrayList<Integer>();
+	public TIntArrayList getUnstables(SandpileConfiguration config) {
+		TIntArrayList unstables = new TIntArrayList();
 		for (int v = 0; v < numVertices(); v++) {
 			if (!isSink(v) && config.get(v) >= degree(v)) {
 				unstables.add(v);
@@ -363,8 +365,8 @@ public class SandpileGraph {
 		return unstables;
 	}
 
-	public List<Integer> getUnstables(SandpileConfiguration config, Iterable<Integer> verts) {
-		ArrayList<Integer> unstables = new ArrayList<Integer>();
+	public TIntArrayList getUnstables(SandpileConfiguration config, Iterable<Integer> verts) {
+		TIntArrayList unstables = new TIntArrayList();
 		//System.err.println("getUnstables");
 		for (int v : verts) {
 			//System.err.println(v);
@@ -379,12 +381,13 @@ public class SandpileGraph {
 		return updaterStartingWith(config, getUnstables(config));
 	}
 
-	public Iterator<SandpileConfiguration> updaterStartingWith(final SandpileConfiguration config, final List<Integer> startingVertices) {
+	public Iterator<SandpileConfiguration> updaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
 		final int[] unstables = new int[config.size()];
 		Arrays.fill(unstables, -1);
 		int i = 0;
-		for(int v : startingVertices){
+		for(int j=0; j < startingVertices.size(); j++){
+			int v = startingVertices.get(j);
 			if(config.get(v)>=degree(v) && !isSink(v)){
 				unstables[i] = v;
 				i++;
@@ -395,7 +398,7 @@ public class SandpileGraph {
 		return new Iterator<SandpileConfiguration>() {
 
 			SandpileConfiguration curConfig = new SandpileConfiguration(config);
-			//List<Integer> unstables = getUnstables(config, startingVertices);
+			//TIntArrayList unstables = getUnstables(config, startingVertices);
 			boolean[] added = new boolean[numVertices()];
 
 			public boolean hasNext() {
@@ -440,12 +443,13 @@ public class SandpileGraph {
 	public Iterator<SandpileConfiguration> inPlaceUpdater(final SandpileConfiguration config) {
 		return inPlaceUpdaterStartingWith(config, getUnstables(config));
 	}
-	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final List<Integer> startingVertices) {
+	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
 		final int[] unstables = new int[config.size()];
 		Arrays.fill(unstables, -1);
 		int i = 0;
-		for(int v : startingVertices){
+		for(int j=0; j < startingVertices.size(); j++){
+			int v = startingVertices.get(j);
 			if(config.get(v)>=degree(v) && !isSink(v)){
 				unstables[i] = v;
 				i++;
@@ -532,7 +536,7 @@ public class SandpileGraph {
 		return stabilizeConfigStartingWith(config, getUnstables(config));
 	}
 
-	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, List<Integer> starters) {
+	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, TIntArrayList starters) {
 		SandpileConfiguration stableConfig = new SandpileConfiguration(config);
 		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(stableConfig, starters);
 		for(;updater.hasNext();){
@@ -549,7 +553,7 @@ public class SandpileGraph {
 		return stabilizeConfigInPlaceStartingWith(config, getUnstables(config));
 	}
 
-	public SandpileConfiguration stabilizeConfigInPlaceStartingWith(SandpileConfiguration config, List<Integer> starters) {
+	public SandpileConfiguration stabilizeConfigInPlaceStartingWith(SandpileConfiguration config, TIntArrayList starters) {
 		SandpileConfiguration stableConfig = config;
 		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(config, starters);
 		for(;updater.hasNext();){
@@ -598,7 +602,8 @@ public class SandpileGraph {
 	 */
 	public SandpileConfiguration getMaxConfig() {
 		SandpileConfiguration maxConfig = new SandpileConfiguration(this.numVertices());
-		for (Integer d : degrees) {
+		for (int i=0; i<degrees.size(); i++) {
+			int d = degrees.get(i);
 			maxConfig.add(d - 1);
 		}
 		return maxConfig;
@@ -702,7 +707,7 @@ public class SandpileGraph {
 	 */
 	public SandpileConfiguration getIdentityConfig() {
 		SandpileConfiguration burning = getMinimalBurningConfig();
-		ArrayList<Integer> burningVertices = new ArrayList<Integer>();
+		TIntArrayList burningVertices = new TIntArrayList();
 		for (int vert = 0; vert < burning.size(); vert++) {
 			if (burning.get(vert) > 0) {
 				burningVertices.add(vert);

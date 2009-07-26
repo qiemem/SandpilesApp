@@ -38,7 +38,7 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
-
+import gnu.trove.TIntArrayList;
 /**
  *
  * @author headb
@@ -49,7 +49,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private List<float[]> vertexLocations = new ArrayList<float[]>();
 	private SandpileGraph graph = new SandpileGraph();
 	private SandpileConfiguration config = new SandpileConfiguration();
-	private List<Integer> selectedVertices = new ArrayList<Integer>();
+	private TIntArrayList selectedVertices = new TIntArrayList();
 	private float startingWidth = 200.0f, startingHeight = 200.0f, zoom = 1f;
 	private float originX = 0.0f, originY = 0.0f, width = 200.0f, height = 200.0f;
 	private int canvasX, canvasY, canvasW, canvasH;
@@ -59,7 +59,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private ColorMode mode = SandpileDrawer.ColorMode.NUM_OF_GRAINS;
 	private ArrayList<float[]> colors;
 	private ArrayList<float[]> inDebtColors;
-	private List<Integer> firings = new ArrayList<Integer>();
+	private TIntArrayList firings = new TIntArrayList();
 	public boolean drawEdgeLabels = false;
 	public boolean drawVertexLabels = false;
 	public boolean drawEdges = true;
@@ -292,7 +292,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	private void drawSelected(GL gl) {
-		for (Integer selectedVertex : selectedVertices) {
+		for (int i=0; i<selectedVertices.size(); i++) {
+			int selectedVertex = selectedVertices.get(i);
 			if (selectedVertex >= 0) {
 				gl.glBegin(gl.GL_LINES);
 				float x = vertexLocations.get(selectedVertex)[0];
@@ -349,7 +350,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		return canvas;
 	}
 
-	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, List<Integer> firings, List<Integer> selectedVertices) {
+	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices) {
 		this.graph = graph;
 		this.vertexLocations = vertexLocations;
 		this.config = config;
