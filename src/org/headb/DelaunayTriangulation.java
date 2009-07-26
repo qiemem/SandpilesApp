@@ -26,7 +26,7 @@ public class DelaunayTriangulation {
 	private HashMap<float[][], float[][][]> triTree;
 	private final float ERROR_TOLERANCE = 0.00001f;
 
-	private ArrayList<float[]> points;
+	private List<float[]> points;
 
 	public DelaunayTriangulation(List<float[]> points) {
 		//System.err.println("init");
@@ -34,6 +34,7 @@ public class DelaunayTriangulation {
 		triangles = new ArrayList<float[][]>();
 		pointsToTris = new HashMap<float[], ArrayList<float[][]>>();
 		triTree = new HashMap<float[][], float[][][]>();
+		this.points = points;
 		if(points.isEmpty())
 			return;
 
