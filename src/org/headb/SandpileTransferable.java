@@ -34,18 +34,18 @@ import java.util.List;
 import gnu.trove.TIntArrayList;
 
 public class SandpileTransferable implements Transferable {
-	private final List<float[]> locationData;
+	private final Float2dArrayList locationData;
 	private final TIntArrayList configData;
 	private final List<int[]> edgeData;
 
 
-	public SandpileTransferable(List<float[]> locationData, TIntArrayList configData, List<int[]> edgeData){
+	public SandpileTransferable(Float2dArrayList locationData, TIntArrayList configData, List<int[]> edgeData){
 		this.locationData  = locationData;
 		this.configData = configData;
 		this.edgeData = edgeData;
 	}
 
-	public List<float[]> getLocationData(){
+	public Float2dArrayList getLocationData(){
 		return locationData;
 	}
 

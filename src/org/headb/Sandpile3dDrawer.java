@@ -31,9 +31,9 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	private SandpileConfiguration config;
 	private TIntArrayList firings;
 	private SandpileGraph graph;
-	private HashMap<float[], Integer> pointsToVerts;
-	private ArrayList<float[]> colors;
-	private ArrayList<float[]> inDebtColors;
+	//private HashMap<float[], Integer> pointsToVerts;
+	private Float2dArrayList colors;
+	private Float2dArrayList inDebtColors;
 	private int heightSmoothing = 3;
 	private int colorSmoothing = 3;
 	private float heightMultiplier = 3f;
@@ -48,11 +48,11 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		colorMode = ColorMode.NUM_OF_GRAINS;
 		this.canvas = canvas;
 		this.canvas.addGLEventListener(this);
-		tris = new DelaunayTriangulation(new ArrayList<float[]>());
+		tris = new DelaunayTriangulation(new Float2dArrayList(0, 2));
 		config = new SandpileConfiguration();
 		firings = new TIntArrayList();
 		graph = new SandpileGraph();
-		pointsToVerts = new HashMap<float[], Integer>();
+		//pointsToVerts = new HashMap<float[], Integer>();
 		final Sandpile3dDrawer me = this;
 		canvas.addMouseListener(new MouseAdapter() {
 
@@ -145,28 +145,28 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		colorMode = cm;
 	}
 
-	public void setColors(List<float[]> colors, List<float[]> inDebtColors) {
-		this.colors = new ArrayList<float[]>(colors);
-		this.inDebtColors = new ArrayList<float[]>(inDebtColors);
+	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors) {
+		this.colors = new Float2dArrayList(colors);
+		this.inDebtColors = new Float2dArrayList(inDebtColors);
 	}
 
 	public ColorMode getColorMode() {
 		return colorMode;
 	}
 
-	public void triangulate(List<float[]> vertexLocations) {
+	public void triangulate(Float2dArrayList vertexLocations) {
 		if(vertexLocations.equals(tris.points()))
 			return;
-		pointsToVerts = new HashMap<float[], Integer>();
-		int v = 0;
-		for (float[] p : vertexLocations) {
-			pointsToVerts.put(p, v);
-			v++;
-		}
+		//pointsToVerts = new HashMap<float[], Integer>();
+		//int v = 0;
+		//for (float[] p : vertexLocations) {
+		//	pointsToVerts.put(p, v);
+		//	v++;
+		//}
 		tris = new DelaunayTriangulation(vertexLocations);
 	}
 
-	public void paintSandpileGraph(SandpileGraph graph, List<float[]> vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices) {
+	public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices) {
 //		ArrayList<Float> heights = new ArrayList<Float>();
 //		for(int v : config){
 //			heights.add((float)v);
@@ -213,20 +213,26 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 			}
 
 			gl.glBegin(gl.GL_TRIANGLES);
-			for (float[][] tri : tris.triangles()) {
-				int v0 = pointsToVerts.get(tri[0]);
-				int v1 = pointsToVerts.get(tri[1]);
-				int v2 = pointsToVerts.get(tri[2]);
-				float[] n = normalizedCross(tri[1][0] - tri[0][0], tri[1][1] - tri[0][1], h[v1] - h[v0],
-						tri[2][0] - tri[0][0], tri[2][1] - tri[0][1], h[v2] - h[v0]);
+			for (int i = 0; i<tris.triangles().rows(); i++) {
+				int v0 = tris.triangles().get(i, 0);
+				float x0 = tris.points().get(v0,0);
+				float y0 = tris.points().get(v0,1);
+				int v1 = tris.triangles().get(i, 1);
+				float x1 = tris.points().get(v1,0);
+				float y1 = tris.points().get(v1,1);
+				int v2 = tris.triangles().get(i, 2);
+				float x2 = tris.points().get(v2,0);
+				float y2 = tris.points().get(v2,1);
+				float[] n = normalizedCross(x1 - x0, y1 - y0, h[v1] - h[v0],
+						x2 - x0, y2 - y0, h[v2] - h[v0]);
 				//System.err.println(c[v0][0]+" "+c[v0][1]+" "+c[v0][2]);
 				gl.glNormal3fv(n, 0);
 				gl.glColor3fv(c[v0],0);
-				gl.glVertex3f(tri[0][0], tri[0][1], h[v0]);
+				gl.glVertex3f(x0, y0, h[v0]);
 				gl.glColor3fv(c[v1],0);
-				gl.glVertex3f(tri[1][0], tri[1][1], h[v1]);
+				gl.glVertex3f(x1, y1, h[v1]);
 				gl.glColor3fv(c[v2],0);
-				gl.glVertex3f(tri[2][0], tri[2][1], h[v2]);
+				gl.glVertex3f(x2, y2, h[v2]);
 				//gl.glVertex3f(tri[0][0], tri[0][1], tri[0][2]);
 				
 			}
@@ -235,17 +241,23 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
 		if (drawWire) {
 			gl.glColor3f(0f, 1f, 0f);
-			for (float[][] tri : tris.triangles()) {
-				int v0 = pointsToVerts.get(tri[0]);
-				int v1 = pointsToVerts.get(tri[1]);
-				int v2 = pointsToVerts.get(tri[2]);
+			for (int i=0;i<tris.triangles().rows();i++) {
+				int v0 = tris.triangles().get(i, 0);
+				float x0 = tris.points().get(v0,0);
+				float y0 = tris.points().get(v0,1);
+				int v1 = tris.triangles().get(i, 1);
+				float x1 = tris.points().get(v1,0);
+				float y1 = tris.points().get(v1,1);
+				int v2 = tris.triangles().get(i, 2);
+				float x2 = tris.points().get(v2,0);
+				float y2 = tris.points().get(v2,1);
 				gl.glBegin(gl.GL_LINES);
-				gl.glVertex3f(tri[0][0], tri[0][1], h[v0]);
-				gl.glVertex3f(tri[1][0], tri[1][1], h[v1]);
-				gl.glVertex3f(tri[1][0], tri[1][1], h[v1]);
-				gl.glVertex3f(tri[2][0], tri[2][1], h[v2]);
-				gl.glVertex3f(tri[2][0], tri[2][1], h[v2]);
-				gl.glVertex3f(tri[0][0], tri[0][1], h[v0]);
+				gl.glVertex3f(x0, y0, h[v0]);
+				gl.glVertex3f(x1, y1, h[v1]);
+				gl.glVertex3f(x1, y1, h[v1]);
+				gl.glVertex3f(x2, y2, h[v2]);
+				gl.glVertex3f(x2, y2, h[v2]);
+				gl.glVertex3f(x0, y0, h[v0]);
 				gl.glEnd();
 			}
 		}
@@ -316,30 +328,35 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	}
 
 	private float[] getColorForVertex(int vert) {
-		//System.err.println(vert);
-		float[] color = {0f, 0f, 0f};
+		int color = 0;
+		boolean inDebt=false;
 		switch (colorMode) {
 			case NUM_OF_GRAINS:
 				int sand = Math.max(config.get(vert), -1);
-				if (sand < 0) {
-					color = inDebtColors.get(Math.min(-sand - 1, inDebtColors.size() - 1));
-				} else {
-					color = colors.get(Math.min(sand, colors.size() - 1));
-				}
+				if(sand<0){
+					color = Math.min(-sand-1, inDebtColors.size()-1);
+					inDebt = true;
+				}else
+					color = Math.min(sand, colors.size()-1);
 				break;
 			case STABILITY:
 				if (config.get(vert) < graph.degree(vert)) {
-					color = colors.get(0);
+					color = 0;
 				} else {
-					color[0] = 1f;
-					color[1] = 1f;
+					color = colors.size()-1;
 				}
 				break;
 			case FIRINGS:
-				color = colors.get(Math.min(firings.get(vert), colors.size() - 1));
+				color = Math.min(firings.get(vert),colors.size()-1);
 				break;
 		}
-		return color;
+		if(inDebt){
+			float[] theColor = {inDebtColors.get(color, 0), inDebtColors.get(color,1), inDebtColors.get(color,2)};
+			return theColor;
+		}else{
+			float[] theColor = {colors.get(color, 0), colors.get(color,1), colors.get(color,2)};
+			return theColor;
+		}
 	}
 
 	private float getHeightForVertex(int vert) {

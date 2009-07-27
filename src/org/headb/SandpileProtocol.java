@@ -63,11 +63,9 @@ public class SandpileProtocol {
 				output = "";
 			} else {
 				StringBuilder sb = new StringBuilder();
-				float[] v = sc.vertexData.get(0);
-				sb.append(v[0]+","+v[1]);
-				for (int i = 1; i < sc.vertexData.size(); i++) {
-					v = sc.vertexData.get(i);
-					sb.append(" " + v[0] + "," + v[1]);
+				sb.append(sc.getVertexX(0)+","+sc.getVertexY(0));
+				for (int i = 1; i < sc.configSize(); i++) {
+					sb.append(" " + sc.getVertexX(i) + "," + sc.getVertexY(i));
 				}
 				output = sb.toString();
 			}
@@ -75,7 +73,7 @@ public class SandpileProtocol {
 			output = String.valueOf(sc.configSize());
 		}else if (command[0].equals("get_vertex")){
 			int vert = Integer.valueOf(command[1]);
-			output = String.valueOf(sc.getVertexLocation(vert)[0]) + "," + String.valueOf(sc.getVertexLocation(vert)[1]);
+			output = String.valueOf(sc.getVertexX(vert)) + "," + String.valueOf(sc.getVertexX(vert));
 		}else if (command[0].equals("get_edges")) {
 			StringBuilder sb = new StringBuilder();
 			boolean needsSpace = false;

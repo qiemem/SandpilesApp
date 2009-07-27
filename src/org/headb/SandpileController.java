@@ -64,7 +64,7 @@ public class SandpileController implements ActionListener, Serializable{
 	private long lastRepaintTime = 0;
 	private boolean repaintOnEveryUpdate = false;
 	private SandpileGraph sg;
-	ArrayList<float[]> vertexData;
+	Float2dArrayList vertexData;
 	TIntArrayList firings;
 	private TIntArrayList selectedVertices;
 	private long lastUpdate = System.currentTimeMillis();
@@ -102,7 +102,7 @@ public class SandpileController implements ActionListener, Serializable{
 	private void initWithSandpileGraph(SandpileGraph sg) {
 		//this.curState = ADD_VERT_STATE;
 		this.sg = sg;
-		vertexData = new ArrayList<float[]>();
+		vertexData = new Float2dArrayList(0,2);
 		firings = new TIntArrayList();
 		currentConfig = new SandpileConfiguration();
 		selectedVertices = new TIntArrayList();
@@ -547,29 +547,29 @@ public class SandpileController implements ActionListener, Serializable{
 		//create vertices
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				gridRef[i][j] = vertexData.size();
+				gridRef[i][j] = configSize();
 				addVertex(x + j * gridSpacing, y - i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols; i++) {
 			if (nBorder == SINKS_BORDER || nBorder == REFLECTIVE_BORDER) {
-				nBorderRef[i] = vertexData.size();
+				nBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing, y + gridSpacing);
 			}
 			if (sBorder == SINKS_BORDER || sBorder == REFLECTIVE_BORDER) {
-				sBorderRef[i] = vertexData.size();
+				sBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
 			}
 
 		}
 		for (int i = 0; i < rows; i++) {
 			if (wBorder == SINKS_BORDER || wBorder == REFLECTIVE_BORDER) {
-				wBorderRef[i] = vertexData.size();
+				wBorderRef[i] = configSize();
 				addVertex(x - gridSpacing, y - i * gridSpacing);
 			}
 			if (eBorder == SINKS_BORDER || eBorder == REFLECTIVE_BORDER) {
-				eBorderRef[i] = vertexData.size();
+				eBorderRef[i] = configSize();
 				addVertex(x + (cols) * gridSpacing, y - i * gridSpacing);
 			}
 		}
@@ -697,7 +697,7 @@ public class SandpileController implements ActionListener, Serializable{
 		int[][] gridRef = new int[radius * 2 - 1][radius * 2 - 1];
 		for (int i = 0; i < radius * 2 - 1; i++) {
 			for (int j = 0; j < curRowLength; j++) {
-				gridRef[i][j] = vertexData.size();
+				gridRef[i][j] = configSize();
 				addVertex(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y - i * (gridSpacing * 5f / 6f));
 			}
 			if (i < radius - 1) {
@@ -834,18 +834,18 @@ public class SandpileController implements ActionListener, Serializable{
 		//create vertices
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				gridRef[i][j] = vertexData.size();
+				gridRef[i][j] = configSize();
 				addVertex(x + j * gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols + 1; i++) {
 			if (nBorder < 2) {
-				nBorderRef[i] = vertexData.size();
+				nBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing - (gridSpacing / 2), y + gridSpacing);
 			}
 			if (sBorder < 2) {
-				sBorderRef[i] = vertexData.size();
+				sBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing - (gridSpacing / 2), y - (rows) * gridSpacing);
 			}
 
@@ -853,11 +853,11 @@ public class SandpileController implements ActionListener, Serializable{
 
 		for (int i = 0; i < rows; i++) {
 			if (wBorder < 2) {
-				wBorderRef[i] = vertexData.size();
+				wBorderRef[i] = configSize();
 				addVertex(x - gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 			if (eBorder < 2) {
-				eBorderRef[i] = vertexData.size();
+				eBorderRef[i] = configSize();
 				addVertex(x + (cols) * gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 		}
@@ -1024,7 +1024,7 @@ public class SandpileController implements ActionListener, Serializable{
 		//create vertices
 		for (int x = 0; x < cols; x++) {
 			for (int y = 0; y < rows; y++) {
-				gridRef[x][y] = vertexData.size();
+				gridRef[x][y] = configSize();
 				addVertex(xCoord + x * gridSpacing, yCoord + y * gridSpacing);
 			}
 		}
@@ -1221,8 +1221,17 @@ public class SandpileController implements ActionListener, Serializable{
 		return configSize() - 1;
 	}
 
-	public float[] getVertexLocation(int vert) {
-		return vertexData.get(vert);
+	public float getVertexX(int vert) {
+		return vertexData.get(vert, 0);
+	}
+
+	public float getVertexY(int vert) {
+		return vertexData.get(vert, 1);
+	}
+
+	public void setVertexPos(int vert, float x, float y) {
+		vertexData.set(vert, 0, x);
+		vertexData.set(vert, 1, y);
 	}
 
 	public int getSand(int vert) {
@@ -1319,9 +1328,10 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public TIntArrayList getVerticesInRect(float maxX, float maxY, float minX, float minY) {
 		TIntArrayList containedVertices = new TIntArrayList();
-		for (int v = 0; v < vertexData.size(); v++) {
-			float[] pos = vertexData.get(v);
-			if ((pos[0] <= maxX && pos[0] >= minX) && (pos[1] <= maxY && pos[1] >= minY)) {
+		for (int v = 0; v < configSize(); v++) {
+			float x = getVertexX(v);
+			float y = getVertexY(v);
+			if ((x <= maxX && x >= minX) && (y <= maxY && y >= minY)) {
 				containedVertices.add(v);
 			}
 		}
@@ -1358,21 +1368,17 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void moveVertices(TIntArrayList vertices, float deltaX, float deltaY) {
-		for (int i=0; i<vertices.size(); i++) {
-			int v = vertices.get(i);
-			vertexData.get(v)[0] += deltaX;
-			vertexData.get(v)[1] += deltaY;
+		for (int v=0; v<configSize(); v++) {
+			setVertexPos(v, getVertexX(v)+deltaX, getVertexY(v)+deltaY);
 		}
 	}
 
 	public int touchingVertex(float x, float y) {
-		for (int i = 0; i < vertexData.size(); i++) {
-			float[] v = vertexData.get(i);/*
-			if (Math.sqrt((x - v[0]) * (x - v[0]) + (y - v[1]) * (y - v[1])) <= VERT_RADIUS) {
-			return i;
-			}*/
-			if ((v[0] - VERT_RADIUS) <= x && v[0] + VERT_RADIUS >= x && (v[1] - VERT_RADIUS) <= y && v[1] + VERT_RADIUS >= y) {
-				return i;
+		for (int v = 0; v < configSize(); v++) {
+			float vx = getVertexX(v);
+			float vy = getVertexY(v);
+			if ((vx - VERT_RADIUS) <= x && vx + VERT_RADIUS >= x && (vy - VERT_RADIUS) <= y && vy + VERT_RADIUS >= y) {
+				return v;
 			}
 		}
 		return -1;
@@ -1464,11 +1470,11 @@ public class SandpileController implements ActionListener, Serializable{
 		try {
 			file.createNewFile();
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
-			for (float[] coords : vertexData) {
-				outBuffer.write("vertex " + coords[0] + " " + coords[1]);
+			for (int v=0; v<configSize(); v++) {
+				outBuffer.write("vertex " + getVertexX(v) + " " + getVertexY(v));
 				outBuffer.newLine();
 			}
-			for (int i = 0; i < vertexData.size(); i++) {
+			for (int i = 0; i < configSize(); i++) {
 				for (int j : sg.getOutgoingVertices(i)) {
 					outBuffer.write("edge " + i + " " + j + " " + sg.weight(i, j));
 					outBuffer.newLine();
@@ -1509,7 +1515,7 @@ public class SandpileController implements ActionListener, Serializable{
 	public void saveConfig(File file, SandpileConfiguration config) {
 		try {
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
-			for (int i=0; i< config.size(); i++) {
+			for (int i=0; i< configSize(); i++) {
 				int v = config.get(i);
 				outBuffer.write(Integer.toString(v));
 				outBuffer.newLine();

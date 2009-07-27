@@ -82,15 +82,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private static final String RANDOM_CONFIG = "Random Grain";
 	private final String[] defaultConfigs = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, CURRENT_CONFIG, DUAL_CONFIG, ONES_CONFIG, RANDOM_CONFIG };
 
-	private float[][] colors ={{0.2f, 0.2f, 0.2f},
-							   {0f, 0f, 1f},
-							   {0f, 1f, 1f},
-							   {0f, 1f, 0f},
-							   {1f, 0f, 0f},
-							   {1f, .5f, 0f},
-							   {1f, 1f, 0f},
-							   {1f, 1f, 1f}};
-	private float[][] inDebtColors = {{0.2f, 0f, 0f}};
+	private Float2dArrayList colors;
+	private Float2dArrayList inDebtColors;
 
 	private final int PORT = 7236;
 
@@ -129,6 +122,19 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     /** Creates new form SandpilesInteractionPanel */
     public SandpilesInteractionPanel() {
         initComponents();
+
+		float[] colorArray = {0.2f, 0.2f, 0.2f,
+							   0f, 0f, 1f,
+							   0f, 1f, 1f,
+							   0f, 1f, 0f,
+							   1f, 0f, 0f,
+							   1f, .5f, 0f,
+							   1f, 1f, 0f,
+							   1f, 1f, 1f};
+		colors = new Float2dArrayList(colorArray, 3);
+		float[] inDebtColorArray = {0.2f, 0f, 0f};
+		inDebtColors = new Float2dArrayList(inDebtColorArray, 3);
+
 		drawer = new SandpileGLDrawer(canvas);
 		sandpileController = new SandpileController(drawer);
 		canvas.addMouseListener(drawer);
@@ -143,8 +149,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		runTimer.setDelay(0);
 		updateDelayTextField();
 
-		drawer.setColors(Arrays.asList(colors), Arrays.asList(inDebtColors));
-		drawer3d.setColors(Arrays.asList(colors), Arrays.asList(inDebtColors));
+
+
+		drawer.setColors(colors, inDebtColors);
+		drawer3d.setColors(colors, inDebtColors);
 
 		canvas.addMouseListener(new MouseAdapter(){
 			@Override public void mousePressed(MouseEvent e){
@@ -224,20 +232,20 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
 	}
 
-	public void copyVertexDataToClipboard(List<float[]> locationData, TIntArrayList sandData, List<int[]> edgeData){
+	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, List<int[]> edgeData){
 		localClipboard.setContents(new SandpileTransferable(locationData, sandData, edgeData), this);
 	}
 	
 	public void copySelectedToClipboard(){
 		TIntArrayList vertices = sandpileController.getSelectedVertices();
-		ArrayList<float[]> locationData = new ArrayList<float[]>();
+		Float2dArrayList locationData = new Float2dArrayList(0,3);
 		TIntArrayList configData = new TIntArrayList();
 		ArrayList<int[]> edgeData = new ArrayList<int[]>();
 		int vert = 0;
 		for(int i=0; i< vertices.size(); i++){
 			int v = vertices.get(i);
-			float x = sandpileController.getVertexLocation(v)[0]-drawer.getOriginX();
-			float y = sandpileController.getVertexLocation(v)[1]-drawer.getOriginY();
+			float x = sandpileController.getVertexX(v)-drawer.getOriginX();
+			float y = sandpileController.getVertexY(v)-drawer.getOriginY();
 			float[] pos = {x,y};
 			locationData.add(pos);
 			configData.add(sandpileController.getSand(v));
@@ -263,11 +271,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	public void pasteVertexDataFromClipboard(){
 		if(!localClipboard.isDataFlavorAvailable(DataFlavor.getTextPlainUnicodeFlavor())) return;
 		SandpileTransferable data = (SandpileTransferable) localClipboard.getContents(this);
-		List<float[]> locationData = data.getLocationData();
+		Float2dArrayList locationData = data.getLocationData();
 		TIntArrayList configData = data.getConfigData();
 		int startingIndex = sandpileController.getConfig().size();
 		for(int i=0; i<locationData.size(); i++){
-			sandpileController.addVertex(locationData.get(i)[0]+drawer.getOriginX(), locationData.get(i)[1]+drawer.getOriginY());
+			sandpileController.addVertex(locationData.get(i,0)+drawer.getOriginX(), locationData.get(i,1)+drawer.getOriginY());
 			sandpileController.setSand(i, configData.get(i));
 		}
 		for(int[] e : data.getEdgeData()){
