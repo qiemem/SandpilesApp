@@ -1707,7 +1707,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 }//GEN-LAST:event_stepButtonMouseClicked
 
 	private void deleteGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGraphButtonActionPerformed
-		
+
 		sandpileController.delAllVertices();
 		drawer3d.triangulate(sandpileController.vertexData);
 		this.updateConfigSelectList();

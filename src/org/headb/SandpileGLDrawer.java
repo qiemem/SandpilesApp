@@ -231,12 +231,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private void drawVertices(GL gl) {
 		gl.glBegin(gl.GL_QUADS);
 		for (int vert = 0; vert < graph.numVertices(); vert++) {
-			float x = vertexLocations.get(vert,0);
-			float y = vertexLocations.get(vert,1);
+			float x = vertexLocations.getQuick(vert,0);
+			float y = vertexLocations.getQuick(vert,1);
 			float size = vertSize;
-			if (changingVertexSize && !graph.isSink(vert)) {
+			int d = graph.degree(vert);
+			if (changingVertexSize && d!=0) {
 				int sand = Math.max(config.get(vert), 0);
-				size = Math.min(((float) sand + 1f) / ((float) graph.degree(vert)), vertSize);
+				size = Math.min(((float) sand + 1f) / ((float) d), vertSize);
 			}
 			setColorForVertex(gl, vert);
 			gl.glVertex2f(x - size, y + size);
@@ -425,7 +426,6 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		float amount = 1f - 0.01f * e.getUnitsToScroll();
 		setZoom(getZoom() * amount);
-		//setGLDimensions(getOriginX(), getOriginY(), getWidth() + amount, getHeight() + amount);
 	}
 
 	private void setColorForVertex(GL gl, int vert) {
@@ -433,7 +433,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		boolean inDebt=false;
 		switch (mode) {
 			case NUM_OF_GRAINS:
-				int sand = Math.max(config.get(vert), -1);
+				int sand = Math.max(config.getQuick(vert), -1);
 				if(sand<0){
 					color = Math.min(-sand-1, inDebtColors.rows()-1);
 					inDebt = true;
@@ -441,20 +441,20 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 					color = Math.min(sand, colors.rows()-1);
 				break;
 			case STABILITY:
-				if (config.get(vert) < graph.degree(vert)) {
+				if (config.getQuick(vert) < graph.degree(vert)) {
 					color = 0;
 				} else {
 					color = colors.rows()-1;
 				}
 				break;
 			case FIRINGS:
-				color = Math.min(firings.get(vert),colors.rows()-1);
+				color = Math.min(firings.getQuick(vert),colors.rows()-1);
 				break;
 		}
 		if(inDebt)
-			gl.glColor3f(inDebtColors.get(color, 0),inDebtColors.get(color, 1), inDebtColors.get(color, 2));
+			gl.glColor3f(inDebtColors.getQuick(color, 0),inDebtColors.getQuick(color, 1), inDebtColors.getQuick(color, 2));
 		else
-			gl.glColor3f(colors.get(color, 0), colors.get(color,1), colors.get(color, 2));
+			gl.glColor3f(colors.getQuick(color, 0), colors.getQuick(color,1), colors.getQuick(color, 2));
 	}
 
 	public void addReshapeListener(ReshapeListener r) {

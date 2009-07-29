@@ -157,12 +157,6 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	public void triangulate(Float2dArrayList vertexLocations) {
 		if(vertexLocations.equals(tris.points()))
 			return;
-		//pointsToVerts = new HashMap<float[], Integer>();
-		//int v = 0;
-		//for (float[] p : vertexLocations) {
-		//	pointsToVerts.put(p, v);
-		//	v++;
-		//}
 		tris = new DelaunayTriangulation(vertexLocations);
 	}
 
@@ -334,20 +328,20 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 			case NUM_OF_GRAINS:
 				int sand = Math.max(config.get(vert), -1);
 				if(sand<0){
-					color = Math.min(-sand-1, inDebtColors.size()-1);
+					color = Math.min(-sand-1, inDebtColors.rows()-1);
 					inDebt = true;
 				}else
-					color = Math.min(sand, colors.size()-1);
+					color = Math.min(sand, colors.rows()-1);
 				break;
 			case STABILITY:
 				if (config.get(vert) < graph.degree(vert)) {
 					color = 0;
 				} else {
-					color = colors.size()-1;
+					color = colors.rows()-1;
 				}
 				break;
 			case FIRINGS:
-				color = Math.min(firings.get(vert),colors.size()-1);
+				color = Math.min(firings.get(vert),colors.rows()-1);
 				break;
 		}
 		if(inDebt){

@@ -20,7 +20,7 @@ import gnu.trove.TIntArrayList;
 public class DelaunayTriangulation {
 	//private Float2dArrayList points;
 
-	private Float2dArrayList triangles;
+	private Int2dArrayList triangles;
 	private int parentTri;
 	private ArrayList<TIntArrayList> pointsToTris;
 	private Int2dArrayList trisToPoints;
@@ -31,23 +31,23 @@ public class DelaunayTriangulation {
 	private Float2dArrayList points;
 
 	public DelaunayTriangulation(Float2dArrayList points) {
-		//System.err.println("init");
-		//this.points = new Float2dArrayList(pts);
 		trisToPoints = new Int2dArrayList(0, 3);
 		pointsToTris = new ArrayList<TIntArrayList>();
 		triTree = new ArrayList<int[]>();
-		if(points.isEmpty())
+		triangles = new Int2dArrayList(0,3);
+		this.points = new Float2dArrayList(points);
+		if(this.points.isEmpty())
 			return;
 
-		float trX = points.get(0,0);
-		float trY = points.get(0,1);
+		float trX = this.points.get(0,0);
+		float trY = this.points.get(0,1);
 
-		for (int i=1; i<points.rows(); i++) {
-			float x = points.get(i, 0);
-			float y = points.get(i, 1);
+		for (int i=1; i<this.points.rows(); i++) {
+			float x = this.points.get(i, 0);
+			float y = this.points.get(i, 1);
 			if (y > trY) {
-				trX = points.get(i,0);
-				trY = points.get(i,1);
+				trX = this.points.get(i,0);
+				trY = this.points.get(i,1);
 			} else if (y == trY && x > trX) {
 				trX = x;
 				trY = y;
@@ -59,11 +59,11 @@ public class DelaunayTriangulation {
 		float largestAngle = PI;
 		float smallestAngle = 2 * PI;
 		float largestDist = 0f;
-		for (int i=0; i<points.rows(); i++) {
+		for (int i=0; i<this.points.rows(); i++) {
 			//if(p==startPt)
 			//	continue;
-			float px = points.get(i,0);
-			float py = points.get(i,1);
+			float px = this.points.get(i,0);
+			float py = this.points.get(i,1);
 			largestAngle = Math.max(atan2(px, py, startX, startY), largestAngle);
 			smallestAngle = Math.min(atan2(px, py, startX, startY), smallestAngle);
 			largestDist = Math.max(largestDist, dist(startX, startY, px, py));
@@ -83,40 +83,50 @@ public class DelaunayTriangulation {
 		float brX = startX + length * (float) (Math.cos(brAngle));
 		float brY = startY + length * (float) (Math.sin(brAngle));
 
-		int startPt = points.rows();
+		int startPt = this.points.rows();
 		int tl = startPt+1;
 		int br = tl+1;
-		points.addRow(startX, startY);
-		points.addRow(tlX, tlY);
-		points.addRow(brX, brY);
+		this.points.addRow(startX, startY);
+		this.points.addRow(tlX, tlY);
+		this.points.addRow(brX, brY);
+
+		for(int i=0; i<this.points.rows(); i++){
+			pointsToTris.add(new TIntArrayList());
+		}
+
 		parentTri = addTriangle(startPt, tl, br);
-		for (int p = 0; p < points.rows(); p++) {
-			try {
+		for (int p = 0; p < this.points.rows()-3; p++) {
+			//try {
 				addPoint(p);
-			} catch (RuntimeException e) {
-				System.err.println("WARNING: Couldn't add a point. Throwing it out.");
-				System.err.println("Point: " + points.get(p,0) + " " + points.get(p,1));
-				System.err.println("Largest angle: " + largestAngle);
-				System.err.println("Smallest angle: " + smallestAngle);
-				System.err.println("startPt: " + startX + " " + startY);
-				System.err.println("brAngle: " + brAngle);
-				System.err.println("tlAngle: " + tlAngle);
-				System.err.println("length: " + length);
-			}
+//			} catch (RuntimeException e) {
+//				System.err.println("WARNING: Couldn't add a point. Throwing it out.");
+//				System.err.println("Point: " + points.get(p,0) + " " + points.get(p,1));
+//				System.err.println("Largest angle: " + largestAngle);
+//				System.err.println("Smallest angle: " + smallestAngle);
+//				System.err.println("startPt: " + startX + " " + startY);
+//				System.err.println("brAngle: " + brAngle);
+//				System.err.println("tlAngle: " + tlAngle);
+//				System.err.println("length: " + length);
+//			}
 		}
 		removePoint(tl);
 		removePoint(br);
-		removePoint(startPt);/*
-		triangles = new Float2dArrayList(0, 9);
-		for(int t=0; t<triangles.size();t++){
-			if(triTree.get(t)==null){
-				for(int c=0; c<3; c++){
-					float x = x(trisToPoints.get(t,c));
-					float y = y(trisToPoints.get(t,c));
-					triangles.addRow(x,y);
-				}
+		removePoint(startPt);
+		triangles = new Int2dArrayList(0, 3);
+		for (int t = 0; t < trisToPoints.rows(); t++) {
+			boolean ok = triTree.get(t)==null;
+			for(int c = 0; c<3; c++){
+				if (trisToPoints.get(t, c)==tl)
+					ok = false;
+				if (trisToPoints.get(t, c)==br)
+					ok = false;
+				if(trisToPoints.get(t, c)==startPt)
+					ok = false;
 			}
-		}*/
+			if(ok){
+				triangles.addRow(p1(t), p2(t), p3(t));
+			}
+		}
 		triTree = null;
 	}
 
@@ -149,7 +159,7 @@ public class DelaunayTriangulation {
 	}
 
 	public final Int2dArrayList triangles() {
-		return trisToPoints;
+		return triangles;
 	}
 
 	public Float2dArrayList points() {
@@ -228,6 +238,7 @@ public class DelaunayTriangulation {
 		pointsToTris.get(p1).add(tri);
 		pointsToTris.get(p2).add(tri);
 		pointsToTris.get(p3).add(tri);
+		triTree.add(null);
 		return tri;
 	}
 
@@ -235,12 +246,15 @@ public class DelaunayTriangulation {
 		int p1 = p1(tri);
 		int p2 = p2(tri);
 		int p3 = p3(tri);
-		int t1 = pointsToTris.get(p1).binarySearch(tri);
-		pointsToTris.get(p1).remove(t1);
-		int t2 = pointsToTris.get(p2).binarySearch(tri);
-		pointsToTris.get(p2).remove(t2);
-		int t3 = pointsToTris.get(p3).binarySearch(tri);
-		pointsToTris.get(p3).remove(t3);
+		int t1 = pointsToTris.get(p1).indexOf(tri);
+		if(t1>=0)
+			pointsToTris.get(p1).remove(t1);
+		int t2 = pointsToTris.get(p2).indexOf(tri);
+		if(t2>=0)
+			pointsToTris.get(p2).remove(t2);
+		int t3 = pointsToTris.get(p3).indexOf(tri);
+		if(t3>=0)
+			pointsToTris.get(p3).remove(t3);
 	}
 
 	protected TIntArrayList getIncidentTriangles(int p1, int p2) {
@@ -365,6 +379,8 @@ public class DelaunayTriangulation {
 
 	protected void removePoint(int p) {
 		TIntArrayList tris = new TIntArrayList(pointsToTris.get(p).toNativeArray());
+		tris.sort();
+		tris.reverse();
 		for (int i=0; i<tris.size(); i++) {
 			int tri = tris.get(i);
 			removeTriangle(tri);

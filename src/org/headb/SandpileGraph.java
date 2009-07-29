@@ -350,9 +350,9 @@ public class SandpileGraph {
 		List<int[]> edges = getOutgoingEdges(vert);
 		for(int i=0; i<edges.size(); i++){
 			int[] e = edges.get(i);
-			config.set(e[1], config.get(e[1])+e[2]);
+			config.setQuick(e[1], config.getQuick(e[1])+e[2]);
 		}
-		config.set(vert, config.get(vert)-degree(vert));
+		config.setQuick(vert, config.getQuick(vert)-degree(vert));
 	}
 
 	public TIntArrayList getUnstables(SandpileConfiguration config) {
@@ -450,7 +450,7 @@ public class SandpileGraph {
 		int i = 0;
 		for(int j=0; j < startingVertices.size(); j++){
 			int v = startingVertices.get(j);
-			if(config.get(v)>=degree(v) && !isSink(v)){
+			if(config.getQuick(v)>=degree(v) && !isSink(v)){
 				unstables[i] = v;
 				i++;
 			}
@@ -470,7 +470,7 @@ public class SandpileGraph {
 				int j=0;
 				for(int i=0; unstables[i]!=-1; i++){
 					int v = unstables[i];
-					if(!added[v] && config.get(v)>=degree(v)){
+					if(!added[v] && config.getQuick(v)>=degrees.getQuick(v)){
 						newUnstables[j]=v;
 						added[v]=true;
 						j++;
@@ -478,7 +478,8 @@ public class SandpileGraph {
 					List<int[]> edges = getOutgoingEdges(v);
 					for(int k=0; k<edges.size(); k++){
 						int w = edges.get(k)[1];
-						if(!added[w] && config.get(w)>=degree(w) && !isSink(w)){
+						int d = degrees.getQuick(w);
+						if(!added[w] && config.getQuick(w)>=d && d>0){
 							newUnstables[j]=w;
 							added[w]=true;
 							j++;
