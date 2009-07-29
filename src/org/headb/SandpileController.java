@@ -997,11 +997,9 @@ public class SandpileController implements ActionListener, Serializable{
 
 			@Override
 			public void undo() {
-				TIntArrayList vertices = new TIntArrayList();
 				for(int i=startingIndex;i<=endingIndex;i++){
-					vertices.add(i);
+					delVertex(configSize()-1);
 				}
-				delVertices(vertices);
 				repaint();
 			}
 
@@ -1239,7 +1237,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void delVertex(int v) {
-		vertexData.remove(v);
+		vertexData.removeRow(v);
 		currentConfig.remove(v);
 		firings.remove(v);
 		sg.removeVertex(v);
@@ -1257,7 +1255,7 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 		for (int v = configSize() - 1; v >= 0; v--) {
 			if (toRemove[v]) {
-				vertexData.remove(v);
+				vertexData.removeRow(v);
 				currentConfig.remove(v);
 			}
 		}
