@@ -2241,7 +2241,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
-			if(!s.equals(IDENTITY_CONFIG) || !s.equals(BURNING_CONFIG))
+			System.err.println(s);
+			System.err.println(IDENTITY_CONFIG);
+			if(!(s.equals(IDENTITY_CONFIG) || s.equals(BURNING_CONFIG)))
 				newList.add(s);
 		}
 		configSelectList.setListData(newList);

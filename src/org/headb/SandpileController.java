@@ -1431,16 +1431,23 @@ public class SandpileController implements ActionListener, Serializable{
 		saveGraphProject(projectFile);
 	}
 
-	public void saveGraphProject(File file) {
+	public boolean saveGraphProject(File file) {
 		file.mkdir();
 		File graphFile = new File(file, "graph.sg");
 		saveGraph(graphFile);
+		for(File f : file.listFiles()){
+			if(f.getName().endsWith(".sc")){
+				if(!f.delete())
+					System.err.println("Unable to clear file: "+f.getName()+".");
+			}
+		}
 		for (String configName : configs.keySet()) {
 			saveConfig(new File(file, configName + ".sc"), configs.get(configName));
 		}
 		saveConfig(new File(file, "current.sc"), currentConfig);
 		projectFile = file;
 		saved = true;
+		return true;
 	}
 
 	public boolean loadGraphProject(File file) {
