@@ -374,8 +374,8 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
 		for (int v = 0; v < config.size(); v++) {
 			float avg = heights[v];
-			for (int vert : graph.getOutgoingVertices(v)) {
-				avg += heights[vert];
+			for (int[] e : graph.getOutgoingEdges(v)) {
+				avg += heights[e[1]];
 			}
 			avg /= (float) (graph.degree(v) + 1);
 			//avg*=1.5f;
@@ -399,7 +399,8 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 			avg[0] = clrs[v][0];
 			avg[1] = clrs[v][1];
 			avg[2] = clrs[v][2];
-			for (int vert : graph.getOutgoingVertices(v)) {
+			for (int[] e : graph.getOutgoingEdges(v)) {
+				int vert = e[1];
 				avg[0] += clrs[vert][0];
 				avg[1] += clrs[vert][1];
 				avg[2] += clrs[vert][2];

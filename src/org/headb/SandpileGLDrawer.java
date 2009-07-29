@@ -191,7 +191,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
 		gl.glBegin(gl.GL_LINES);
 		for (int source = 0; source < graph.numVertices(); source++) {
-			for (int dest : graph.getOutgoingVertices(source)) {
+			for (int[] e : graph.getOutgoingEdges(source)) {
+				int dest = e[1];
 				float sx = vertexLocations.get(source,0);
 				float sy = vertexLocations.get(source,1);
 				float dx = vertexLocations.get(dest,0);
@@ -211,7 +212,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		tr.setColor(.8f, .5f, .6f, 1f);
 		tr.begin3DRendering();
 		for (int source = 0; source < graph.numVertices(); source++) {
-			for (int dest : graph.getOutgoingVertices(source)) {
+			for (int[] e : graph.getOutgoingEdges(source)) {
+				int dest = e[1];
 				float sx = vertexLocations.get(source,0);
 				float sy = vertexLocations.get(source,1);
 				float dx = vertexLocations.get(dest,0);
@@ -220,7 +222,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				//if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
 				float x = (1f - textPlacement) * sx + textPlacement * dx;
 				float y = (1f - textPlacement) * sy + textPlacement * dy;
-				String str = Integer.toString(graph.weight(source, dest));
+				String str = String.valueOf(e[2]);
 				tr.draw3D(str, x, y, 0f, .15f * vertSize / str.length());
 				//}
 			}

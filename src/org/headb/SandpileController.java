@@ -1320,9 +1320,9 @@ public class SandpileController implements ActionListener, Serializable{
 		onConfigChange();
 	}
 
-	public Iterable<Integer> getOutgoingVertices(int vert) {
-		return sg.getOutgoingVertices(vert);
-	}
+//	public Iterable<Integer> getOutgoingVertices(int vert) {
+//		return sg.getOutgoingVertices(vert);
+//	}
 
 	public TIntArrayList getVerticesInRect(float maxX, float maxY, float minX, float minY) {
 		TIntArrayList containedVertices = new TIntArrayList();
@@ -1479,9 +1479,9 @@ public class SandpileController implements ActionListener, Serializable{
 				outBuffer.write("vertex " + getVertexX(v) + " " + getVertexY(v));
 				outBuffer.newLine();
 			}
-			for (int i = 0; i < configSize(); i++) {
-				for (int j : sg.getOutgoingVertices(i)) {
-					outBuffer.write("edge " + i + " " + j + " " + sg.weight(i, j));
+			for (int v = 0; v < configSize(); v++) {
+				for (int[] e : sg.getOutgoingEdges(v)) {
+					outBuffer.write("edge " + e[0] + " " + e[1] + " " + e[2]);
 					outBuffer.newLine();
 				}
 			}

@@ -249,7 +249,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			float[] pos = {x,y};
 			locationData.add(pos);
 			configData.add(sandpileController.getSand(v));
-			for(int w : sandpileController.getGraph().getOutgoingVertices(v)){
+			for(int[] e : sandpileController.getGraph().getOutgoingEdges(v)){
+				int w = e[1];
 				int destVert = vertices.indexOf(w);
 				if(destVert>=0){
 					int[] edge = {vert,destVert,sandpileController.getGraph().weight(v, w)};
@@ -2241,8 +2242,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
-			System.err.println(s);
-			System.err.println(IDENTITY_CONFIG);
 			if(!(s.equals(IDENTITY_CONFIG) || s.equals(BURNING_CONFIG)))
 				newList.add(s);
 		}
