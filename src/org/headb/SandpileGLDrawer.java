@@ -146,7 +146,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			System.err.println(1000f / (curTime - timeOfLastDisplay));
 			timeOfLastDisplay = curTime;
 		}
-		TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 12));
+		
 
 		GL gl = drawable.getGL();
 		if (needsReshape) {
@@ -164,9 +164,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			drawVertices(gl);
 		}
 		if (drawVertexLabels) {
+			TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 12));
 			drawVertexLabels(tr);
 		}
 		if (drawEdgeLabels) {
+			TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 12));
 			drawEdgeLabels(tr);
 		}
 		if (!selectedVertices.isEmpty()) {
