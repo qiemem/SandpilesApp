@@ -47,6 +47,8 @@ import javax.swing.undo.*;
 
 import java.net.*;
 
+import gnu.trove.TIntArrayList;
+
 public class SandpileController implements ActionListener, Serializable{
 
 	public static final int SINKS_BORDER = 0;
@@ -62,9 +64,9 @@ public class SandpileController implements ActionListener, Serializable{
 	private long lastRepaintTime = 0;
 	private boolean repaintOnEveryUpdate = false;
 	private SandpileGraph sg;
-	ArrayList<float[]> vertexData;
-	ArrayList<Integer> firings;
-	private List<Integer> selectedVertices;
+	Float2dArrayList vertexData;
+	TIntArrayList firings;
+	private TIntArrayList selectedVertices;
 	private long lastUpdate = System.currentTimeMillis();
 	public double fps = 0.0;
 	private SandpileConfiguration currentConfig;
@@ -100,10 +102,10 @@ public class SandpileController implements ActionListener, Serializable{
 	private void initWithSandpileGraph(SandpileGraph sg) {
 		//this.curState = ADD_VERT_STATE;
 		this.sg = sg;
-		vertexData = new ArrayList<float[]>();
-		firings = new ArrayList<Integer>();
+		vertexData = new Float2dArrayList(0,2);
+		firings = new TIntArrayList();
 		currentConfig = new SandpileConfiguration();
-		selectedVertices = new ArrayList<Integer>();
+		selectedVertices = new TIntArrayList();
 		configs = new HashMap<String, SandpileConfiguration>();
 
 		Canvas canvas = drawer.getCanvas();
@@ -210,8 +212,8 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void resetFirings() {
-		firings = new ArrayList<Integer>();
-		for (Integer i : currentConfig) {
+		firings = new TIntArrayList();
+		for (int i=0; i<currentConfig.size(); i++) {
 			firings.add(0);
 		}
 	}
@@ -329,12 +331,13 @@ public class SandpileController implements ActionListener, Serializable{
 	public void addEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			for (Integer v : selectedVertices) {
+			for (int i = 0; i<selectedVertices.size(); i++) {
+				int v = selectedVertices.get(i);
 				addEdge(v, touchVert, weight);
 			}
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
-				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
 
 				@Override
 				public String getPresentationName() {
@@ -343,7 +346,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void undo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						delEdge(v, touchVert, weight);
 					}
 					repaint();
@@ -351,7 +355,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void redo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						addEdge(v, touchVert, weight);
 					}
 					repaint();
@@ -364,12 +369,13 @@ public class SandpileController implements ActionListener, Serializable{
 	public void delEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			for (Integer v : selectedVertices) {
+			for (int i = 0; i<selectedVertices.size(); i++) {
+				int v = selectedVertices.get(i);
 				delEdge(v, touchVert, weight);
 			}
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
-				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
 
 				@Override
 				public String getPresentationName() {
@@ -378,7 +384,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void undo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						addEdge(v, touchVert, weight);
 					}
 					repaint();
@@ -386,7 +393,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void redo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						delEdge(v, touchVert, weight);
 					}
 					repaint();
@@ -399,13 +407,14 @@ public class SandpileController implements ActionListener, Serializable{
 	public void addUndiEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			for (Integer v : selectedVertices) {
+			for (int i = 0; i<selectedVertices.size(); i++) {
+				int v = selectedVertices.get(i);
 				addEdge(v, touchVert, weight);
 				addEdge(touchVert, v, weight);
 			}
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
-				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
 
 				@Override
 				public String getPresentationName() {
@@ -414,7 +423,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void undo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						delEdge(v, touchVert, weight);
 						delEdge(touchVert, v, weight);
 					}
@@ -423,7 +433,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void redo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						addEdge(v, touchVert, weight);
 						addEdge(touchVert, v, weight);
 					}
@@ -437,13 +448,14 @@ public class SandpileController implements ActionListener, Serializable{
 	public void delUndiEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			for (Integer v : selectedVertices) {
+			for (int i = 0; i<selectedVertices.size(); i++) {
+				int v = selectedVertices.get(i);
 				delEdge(v, touchVert, weight);
 				delEdge(touchVert, v, weight);
 			}
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
-				private List<Integer> sourceVertices = new ArrayList<Integer>(selectedVertices);
+				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
 
 				@Override
 				public String getPresentationName() {
@@ -452,7 +464,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void undo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						addEdge(v, touchVert, weight);
 						addEdge(touchVert, v, weight);
 					}
@@ -461,7 +474,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 				@Override
 				public void redo() {
-					for (Integer v : sourceVertices) {
+					for (int i=0; i < sourceVertices.size(); i++) {
+						int v = sourceVertices.get(i);
 						delEdge(v, touchVert, weight);
 						delEdge(touchVert, v, weight);
 					}
@@ -504,7 +518,7 @@ public class SandpileController implements ActionListener, Serializable{
 
 			@Override
 			public void undo() {
-				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				TIntArrayList vertices = new TIntArrayList();
 				for(int i=startingIndex;i<=endingIndex;i++){
 					vertices.add(i);
 				}
@@ -533,29 +547,29 @@ public class SandpileController implements ActionListener, Serializable{
 		//create vertices
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				gridRef[i][j] = vertexData.size();
+				gridRef[i][j] = configSize();
 				addVertex(x + j * gridSpacing, y - i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols; i++) {
 			if (nBorder == SINKS_BORDER || nBorder == REFLECTIVE_BORDER) {
-				nBorderRef[i] = vertexData.size();
+				nBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing, y + gridSpacing);
 			}
 			if (sBorder == SINKS_BORDER || sBorder == REFLECTIVE_BORDER) {
-				sBorderRef[i] = vertexData.size();
+				sBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
 			}
 
 		}
 		for (int i = 0; i < rows; i++) {
 			if (wBorder == SINKS_BORDER || wBorder == REFLECTIVE_BORDER) {
-				wBorderRef[i] = vertexData.size();
+				wBorderRef[i] = configSize();
 				addVertex(x - gridSpacing, y - i * gridSpacing);
 			}
 			if (eBorder == SINKS_BORDER || eBorder == REFLECTIVE_BORDER) {
-				eBorderRef[i] = vertexData.size();
+				eBorderRef[i] = configSize();
 				addVertex(x + (cols) * gridSpacing, y - i * gridSpacing);
 			}
 		}
@@ -659,7 +673,7 @@ public class SandpileController implements ActionListener, Serializable{
 
 			@Override
 			public void undo() {
-				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				TIntArrayList vertices = new TIntArrayList();
 				for(int i=startingIndex;i<=endingIndex;i++){
 					vertices.add(i);
 				}
@@ -683,7 +697,7 @@ public class SandpileController implements ActionListener, Serializable{
 		int[][] gridRef = new int[radius * 2 - 1][radius * 2 - 1];
 		for (int i = 0; i < radius * 2 - 1; i++) {
 			for (int j = 0; j < curRowLength; j++) {
-				gridRef[i][j] = vertexData.size();
+				gridRef[i][j] = configSize();
 				addVertex(x + j * gridSpacing + (i + (radius - 1) % 2) % 2 * (gridSpacing / 2) - curRowLength / 2 * (gridSpacing), y - i * (gridSpacing * 5f / 6f));
 			}
 			if (i < radius - 1) {
@@ -788,7 +802,7 @@ public class SandpileController implements ActionListener, Serializable{
 
 			@Override
 			public void undo() {
-				ArrayList<Integer> vertices = new ArrayList<Integer>();
+				TIntArrayList vertices = new TIntArrayList();
 				for(int i=startingIndex;i<=endingIndex;i++){
 					vertices.add(i);
 				}
@@ -820,18 +834,18 @@ public class SandpileController implements ActionListener, Serializable{
 		//create vertices
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				gridRef[i][j] = vertexData.size();
+				gridRef[i][j] = configSize();
 				addVertex(x + j * gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 		}
 
 		for (int i = 0; i < cols + 1; i++) {
 			if (nBorder < 2) {
-				nBorderRef[i] = vertexData.size();
+				nBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing - (gridSpacing / 2), y + gridSpacing);
 			}
 			if (sBorder < 2) {
-				sBorderRef[i] = vertexData.size();
+				sBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing - (gridSpacing / 2), y - (rows) * gridSpacing);
 			}
 
@@ -839,11 +853,11 @@ public class SandpileController implements ActionListener, Serializable{
 
 		for (int i = 0; i < rows; i++) {
 			if (wBorder < 2) {
-				wBorderRef[i] = vertexData.size();
+				wBorderRef[i] = configSize();
 				addVertex(x - gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 			if (eBorder < 2) {
-				eBorderRef[i] = vertexData.size();
+				eBorderRef[i] = configSize();
 				addVertex(x + (cols) * gridSpacing + i % 2 * (gridSpacing / 2), y - i * gridSpacing);
 			}
 		}
@@ -969,8 +983,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void buildLatticeControl(final float xCoord, final float yCoord, final int rows, final int cols,
 			final int spacing, final List<int[]> vectors,
-			final List<Integer> xStartingWith, final List<Integer> xFreq, final List<Integer> yStartingWith, final List<Integer> yFreq,
-			final List<Boolean> directed, final List<Integer> weight, final List<Integer> borders){
+			final TIntArrayList xStartingWith, final TIntArrayList xFreq, final TIntArrayList yStartingWith, final TIntArrayList yFreq,
+			final List<Boolean> directed, final TIntArrayList weight, final TIntArrayList borders){
 		final int startingIndex = configSize();
 		buildLattice(xCoord,yCoord,rows,cols,spacing,vectors,xStartingWith,xFreq,yStartingWith,yFreq,directed,weight,borders);
 		final int endingIndex = configSize()-1;
@@ -983,11 +997,9 @@ public class SandpileController implements ActionListener, Serializable{
 
 			@Override
 			public void undo() {
-				ArrayList<Integer> vertices = new ArrayList<Integer>();
 				for(int i=startingIndex;i<=endingIndex;i++){
-					vertices.add(i);
+					delVertex(configSize()-1);
 				}
-				delVertices(vertices);
 				repaint();
 			}
 
@@ -1002,15 +1014,15 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void buildLattice(final float xCoord, final float yCoord, final int rows, final int cols,
 			final int spacing, final List<int[]> vectors,
-			final List<Integer> xStartingWith, final List<Integer> xFreq, final List<Integer> yStartingWith, final List<Integer> yFreq,
-			final List<Boolean> directed, final List<Integer> weight, final List<Integer> borders) {
+			final TIntArrayList xStartingWith, final TIntArrayList xFreq, final TIntArrayList yStartingWith, final TIntArrayList yFreq,
+			final List<Boolean> directed, final TIntArrayList weight, final TIntArrayList borders) {
 		float gridSpacing = VERT_RADIUS * (spacing+1);
 		int[][] gridRef = new int[rows][cols];
 
 		//create vertices
 		for (int x = 0; x < cols; x++) {
 			for (int y = 0; y < rows; y++) {
-				gridRef[x][y] = vertexData.size();
+				gridRef[x][y] = configSize();
 				addVertex(xCoord + x * gridSpacing, yCoord + y * gridSpacing);
 			}
 		}
@@ -1207,8 +1219,17 @@ public class SandpileController implements ActionListener, Serializable{
 		return configSize() - 1;
 	}
 
-	public float[] getVertexLocation(int vert) {
-		return vertexData.get(vert);
+	public float getVertexX(int vert) {
+		return vertexData.get(vert, 0);
+	}
+
+	public float getVertexY(int vert) {
+		return vertexData.get(vert, 1);
+	}
+
+	public void setVertexPos(int vert, float x, float y) {
+		vertexData.set(vert, 0, x);
+		vertexData.set(vert, 1, y);
 	}
 
 	public int getSand(int vert) {
@@ -1216,7 +1237,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void delVertex(int v) {
-		vertexData.remove(v);
+		vertexData.removeRow(v);
 		currentConfig.remove(v);
 		firings.remove(v);
 		sg.removeVertex(v);
@@ -1224,16 +1245,17 @@ public class SandpileController implements ActionListener, Serializable{
 		onGraphChange();
 	}
 
-	public void delVertices(List<Integer> vertices) {
+	public void delVertices(TIntArrayList vertices) {
 		sg.removeVertices(vertices);
 		configs.clear();
 		boolean[] toRemove = new boolean[configSize()];
-		for (int v : vertices) {
+		for (int i = 0; i < vertices.size(); i++) {
+			int v = vertices.get(i);
 			toRemove[v] = true;
 		}
 		for (int v = configSize() - 1; v >= 0; v--) {
 			if (toRemove[v]) {
-				vertexData.remove(v);
+				vertexData.removeRow(v);
 				currentConfig.remove(v);
 			}
 		}
@@ -1278,7 +1300,7 @@ public class SandpileController implements ActionListener, Serializable{
 		onConfigChange();
 	}
 
-	public void addSandToRandom(List<Integer> vertices, int amount){
+	public void addSandToRandom(TIntArrayList vertices, int amount){
 		int sign = 1;
 		if(amount<0){
 			sign = -1;
@@ -1298,15 +1320,16 @@ public class SandpileController implements ActionListener, Serializable{
 		onConfigChange();
 	}
 
-	public Iterable<Integer> getOutgoingVertices(int vert) {
-		return sg.getOutgoingVertices(vert);
-	}
+//	public Iterable<Integer> getOutgoingVertices(int vert) {
+//		return sg.getOutgoingVertices(vert);
+//	}
 
-	public List<Integer> getVerticesInRect(float maxX, float maxY, float minX, float minY) {
-		ArrayList<Integer> containedVertices = new ArrayList<Integer>();
-		for (int v = 0; v < vertexData.size(); v++) {
-			float[] pos = vertexData.get(v);
-			if ((pos[0] <= maxX && pos[0] >= minX) && (pos[1] <= maxY && pos[1] >= minY)) {
+	public TIntArrayList getVerticesInRect(float maxX, float maxY, float minX, float minY) {
+		TIntArrayList containedVertices = new TIntArrayList();
+		for (int v = 0; v < configSize(); v++) {
+			float x = getVertexX(v);
+			float y = getVertexY(v);
+			if ((x <= maxX && x >= minX) && (y <= maxY && y >= minY)) {
 				containedVertices.add(v);
 			}
 		}
@@ -1317,15 +1340,16 @@ public class SandpileController implements ActionListener, Serializable{
 		selectedVertices.clear();
 	}
 
-	public void unselectVertex(Integer vert) {
-		selectedVertices.remove((Object) vert);
+	public void unselectVertex(int vert) {
+		int i = selectedVertices.binarySearch(vert);
+		selectedVertices.remove(i);
 	}
 
-	public void selectVertices(List<Integer> vertices) {
-		selectedVertices.addAll(vertices);
+	public void selectVertices(TIntArrayList vertices) {
+		selectedVertices.add(vertices.toNativeArray());
 	}
 
-	public void setSelectedVertices(List<Integer> vertices) {
+	public void setSelectedVertices(TIntArrayList vertices) {
 		selectedVertices = vertices;
 	}
 
@@ -1337,25 +1361,22 @@ public class SandpileController implements ActionListener, Serializable{
 		return selectedVertices.contains(vert);
 	}
 
-	public List<Integer> getSelectedVertices() {
+	public TIntArrayList getSelectedVertices() {
 		return selectedVertices;
 	}
 
-	public void moveVertices(List<Integer> vertices, float deltaX, float deltaY) {
-		for (Integer v : vertices) {
-			vertexData.get(v)[0] += deltaX;
-			vertexData.get(v)[1] += deltaY;
+	public void moveVertices(TIntArrayList vertices, float deltaX, float deltaY) {
+		for (int v=0; v<configSize(); v++) {
+			setVertexPos(v, getVertexX(v)+deltaX, getVertexY(v)+deltaY);
 		}
 	}
 
 	public int touchingVertex(float x, float y) {
-		for (int i = 0; i < vertexData.size(); i++) {
-			float[] v = vertexData.get(i);/*
-			if (Math.sqrt((x - v[0]) * (x - v[0]) + (y - v[1]) * (y - v[1])) <= VERT_RADIUS) {
-			return i;
-			}*/
-			if ((v[0] - VERT_RADIUS) <= x && v[0] + VERT_RADIUS >= x && (v[1] - VERT_RADIUS) <= y && v[1] + VERT_RADIUS >= y) {
-				return i;
+		for (int v = 0; v < configSize(); v++) {
+			float vx = getVertexX(v);
+			float vy = getVertexY(v);
+			if ((vx - VERT_RADIUS) <= x && vx + VERT_RADIUS >= x && (vy - VERT_RADIUS) <= y && vy + VERT_RADIUS >= y) {
+				return v;
 			}
 		}
 		return -1;
@@ -1408,16 +1429,23 @@ public class SandpileController implements ActionListener, Serializable{
 		saveGraphProject(projectFile);
 	}
 
-	public void saveGraphProject(File file) {
+	public boolean saveGraphProject(File file) {
 		file.mkdir();
 		File graphFile = new File(file, "graph.sg");
 		saveGraph(graphFile);
+		for(File f : file.listFiles()){
+			if(f.getName().endsWith(".sc")){
+				if(!f.delete())
+					System.err.println("Unable to clear file: "+f.getName()+".");
+			}
+		}
 		for (String configName : configs.keySet()) {
 			saveConfig(new File(file, configName + ".sc"), configs.get(configName));
 		}
 		saveConfig(new File(file, "current.sc"), currentConfig);
 		projectFile = file;
 		saved = true;
+		return true;
 	}
 
 	public boolean loadGraphProject(File file) {
@@ -1447,13 +1475,13 @@ public class SandpileController implements ActionListener, Serializable{
 		try {
 			file.createNewFile();
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
-			for (float[] coords : vertexData) {
-				outBuffer.write("vertex " + coords[0] + " " + coords[1]);
+			for (int v=0; v<configSize(); v++) {
+				outBuffer.write("vertex " + getVertexX(v) + " " + getVertexY(v));
 				outBuffer.newLine();
 			}
-			for (int i = 0; i < vertexData.size(); i++) {
-				for (int j : sg.getOutgoingVertices(i)) {
-					outBuffer.write("edge " + i + " " + j + " " + sg.weight(i, j));
+			for (int v = 0; v < configSize(); v++) {
+				for (int[] e : sg.getOutgoingEdges(v)) {
+					outBuffer.write("edge " + e[0] + " " + e[1] + " " + e[2]);
 					outBuffer.newLine();
 				}
 			}
@@ -1492,7 +1520,8 @@ public class SandpileController implements ActionListener, Serializable{
 	public void saveConfig(File file, SandpileConfiguration config) {
 		try {
 			BufferedWriter outBuffer = new BufferedWriter(new FileWriter(file));
-			for (int v : config) {
+			for (int i=0; i< configSize(); i++) {
+				int v = config.get(i);
 				outBuffer.write(Integer.toString(v));
 				outBuffer.newLine();
 			}

@@ -39,16 +39,16 @@ package org.headb;
  * @author headb
  */
 
-import java.util.ArrayList;
+import gnu.trove.TIntArrayList;
 
-public class SandpileConfiguration extends ArrayList<Integer>{
+public class SandpileConfiguration extends TIntArrayList{
 
 	public SandpileConfiguration() {
 		super();
 	}
 
 	public SandpileConfiguration(SandpileConfiguration other) {
-		super(other);
+		super(other.toNativeArray());
 	}
 
 	public SandpileConfiguration(int size) {
@@ -56,10 +56,10 @@ public class SandpileConfiguration extends ArrayList<Integer>{
 	}
 
 	public SandpileConfiguration plus(SandpileConfiguration other) {
-		SandpileConfiguration result = new SandpileConfiguration();
 		assert this.size() == other.size() : "Tried to add configurations of different size";
+		SandpileConfiguration result = new SandpileConfiguration(this.size());
 		for(int i=0;i<this.size();i++)
-			result.add(this.get(i)+other.get(i));
+			result.add(this.getQuick(i)+other.getQuick(i));
 		return result;
 	}
 

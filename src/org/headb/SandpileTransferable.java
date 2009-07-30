@@ -31,24 +31,25 @@ package org.headb;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.util.List;
+import gnu.trove.TIntArrayList;
 
 public class SandpileTransferable implements Transferable {
-	private final List<float[]> locationData;
-	private final List<Integer> configData;
+	private final Float2dArrayList locationData;
+	private final TIntArrayList configData;
 	private final List<int[]> edgeData;
 
 
-	public SandpileTransferable(List<float[]> locationData, List<Integer> configData, List<int[]> edgeData){
+	public SandpileTransferable(Float2dArrayList locationData, TIntArrayList configData, List<int[]> edgeData){
 		this.locationData  = locationData;
 		this.configData = configData;
 		this.edgeData = edgeData;
 	}
 
-	public List<float[]> getLocationData(){
+	public Float2dArrayList getLocationData(){
 		return locationData;
 	}
 
-	public List<Integer> getConfigData(){
+	public TIntArrayList getConfigData(){
 		return configData;
 	}
 
@@ -57,7 +58,7 @@ public class SandpileTransferable implements Transferable {
 	}
 
 	public Object getTransferData(DataFlavor flavor){
-		List[] data = {locationData, edgeData, configData};
+		Object[] data = {locationData, edgeData, configData};
 		return data;
 	}
 	public DataFlavor[] getTransferDataFlavors(){
