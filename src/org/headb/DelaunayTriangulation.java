@@ -109,8 +109,8 @@ public class DelaunayTriangulation {
 //				System.err.println("length: " + length);
 //			}
 		}
-		removePoint(tl);
 		removePoint(br);
+		removePoint(tl);
 		removePoint(startPt);
 		triangles = new Int2dArrayList(0, 3);
 		for (int t = 0; t < trisToPoints.rows(); t++) {
@@ -385,5 +385,6 @@ public class DelaunayTriangulation {
 			int tri = tris.get(i);
 			removeTriangle(tri);
 		}
+		points.removeRow(p);
 	}
 }
