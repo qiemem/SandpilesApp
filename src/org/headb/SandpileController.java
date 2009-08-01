@@ -1239,6 +1239,9 @@ public class SandpileController implements ActionListener, Serializable{
 	public void delVertex(int v) {
 		vertexData.removeRow(v);
 		currentConfig.remove(v);
+		int index = selectedVertices.indexOf(v);
+		if(index>=0)
+			selectedVertices.remove(index);
 		firings.remove(v);
 		sg.removeVertex(v);
 		configs.clear();
@@ -1252,6 +1255,9 @@ public class SandpileController implements ActionListener, Serializable{
 		for (int i = 0; i < vertices.size(); i++) {
 			int v = vertices.get(i);
 			toRemove[v] = true;
+			int index = selectedVertices.indexOf(v);
+			if(index>=0)
+				selectedVertices.remove(index);
 		}
 		for (int v = configSize() - 1; v >= 0; v--) {
 			if (toRemove[v]) {
@@ -1268,7 +1274,7 @@ public class SandpileController implements ActionListener, Serializable{
 		firings.clear();
 		configs.clear();
 		sg.removeAllVertices();
-		this.selectedVertices.clear();
+		selectedVertices.clear();
 		onGraphChange();
 		repaint();
 	}
