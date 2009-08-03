@@ -85,20 +85,42 @@ public class SandpileController implements ActionListener, Serializable{
 
 	private boolean needsRepaint = false;
 
+
+	/**
+	 * Assigns the SandpileGraph and SandpileDrawer to new instances. The SandpileDrawer
+	 * is a SandpileGLDrawer and the graph is empty.
+	 */
 	public SandpileController() {
 		drawer = new SandpileGLDrawer();
 		initWithSandpileGraph(new SandpileGraph());
 	}
 
+	/**
+	 * Allows you to set the drawer. Useful if you've already added the canvas.
+	 *
+	 * via a GUI maker and assigned it a SandpileDrawer.
+	 * @param d The SandpileDrawer that will be sent repaint commands from this Controller.
+	 */
 	public SandpileController(SandpileDrawer d) {
 		drawer = d;
 		initWithSandpileGraph(new SandpileGraph());
 	}
 
+	/**
+	 * Allows you to set both the graph and drawer used by this controller.
+	 *
+	 * @param d The SandpileDrawer that will be sent repaint commands from this controller.
+	 * @param sg The SandpileGraph that this controller will edit, use to update configs, and tell the drawer to draw.
+	 */
 	public SandpileController(SandpileDrawer d, SandpileGraph sg) {
 		initWithSandpileGraph(sg);
 	}
 
+	/**
+	 * Initializes all members. Should be called by any SandpileController constructor.
+	 *
+	 * @param sg The SandpileGraph that this controller will edit, use to update configs, and tell the drawer to draw.
+	 */
 	private void initWithSandpileGraph(SandpileGraph sg) {
 		//this.curState = ADD_VERT_STATE;
 		this.sg = sg;
@@ -112,16 +134,37 @@ public class SandpileController implements ActionListener, Serializable{
 		selectedVertices.clear();
 	}
 
+	/**
+	 * Changes the drawer that this controller sends repaint commands to.
+	 * Useful if you want to display the graph in a different way; e.g.
+	 * switch from 2d to 3d. A corresponding switch in canvases will have to happen
+	 * elsewhere, if the two different drawers use different canvases.
+	 *
+	 * @param sd The new drawer that will be sent repaint commands by this
+	 * controller.
+	 */
 	public void setDrawer(SandpileDrawer sd){
 		drawer = sd;
 	}
 
+	/**
+	 * Creates a new server socket on the specified port.
+	 * @param port The port to listen on.
+	 * @throws IOException Throws this exception if the connection is
+	 * if the method fails to create a new ServerSocket.
+	 */
 	public void startServer(int port) throws IOException{
 		server = new ServerSocket(port, 5);
 		//System.err.println("Created server socket");
 		protocol = new SandpileProtocol(this);
 	}
-
+	/**
+	 * Tells the controller to wait and listen for a TCP connection request on
+	 * the specified port. This method will return only when a request is made.
+	 * You must call startServer() before calling this method.
+	 * @throws IOException Throws this exception if the connection fails or
+	 * if it fails to create an input or output stream.
+	 */
 	public void acceptClient() throws IOException{
 		incoming = server.accept();
 		//System.err.println("Accepted incoming socket");
@@ -129,6 +172,17 @@ public class SandpileController implements ActionListener, Serializable{
 		out = new PrintWriter(incoming.getOutputStream(), true);
 	}
 
+	/**
+	 * Looks to see if there are any messages have been sent to the server
+	 * created by startServer(). The messages must end with a newline character
+	 * or else they will not be recognized as complete messages. If there is not
+	 * a message that ends in a newline character, this method will simply
+	 * return. You must call startServer() and acceptClient() successfully in
+	 * order to use this method.
+	 * @return Returns the next message waiting if there is one or null.
+	 * @throws IOException Throws this exception if there is a problem reading
+	 * from the input stream.
+	 */
 	public String checkForMessage() throws IOException{
 		if(in.ready())
 			return in.readLine();
@@ -136,6 +190,16 @@ public class SandpileController implements ActionListener, Serializable{
 			return null;
 	}
 
+	/**
+	 * Checks to see if any messages have been sent to the server and, if so,
+	 * acts appropriately by interpretting the message with an instance of
+	 * SandpileProtocol. You must call startServer() and acceptClient()
+	 * succesfully before using this method. This method should be called at
+	 * regular intervals for correct server behavior. If there are no
+	 * messages waiting, the method will simply return.
+	 * @throws IOException Throws this exception if there is a problem reading
+	 * from the input stream or writing to the output stream.
+	 */
 	public void receiveMessage() throws IOException{
 		String msg = null;
 		try{
@@ -147,6 +211,13 @@ public class SandpileController implements ActionListener, Serializable{
 			out.println(protocol.processInput(msg));
 	}
 
+	/**
+	 * Closes the connection created by startServer() and closes the
+	 * corresponding input and output streams. I don't think a connection
+	 * actually has to be open to call this method however.
+	 * @throws IOException Throw this exception if there is a problem closing
+	 * the connection or the input/output streams.
+	 */
 	public void stopServer() throws IOException{
 		if(incoming!=null){
 			incoming.close();
@@ -158,6 +229,12 @@ public class SandpileController implements ActionListener, Serializable{
 		server.close();
 	}
 
+	/**
+	 * Looks to see if there is a project file associated with the current graph
+	 * and returns it. Project files are just folders containing a graph.sg
+	 * file.
+	 * @return Returns the project name if there is one or "Untitled".
+	 */
 	public String getProjectTitle() {
 		String title;
 		if (projectFile != null) {
@@ -171,10 +248,22 @@ public class SandpileController implements ActionListener, Serializable{
 		return title;
 	}
 
+	/**
+	 * Returns the size of the current config, which should always be number of
+	 * vertices.
+	 * @return The size of the current config.
+	 */
 	public int configSize(){
 		return currentConfig.size();
 	}
 
+	/**
+	 * Performs a repaint/update cycle if the appropriate amount of time has
+	 * passed since the last rapint/update. This method is useful for hooking
+	 * this controller up to a javax.swing.Timer or something similar.
+	 * @param evt The ActionEvent that triggers this method.
+	 * @see setMinUpdateDelay(), setMinRepaintDelay(), setRepaintOnEveryUpdate()
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		if(repaintOnEveryUpdate){
 			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
@@ -197,10 +286,17 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	/**
-	 * Fires all unstable vertices and repaints.
+	 * Updated firing counts (by checking for unstables) and fires all unstable
+	 * vertices. This method uses the iterator returned by
+	 * SandpileGraph.inPlaceUpdater() to update the current config in place. It
+	 * will only remake the iterator if it is null. Thus, it is the
+	 * responsibility of the methods that change the graph or config to set the
+	 * iterator to null; the onEdit() method does this. This method will only
+	 * update if the iterator's hasNext() returns true. Hence, no unnecessary
+	 * update cycles will be performed.
 	 */
 	public void update() {
-		if(drawer.getColorMode()==SandpileDrawer.ColorMode.FIRINGS)
+		//if(drawer.getColorMode()==SandpileDrawer.ColorMode.FIRINGS)
 			updateFirings();
 		if (updater == null) {
 			updater = sg.inPlaceUpdater(currentConfig);
@@ -211,6 +307,9 @@ public class SandpileController implements ActionListener, Serializable{
 		//repaint();
 	}
 
+	/**
+	 * Resets all firing counts to 0.
+	 */
 	public void resetFirings() {
 		firings = new TIntArrayList();
 		for (int i=0; i<currentConfig.size(); i++) {
@@ -218,6 +317,9 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 	}
 
+	/**
+	 * Updates the firing counts by looking up the unstable vertices.
+	 */
 	public void updateFirings() {
 		if (firings.size() != configSize()) {
 			resetFirings();
@@ -229,28 +331,63 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 	}
 
+	/**
+	 * Calls this object's SandpileDrawer's paintSandpileGraph() method with
+	 * this object's current data.
+	 */
 	public void repaint() {
 		drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertices);
 	}
 
+	/**
+	 * Should be called by any public method that changes the graph. Calls
+	 * onEdit() and clearVertexDependentConfigs();
+	 */
 	public void onGraphChange(){
 		onEdit();
+		clearVertexDependentConfigs();
 	}
 
+	/**
+	 * Should be called by any public method that changes the current config.
+	 * Calls onEdit().
+	 */
 	public void onConfigChange() {
 		onEdit();
 	}
 
+	/**
+	 * Removes any stored configs that depend on the edges of the graph. This
+	 * includes the identity and minimum burning configs by default.
+	 */
 	public void clearEdgeDependentConfigs() {
 		configs.remove("Identity");
 		configs.remove("Burning");
 	}
 
+	/**
+	 * Removes any stored config that depend on the vertices of the graph. By
+	 * default, this is all stored configs.
+	 */
+	public void clearVertexDependentConfigs() {
+		configs.clear();
+	}
+
+	/**
+	 * Ensures the the current project no longer registers as saved and sets the
+	 * updater iterator is set to null.
+	 */
 	public void onEdit() {
 		saved = false;
 		updater = null;
 	}
 
+	/**
+	 * Set the current config to the given config.
+	 * @param config The new current config.
+	 * @throws IndexOutOfBoundsException Throws this exception if the given
+	 * config is a different size than the current config.
+	 */
 	public void setConfig(SandpileConfiguration config){
 		if(config.size() == configSize()){
 			currentConfig = config;
@@ -261,6 +398,12 @@ public class SandpileController implements ActionListener, Serializable{
 					" size is "+ configSize()+" while the new configuration had size" +
 					config.size()+ ".");
 	}
+	/**
+	 * Sets the current config to the given config plus the current config.
+	 * @param config The config to add to the current config.
+	 * @throws IndexOutOfBoundsException Throws this exception if the given
+	 * config is a different size than the current config.
+	 */
 	public void addConfig(SandpileConfiguration config){
 		if(config.size() == configSize()){
 			currentConfig = currentConfig.plus(config);
@@ -272,10 +415,17 @@ public class SandpileController implements ActionListener, Serializable{
 					config.size()+ ".");
 	}
 
+	/**
+	 * Adds a vertex at the given coordinates, as long as the given coordinates
+	 * don't touch any other vertex. Triggers onGraphChange().
+	 * @param x The x coordinate of the new vertex.
+	 * @param y The y coordinate of the new vertex.
+	 */
 	public void addVertexControl(final float x, final float y) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert < 0) {
 			final int addedVert = addVertex(x, y);
+			onGraphChange();
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
 				@Override
@@ -299,10 +449,19 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
+	/**
+	 * Deletes the most recently placed vertex that touchs the points (x,y). If
+	 * no vertex is touching (x,y), this method does nothing. Triggers
+	 * onGraphChange().
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 */
 	public void delVertexControl(final float x, final float y) {
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
-			delVertex(touchVert);
+			final ArrayList<int[]> edges = new ArrayList<int[]>();
+			edges.addAll(sg.getOutgoingEdges(touchVert));
+			edges.addAll(sg.getIncomingEdges(touchVert));
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
 				private int vertIndex = touchVert;
@@ -324,10 +483,22 @@ public class SandpileController implements ActionListener, Serializable{
 					repaint();
 				}
 			});
+			delVertex(touchVert);
+			onGraphChange();
 		}
 		repaint();
 	}
 
+	/**
+	 * Adds an starting from each selected vertex to the most recently placed
+	 * vertex that touches the point (x,y) of the specified weight. If an edge
+	 * already exists this will increase the weight of the edge by the given
+	 * weight. If no vertex touches (x,y), this method does nothing. Triggers
+	 * onGraphChange().
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param weight The weight of the new edges.
+	 */
 	public void addEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
@@ -335,6 +506,7 @@ public class SandpileController implements ActionListener, Serializable{
 				int v = selectedVertices.get(i);
 				addEdge(v, touchVert, weight);
 			}
+			onGraphChange();
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
 				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
@@ -366,6 +538,14 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
+	/**
+	 * Calling delEdgeControl(x,y,weight) is the same as
+	 * addEdgeControl(x,y,-weight). If an edge weight goes to zero or less,
+	 * it will simply be removed.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate
+	 * @param weight The amount of weight to take away from the edges.
+	 */
 	public void delEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
@@ -373,6 +553,7 @@ public class SandpileController implements ActionListener, Serializable{
 				int v = selectedVertices.get(i);
 				delEdge(v, touchVert, weight);
 			}
+			onGraphChange();
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
 				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
@@ -412,6 +593,7 @@ public class SandpileController implements ActionListener, Serializable{
 				addEdge(v, touchVert, weight);
 				addEdge(touchVert, v, weight);
 			}
+			onGraphChange();
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
 				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
@@ -453,6 +635,7 @@ public class SandpileController implements ActionListener, Serializable{
 				delEdge(v, touchVert, weight);
 				delEdge(touchVert, v, weight);
 			}
+			onGraphChange();
 			undoManager.addEdit(new AbstractUndoableEdit() {
 
 				private TIntArrayList sourceVertices = (TIntArrayList) selectedVertices.clone();
@@ -490,6 +673,7 @@ public class SandpileController implements ActionListener, Serializable{
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			addSand(touchVert, amount);
+			onConfigChange();
 		}
 		repaint();
 	}
@@ -498,6 +682,7 @@ public class SandpileController implements ActionListener, Serializable{
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			setSand(touchVert, amount);
+			onConfigChange();
 		}
 		repaint();
 	}
@@ -508,6 +693,7 @@ public class SandpileController implements ActionListener, Serializable{
 			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
 		final int startingIndex = configSize();
 		makeGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+		onGraphChange();
 		final int endingIndex = configSize()-1;
 		undoManager.addEdit(new AbstractUndoableEdit() {
 
@@ -663,6 +849,7 @@ public class SandpileController implements ActionListener, Serializable{
 		
 		final int startingIndex = configSize();
 		makeHoneycomb(radius, x, y, borders);
+		onGraphChange();
 		final int endingIndex = configSize()-1;
 		undoManager.addEdit(new AbstractUndoableEdit() {
 
@@ -792,6 +979,7 @@ public class SandpileController implements ActionListener, Serializable{
 			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
 		final int startingIndex = configSize();
 		makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+		onGraphChange();
 		final int endingIndex = configSize()-1;
 		undoManager.addEdit(new AbstractUndoableEdit() {
 
@@ -987,6 +1175,7 @@ public class SandpileController implements ActionListener, Serializable{
 			final List<Boolean> directed, final TIntArrayList weight, final TIntArrayList borders){
 		final int startingIndex = configSize();
 		buildLattice(xCoord,yCoord,rows,cols,spacing,vectors,xStartingWith,xFreq,yStartingWith,yFreq,directed,weight,borders);
+		onGraphChange();
 		final int endingIndex = configSize()-1;
 		undoManager.addEdit(new AbstractUndoableEdit() {
 
@@ -1012,7 +1201,7 @@ public class SandpileController implements ActionListener, Serializable{
 		this.repaint();
 	}
 
-	public void buildLattice(final float xCoord, final float yCoord, final int rows, final int cols,
+	protected void buildLattice(final float xCoord, final float yCoord, final int rows, final int cols,
 			final int spacing, final List<int[]> vectors,
 			final TIntArrayList xStartingWith, final TIntArrayList xFreq, final TIntArrayList yStartingWith, final TIntArrayList yFreq,
 			final List<Boolean> directed, final TIntArrayList weight, final TIntArrayList borders) {
@@ -1214,8 +1403,6 @@ public class SandpileController implements ActionListener, Serializable{
 		vertexData.add(newPos);
 		currentConfig.add(0);
 		firings.add(0);
-		configs.clear();
-		onGraphChange();
 		return configSize() - 1;
 	}
 
@@ -1236,7 +1423,7 @@ public class SandpileController implements ActionListener, Serializable{
 		return currentConfig.get(vert);
 	}
 
-	public void delVertex(int v) {
+	private void delVertex(int v) {
 		vertexData.removeRow(v);
 		currentConfig.remove(v);
 		int index = selectedVertices.indexOf(v);
@@ -1246,6 +1433,7 @@ public class SandpileController implements ActionListener, Serializable{
 		sg.removeVertex(v);
 		configs.clear();
 		onGraphChange();
+		onConfigChange();
 	}
 
 	public void delVertices(TIntArrayList vertices) {
@@ -1279,26 +1467,22 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
-	public void addEdge(int originVert, int destVert) {
+	protected void addEdge(int originVert, int destVert) {
 		addEdge(originVert, destVert, 1);
-		onGraphChange();
 	}
 
-	public void addEdge(int originVert, int destVert, int weight) {
+	protected void addEdge(int originVert, int destVert, int weight) {
 		sg.addEdge(originVert, destVert, weight);
 		clearEdgeDependentConfigs();
-		onGraphChange();
 	}
 
-	public void delEdge(int originVert, int destVert) {
+	protected void delEdge(int originVert, int destVert) {
 		this.delEdge(originVert, destVert, 1);
-		onGraphChange();
 	}
 
-	public void delEdge(int originVert, int destVert, int weight) {
+	protected void delEdge(int originVert, int destVert, int weight) {
 		sg.removeEdge(originVert, destVert, weight);
 		clearEdgeDependentConfigs();
-		onGraphChange();
 	}
 
 	public void addSand(int vert, int amount) {

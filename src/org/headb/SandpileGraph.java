@@ -90,6 +90,17 @@ public class SandpileGraph {
 		return adj.get(vert);
 	}
 
+	public List<int[]> getIncomingEdges(int vert) {
+		ArrayList<int[]> edges = new ArrayList<int[]>();
+		for(int v=0; v<this.numVertices(); v++){
+			for(int[] e : getOutgoingEdges(v)){
+				if(e[1] == vert)
+					edges.add(e);
+			}
+		}
+		return edges;
+	}
+
 //	public final Iterable<Integer> getOutgoingVertices(int vert) {
 //		final List<int[]> edgeList = getOutgoingEdges(vert);
 //		final Iterator<Integer> vertIter = new Iterator<Integer>() {
