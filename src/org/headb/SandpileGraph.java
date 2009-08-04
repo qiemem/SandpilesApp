@@ -49,7 +49,18 @@ public class SandpileGraph {
 	}
 
 	public SandpileGraph(SandpileGraph graph){
-		this.adj = new ArrayList<ArrayList<int[]>>(graph.adj);
+		this.adj = new ArrayList<ArrayList<int[]>>();
+		for (ArrayList<int[]> v : graph.adj) {
+			ArrayList<int[]> newV = new ArrayList<int[]>();
+			for (int[] e : v){
+				int[] newE = new int[3];
+				newE[0] = e[0];
+				newE[1] = e[1];
+				newE[2] = e[2];
+				newV.add(newE);
+			}
+			this.adj.add(newV);
+		}
 		this.degrees = new TIntArrayList(graph.degrees.toNativeArray());
 	}
 

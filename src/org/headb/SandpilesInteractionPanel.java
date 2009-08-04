@@ -264,7 +264,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	public void cutSelectedToClipBoard(){
 		copySelectedToClipboard();
-		sandpileController.delVertices(sandpileController.getSelectedVertices());
+		sandpileController.delVerticesControl(sandpileController.getSelectedVertices());
 		sandpileController.unselectVertices();
 		sandpileController.repaint();
 	}
@@ -711,6 +711,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         optionsTabbedPane.addTab(EDIT_GRAPH_STATE, editGraphPanel);
 
         configManagerOptionsPanel.setPreferredSize(new java.awt.Dimension(150, 600));
+        configManagerOptionsPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                configManagerOptionsPanelComponentShown(evt);
+            }
+        });
 
         DefaultListModel configSelectListModel = new DefaultListModel();
         configSelectListModel.addElement(MAX_CONFIG);
@@ -1622,9 +1627,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 898, Short.MAX_VALUE)
+                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(mouseToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 106, Short.MAX_VALUE)
                 .add(2, 2, 2))
             .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
         );
@@ -1709,7 +1714,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private void deleteGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGraphButtonActionPerformed
 
-		sandpileController.delAllVertices();
+		sandpileController.delAllVerticesControl();
 		drawer3d.triangulate(sandpileController.vertexData);
 		this.updateConfigSelectList();
 }//GEN-LAST:event_deleteGraphButtonActionPerformed
@@ -2069,10 +2074,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		updateConfigSelectList();
 	}//GEN-LAST:event_storeConfigButtonActionPerformed
 
-	private void navigateToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToggleButtonActionPerformed
-
-}//GEN-LAST:event_navigateToggleButtonActionPerformed
-
 	private void selectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectToggleButtonActionPerformed
 
 	}//GEN-LAST:event_selectToggleButtonActionPerformed
@@ -2104,7 +2105,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private void deleteSelectedVerticesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedVerticesButtonActionPerformed
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		TIntArrayList verts = sandpileController.getSelectedVertices();
-		sandpileController.delVertices(verts);
+		sandpileController.delVerticesControl(verts);
 		sandpileController.unselectVertices();
 		sandpileController.repaint();
 		this.setCursor(Cursor.getDefaultCursor());
@@ -2238,6 +2239,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}//GEN-LAST:event_subtractConfigButtonActionPerformed
+
+	private void configManagerOptionsPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_configManagerOptionsPanelComponentShown
+		updateConfigSelectList();
+	}//GEN-LAST:event_configManagerOptionsPanelComponentShown
+
+	private void navigateToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToggleButtonActionPerformed
+
+}//GEN-LAST:event_navigateToggleButtonActionPerformed
 
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));

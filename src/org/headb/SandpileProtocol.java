@@ -55,7 +55,7 @@ public class SandpileProtocol {
 		} else if (command[0].equals("repaint")) {
 			sc.repaint();
 		} else if (command[0].equals("delete_graph")) {
-			sc.delAllVertices();
+			sc.delAllVerticesControl();
 		} else if (command[0].equals("clear_sand")) {
 			sc.clearSand();
 		} else if (command[0].equals("get_vertices")) {
