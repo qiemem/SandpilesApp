@@ -657,7 +657,6 @@ public class SandpileGraph {
 
 	/**
 	 * Calculates the minimal burning configuration of the graph. Preserves the current configuration.
-	 * Runs in O(V+E), I think.
 	 *
 	 * @return Returns a list representing the configuration.
 	 */
@@ -670,6 +669,37 @@ public class SandpileGraph {
 			w = getInDebtVertex(config);
 		}
 		return config;
+	}
+
+	/**
+	 * Calculates the recurrent configuration that is equivalent to config,
+	 * where equivalent means that stabilize(config+identity) = equivConfig.
+	 * This method calculates the recurrent by adding the burning config to the
+	 * config repeatedly, until it no longer changes. The efficiency of this
+	 * method relies on the fact that stabilizing a stable config plus burning
+	 * is O(V+E), rather than each update taking O(V+E) as with arbitrary
+	 * stabilization.
+	 * WARNING: This method can take a very long time for large graphs.
+	 * WARNING2: If there is no global sink for the graph, this method may not
+	 * end.
+	 * @param config An arbitrary SandpileConfiguration.
+	 * @return The equivalent sandpile configuration.
+	 */
+	public SandpileConfiguration getEquivalentRecurrent(SandpileConfiguration config) {
+		SandpileConfiguration burning = getMinimalBurningConfig();
+		TIntArrayList burningVertices = new TIntArrayList();
+		for (int vert = 0; vert < burning.size(); vert++) {
+			if (burning.get(vert) > 0) {
+				burningVertices.add(vert);
+			}
+		}
+		SandpileConfiguration result = stabilizeConfig(config.plus(burning));
+		SandpileConfiguration nextResult = stabilizeConfigStartingWith(result.plus(burning), burningVertices);
+		while(!result.equals(nextResult)){
+			result = nextResult;
+			nextResult = stabilizeConfigStartingWith(result.plus(burning), burningVertices);
+		}
+		return result;
 	}
 
 	/**
@@ -696,36 +726,6 @@ public class SandpileGraph {
 		}
 		return false;
 	}
-	/*
-	public SandpileConfiguration fireEverything(SandpileConfiguration config, int times){
-	SandpileConfiguration newConfig = new SandpileConfiguration(config);
-	for(int sourceVert=0; sourceVert<config.size(); sourceVert++){
-	newConfig.set(sourceVert, newConfig.get(sourceVert) - times*degree(sourceVert));
-	for(Integer destVert : this.getOutgoingVertices(sourceVert))
-	newConfig.set(destVert, newConfig.get(destVert)+times*weight(sourceVert,destVert));
-	}
-	return newConfig;
-	}*/
-
-	/**
-	 * Calculates the identity configuration of the graph.
-	 * WARNING: For big graphs, this can take a long time.
-	 * Currently, the function stabilizes 2*max_config,
-	 * takes the dual, adds max_config, and stabilizes again.
-	 * SECOND WARNING: If the graph does not have an identity (there is no global
-	 * sink or something), this function will never end!
-	 * @return A list representing the identity configuration.
-	 *//*
-	public SandpileConfiguration getIdentityConfig() {
-	SandpileConfiguration config = new SandpileConfiguration(this.numVertices());
-	SandpileConfiguration maxConfig = this.getMaxConfig();
-	config = maxConfig.plus(maxConfig);
-	config = stabilizeConfig(config);
-	config = this.getDualConfig(config);
-	config = config.plus(maxConfig);
-	return stabilizeConfig(config);
-	}
-	 */
 
 	/**
 	 * Calculates the identity configuration of the graph.
@@ -738,19 +738,6 @@ public class SandpileGraph {
 	 * @return The identity configuration.
 	 */
 	public SandpileConfiguration getIdentityConfig() {
-		SandpileConfiguration burning = getMinimalBurningConfig();
-		TIntArrayList burningVertices = new TIntArrayList();
-		for (int vert = 0; vert < burning.size(); vert++) {
-			if (burning.get(vert) > 0) {
-				burningVertices.add(vert);
-			}
-		}
-		SandpileConfiguration config = stabilizeConfig(burning);
-		SandpileConfiguration nextConfig = stabilizeConfigStartingWith(config.plus(burning), burningVertices);
-		while (!config.equals(nextConfig)) {
-			config = nextConfig;
-			nextConfig = stabilizeConfigStartingWith(config.plus(burning), burningVertices);
-		}
-		return config;
+		return getEquivalentRecurrent(getUniformConfig(0));
 	}
 }
