@@ -1145,6 +1145,26 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
+	public void setToEquivalentRecurrent(int times) {
+		setConfig(sg.getEquivalentRecurrent(currentConfig).times(times));
+		repaint();
+	}
+
+	public void addEquivalentRecurrent(int times) {
+		setConfig(currentConfig.plus(sg.getEquivalentRecurrent(currentConfig).times(times)));
+		repaint();
+	}
+
+	public void setToInverseConfig(int times) {
+		setConfig(sg.getInverseConfig(currentConfig).times(times));
+		repaint();
+	}
+
+	public void addInverseConfig(int times) {
+		setConfig(currentConfig.plus(sg.getInverseConfig(currentConfig).times(times)));
+		repaint();
+	}
+
 	public void setToRandomConfig(int times) {
 		this.clearSand();
 		this.addSandToRandom(sg.getNonSinks(), times);

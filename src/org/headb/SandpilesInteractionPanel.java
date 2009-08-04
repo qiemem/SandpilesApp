@@ -76,11 +76,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private static final String MAX_CONFIG = "Max Stable";
 	private static final String IDENTITY_CONFIG = "Identity";
 	private static final String BURNING_CONFIG = "Burning";
+	private static final String EQUIVALENT_RECURRENT = "Equivalent Recurrent";
+	private static final String INVERSE_CONFIG = "Inverse";
 	private static final String CURRENT_CONFIG = "Current";
 	private static final String DUAL_CONFIG = "Dual of Current";
 	private static final String ONES_CONFIG = "Ones Everywhere";
 	private static final String RANDOM_CONFIG = "Random Grain";
-	private final String[] defaultConfigs = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, CURRENT_CONFIG, DUAL_CONFIG, ONES_CONFIG, RANDOM_CONFIG };
+	private final String[] defaultConfigs = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, EQUIVALENT_RECURRENT, INVERSE_CONFIG, CURRENT_CONFIG, DUAL_CONFIG, ONES_CONFIG, RANDOM_CONFIG };
 
 	private Float2dArrayList colors;
 	private Float2dArrayList inDebtColors;
@@ -717,12 +719,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
-        DefaultListModel configSelectListModel = new DefaultListModel();
-        configSelectListModel.addElement(MAX_CONFIG);
-        configSelectListModel.addElement(IDENTITY_CONFIG);
-        configSelectListModel.addElement(BURNING_CONFIG);
-        configSelectListModel.addElement(ONES_CONFIG);
-        configSelectList.setModel(configSelectListModel);
+        //DefaultListModel configSelectListModel = new DefaultListModel();
+        //configSelectListModel.addElement(MAX_CONFIG);
+        //configSelectListModel.addElement(IDENTITY_CONFIG);
+        //configSelectListModel.addElement(BURNING_CONFIG);
+        //configSelectListModel.addElement(ONES_CONFIG);
         jScrollPane3.setViewportView(configSelectList);
 
         addConfigButton.setText("Add"); // NOI18N
@@ -1627,9 +1628,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE)
+                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 898, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 106, Short.MAX_VALUE)
+                .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(2, 2, 2))
             .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
         );
@@ -1759,23 +1760,27 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
 		int times = Integer.valueOf(configTimesTextField.getText());
-		if(selection!=null){
-			if(selection.equals(MAX_CONFIG)){
+		if (selection != null) {
+			if (selection.equals(MAX_CONFIG)) {
 				sandpileController.addMaxStableConfig(times);
-			}else if(selection.equals(CURRENT_CONFIG)){
+			} else if (selection.equals(CURRENT_CONFIG)) {
 				sandpileController.addCurrentConfig(times);
-			}if(selection.equals(DUAL_CONFIG)){
+			} else if (selection.equals(DUAL_CONFIG)) {
 				sandpileController.addDualConfig(times);
-			}else if(selection.equals(ONES_CONFIG)){
+			} else if (selection.equals(ONES_CONFIG)) {
 				sandpileController.addSandEverywhere(times);
-			}else if(selection.equals(IDENTITY_CONFIG)){
+			} else if (selection.equals(IDENTITY_CONFIG)) {
 				sandpileController.addIdentity(times);
-			}else if(selection.equals(BURNING_CONFIG)){
+			} else if (selection.equals(BURNING_CONFIG)) {
 				sandpileController.addBurningConfig(times);
-			}else if(selection.equals(RANDOM_CONFIG)){
+			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
+				sandpileController.addEquivalentRecurrent(times);
+			} else if (selection.equals(INVERSE_CONFIG)) {
+				sandpileController.addInverseConfig(times);
+			} else if (selection.equals(RANDOM_CONFIG)) {
 				sandpileController.addRandomConfig(times);
-			}else {
-				sandpileController.addConfigNamed(selection,times);
+			} else {
+				sandpileController.addConfigNamed(selection, times);
 			}
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -1786,21 +1791,25 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		String selection = (String)configSelectList.getSelectedValue();
 		int times = Integer.valueOf(configTimesTextField.getText());
 		if(selection!=null){
-			if(selection.equals(MAX_CONFIG)){
+			if (selection.equals(MAX_CONFIG)) {
 				sandpileController.setToMaxStableConfig(times);
-			}else if(selection.equals(DUAL_CONFIG)){
+			} else if (selection.equals(DUAL_CONFIG)) {
 				sandpileController.setToDualConfig(times);
-			}else if(selection.equals(ONES_CONFIG)){
+			} else if (selection.equals(ONES_CONFIG)) {
 				sandpileController.setSandEverywhere(times);
-			}else if(selection.equals(IDENTITY_CONFIG)){
+			} else if (selection.equals(IDENTITY_CONFIG)) {
 				sandpileController.setToIdentity(times);
-			}else if(selection.equals(BURNING_CONFIG)){
+			} else if (selection.equals(BURNING_CONFIG)) {
 				sandpileController.setToBurningConfig(times);
-			}else if(selection.equals(CURRENT_CONFIG)){
+			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
+				sandpileController.setToEquivalentRecurrent(times);
+			} else if (selection.equals(INVERSE_CONFIG)) {
+				sandpileController.setToInverseConfig(times);
+			} else if (selection.equals(CURRENT_CONFIG)) {
 				sandpileController.setToCurrentConfig(times);
-			}else if(selection.equals(RANDOM_CONFIG)){
+			} else if (selection.equals(RANDOM_CONFIG)) {
 				sandpileController.setToRandomConfig(times);
-			}else{
+			} else {
 				sandpileController.setConfigNamed(selection,times);
 			}
 		}
