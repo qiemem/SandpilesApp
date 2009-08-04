@@ -703,6 +703,19 @@ public class SandpileGraph {
 	}
 
 	/**
+	 * Calculates the inverse recurrent config. That is, if config is recurrent,
+	 * stabilize(config + inverse) = identity.
+	 * WARNING: This method uses getEquivalentRecurrent(), so the same warnings
+	 * apply.
+	 * @param config An arbitrary SandpileConfiguration.
+	 * @return The recurrent inverse of config;
+	 */
+	public SandpileConfiguration getInverseConfig(SandpileConfiguration config) {
+		SandpileConfiguration inverse = config.times(-1);
+		return getEquivalentRecurrent(inverse);
+	}
+
+	/**
 	 * Gets an arbitrary vertex with negative sand.
 	 * @return Returns the index of a vertex.
 	 */
