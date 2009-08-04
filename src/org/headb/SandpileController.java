@@ -88,15 +88,15 @@ public class SandpileController implements ActionListener, Serializable{
 	private class SGEdit extends AbstractUndoableEdit {
 		private SandpileGraph oldSG = new SandpileGraph(sg);
 		private Float2dArrayList oldLocations = new Float2dArrayList(vertexData);
-		private SandpileConfiguration oldCurConfig = new SandpileConfiguration(currentConfig);
-		private HashMap<String, SandpileConfiguration> oldConfigs = new HashMap<String, SandpileConfiguration>(configs);
-		private TIntArrayList oldSelected = new TIntArrayList(selectedVertices.toNativeArray());
+		//private SandpileConfiguration oldCurConfig = new SandpileConfiguration(currentConfig);
+		//private HashMap<String, SandpileConfiguration> oldConfigs = new HashMap<String, SandpileConfiguration>(configs);
+		//private TIntArrayList oldSelected = new TIntArrayList(selectedVertices.toNativeArray());
 
 		private SandpileGraph newSG;
 		private Float2dArrayList newLocations;
-		private SandpileConfiguration newCurConfig;
-		private HashMap<String, SandpileConfiguration> newConfigs;
-		private TIntArrayList newSelected;
+		//private SandpileConfiguration newCurConfig;
+		//private HashMap<String, SandpileConfiguration> newConfigs;
+		//private TIntArrayList newSelected;
 		
 		private String presentationName;
 
@@ -109,30 +109,30 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 
 		@Override public void undo(){
-			System.err.println("undo " + getPresentationName());
+			//System.err.println("undo " + getPresentationName());
 			newSG = new SandpileGraph(sg);
 			newLocations = new Float2dArrayList(vertexData);
-			newCurConfig = new SandpileConfiguration(currentConfig);
-			newConfigs = new HashMap<String, SandpileConfiguration>(configs);
-			newSelected = new TIntArrayList(selectedVertices.toNativeArray());
+//			newCurConfig = new SandpileConfiguration(currentConfig);
+//			newConfigs = new HashMap<String, SandpileConfiguration>(configs);
+//			newSelected = new TIntArrayList(selectedVertices.toNativeArray());
 
 
 			sg = new SandpileGraph(oldSG);
 			vertexData = new Float2dArrayList(oldLocations);
-			currentConfig = new SandpileConfiguration(oldCurConfig);
-			configs = new HashMap<String, SandpileConfiguration>(oldConfigs);
-			selectedVertices = new TIntArrayList(oldSelected.toNativeArray());
+//			currentConfig = new SandpileConfiguration(oldCurConfig);
+//			configs = new HashMap<String, SandpileConfiguration>(oldConfigs);
+//			selectedVertices = new TIntArrayList(oldSelected.toNativeArray());
 			onGraphChange();
 			onConfigChange();
 			repaint();
 		}
 
 		@Override public void redo(){
-			System.err.println("redo " + getPresentationName());
+			//System.err.println("redo " + getPresentationName());
 			sg = newSG;
 			vertexData = newLocations;
-			currentConfig = newCurConfig;
-			configs = newConfigs;
+//			currentConfig = newCurConfig;
+//			configs = newConfigs;
 			onGraphChange();
 			onConfigChange();
 			repaint();
