@@ -125,7 +125,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     public SandpilesInteractionPanel() {
         initComponents();
 
-		float[] colorArray = {0.2f, 0.2f, 0.2f,
+		float[] colorArray = {0.3f, 0.3f, 0.3f,
 							   0f, 0f, 1f,
 							   0f, 1f, 1f,
 							   0f, 1f, 0f,
@@ -403,9 +403,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         drawWireCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         canvasHolderPanel = new javax.swing.JPanel();
-        jLabel13 = new javax.swing.JLabel();
+        infoToolBar = new javax.swing.JToolBar();
+        centerLabel = new javax.swing.JLabel();
         centerCoordLabel = new javax.swing.JLabel();
-        jSeparator4 = new javax.swing.JSeparator();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
+        currentActionLabel = new javax.swing.JLabel();
+        cancelButton = new javax.swing.JButton();
         controlToolBar = new javax.swing.JToolBar();
         runButton = new javax.swing.JToggleButton();
         stepButton = new javax.swing.JButton();
@@ -433,7 +436,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         serverToggleButton = new javax.swing.JToggleButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         mouseToolBar = new javax.swing.JToolBar();
-        navigateToggleButton = new javax.swing.JToggleButton();
         selectToggleButton = new javax.swing.JToggleButton();
         editToggleButton = new javax.swing.JToggleButton();
 
@@ -1350,35 +1352,39 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
         cl.show(canvasHolderPanel, "2d");
 
-        jLabel13.setText("Center:");
+        infoToolBar.setRollover(true);
+
+        centerLabel.setText("Center: ");
+        infoToolBar.add(centerLabel);
 
         centerCoordLabel.setText("0.0, 0.0");
+        infoToolBar.add(centerCoordLabel);
+        infoToolBar.add(jSeparator4);
 
-        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        currentActionLabel.setText("current action: ");
+        currentActionLabel.setEnabled(false);
+        infoToolBar.add(currentActionLabel);
+
+        cancelButton.setText("Cancel");
+        cancelButton.setEnabled(false);
+        cancelButton.setFocusable(false);
+        cancelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        cancelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        infoToolBar.add(cancelButton);
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
-                .add(jLabel13)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(centerCoordLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(539, Short.MAX_VALUE))
             .add(canvasHolderPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
+            .add(infoToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .add(canvasHolderPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+                .add(canvasHolderPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(jLabel13)
-                        .add(centerCoordLabel))
-                    .add(jSeparator4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(infoToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPane1.setRightComponent(jPanel1);
@@ -1586,18 +1592,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         mouseToolBar.setFloatable(false);
         mouseToolBar.setRollover(true);
 
-        mouseButtonGroup.add(navigateToggleButton);
-        navigateToggleButton.setText("Nav.");
-        navigateToggleButton.setFocusable(false);
-        navigateToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        navigateToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        navigateToggleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                navigateToggleButtonActionPerformed(evt);
-            }
-        });
-        mouseToolBar.add(navigateToggleButton);
-
         mouseButtonGroup.add(selectToggleButton);
         selectToggleButton.setText("Select");
         selectToggleButton.setFocusable(false);
@@ -1628,7 +1622,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 898, Short.MAX_VALUE)
+                .add(controlToolBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 935, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(mouseToolBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(2, 2, 2))
@@ -2092,9 +2086,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_editToggleButtonActionPerformed
 
 	private MouseMode getSelectedMouseMode(){
-		if(navigateToggleButton.isSelected())
-			return MouseMode.MOVE;
-		else if(selectToggleButton.isSelected())
+		if(selectToggleButton.isSelected())
 			return MouseMode.SELECT;
 		else if(editToggleButton.isSelected())
 			return MouseMode.EDIT;
@@ -2253,10 +2245,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		updateConfigSelectList();
 	}//GEN-LAST:event_configManagerOptionsPanelComponentShown
 
-	private void navigateToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToggleButtonActionPerformed
-
-}//GEN-LAST:event_navigateToggleButtonActionPerformed
-
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -2326,10 +2314,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JPanel blankOptionsPanel;
     private javax.swing.JPanel buildLaticePanel;
     private javax.swing.JTable buildLatticeTable;
+    private javax.swing.JButton cancelButton;
     private javax.media.opengl.GLCanvas canvas;
     private javax.media.opengl.GLCanvas canvas3d;
     private javax.swing.JPanel canvasHolderPanel;
     private javax.swing.JLabel centerCoordLabel;
+    private javax.swing.JLabel centerLabel;
     private javax.swing.JCheckBox changingNodeSizeCheckBox;
     private javax.swing.JButton clearSandButton;
     private javax.swing.JSpinner colSpinner;
@@ -2341,6 +2331,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JPanel controlPanel;
     private javax.swing.JComboBox controlStateComboBox;
     private javax.swing.JToolBar controlToolBar;
+    private javax.swing.JLabel currentActionLabel;
     private javax.swing.JLabel delayLabel;
     private javax.swing.JTextField delayTextField;
     private javax.swing.JButton deleteGraphButton;
@@ -2370,11 +2361,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JComboBox hexNBorderComboBox;
     private javax.swing.JComboBox hexSBorderComboBox;
     private javax.swing.JComboBox hexWBorderComboBox;
+    private javax.swing.JToolBar infoToolBar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -2401,7 +2392,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSpinner latticeSpacingSpinner;
@@ -2413,7 +2404,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.ButtonGroup mouseButtonGroup;
     private javax.swing.JToolBar mouseToolBar;
     private javax.swing.JComboBox nBorderComboBox;
-    private javax.swing.JToggleButton navigateToggleButton;
     private javax.swing.JPanel optionsContainerPanel;
     private javax.swing.JTabbedPane optionsTabbedPane;
     private javax.swing.JCheckBox printFPSCheckBox;
