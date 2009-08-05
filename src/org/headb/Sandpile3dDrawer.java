@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import gnu.trove.TIntArrayList;
+import java.awt.Dimension;
 
 /**
  *
@@ -39,10 +40,14 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	private float heightMultiplier = 3f;
 	private boolean drawShape = true;
 	private boolean drawWire = false;
-	private int mouseX, mouseY;
+	private float[] lastPoint;
 	private float xRot = 0f, yRot = 0f;
-	private float startingZ = 200f;
-	private float cameraX = 0f, cameraY = 0f, cameraZ = startingZ;
+	private float startingZoom = 250f;
+	private float cameraX = 0f, cameraY = 0f, cameraZ = startingZoom;
+	private float[] rotAxis = new float[3];
+	private float rotAngle = 0f;
+	private final float ROT_SCALE = 90f;
+	private float[] rotMatrix = new float[16];
 
 	public Sandpile3dDrawer(GLCanvas canvas) {
 		colorMode = ColorMode.NUM_OF_GRAINS;
@@ -82,16 +87,38 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	}
 
 	public void mousePressed(MouseEvent evt) {
-		mouseX = evt.getX();
-		mouseY = evt.getY();
+		lastPoint = trackBallPointMapping(evt.getX(), evt.getY());
 	}
 
 	public void mouseDragged(MouseEvent evt) {
-		yRot += 0.1f * (evt.getX() - mouseX);
-		xRot += 0.1f * (evt.getY() - mouseY);
-		mouseX = evt.getX();
-		mouseY = evt.getY();
+		float[] curPoint = trackBallPointMapping(evt.getX(), evt.getY());
+		float[] dir = new float[3];
+		dir[0] = curPoint[0]-lastPoint[0];
+		dir[1] = curPoint[1]-lastPoint[1];
+		dir[2] = curPoint[2]-lastPoint[2];
+		float velocity = (float) Math.sqrt(dir[0]*dir[0] + dir[1]*dir[1] + dir[2]*dir[2]);
+		rotAxis[0] = lastPoint[1]*curPoint[2] - lastPoint[2]*curPoint[1];
+		rotAxis[1] = lastPoint[2]*curPoint[0] - lastPoint[0]*curPoint[2];
+		rotAxis[2] = lastPoint[0]*curPoint[1] - lastPoint[1]*curPoint[0];
+		rotAngle = velocity*ROT_SCALE;
+		lastPoint = curPoint;
 		canvas.repaint();
+		System.err.println(rotAngle);
+	}
+
+	private float[] trackBallPointMapping(int x, int y){
+		float[] v = new float[3];
+		Dimension dim = canvas.getSize();
+		v[0] = (2f*x - (float)dim.getWidth())/(float)dim.getWidth();
+		v[1] = ((float)dim.getHeight() - 2f*y)/(float)dim.getHeight();
+		float d = (float)Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+		d = d<1f ? d : 1f;
+		v[2] = (float)Math.sqrt(1.001f - d*d);
+		d = (float)Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+		v[0]/=d;
+		v[1]/=d;
+		v[2]/=d;
+		return v;
 	}
 
 	public void setCamera(float x, float y) {
@@ -100,7 +127,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	}
 
 	public void setZoom(float amount) {
-		cameraZ = startingZ / amount;
+		cameraZ = startingZoom / amount;
 	}
 
 	public void setDrawShape(boolean val){
@@ -213,14 +240,14 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 			gl.glBegin(gl.GL_TRIANGLES);
 			for (int i = 0; i<tris.triangles().rows(); i++) {
 				int v0 = tris.triangles().get(i, 0);
-				float x0 = tris.points().get(v0,0);
-				float y0 = tris.points().get(v0,1);
+				float x0 = tris.points().get(v0,0)-cameraX;
+				float y0 = tris.points().get(v0,1)-cameraY;
 				int v1 = tris.triangles().get(i, 1);
-				float x1 = tris.points().get(v1,0);
-				float y1 = tris.points().get(v1,1);
+				float x1 = tris.points().get(v1,0)-cameraX;
+				float y1 = tris.points().get(v1,1)-cameraY;
 				int v2 = tris.triangles().get(i, 2);
-				float x2 = tris.points().get(v2,0);
-				float y2 = tris.points().get(v2,1);
+				float x2 = tris.points().get(v2,0)-cameraX;
+				float y2 = tris.points().get(v2,1)-cameraY;
 				float[] n = normalizedCross(x1 - x0, y1 - y0, h[v1] - h[v0],
 						x2 - x0, y2 - y0, h[v2] - h[v0]);
 				//System.err.println(c[v0][0]+" "+c[v0][1]+" "+c[v0][2]);
@@ -241,14 +268,14 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 			gl.glColor3f(0f, 1f, 0f);
 			for (int i=0;i<tris.triangles().rows();i++) {
 				int v0 = tris.triangles().get(i, 0);
-				float x0 = tris.points().get(v0,0);
-				float y0 = tris.points().get(v0,1);
+				float x0 = tris.points().get(v0,0)-cameraX;
+				float y0 = tris.points().get(v0,1)-cameraY;
 				int v1 = tris.triangles().get(i, 1);
-				float x1 = tris.points().get(v1,0);
-				float y1 = tris.points().get(v1,1);
+				float x1 = tris.points().get(v1,0)-cameraX;
+				float y1 = tris.points().get(v1,1)-cameraY;
 				int v2 = tris.triangles().get(i, 2);
-				float x2 = tris.points().get(v2,0);
-				float y2 = tris.points().get(v2,1);
+				float x2 = tris.points().get(v2,0)-cameraX;
+				float y2 = tris.points().get(v2,1)-cameraY;
 				gl.glBegin(gl.GL_LINES);
 				gl.glVertex3f(x0, y0, h[v0]);
 				gl.glVertex3f(x1, y1, h[v1]);
@@ -287,6 +314,8 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_DIFFUSE);
 		gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT);
 		gl.glEnable(gl.GL_COLOR_MATERIAL);
+
+		gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX, rotMatrix,0);
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -301,7 +330,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(45.0f, h, 1.0, 500.0);
+		glu.gluPerspective(45.0f, h, 1.0, 100000.0);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
@@ -313,10 +342,16 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		// Reset the current matrix to the "identity"
 		gl.glLoadIdentity();
-		gl.glTranslatef(-cameraX, -cameraY, -cameraZ);
-		gl.glRotatef(xRot, 1f, 0f, 0f);
-		gl.glRotatef(yRot, 0f, 1f, 0f);
+		gl.glRotatef(rotAngle, rotAxis[0], rotAxis[1], rotAxis[2]);
+		gl.glMultMatrixf(rotMatrix, 0);
+		gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX,rotMatrix, 0);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0f, 0f, -cameraZ);
+		//gl.glTranslatef(-cameraX, -cameraY, 0);
+		gl.glMultMatrixf(rotMatrix, 0);
+		gl.glPushMatrix();
 		drawTriangulation(gl, tris);
+		gl.glPopMatrix();
 
 		// Flush all drawing operations to the graphics card
 		gl.glFlush();
