@@ -564,15 +564,17 @@ public class SandpileGraph {
 	 * Updates the graph until all vertices stabilize.
 	 * WARNING: If the graph does not have a global sink, this function may not end.
 	 */
-	public SandpileConfiguration stabilizeConfig(SandpileConfiguration config) {
+	public SandpileConfiguration stabilizeConfig(SandpileConfiguration config) throws InterruptedException{
 		return stabilizeConfigStartingWith(config, getUnstables(config));
 	}
 
-	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, TIntArrayList starters) {
+	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, TIntArrayList starters) throws InterruptedException{
 		SandpileConfiguration stableConfig = new SandpileConfiguration(config);
 		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(stableConfig, starters);
 		for(;updater.hasNext();){
 			updater.next();
+			if(Thread.interrupted())
+				throw new InterruptedException();
 		}
 		return stableConfig;
 	}
@@ -581,15 +583,18 @@ public class SandpileGraph {
 	 * Updates the graph until all vertices stabilize.
 	 * WARNING: If the graph does not have a global sink, this function may not end.
 	 */
-	public SandpileConfiguration stabilizeConfigInPlace(SandpileConfiguration config) {
+	public SandpileConfiguration stabilizeConfigInPlace(SandpileConfiguration config) throws InterruptedException{
 		return stabilizeConfigInPlaceStartingWith(config, getUnstables(config));
 	}
 
-	public SandpileConfiguration stabilizeConfigInPlaceStartingWith(SandpileConfiguration config, TIntArrayList starters) {
+	public SandpileConfiguration stabilizeConfigInPlaceStartingWith(SandpileConfiguration config, TIntArrayList starters) throws InterruptedException {
 		SandpileConfiguration stableConfig = config;
 		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(config, starters);
 		for(;updater.hasNext();){
 			updater.next();
+			if(Thread.interrupted()){
+				throw new InterruptedException();
+			}
 		}
 		return stableConfig;
 	}
@@ -685,7 +690,7 @@ public class SandpileGraph {
 	 * @param config An arbitrary SandpileConfiguration.
 	 * @return The equivalent sandpile configuration.
 	 */
-	public SandpileConfiguration getEquivalentRecurrent(SandpileConfiguration config) {
+	public SandpileConfiguration getEquivalentRecurrent(SandpileConfiguration config) throws InterruptedException{
 		SandpileConfiguration burning = getMinimalBurningConfig();
 		TIntArrayList burningVertices = new TIntArrayList();
 		for (int vert = 0; vert < burning.size(); vert++) {
@@ -698,6 +703,8 @@ public class SandpileGraph {
 		while(!result.equals(nextResult)){
 			result = nextResult;
 			nextResult = stabilizeConfigStartingWith(result.plus(burning), burningVertices);
+			if(nextResult==null)
+				return null;
 		}
 		return result;
 	}
@@ -710,7 +717,7 @@ public class SandpileGraph {
 	 * @param config An arbitrary SandpileConfiguration.
 	 * @return The recurrent inverse of config;
 	 */
-	public SandpileConfiguration getInverseConfig(SandpileConfiguration config) {
+	public SandpileConfiguration getInverseConfig(SandpileConfiguration config) throws InterruptedException{
 		SandpileConfiguration inverse = config.times(-1);
 		return getEquivalentRecurrent(inverse);
 	}
@@ -750,7 +757,7 @@ public class SandpileGraph {
 	 * sink or something), this function will never end!
 	 * @return The identity configuration.
 	 */
-	public SandpileConfiguration getIdentityConfig() {
+	public SandpileConfiguration getIdentityConfig() throws InterruptedException{
 		return getEquivalentRecurrent(getUniformConfig(0));
 	}
 }

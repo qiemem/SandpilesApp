@@ -113,6 +113,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 	private Clipboard localClipboard = new Clipboard("Sandpile Clipboard");
 
+	private boolean runningThread=false;
+	private Thread calculationThread;
+
 
 
     private boolean running = false;
@@ -406,6 +409,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         heightScalarSpinner = new javax.swing.JSpinner();
         drawShapeCheckBox = new javax.swing.JCheckBox();
         drawWireCheckBox = new javax.swing.JCheckBox();
+        jLabel13 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         canvasHolderPanel = new javax.swing.JPanel();
         infoToolBar = new javax.swing.JToolBar();
@@ -418,6 +422,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         selecteCenterLabel = new javax.swing.JLabel();
         selectedSandLabel = new javax.swing.JLabel();
         selectedDegreeLabel = new javax.swing.JLabel();
+        selectedFiringsLabel = new javax.swing.JLabel();
         controlToolBar = new javax.swing.JToolBar();
         runButton = new javax.swing.JToggleButton();
         stepButton = new javax.swing.JButton();
@@ -1253,6 +1258,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
             }
         });
 
+        jLabel13.setText("ms");
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -1270,7 +1277,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                     .add(visualOptionsPanelLayout.createSequentialGroup()
                         .add(repaintDelayRadioButton)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 47, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel13))
                     .add(repaintOnUpdateRadioButton)
                     .add(visualOptionsPanelLayout.createSequentialGroup()
                         .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1285,7 +1294,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                             .add(heightScalarSpinner)))
                     .add(drawShapeCheckBox)
                     .add(drawWireCheckBox))
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
             visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1304,7 +1313,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(repaintDelayRadioButton)
-                    .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel13))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(repaintOnUpdateRadioButton)
                 .add(25, 25, 25)
@@ -1361,6 +1371,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
         cl.show(canvasHolderPanel, "2d");
 
+        infoToolBar.setFloatable(false);
         infoToolBar.setRollover(true);
 
         centerLabel.setText("Center: ");
@@ -1370,7 +1381,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         infoToolBar.add(centerCoordLabel);
         infoToolBar.add(jSeparator4);
 
-        currentActionLabel.setText("current action: ");
+        currentActionLabel.setText("None: ");
         currentActionLabel.setEnabled(false);
         infoToolBar.add(currentActionLabel);
 
@@ -1379,17 +1390,25 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         cancelButton.setFocusable(false);
         cancelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         cancelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
         infoToolBar.add(cancelButton);
         infoToolBar.add(jSeparator6);
 
         selecteCenterLabel.setText("Selected Center: -, -; ");
         infoToolBar.add(selecteCenterLabel);
 
-        selectedSandLabel.setText("Sand: 0; ");
+        selectedSandLabel.setText("Sand: -; ");
         infoToolBar.add(selectedSandLabel);
 
-        selectedDegreeLabel.setText("Degree: 0");
+        selectedDegreeLabel.setText("Degree: -; ");
         infoToolBar.add(selectedDegreeLabel);
+
+        selectedFiringsLabel.setText("Firings: -; ");
+        infoToolBar.add(selectedFiringsLabel);
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1727,7 +1746,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 }//GEN-LAST:event_stepButtonMouseClicked
 
 	private void deleteGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGraphButtonActionPerformed
-
+		if(runningThread)
+			return;
 		sandpileController.delAllVerticesControl();
 		drawer3d.triangulate(sandpileController.vertexData);
 		this.updateConfigSelectList();
@@ -1770,9 +1790,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 }//GEN-LAST:event_wBorderComboBoxActionPerformed
 
 	private void addConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addConfigButtonActionPerformed
+		if(runningThread)
+			return;
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
-		int times = Integer.valueOf(configTimesTextField.getText());
+		final int times = Integer.valueOf(configTimesTextField.getText());
 		if (selection != null) {
 			if (selection.equals(MAX_CONFIG)) {
 				sandpileController.addMaxStableConfig(times);
@@ -1783,13 +1805,46 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			} else if (selection.equals(ONES_CONFIG)) {
 				sandpileController.addSandEverywhere(times);
 			} else if (selection.equals(IDENTITY_CONFIG)) {
-				sandpileController.addIdentity(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating identity");
+						try{
+							sandpileController.addIdentity(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(BURNING_CONFIG)) {
 				sandpileController.addBurningConfig(times);
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
-				sandpileController.addEquivalentRecurrent(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating equivalent recurrent");
+						try{
+							sandpileController.addEquivalentRecurrent(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(INVERSE_CONFIG)) {
-				sandpileController.addInverseConfig(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating inverse");
+						try{
+							sandpileController.addInverseConfig(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(RANDOM_CONFIG)) {
 				sandpileController.addRandomConfig(times);
 			} else {
@@ -1800,9 +1855,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 }//GEN-LAST:event_addConfigButtonActionPerformed
 
 	private void setConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setConfigButtonActionPerformed
+		if(runningThread)
+			return;
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
-		int times = Integer.valueOf(configTimesTextField.getText());
+		final int times = Integer.valueOf(configTimesTextField.getText());
 		if(selection!=null){
 			if (selection.equals(MAX_CONFIG)) {
 				sandpileController.setToMaxStableConfig(times);
@@ -1810,14 +1867,47 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				sandpileController.setToDualConfig(times);
 			} else if (selection.equals(ONES_CONFIG)) {
 				sandpileController.setSandEverywhere(times);
-			} else if (selection.equals(IDENTITY_CONFIG)) {
-				sandpileController.setToIdentity(times);
+			}  else if (selection.equals(IDENTITY_CONFIG)) {
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating identity");
+						try{
+							sandpileController.setToIdentity(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(BURNING_CONFIG)) {
 				sandpileController.setToBurningConfig(times);
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
-				sandpileController.setToEquivalentRecurrent(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating equivalent recurrent");
+						try{
+							sandpileController.setToEquivalentRecurrent(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(INVERSE_CONFIG)) {
-				sandpileController.setToInverseConfig(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating inverse");
+						try{
+							sandpileController.setToInverseConfig(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(CURRENT_CONFIG)) {
 				sandpileController.setToCurrentConfig(times);
 			} else if (selection.equals(RANDOM_CONFIG)) {
@@ -1861,8 +1951,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_printFPSCheckBoxActionPerformed
 
 	private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
+		if(runningThread)
+			return;
 		if(getMouseMode(evt)!=MouseMode.EDIT) return;
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		setWaitCursor();
 		String currentState = optionsTabbedPane.getTitleAt(optionsTabbedPane.getSelectedIndex());
 		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
 		float x = coords[0];
@@ -1960,7 +2052,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			}
 		}
 		this.updateConfigSelectList();
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		setDefaultCursor();
 	}//GEN-LAST:event_canvasMouseClicked
 
 	private void canvasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseReleased
@@ -2020,10 +2112,22 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_resetFiringsButtonActionPerformed
 
 	private void stabilizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stabilizeButtonActionPerformed
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		sandpileController.stabilize();
+		if(runningThread)
+			return;
+		calculationThread = new Thread() {
+
+			@Override
+			public void run() {
+				calculationThreadInit("Stabilizing");
+				try {
+					sandpileController.stabilize();
+				} catch (InterruptedException e) {
+				}
+				calculationThreadEnd();
+			}
+		};
+		calculationThread.start();
 		sandpileController.repaint();
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}//GEN-LAST:event_stabilizeButtonActionPerformed
 
 	private void smallIncDelayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallIncDelayButtonActionPerformed
@@ -2123,6 +2227,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}
 
 	private void deleteSelectedVerticesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedVerticesButtonActionPerformed
+		if(runningThread)
+			return;
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		TIntArrayList verts = sandpileController.getSelectedVertices();
 		sandpileController.delVerticesControl(verts);
@@ -2235,9 +2341,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_drawWireCheckBoxActionPerformed
 
 	private void subtractConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subtractConfigButtonActionPerformed
-				this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		if(runningThread)
+			return;
 		String selection = (String)configSelectList.getSelectedValue();
-		int times = -Integer.valueOf(configTimesTextField.getText());
+		final int times = -Integer.valueOf(configTimesTextField.getText());
 		if(selection!=null){
 			if(selection.equals(MAX_CONFIG)){
 				sandpileController.addMaxStableConfig(times);
@@ -2247,22 +2354,63 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				sandpileController.addDualConfig(times);
 			}else if(selection.equals(ONES_CONFIG)){
 				sandpileController.addSandEverywhere(times);
-			}else if(selection.equals(IDENTITY_CONFIG)){
-				sandpileController.addIdentity(times);
-			}else if(selection.equals(BURNING_CONFIG)){
+			}  else if (selection.equals(IDENTITY_CONFIG)) {
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating identity");
+						try{
+							sandpileController.addIdentity(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
+			} else if (selection.equals(BURNING_CONFIG)) {
 				sandpileController.addBurningConfig(times);
+			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating equivalent recurrent");
+						try{
+							sandpileController.addEquivalentRecurrent(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
+			} else if (selection.equals(INVERSE_CONFIG)) {
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating inverse");
+						try{
+							sandpileController.addInverseConfig(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			}else if(selection.equals(RANDOM_CONFIG)){
 				sandpileController.addRandomConfig(times);
 			}else {
 				sandpileController.addConfigNamed(selection,times);
 			}
 		}
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}//GEN-LAST:event_subtractConfigButtonActionPerformed
 
 	private void configManagerOptionsPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_configManagerOptionsPanelComponentShown
 		updateConfigSelectList();
 	}//GEN-LAST:event_configManagerOptionsPanelComponentShown
+
+	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+		if(runningThread)
+			calculationThread.interrupt();
+	}//GEN-LAST:event_cancelButtonActionPerformed
 
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
@@ -2312,22 +2460,26 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			float y=0f;
 			int degree=0;
 			int sand=0;
+			int firings=0;
 			for(int i=0; i<n; i++){
 				int v=selVerts.get(i);
 				x+=sandpileController.getVertexX(v);
 				y+=sandpileController.getVertexY(v);
 				degree+=sandpileController.getGraph().degree(v);
 				sand+=sandpileController.getConfig().get(v);
+				firings+=sandpileController.getFirings(v);
 			}
 			x/=n;
 			y/=n;
 			this.selecteCenterLabel.setText(String.format("Selected Center: %.2f, %.2f; ", x,y));
 			this.selectedDegreeLabel.setText(String.format("Degree: %d; ",degree));
 			this.selectedSandLabel.setText(String.format("Sand: %d; ",sand));
+			this.selectedFiringsLabel.setText(String.format("Firings: %d; ",firings));
 		}else{
 			this.selecteCenterLabel.setText("Selected Center: -, -; ");
 			this.selectedDegreeLabel.setText("Degree: -; ");
 			this.selectedSandLabel.setText("Sand: -; ");
+			this.selectedFiringsLabel.setText("Firings: -;");
 		}
 	}
 
@@ -2352,6 +2504,31 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			javax.swing.JOptionPane.showInternalMessageDialog(this, "Error creating robot: "+e.getMessage());
 			return null;
 		}
+	}
+
+	public void setWaitCursor(){
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+	}
+
+	public void setDefaultCursor(){
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
+
+	public void calculationThreadInit(String description){
+		setWaitCursor();
+		currentActionLabel.setText(description+": ");
+		currentActionLabel.setEnabled(true);
+		runningThread = true;
+		cancelButton.setEnabled(true);
+	}
+
+	public void calculationThreadEnd(){
+		setDefaultCursor();
+		currentActionLabel.setText("None: ");
+		currentActionLabel.setEnabled(false);
+		runningThread = false;
+		cancelButton.setEnabled(false);
+		sandpileController.repaint();
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2420,6 +2597,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -2481,6 +2659,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JToggleButton selectToggleButton;
     private javax.swing.JLabel selecteCenterLabel;
     private javax.swing.JLabel selectedDegreeLabel;
+    private javax.swing.JLabel selectedFiringsLabel;
     private javax.swing.JLabel selectedSandLabel;
     private javax.swing.JToggleButton serverToggleButton;
     private javax.swing.JButton setConfigButton;

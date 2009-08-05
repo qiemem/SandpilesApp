@@ -1435,6 +1435,8 @@
                                       <Component id="repaintDelayRadioButton" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="repaintDelayTextField" min="-2" pref="47" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="repaintOnUpdateRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" attributes="0">
@@ -1454,7 +1456,7 @@
                                   <Component id="drawShapeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="drawWireCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="112" max="32767" attributes="0"/>
+                              <EmptySpace pref="99" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1476,6 +1478,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="repaintDelayRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="repaintDelayTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="repaintOnUpdateRadioButton" min="-2" max="-2" attributes="0"/>
@@ -1681,6 +1684,11 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawWireCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel13">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="ms"/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
               </SubComponents>
@@ -1726,6 +1734,7 @@
             </Container>
             <Container class="javax.swing.JToolBar" name="infoToolBar">
               <Properties>
+                <Property name="floatable" type="boolean" value="false"/>
                 <Property name="rollover" type="boolean" value="true"/>
               </Properties>
 
@@ -1745,7 +1754,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="currentActionLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="current action: "/>
+                    <Property name="text" type="java.lang.String" value="None: "/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </Component>
@@ -1757,6 +1766,9 @@
                     <Property name="horizontalTextPosition" type="int" value="0"/>
                     <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JToolBar$Separator" name="jSeparator6">
                 </Component>
@@ -1767,12 +1779,17 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="selectedSandLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Sand: 0; "/>
+                    <Property name="text" type="java.lang.String" value="Sand: -; "/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="selectedDegreeLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Degree: 0"/>
+                    <Property name="text" type="java.lang.String" value="Degree: -; "/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="selectedFiringsLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Firings: -; "/>
                   </Properties>
                 </Component>
               </SubComponents>

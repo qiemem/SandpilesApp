@@ -386,10 +386,15 @@ public class SandpileController implements ActionListener, Serializable{
 			resetFirings();
 		}
 		for (int vert = 0; vert < configSize(); vert++) {
-			if (currentConfig.get(vert) >= sg.degree(vert)) {
+			int d = sg.degree(vert);
+			if (d!=0&&currentConfig.get(vert) >= d) {
 				firings.set(vert, firings.get(vert) + 1);
 			}
 		}
+	}
+
+	public int getFirings(int v){
+		return firings.get(v);
 	}
 
 	/**
@@ -1116,19 +1121,19 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
-	public SandpileConfiguration getIdentity() {
+	public SandpileConfiguration getIdentity() throws InterruptedException{
 		if (!configs.containsKey("Identity")) {
 			configs.put("Identity", sg.getIdentityConfig());
 		}
 		return configs.get("Identity");
 	}
 
-	public void addIdentity(int times) {
+	public void addIdentity(int times) throws InterruptedException{
 		setConfig(currentConfig.plus(getIdentity().times(times)));
 		repaint();
 	}
 
-	public void setToIdentity(int times) {
+	public void setToIdentity(int times) throws InterruptedException{
 		setConfig(getIdentity().times(times));
 		repaint();
 	}
@@ -1160,22 +1165,22 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
-	public void setToEquivalentRecurrent(int times) {
+	public void setToEquivalentRecurrent(int times) throws InterruptedException{
 		setConfig(sg.getEquivalentRecurrent(currentConfig).times(times));
 		repaint();
 	}
 
-	public void addEquivalentRecurrent(int times) {
+	public void addEquivalentRecurrent(int times) throws InterruptedException{
 		setConfig(currentConfig.plus(sg.getEquivalentRecurrent(currentConfig).times(times)));
 		repaint();
 	}
 
-	public void setToInverseConfig(int times) {
+	public void setToInverseConfig(int times) throws InterruptedException{
 		setConfig(sg.getInverseConfig(currentConfig).times(times));
 		repaint();
 	}
 
-	public void addInverseConfig(int times) {
+	public void addInverseConfig(int times) throws InterruptedException{
 		setConfig(currentConfig.plus(sg.getInverseConfig(currentConfig).times(times)));
 		repaint();
 	}
@@ -1230,7 +1235,7 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
-	public void stabilize() {
+	public void stabilize() throws InterruptedException{
 		setConfig(sg.stabilizeConfig(currentConfig));
 	}
 

@@ -51,7 +51,11 @@ public class SandpileProtocol {
 		if (command[0].equals("update")) {
 			sc.update();
 		} else if (command[0].equals("stabilize")) {
-			sc.stabilize();
+			try{
+				sc.stabilize();
+			}catch(InterruptedException e){
+				System.err.println("Stabilization interrupted");
+			}
 		} else if (command[0].equals("repaint")) {
 			sc.repaint();
 		} else if (command[0].equals("delete_graph")) {
@@ -153,11 +157,23 @@ public class SandpileProtocol {
 		}else if (command[0].equals("get_max_stable")){
 			output = configToString(sc.getGraph().getMaxConfig());
 		} else if (command[0].equals("set_to_identity")) {
-			sc.setToIdentity(1);
+			try{
+				sc.setToIdentity(1);
+			}catch(InterruptedException e){
+				System.err.println("Identity calculation interrupted");
+			}
 		} else if (command[0].equals("add_identity")) {
-			sc.addIdentity(1);
+			try{
+				sc.addIdentity(1);
+			}catch(InterruptedException e){
+				System.err.println("Stabilization interrupted");
+			}
 		}else if (command[0].equals("get_identity")){
-			output = configToString(sc.getIdentity());
+			try{
+				output = configToString(sc.getIdentity());
+			} catch(InterruptedException e){
+				System.err.println("Stabilization interrupted");
+			}
 		} else if (command[0].equals("set_to_burning")) {
 			sc.setToBurningConfig(1);
 		} else if (command[0].equals("add_burning")) {
