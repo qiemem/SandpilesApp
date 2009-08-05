@@ -48,7 +48,11 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		colorMode = ColorMode.NUM_OF_GRAINS;
 		this.canvas = canvas;
 		this.canvas.addGLEventListener(this);
-		tris = new DelaunayTriangulation(new Float2dArrayList(0, 2));
+		try{
+			tris = new DelaunayTriangulation(new Float2dArrayList(0, 2));
+		}catch(InterruptedException e){
+			
+		}
 		config = new SandpileConfiguration();
 		firings = new TIntArrayList();
 		graph = new SandpileGraph();
@@ -154,7 +158,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		return colorMode;
 	}
 
-	public void triangulate(Float2dArrayList vertexLocations) {
+	public void triangulate(Float2dArrayList vertexLocations) throws InterruptedException{
 		if(vertexLocations.equals(tris.points()))
 			return;
 		tris = new DelaunayTriangulation(vertexLocations);

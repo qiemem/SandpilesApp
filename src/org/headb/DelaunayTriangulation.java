@@ -30,7 +30,7 @@ public class DelaunayTriangulation {
 
 	private Float2dArrayList points;
 
-	public DelaunayTriangulation(Float2dArrayList points) {
+	public DelaunayTriangulation(Float2dArrayList points) throws InterruptedException{
 		trisToPoints = new Int2dArrayList(0, 3);
 		pointsToTris = new ArrayList<TIntArrayList>();
 		triTree = new ArrayList<int[]>();
@@ -97,7 +97,7 @@ public class DelaunayTriangulation {
 		parentTri = addTriangle(startPt, tl, br);
 		for (int p = 0; p < this.points.rows()-3; p++) {
 			//try {
-				addPoint(p);
+			addPoint(p);
 //			} catch (RuntimeException e) {
 //				System.err.println("WARNING: Couldn't add a point. Throwing it out.");
 //				System.err.println("Point: " + points.get(p,0) + " " + points.get(p,1));
@@ -108,6 +108,9 @@ public class DelaunayTriangulation {
 //				System.err.println("tlAngle: " + tlAngle);
 //				System.err.println("length: " + length);
 //			}
+			if (Thread.interrupted()) {
+				throw new InterruptedException();
+			}
 		}
 		removePoint(br);
 		removePoint(tl);

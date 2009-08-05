@@ -1749,7 +1749,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		if(runningThread)
 			return;
 		sandpileController.delAllVerticesControl();
-		drawer3d.triangulate(sandpileController.vertexData);
+		try{
+			drawer3d.triangulate(sandpileController.vertexData);
+		}catch(InterruptedException e){
+			
+		}
 		this.updateConfigSelectList();
 }//GEN-LAST:event_deleteGraphButtonActionPerformed
 
@@ -2299,12 +2303,29 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	private void dimensionToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dimensionToggleButtonActionPerformed
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		if(dimensionToggleButton.isSelected()){
-			dimensionToggleButton.setText("2d");
-			drawer3d.triangulate(sandpileController.vertexData);
-			drawer3d.setCamera(drawer.getOriginX(), drawer.getOriginX());
-			CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
-			cl.show(canvasHolderPanel,"3d");
-			sandpileController.setDrawer(drawer3d);
+			calculationThread = new Thread(){
+				@Override public void run(){
+					calculationThreadInit("Calculating triangulation");
+					try{
+						drawer3d.triangulate(sandpileController.vertexData);
+
+						dimensionToggleButton.setText("2d");
+						drawer3d.setCamera(drawer.getOriginX(), drawer.getOriginY());
+						drawer3d.setZoom(drawer.getZoom());
+						CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
+						cl.show(canvasHolderPanel, "3d");
+						sandpileController.setDrawer(drawer3d);
+					}catch(InterruptedException e){
+						dimensionToggleButton.setText("3d");
+						CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
+						cl.show(canvasHolderPanel, "2d");
+						sandpileController.setDrawer(drawer);
+						dimensionToggleButton.setSelected(false);
+					}
+					calculationThreadEnd();
+				}
+			};
+			calculationThread.start();
 		}else{
 			dimensionToggleButton.setText("3d");
 			CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
