@@ -63,7 +63,7 @@ import java.util.Arrays;
 import java.awt.Dimension;
 import gnu.trove.TIntArrayList;
 
-public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner, SandpileChangeListener {
+public class SandpilesInteractionPanel extends javax.swing.JPanel implements ClipboardOwner, SandpileChangeListener {
 	private static final String MAKE_GRID_STATE = "Make Grid";
 	private static final String MAKE_HEX_GRID_STATE = "Make Hex Grid";
 	private static final String MAKE_HONEYCOMB_STATE = "Make Honeycomb";
@@ -145,7 +145,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		sandpileController.addSandpileChangeListener(this);
 		canvas.addMouseListener(drawer);
 		canvas.addMouseMotionListener(drawer);
-		drawer.addReshapeListener(this);
+		//drawer.addReshapeListener(this);
 
 		drawer3d = new Sandpile3dDrawer(canvas3d);
 
@@ -221,8 +221,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				}
 				mouseX = coords[0];
 				mouseY = coords[1];
+				centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
 			}
 		});
+		MouseWheelListener zoomListener = new MouseWheelListener() {
+			public void mouseWheelMoved(MouseWheelEvent evt){
+				updateZoomTextField();
+			}
+		};
+		canvas.addMouseWheelListener(zoomListener);
+		canvas3d.addMouseWheelListener(zoomListener);
 
 		final SandpilesInteractionPanel me = this;
 		serverMsgChecker = new Timer(0, new ActionListener(){
@@ -237,10 +245,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		serverMsgChecker.stop();
     }
 
-	public void onReshape(){
-		updateZoomTextField();
-		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
-	}
+//	public void onReshape() {
+//		updateZoomTextField();
+//		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
+//	}
 
 	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, List<int[]> edgeData){
 		localClipboard.setContents(new SandpileTransferable(locationData, sandData, edgeData), this);
@@ -2301,7 +2309,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}//GEN-LAST:event_vertexLabelsCheckBoxActionPerformed
 
 	private void dimensionToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dimensionToggleButtonActionPerformed
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		if(dimensionToggleButton.isSelected()){
 			calculationThread = new Thread(){
 				@Override public void run(){
@@ -2315,12 +2322,15 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 						CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
 						cl.show(canvasHolderPanel, "3d");
 						sandpileController.setDrawer(drawer3d);
+						currentDrawer = drawer3d;
 					}catch(InterruptedException e){
 						dimensionToggleButton.setText("3d");
 						CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
 						cl.show(canvasHolderPanel, "2d");
 						sandpileController.setDrawer(drawer);
 						dimensionToggleButton.setSelected(false);
+						drawer.setZoom(drawer3d.getZoom());
+						currentDrawer = drawer;
 					}
 					calculationThreadEnd();
 				}
@@ -2331,8 +2341,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 			CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
 			cl.show(canvasHolderPanel,"2d");
 			sandpileController.setDrawer(drawer);
+			drawer.setZoom(drawer3d.getZoom());
+			currentDrawer = drawer;
 		}
-		this.setCursor(Cursor.getDefaultCursor());
 		sandpileController.repaint();
 	}//GEN-LAST:event_dimensionToggleButtonActionPerformed
 
@@ -2443,7 +2454,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 	}
 
 	public void updateZoomTextField(){
-		zoomTextField.setText(String.format("%.2f",(drawer.getZoom()*100.0f)));
+		zoomTextField.setText(String.format("%.2f",(currentDrawer.getZoom()*100.0f)));
 	}
 
 	public boolean updateDrawerZoom(){

@@ -72,7 +72,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private float[] selectionBox = {0f, 0f, 0f, 0f};
 	private boolean drawSelectionBox = false;
 	private long timeOfLastDisplay = 0;
-	private ArrayList<ReshapeListener> repaintListeners = new ArrayList<ReshapeListener>();
+//	private ArrayList<ReshapeListener> repaintListeners = new ArrayList<ReshapeListener>();
 
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
@@ -131,9 +131,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		needsReshape = false;
-		for (ReshapeListener r : repaintListeners) {
-			r.onReshape();
-		}
+//		for (ReshapeListener r : repaintListeners) {
+//			r.onReshape();
+//		}
 	}
 
 	public void display(GLAutoDrawable drawable) {
@@ -461,7 +461,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			gl.glColor3f(colors.getQuick(color, 0), colors.getQuick(color,1), colors.getQuick(color, 2));
 	}
 
-	public void addReshapeListener(ReshapeListener r) {
-		repaintListeners.add(r);
-	}
+//	public void addReshapeListener(ReshapeListener r) {
+//		repaintListeners.add(r);
+//	}
 }

@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.KeyAdapter;
@@ -40,10 +42,11 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	private float heightMultiplier = 3f;
 	private boolean drawShape = true;
 	private boolean drawWire = false;
+	private boolean autoRotate = false;
 	private float[] lastPoint;
 	private float xRot = 0f, yRot = 0f;
-	private float startingZoom = 250f;
-	private float cameraX = 0f, cameraY = 0f, cameraZ = startingZoom;
+	private float startingZ = 250f;
+	private float cameraX = 0f, cameraY = 0f, cameraZ = startingZ;
 	private float[] rotAxis = new float[3];
 	private float rotAngle = 0f;
 	private final float ROT_SCALE = 90f;
@@ -77,6 +80,11 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 				me.mouseDragged(evt);
 			}
 		});
+		canvas.addMouseWheelListener(new MouseWheelListener(){
+			public void mouseWheelMoved(MouseWheelEvent evt){
+				me.mouseWheelMoved(evt);
+			}
+		});
 		canvas.addKeyListener(new KeyAdapter() {
 
 			@Override
@@ -84,6 +92,12 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 				me.keyPressed(evt);
 			}
 		});
+	}
+
+	public void mouseWheelMoved(MouseWheelEvent evt){
+		float amount = 1f - 0.01f * evt.getUnitsToScroll();
+		setZoom(getZoom() * amount);
+		canvas.repaint();
 	}
 
 	public void mousePressed(MouseEvent evt) {
@@ -97,13 +111,16 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		dir[1] = curPoint[1]-lastPoint[1];
 		dir[2] = curPoint[2]-lastPoint[2];
 		float velocity = (float) Math.sqrt(dir[0]*dir[0] + dir[1]*dir[1] + dir[2]*dir[2]);
+		if(velocity<0.0001f){
+			rotAngle = 0f;
+			return;
+		}
 		rotAxis[0] = lastPoint[1]*curPoint[2] - lastPoint[2]*curPoint[1];
 		rotAxis[1] = lastPoint[2]*curPoint[0] - lastPoint[0]*curPoint[2];
 		rotAxis[2] = lastPoint[0]*curPoint[1] - lastPoint[1]*curPoint[0];
 		rotAngle = velocity*ROT_SCALE;
 		lastPoint = curPoint;
 		canvas.repaint();
-		System.err.println(rotAngle);
 	}
 
 	private float[] trackBallPointMapping(int x, int y){
@@ -126,8 +143,20 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		cameraY = y;
 	}
 
+	public float getCameraX(){
+		return cameraX;
+	}
+
+	public float getCameraY(){
+		return cameraY;
+	}
+
+	public float getZoom(){
+		return startingZ/cameraZ;
+	}
+
 	public void setZoom(float amount) {
-		cameraZ = startingZoom / amount;
+		cameraZ = startingZ / amount;
 	}
 
 	public void setDrawShape(boolean val){
@@ -355,6 +384,9 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
 		// Flush all drawing operations to the graphics card
 		gl.glFlush();
+
+		if(!autoRotate)
+			rotAngle = 0f;
 	}
 
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
