@@ -2181,7 +2181,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	}//GEN-LAST:event_delayTextFieldCaretUpdate
 
 	private void bigZoomInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigZoomInButtonActionPerformed
-		float amount = drawer.getZoom()*1.25f;
+		float amount = currentDrawer.getZoom()*1.25f;
 		drawer.setZoom(amount);
 		drawer3d.setZoom(amount);
 		updateZoomTextField();
@@ -2189,7 +2189,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	}//GEN-LAST:event_bigZoomInButtonActionPerformed
 
 	private void smallZoomInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallZoomInButtonActionPerformed
-		float amount = drawer.getZoom()*1.05f;
+		float amount = currentDrawer.getZoom()*1.05f;
 		drawer.setZoom(amount);
 		drawer3d.setZoom(amount);
 		updateZoomTextField();
@@ -2197,7 +2197,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	}//GEN-LAST:event_smallZoomInButtonActionPerformed
 
 	private void smallZoomOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallZoomOutButtonActionPerformed
-		float amount = drawer.getZoom()*0.95f;
+		float amount = currentDrawer.getZoom()*0.95f;
 		drawer.setZoom(amount);
 		drawer3d.setZoom(amount);
 		updateZoomTextField();
@@ -2205,7 +2205,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	}//GEN-LAST:event_smallZoomOutButtonActionPerformed
 
 	private void bigZoomOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bigZoomOutButtonActionPerformed
-		float amount = drawer.getZoom()*0.75f;
+		float amount = currentDrawer.getZoom()*0.75f;
 		drawer.setZoom(amount);
 		drawer3d.setZoom(amount);
 		updateZoomTextField();
