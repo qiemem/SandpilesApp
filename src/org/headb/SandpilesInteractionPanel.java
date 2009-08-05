@@ -63,7 +63,7 @@ import java.util.Arrays;
 import java.awt.Dimension;
 import gnu.trove.TIntArrayList;
 
-public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner {
+public class SandpilesInteractionPanel extends javax.swing.JPanel implements ReshapeListener, ClipboardOwner, SandpileChangeListener {
 	private static final String MAKE_GRID_STATE = "Make Grid";
 	private static final String MAKE_HEX_GRID_STATE = "Make Hex Grid";
 	private static final String MAKE_HONEYCOMB_STATE = "Make Honeycomb";
@@ -139,6 +139,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 
 		drawer = new SandpileGLDrawer(canvas);
 		sandpileController = new SandpileController(drawer);
+		sandpileController.addSandpileChangeListener(this);
 		canvas.addMouseListener(drawer);
 		canvas.addMouseMotionListener(drawer);
 		drawer.addReshapeListener(this);
@@ -150,7 +151,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(0);
 		updateDelayTextField();
-
+		updateSelectedInfo();
 
 
 		drawer.setColors(colors, inDebtColors);
@@ -179,11 +180,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 				if(vert>=0&&getMouseMode(e) == MouseMode.SELECT){
 					if(sandpileController.isSelected(vert)){
 						sandpileController.unselectVertex(vert);
+						updateSelectedInfo();
 					}else{
 						sandpileController.selectVertex(vert);
+						updateSelectedInfo();
 					}
 				}else if(getMouseMode(e)==MouseMode.SELECT){
 					sandpileController.unselectVertices();
+					updateSelectedInfo();
 				}
 				sandpileController.repaint();
 			}
@@ -209,6 +213,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 					float minY = Math.min(boxY, coords[1]);
 					drawer.setSelectionBox(maxX, maxY, minX, minY);
 					sandpileController.setSelectedVertices(sandpileController.getVerticesInRect(maxX, maxY, minX, minY));
+					updateSelectedInfo();
 					sandpileController.repaint();
 				}
 				mouseX = coords[0];
@@ -409,6 +414,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         jSeparator4 = new javax.swing.JToolBar.Separator();
         currentActionLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
+        selecteCenterLabel = new javax.swing.JLabel();
+        selectedSandLabel = new javax.swing.JLabel();
+        selectedDegreeLabel = new javax.swing.JLabel();
         controlToolBar = new javax.swing.JToolBar();
         runButton = new javax.swing.JToggleButton();
         stepButton = new javax.swing.JButton();
@@ -1371,6 +1380,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
         cancelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         cancelButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         infoToolBar.add(cancelButton);
+        infoToolBar.add(jSeparator6);
+
+        selecteCenterLabel.setText("Selected Center: -, -; ");
+        infoToolBar.add(selecteCenterLabel);
+
+        selectedSandLabel.setText("Sand: 0; ");
+        infoToolBar.add(selectedSandLabel);
+
+        selectedDegreeLabel.setText("Degree: 0");
+        infoToolBar.add(selectedDegreeLabel);
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -2285,6 +2304,41 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
 		}
 	}
 
+	public void updateSelectedInfo() {
+		TIntArrayList selVerts = sandpileController.getSelectedVertices();
+		if(!selVerts.isEmpty()){
+			int n = selVerts.size();
+			float x=0f;
+			float y=0f;
+			int degree=0;
+			int sand=0;
+			for(int i=0; i<n; i++){
+				int v=selVerts.get(i);
+				x+=sandpileController.getVertexX(v);
+				y+=sandpileController.getVertexY(v);
+				degree+=sandpileController.getGraph().degree(v);
+				sand+=sandpileController.getConfig().get(v);
+			}
+			x/=n;
+			y/=n;
+			this.selecteCenterLabel.setText(String.format("Selected Center: %.2f, %.2f; ", x,y));
+			this.selectedDegreeLabel.setText(String.format("Degree: %d; ",degree));
+			this.selectedSandLabel.setText(String.format("Sand: %d; ",sand));
+		}else{
+			this.selecteCenterLabel.setText("Selected Center: -, -; ");
+			this.selectedDegreeLabel.setText("Degree: -; ");
+			this.selectedSandLabel.setText("Sand: -; ");
+		}
+	}
+
+	public void onGraphChange(SandpileGraph sg) {
+		updateSelectedInfo();
+	}
+
+	public void onConfigChange(SandpileConfiguration config) {
+		updateSelectedInfo();
+	}
+
 	public BufferedImage getCanvasShot(){
 		int height = canvasHolderPanel.getHeight();
 		int width = canvasHolderPanel.getWidth();
@@ -2394,6 +2448,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSpinner latticeSpacingSpinner;
     private javax.swing.JPanel makeGridOptionsPanel;
@@ -2424,6 +2479,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Res
     private javax.swing.JComboBox sBorderComboBox;
     private javax.swing.JScrollPane sandpileViewScrollPane;
     private javax.swing.JToggleButton selectToggleButton;
+    private javax.swing.JLabel selecteCenterLabel;
+    private javax.swing.JLabel selectedDegreeLabel;
+    private javax.swing.JLabel selectedSandLabel;
     private javax.swing.JToggleButton serverToggleButton;
     private javax.swing.JButton setConfigButton;
     private javax.swing.JRadioButton setSandRadioButton;

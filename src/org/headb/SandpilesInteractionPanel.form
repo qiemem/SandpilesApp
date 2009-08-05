@@ -1758,6 +1758,23 @@
                     <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JToolBar$Separator" name="jSeparator6">
+                </Component>
+                <Component class="javax.swing.JLabel" name="selecteCenterLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Selected Center: -, -; "/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="selectedSandLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Sand: 0; "/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="selectedDegreeLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Degree: 0"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>

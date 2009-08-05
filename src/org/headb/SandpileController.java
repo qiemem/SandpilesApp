@@ -77,6 +77,8 @@ public class SandpileController implements ActionListener, Serializable{
 	private Iterator<SandpileConfiguration> updater = null;
 	public UndoManager undoManager = new UndoManager();
 
+	private ArrayList<SandpileChangeListener> listeners = new ArrayList<SandpileChangeListener>();
+
 	private ServerSocket server;
 	private Socket incoming;
 	private SandpileProtocol protocol;
@@ -199,6 +201,10 @@ public class SandpileController implements ActionListener, Serializable{
 	 */
 	public void setDrawer(SandpileDrawer sd){
 		drawer = sd;
+	}
+
+	public void addSandpileChangeListener(SandpileChangeListener listener){
+		listeners.add(listener);
 	}
 
 	/**
@@ -357,6 +363,7 @@ public class SandpileController implements ActionListener, Serializable{
 		}
 		if (updater.hasNext()) {
 			updater.next();
+			onConfigChange();
 		}
 		//repaint();
 	}
@@ -400,6 +407,10 @@ public class SandpileController implements ActionListener, Serializable{
 	public void onGraphChange(){
 		onEdit();
 		clearVertexDependentConfigs();
+
+		for(SandpileChangeListener listener: listeners){
+			listener.onGraphChange(sg);
+		}
 	}
 
 	/**
@@ -408,6 +419,9 @@ public class SandpileController implements ActionListener, Serializable{
 	 */
 	public void onConfigChange() {
 		onEdit();
+		for(SandpileChangeListener listener: listeners){
+			listener.onConfigChange(this.getConfig());
+		}
 	}
 
 	/**
@@ -1080,6 +1094,7 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void setToDualConfig(int times) {
 		setConfig(sg.getDualConfig(currentConfig).times(times));
+		onConfigChange();
 		repaint();
 	}
 
