@@ -45,7 +45,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	private boolean autoRotate = false;
 	private float[] lastPoint;
 	private float xRot = 0f, yRot = 0f;
-	private float startingZ = 250f;
+	private float startingZ = 240f;
 	private float cameraX = 0f, cameraY = 0f, cameraZ = startingZ;
 	private float[] rotAxis = new float[3];
 	private float rotAngle = 0f;
@@ -446,7 +446,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		for (int v = 0; v < config.size(); v++) {
 			float avg = heights[v];
 			for (int[] e : graph.getOutgoingEdges(v)) {
-				avg += heights[e[1]];
+				avg += heights[e[1]]*e[2];
 			}
 			avg /= (float) (graph.degree(v) + 1);
 			//avg*=1.5f;
@@ -472,9 +472,9 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 			avg[2] = clrs[v][2];
 			for (int[] e : graph.getOutgoingEdges(v)) {
 				int vert = e[1];
-				avg[0] += clrs[vert][0];
-				avg[1] += clrs[vert][1];
-				avg[2] += clrs[vert][2];
+				avg[0] += clrs[vert][0]*e[2];
+				avg[1] += clrs[vert][1]*e[2];
+				avg[2] += clrs[vert][2]*e[2];
 			}
 			avg[0] /= (float) (graph.degree(v) + 1);
 			avg[1] /= (float) (graph.degree(v) + 1);

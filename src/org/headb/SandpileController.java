@@ -90,13 +90,13 @@ public class SandpileController implements ActionListener, Serializable{
 	private class SGEdit extends AbstractUndoableEdit {
 		private SandpileGraph oldSG = new SandpileGraph(sg);
 		private Float2dArrayList oldLocations = new Float2dArrayList(vertexData);
-		//private SandpileConfiguration oldCurConfig = new SandpileConfiguration(currentConfig);
+		private SandpileConfiguration oldCurConfig = new SandpileConfiguration(currentConfig);
 		//private HashMap<String, SandpileConfiguration> oldConfigs = new HashMap<String, SandpileConfiguration>(configs);
 		//private TIntArrayList oldSelected = new TIntArrayList(selectedVertices.toNativeArray());
 
 		private SandpileGraph newSG;
 		private Float2dArrayList newLocations;
-		//private SandpileConfiguration newCurConfig;
+		private SandpileConfiguration newCurConfig;
 		//private HashMap<String, SandpileConfiguration> newConfigs;
 		//private TIntArrayList newSelected;
 		
@@ -114,14 +114,14 @@ public class SandpileController implements ActionListener, Serializable{
 			//System.err.println("undo " + getPresentationName());
 			newSG = new SandpileGraph(sg);
 			newLocations = new Float2dArrayList(vertexData);
-//			newCurConfig = new SandpileConfiguration(currentConfig);
+			newCurConfig = new SandpileConfiguration(currentConfig);
 //			newConfigs = new HashMap<String, SandpileConfiguration>(configs);
 //			newSelected = new TIntArrayList(selectedVertices.toNativeArray());
 
 
 			sg = new SandpileGraph(oldSG);
 			vertexData = new Float2dArrayList(oldLocations);
-//			currentConfig = new SandpileConfiguration(oldCurConfig);
+			currentConfig = new SandpileConfiguration(oldCurConfig);
 //			configs = new HashMap<String, SandpileConfiguration>(oldConfigs);
 //			selectedVertices = new TIntArrayList(oldSelected.toNativeArray());
 			onGraphChange();
@@ -562,6 +562,18 @@ public class SandpileController implements ActionListener, Serializable{
 			}
 			onGraphChange();
 		}
+		repaint();
+	}
+
+	public void makeSink(TIntArrayList verts){
+		for (int i = 0; i < verts.size(); i++) {
+			int v = verts.get(i);
+			ArrayList<int[]> edges = new ArrayList<int[]>(getGraph().getOutgoingEdges(v));
+			for(int[] e : edges){
+				delEdge(e[0], e[1], e[2]);
+			}
+		}
+		onGraphChange();
 		repaint();
 	}
 

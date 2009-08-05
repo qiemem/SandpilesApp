@@ -168,7 +168,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			drawVertexLabels(tr);
 		}
 		if (drawEdgeLabels) {
-			TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 12));
+			TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 6));
 			drawEdgeLabels(tr);
 		}
 		if (!selectedVertices.isEmpty()) {

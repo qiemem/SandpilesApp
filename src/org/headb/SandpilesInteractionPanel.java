@@ -353,6 +353,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         edgeWeightField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         deleteSelectedVerticesButton = new javax.swing.JButton();
+        makeSinkButton = new javax.swing.JButton();
         configManagerOptionsPanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         configSelectList = new javax.swing.JList();
@@ -692,6 +693,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
             }
         });
 
+        makeSinkButton.setText("Turn into Sink");
+        makeSinkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                makeSinkButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout editGraphPanelLayout = new org.jdesktop.layout.GroupLayout(editGraphPanel);
         editGraphPanel.setLayout(editGraphPanelLayout);
         editGraphPanelLayout.setHorizontalGroup(
@@ -699,28 +707,34 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
             .add(editGraphPanelLayout.createSequentialGroup()
                 .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(addVertexRadioButton)
-                    .add(removeVertexRadioButton)
-                    .add(addEdgeRadioButton)
-                    .add(removeEdgeRadioButton)
-                    .add(addUndirectedEdgeRadioButton)
-                    .add(removeUndirectedEdgeRadioButton)
-                    .add(editGraphPanelLayout.createSequentialGroup()
-                        .add(jLabel1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(deleteSelectedVerticesButton))
-                .addContainerGap(108, Short.MAX_VALUE))
+                    .add(removeVertexRadioButton))
+                .addContainerGap(177, Short.MAX_VALUE))
+            .add(addUndirectedEdgeRadioButton)
+            .add(removeUndirectedEdgeRadioButton)
+            .add(editGraphPanelLayout.createSequentialGroup()
+                .add(jLabel1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(deleteSelectedVerticesButton)
+            .add(addEdgeRadioButton)
+            .add(editGraphPanelLayout.createSequentialGroup()
+                .add(removeEdgeRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 54, Short.MAX_VALUE)
+                .add(makeSinkButton))
         );
         editGraphPanelLayout.setVerticalGroup(
             editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(editGraphPanelLayout.createSequentialGroup()
-                .add(addVertexRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(removeVertexRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(addEdgeRadioButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(removeEdgeRadioButton)
+                .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(editGraphPanelLayout.createSequentialGroup()
+                        .add(addVertexRadioButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(removeVertexRadioButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(addEdgeRadioButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(removeEdgeRadioButton))
+                    .add(makeSinkButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(addUndirectedEdgeRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -2444,6 +2458,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			calculationThread.interrupt();
 	}//GEN-LAST:event_cancelButtonActionPerformed
 
+	private void makeSinkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeSinkButtonActionPerformed
+		sandpileController.makeSink(sandpileController.getSelectedVertices());
+	}//GEN-LAST:event_makeSinkButtonActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -2666,6 +2684,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JComboBox makeHoneycombBorderComboBox;
     private javax.swing.JPanel makeHoneycombOptionsPanel;
     private javax.swing.JTextField makeHoneycombRadiusField;
+    private javax.swing.JButton makeSinkButton;
     private javax.swing.ButtonGroup mouseButtonGroup;
     private javax.swing.JToolBar mouseToolBar;
     private javax.swing.JComboBox nBorderComboBox;

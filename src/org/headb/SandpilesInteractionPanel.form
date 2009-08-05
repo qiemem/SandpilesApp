@@ -377,35 +377,44 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="addVertexRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="removeVertexRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="addEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="removeEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="addUndirectedEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="removeUndirectedEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="edgeWeightField" min="-2" pref="36" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="deleteSelectedVerticesButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="108" max="32767" attributes="0"/>
+                              <EmptySpace pref="177" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="addUndirectedEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="removeUndirectedEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="edgeWeightField" min="-2" pref="36" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="deleteSelectedVerticesButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="addEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="removeEdgeRadioButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="54" max="32767" attributes="0"/>
+                              <Component id="makeSinkButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="addVertexRadioButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="removeVertexRadioButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="addEdgeRadioButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="removeEdgeRadioButton" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="addVertexRadioButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="removeVertexRadioButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="addEdgeRadioButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="removeEdgeRadioButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="makeSinkButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="addUndirectedEdgeRadioButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -496,6 +505,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSelectedVerticesButtonActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="makeSinkButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Turn into Sink"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="makeSinkButtonActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
