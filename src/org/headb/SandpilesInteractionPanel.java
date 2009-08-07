@@ -84,9 +84,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	private static final String RANDOM_CONFIG = "Random Grain";
 	private final String[] defaultConfigs = { MAX_CONFIG, IDENTITY_CONFIG, BURNING_CONFIG, EQUIVALENT_RECURRENT, INVERSE_CONFIG, CURRENT_CONFIG, DUAL_CONFIG, ONES_CONFIG, RANDOM_CONFIG };
 
-	private Float2dArrayList colors;
-	private Float2dArrayList inDebtColors;
-
 	private final int PORT = 7236;
 
 	SandpileDrawer currentDrawer;
@@ -128,18 +125,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     public SandpilesInteractionPanel() {
         initComponents();
 
-		float[] colorArray = {0.3f, 0.3f, 0.3f,
-							   0f, 0f, 1f,
-							   0f, 1f, 1f,
-							   0f, 1f, 0f,
-							   1f, 0f, 0f,
-							   1f, .5f, 0f,
-							   1f, 1f, 0f,
-							   1f, 1f, 1f};
-		colors = new Float2dArrayList(colorArray, 3);
-		float[] inDebtColorArray = {0.2f, 0f, 0f};
-		inDebtColors = new Float2dArrayList(inDebtColorArray, 3);
-
 		drawer = new SandpileGLDrawer(canvas);
 		sandpileController = new SandpileController(drawer);
 		sandpileController.addSandpileChangeListener(this);
@@ -155,10 +140,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		runTimer.setDelay(0);
 		updateDelayTextField();
 		updateSelectedInfo();
-
-
-		drawer.setColors(colors, inDebtColors);
-		drawer3d.setColors(colors, inDebtColors);
 
 		canvas.addMouseListener(new MouseAdapter(){
 			@Override public void mousePressed(MouseEvent e){
@@ -249,6 +230,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 //		updateZoomTextField();
 //		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
 //	}
+
+	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors){
+		drawer.setColors(colors, inDebtColors);
+		drawer3d.setColors(colors, inDebtColors);
+	}
 
 	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, List<int[]> edgeData){
 		localClipboard.setContents(new SandpileTransferable(locationData, sandData, edgeData), this);
@@ -1755,6 +1741,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 }//GEN-LAST:event_clearSandButtonActionPerformed
 
 	private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
+
+
 		System.exit(0);
 }//GEN-LAST:event_quitButtonActionPerformed
 

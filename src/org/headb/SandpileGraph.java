@@ -40,9 +40,16 @@ import gnu.trove.TIntArrayList;
 
 public class SandpileGraph {
 
+	// Edges are represented by int[3] arrays
+	// where int[0] = source
+	// int[1] = dest
+	// int[2] = weight
 	private ArrayList<ArrayList<int[]>> adj;
 	private TIntArrayList degrees;
 
+	/**
+	 * Creates a new, empty graph.
+	 */
 	public SandpileGraph() {
 		this.adj = new ArrayList<ArrayList<int[]>>();
 		this.degrees = new TIntArrayList();
@@ -64,6 +71,10 @@ public class SandpileGraph {
 		this.degrees = new TIntArrayList(graph.degrees.toNativeArray());
 	}
 
+	/**
+	 * Returns the number of vertices.
+	 * @return An int of the number of vertices.
+	 */
 	public int numVertices(){
 		return adj.size();
 	}
@@ -268,7 +279,7 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Adds the given number of vertices to the graph. Runs in constant time.
+	 * Adds the given number of vertices to the graph. Runs in linear time.
 	 */
 	public void addVertices(int amount) {
 		for (int i = 0; i < amount; i++) {
@@ -476,7 +487,7 @@ public class SandpileGraph {
 	}
 	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
-		final int[] unstables = new int[config.size()];
+		final int[] unstables = new int[numVertices()];
 		Arrays.fill(unstables, -1);
 		int i = 0;
 		for(int j=0; j < startingVertices.size(); j++){
@@ -486,7 +497,7 @@ public class SandpileGraph {
 				i++;
 			}
 		}
-		final int[] newUnstables = new int[config.size()];
+		final int[] newUnstables = new int[numVertices()];
 		Arrays.fill(newUnstables,-1);
 		return new Iterator<SandpileConfiguration>() {
 			boolean[] added = new boolean[numVertices()];

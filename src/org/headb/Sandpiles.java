@@ -30,25 +30,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb;
 
 
+import java.awt.Color;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
-import java.io.File;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import java.io.IOException;
+import javax.swing.DefaultListModel;
+import javax.swing.JColorChooser;
+import java.io.*;
 
 public class Sandpiles extends javax.swing.JFrame {
 
 	private final int SAVE_PROJECT = 0, LOAD_PROJECT = 1, SAVE_CONFIG = 2, LOAD_CONFIG = 3;
 	private int fileAction=-1;
 
+	private SandpilePreferences prefs;
+
 
 	/** Creates new form Sandpiles */
 	public Sandpiles() {
 		initComponents();
 		this.setTitle("Sandpiles - Untitled");
+		prefs = SandpilePreferences.getPreferences();
+		sandpilesIP.setColors(prefs.getColors(), prefs.getInDebtColors());
 	}
 
 	/** This method is called from within the constructor to
@@ -62,6 +68,15 @@ public class Sandpiles extends javax.swing.JFrame {
 
         projectFileChooser = new javax.swing.JFileChooser();
         imageFileChooser = new javax.swing.JFileChooser(new File(System.getProperty("user.home")));
+        preferencesDialog = new javax.swing.JDialog();
+        preferencesTabbedPane = new javax.swing.JTabbedPane();
+        colorPreferencesPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        colorPreferencesList = new javax.swing.JList();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        preferencesDoneButton = new javax.swing.JButton();
         sandpilesIP = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -78,6 +93,8 @@ public class Sandpiles extends javax.swing.JFrame {
         copyMenuItem = new javax.swing.JMenuItem();
         cutMenuItem2 = new javax.swing.JMenuItem();
         pasteMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JSeparator();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         projectFileChooser.setAcceptAllFileFilterUsed(false);
         projectFileChooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
@@ -117,6 +134,87 @@ public class Sandpiles extends javax.swing.JFrame {
                 imageFileChooserActionPerformed(evt);
             }
         });
+
+        preferencesDialog.setTitle("Preferences");
+        preferencesDialog.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                preferencesDialogComponentHidden(evt);
+            }
+        });
+
+        colorPreferencesList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        colorPreferencesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(colorPreferencesList);
+
+        jButton1.setText("Set");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("+");
+
+        jButton3.setText("-");
+
+        org.jdesktop.layout.GroupLayout colorPreferencesPanelLayout = new org.jdesktop.layout.GroupLayout(colorPreferencesPanel);
+        colorPreferencesPanel.setLayout(colorPreferencesPanelLayout);
+        colorPreferencesPanelLayout.setHorizontalGroup(
+            colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, colorPreferencesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                    .add(colorPreferencesPanelLayout.createSequentialGroup()
+                        .add(jButton1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(jButton3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(449, 449, 449))
+        );
+        colorPreferencesPanelLayout.setVerticalGroup(
+            colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, colorPreferencesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jButton1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jButton3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        preferencesTabbedPane.addTab("Colors", colorPreferencesPanel);
+
+        preferencesDoneButton.setText("Done");
+        preferencesDoneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                preferencesDoneButtonActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout preferencesDialogLayout = new org.jdesktop.layout.GroupLayout(preferencesDialog.getContentPane());
+        preferencesDialog.getContentPane().setLayout(preferencesDialogLayout);
+        preferencesDialogLayout.setHorizontalGroup(
+            preferencesDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(preferencesDoneButton))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+        );
+        preferencesDialogLayout.setVerticalGroup(
+            preferencesDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesDialogLayout.createSequentialGroup()
+                .add(preferencesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(preferencesDoneButton))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -216,6 +314,15 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
         editMenu.add(pasteMenuItem3);
+        editMenu.add(jSeparator3);
+
+        jMenuItem2.setText("Preferences");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        editMenu.add(jMenuItem2);
 
         jMenuBar1.add(editMenu);
 
@@ -332,6 +439,58 @@ public class Sandpiles extends javax.swing.JFrame {
 		}
 	}//GEN-LAST:event_imageFileChooserActionPerformed
 
+	private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+		preferencesDialog.setSize(600, 400);
+		preferencesDialog.setLocationRelativeTo(this);
+		updateColorPreferencesList();
+		this.preferencesDialog.setVisible(true);
+	}//GEN-LAST:event_jMenuItem2ActionPerformed
+
+	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		DefaultListModel model = (DefaultListModel) colorPreferencesList.getModel();
+		Color defaultColor = (Color) model.getElementAt(colorPreferencesList.getSelectedIndex());
+		Color newColor = getColor(defaultColor);
+		model.set(colorPreferencesList.getSelectedIndex(), newColor);
+		updateColorPreferences();
+		updateColorPreferencesList();
+	}//GEN-LAST:event_jButton1ActionPerformed
+
+	private void preferencesDoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesDoneButtonActionPerformed
+		this.preferencesDialog.setVisible(false);
+
+	}//GEN-LAST:event_preferencesDoneButtonActionPerformed
+
+	private void preferencesDialogComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_preferencesDialogComponentHidden
+		if (!prefs.save()) {
+			JOptionPane.showMessageDialog(this, "Unable to save preferences. Perhaps this program doesn't have permissions to write to its own directory.");
+		}else{
+			System.err.println("Preferences saved");
+		}
+	}//GEN-LAST:event_preferencesDialogComponentHidden
+
+	private void updateColorPreferencesList() {
+		ColorListCellRenderer cellRenderer = new ColorListCellRenderer();
+		cellRenderer.setColors(this.prefs.getColors());
+		DefaultListModel colorModel = new DefaultListModel();
+		for(int i=0; i<prefs.getColors().rows(); i++){
+			colorModel.addElement(new Color(prefs.getColors().get(i,0),prefs.getColors().get(i,1),prefs.getColors().get(i,2)));
+		}
+		colorPreferencesList.setModel(colorModel);
+		colorPreferencesList.setCellRenderer(cellRenderer);
+	}
+
+	private void updateColorPreferences() {
+		prefs.getColors().clear();
+		for(int i=0; i<colorPreferencesList.getModel().getSize(); i++){
+			Color c = (Color)colorPreferencesList.getModel().getElementAt(i);
+			float[] colorVals = c.getRGBColorComponents(null);
+			prefs.getColors().addRow(colorVals);
+		}
+		sandpilesIP.setColors(prefs.getColors(), prefs.getInDebtColors());
+		sandpilesIP.getSandpileController().repaint();
+	}
+
+
 	/**
 	 * @param args the command line arguments
 	 */
@@ -358,18 +517,33 @@ public class Sandpiles extends javax.swing.JFrame {
 		});
 	}
 
+	private Color getColor(Color defaultColor){
+		return JColorChooser.showDialog(colorPreferencesPanel, "Pick a color", defaultColor);
+	}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList colorPreferencesList;
+    private javax.swing.JPanel colorPreferencesPanel;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem2;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JFileChooser imageFileChooser;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JMenuItem openProjectMenuItem;
     private javax.swing.JMenuItem pasteMenuItem3;
+    private javax.swing.JDialog preferencesDialog;
+    private javax.swing.JButton preferencesDoneButton;
+    private javax.swing.JTabbedPane preferencesTabbedPane;
     private javax.swing.JFileChooser projectFileChooser;
     private javax.swing.JMenuItem quitMenuItem;
     private javax.swing.JMenuItem redoMenuItem;

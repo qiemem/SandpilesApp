@@ -11,7 +11,19 @@ import gnu.trove.TFloatArrayList;
  * @author headb
  */
 public class Float2dArrayList extends TFloatArrayList{
+	static private final long serialVersionUID = -21312181081L;
 	private int cols;
+
+	public Float2dArrayList(){
+		super();
+		cols = 1;
+	}
+
+	public Float2dArrayList(int cols){
+		super();
+		this.cols = cols;
+	}
+
 	public Float2dArrayList(int rows, int cols){
 		super(new float[rows*cols]);
 		this.cols = cols;
