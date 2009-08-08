@@ -12,9 +12,37 @@ import gnu.trove.TIntArrayList;
  */
 public class Int2dArrayList extends TIntArrayList{
 	private int cols;
+//	private Int2dArrayList me = this;
+//
+//	private class Row{
+//		int row;
+//		public Row(int r){
+//			row = r;
+//		}
+//		public int get(int c){
+//			if(c<me.cols())
+//				return me.getQuick(row, c);
+//			else
+//				throw new IndexOutOfBoundsException();
+//		}
+//		public int getQuick(int c){
+//			return me.getQuick(row, c);
+//		}
+//		public void set(int c, int val){
+//			if(c<me.cols())
+//				me.setQuick(row, c, val);
+//			else
+//				throw new IndexOutOfBoundsException();
+//		}
+//		public void setQuick(int c, int val){
+//			me.setQuick(row, c, val);
+//		}
+//	}
+
 	public Int2dArrayList(int rows, int cols){
 		super(new int[rows*cols]);
 		this.cols = cols;
+
 	}
 	public Int2dArrayList(Int2dArrayList other){
 		super(other.toNativeArray());
@@ -36,6 +64,7 @@ public class Int2dArrayList extends TIntArrayList{
 	public void setQuick(int r, int c, int val){
 		super.setQuick(r*cols+c, val);
 	}
+	
 	public int addRow(){
 		for(int i=0; i<cols; i++)
 			super.add(0);
