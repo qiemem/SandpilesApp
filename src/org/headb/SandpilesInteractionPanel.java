@@ -2210,8 +2210,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 	private void storeConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeConfigButtonActionPerformed
 		String name = javax.swing.JOptionPane.showInputDialog("Enter a name for the configuration:");
-		sandpileController.storeCurrentConfig(name);
-		updateConfigSelectList();
+		if(name!=null){
+			sandpileController.storeCurrentConfig(name);
+			updateConfigSelectList();
+		}
 	}//GEN-LAST:event_storeConfigButtonActionPerformed
 
 	private void selectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectToggleButtonActionPerformed

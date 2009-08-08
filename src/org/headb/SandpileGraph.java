@@ -487,55 +487,37 @@ public class SandpileGraph {
 	}
 	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
-		final int[] unstables = new int[numVertices()];
-		Arrays.fill(unstables, -1);
-		int i = 0;
-		for(int j=0; j < startingVertices.size(); j++){
-			int v = startingVertices.get(j);
-			if(config.getQuick(v)>=degree(v) && !isSink(v)){
-				unstables[i] = v;
-				i++;
-			}
+		final IntCyclicBuffer unstables = new IntCyclicBuffer(numVertices());
+		unstables.addAll(startingVertices);
+		final boolean[] added = new boolean[numVertices()];
+		for(int i=0; i<startingVertices.size(); i++){
+			added[startingVertices.get(i)] = true;
 		}
-		final int[] newUnstables = new int[numVertices()];
-		Arrays.fill(newUnstables,-1);
 		return new Iterator<SandpileConfiguration>() {
-			boolean[] added = new boolean[numVertices()];
-
 			public boolean hasNext() {
-				return unstables.length!=0 && unstables[0]!=-1;
+				return unstables.hasNextCycle();
 			}
 			public SandpileConfiguration next() {
-				for(int i=0; unstables[i]!=-1; i++){
-					fireVertexInPlace(config, unstables[i]);
-				}
-				int j=0;
-				for(int i=0; unstables[i]!=-1; i++){
-					int v = unstables[i];
-					if(!added[v] && config.getQuick(v)>=degrees.getQuick(v)){
-						newUnstables[j]=v;
-						added[v]=true;
-						j++;
+				int numUnstables = unstables.nextCycleLength();
+				unstables.goToNextCycle();
+				for(int i=0; i<numUnstables; i++){
+					int v = unstables.nextItemUnsafe();
+					added[v]=false;
+					fireVertexInPlace(config, v);
+					if(config.getQuick(v)>=degrees.getQuick(v)){
+						unstables.addUnsafe(v);
+						added[v] = true;
 					}
 					List<int[]> edges = getOutgoingEdges(v);
 					for(int k=0; k<edges.size(); k++){
 						int w = edges.get(k)[1];
 						int d = degrees.getQuick(w);
 						if(!added[w] && config.getQuick(w)>=d && d>0){
-							newUnstables[j]=w;
+							unstables.addUnsafe(w);
 							added[w]=true;
-							j++;
 						}
 					}
-					unstables[i]=-1;
 				}
-				for(int i=0; newUnstables[i]!=-1; i++){
-					int v = newUnstables[i];
-					added[v]=false;
-					unstables[i] = v;
-					newUnstables[i]=-1;
-				}
-
 				return config;
 			}
 

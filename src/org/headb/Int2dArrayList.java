@@ -39,6 +39,10 @@ public class Int2dArrayList extends TIntArrayList{
 //		}
 //	}
 
+	public Int2dArrayList(int cols){
+		super();
+		this.cols = cols;
+	}
 	public Int2dArrayList(int rows, int cols){
 		super(new int[rows*cols]);
 		this.cols = cols;

@@ -447,6 +447,8 @@ public class Sandpiles extends javax.swing.JFrame {
 	}//GEN-LAST:event_jMenuItem2ActionPerformed
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		if (colorPreferencesList.getSelectedIndex() < 0)
+			return;
 		DefaultListModel model = (DefaultListModel) colorPreferencesList.getModel();
 		Color defaultColor = (Color) model.getElementAt(colorPreferencesList.getSelectedIndex());
 		Color newColor = getColor(defaultColor);
