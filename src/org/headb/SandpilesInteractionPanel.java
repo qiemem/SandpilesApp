@@ -1971,97 +1971,107 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
 		float x = coords[0];
 		float y = coords[1];
-		if(currentState.equals(MAKE_GRID_STATE)){
-			sandpileController.makeGridControl(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
-					nBorderComboBox.getSelectedIndex(),
-					sBorderComboBox.getSelectedIndex(),
-					eBorderComboBox.getSelectedIndex(),
-					wBorderComboBox.getSelectedIndex());
-		}else if(currentState.equals(MAKE_HEX_GRID_STATE)){
-			sandpileController.makeHexGridControl(Integer.valueOf(hexGridRowsField.getText()), Integer.valueOf(hexGridColsField.getText()), x, y,
-					hexNBorderComboBox.getSelectedIndex(),
-					hexSBorderComboBox.getSelectedIndex(),
-					hexEBorderComboBox.getSelectedIndex(),
-					hexWBorderComboBox.getSelectedIndex());
-		}else if(currentState.equals(EDIT_GRAPH_STATE)) {
-			if(editGraphButtonGroup.isSelected(addVertexRadioButton.getModel())){
-				sandpileController.addVertexControl(x,y);
-			}else if(editGraphButtonGroup.isSelected(removeVertexRadioButton.getModel())){
-				sandpileController.delVertexControl(x, y);
-			}else if(editGraphButtonGroup.isSelected(addEdgeRadioButton.getModel())){
-				sandpileController.addEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
-			}else if(editGraphButtonGroup.isSelected(removeEdgeRadioButton.getModel())){
-				sandpileController.delEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
-			}else if(editGraphButtonGroup.isSelected(addUndirectedEdgeRadioButton.getModel())){
-				sandpileController.addUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
-			}else if(editGraphButtonGroup.isSelected(removeUndirectedEdgeRadioButton.getModel())){
-				sandpileController.delUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
-			}
+		try{
+			if (currentState.equals(MAKE_GRID_STATE)) {
+				sandpileController.makeGridControl(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y,
+						nBorderComboBox.getSelectedIndex(),
+						sBorderComboBox.getSelectedIndex(),
+						eBorderComboBox.getSelectedIndex(),
+						wBorderComboBox.getSelectedIndex());
+			} else if (currentState.equals(MAKE_HEX_GRID_STATE)) {
+				sandpileController.makeHexGridControl(Integer.valueOf(hexGridRowsField.getText()), Integer.valueOf(hexGridColsField.getText()), x, y,
+						hexNBorderComboBox.getSelectedIndex(),
+						hexSBorderComboBox.getSelectedIndex(),
+						hexEBorderComboBox.getSelectedIndex(),
+						hexWBorderComboBox.getSelectedIndex());
+			} else if (currentState.equals(EDIT_GRAPH_STATE)) {
+				if (editGraphButtonGroup.isSelected(addVertexRadioButton.getModel())) {
+					sandpileController.addVertexControl(x, y);
+				} else if (editGraphButtonGroup.isSelected(removeVertexRadioButton.getModel())) {
+					sandpileController.delVertexControl(x, y);
+				} else if (editGraphButtonGroup.isSelected(addEdgeRadioButton.getModel())) {
+					sandpileController.addEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				} else if (editGraphButtonGroup.isSelected(removeEdgeRadioButton.getModel())) {
+					sandpileController.delEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				} else if (editGraphButtonGroup.isSelected(addUndirectedEdgeRadioButton.getModel())) {
+					sandpileController.addUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				} else if (editGraphButtonGroup.isSelected(removeUndirectedEdgeRadioButton.getModel())) {
+					sandpileController.delUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+				}
 
-		}else if(currentState.equals(MAKE_HONEYCOMB_STATE)){
-			sandpileController.makeHoneycombControl(Integer.valueOf(makeHoneycombRadiusField.getText()),x, y,  makeHoneycombBorderComboBox.getSelectedIndex());
-		}else if(currentState.equals(CONFIG_MANAGER_STATE)){
-			if(editConfigButtonGroup.isSelected(addSandRadioButton.getModel())){
-				sandpileController.addSandControl(x,y, Integer.valueOf(amountOfSandField.getText() ) );
-			}else if(editConfigButtonGroup.isSelected(removeSandRadioButton.getModel())){
-				sandpileController.addSandControl(x,y, -Integer.valueOf(amountOfSandField.getText()));
-			}else if(editConfigButtonGroup.isSelected(setSandRadioButton.getModel())){
-				sandpileController.setSandControl(x,y, Integer.valueOf(amountOfSandField.getText()));
-			}
-		}else if(currentState.equals(BUILD_LATTICE_STATE)){
-			ArrayList<int[]> vectors = new ArrayList<int[]>();
-			TIntArrayList xStarts = new TIntArrayList();
-			TIntArrayList xFreqs = new TIntArrayList();
-			TIntArrayList yStarts = new TIntArrayList();
-			TIntArrayList yFreqs = new TIntArrayList();
-			ArrayList<Boolean> dirs = new ArrayList<Boolean>();
-			TIntArrayList weights = new TIntArrayList();
-			TIntArrayList borders = new TIntArrayList();
+			} else if (currentState.equals(MAKE_HONEYCOMB_STATE)) {
+				sandpileController.makeHoneycombControl(Integer.valueOf(makeHoneycombRadiusField.getText()), x, y, makeHoneycombBorderComboBox.getSelectedIndex());
+			} else if (currentState.equals(CONFIG_MANAGER_STATE)) {
+				if (editConfigButtonGroup.isSelected(addSandRadioButton.getModel())) {
+					sandpileController.addSandControl(x, y, Integer.valueOf(amountOfSandField.getText()));
+				} else if (editConfigButtonGroup.isSelected(removeSandRadioButton.getModel())) {
+					sandpileController.addSandControl(x, y, -Integer.valueOf(amountOfSandField.getText()));
+				} else if (editConfigButtonGroup.isSelected(setSandRadioButton.getModel())) {
+					sandpileController.setSandControl(x, y, Integer.valueOf(amountOfSandField.getText()));
+				}
+			} else if (currentState.equals(BUILD_LATTICE_STATE)) {
+				ArrayList<int[]> vectors = new ArrayList<int[]>();
+				TIntArrayList xStarts = new TIntArrayList();
+				TIntArrayList xFreqs = new TIntArrayList();
+				TIntArrayList yStarts = new TIntArrayList();
+				TIntArrayList yFreqs = new TIntArrayList();
+				ArrayList<Boolean> dirs = new ArrayList<Boolean>();
+				TIntArrayList weights = new TIntArrayList();
+				TIntArrayList borders = new TIntArrayList();
 
-			for(int r=0; r<buildLatticeTable.getRowCount(); r++){
-				Integer xCoord = (Integer)buildLatticeTable.getValueAt(r, 0);
-				Integer yCoord = (Integer)buildLatticeTable.getValueAt(r, 1);
-				Integer xStart = (Integer)buildLatticeTable.getValueAt(r, 2);
-				Integer xFreq = (Integer)buildLatticeTable.getValueAt(r, 3);
-				Integer yStart = (Integer)buildLatticeTable.getValueAt(r, 4);
-				Integer yFreq = (Integer)buildLatticeTable.getValueAt(r, 5);
-				Boolean dir = (Boolean)buildLatticeTable.getValueAt(r, 6);
-				Integer weight = (Integer)buildLatticeTable.getValueAt(r, 7);
-				if(xCoord!=null && yCoord!=null){
-					int[] vec = {xCoord, yCoord};
-					vectors.add(vec);
-					if(xStart==null)
-						xStarts.add(0);
-					else
-						xStarts.add(xStart);
-					if(xFreq==null)
-						xFreqs.add(1);
-					else
-						xFreqs.add(xFreq);
-					if(yStart==null)
-						yStarts.add(0);
-					else
-						yStarts.add(yStart);
-					if(yFreq==null)
-						yFreqs.add(1);
-					else
-						yFreqs.add(yFreq);
-					if(dir==null)
-						dirs.add(false);
-					else
-						dirs.add(dir);
-					if(weight==null)
-						weights.add(1);
-					else
-						weights.add(weight);
-					borders.add(SandpileController.NO_BORDER);
+				for (int r = 0; r < buildLatticeTable.getRowCount(); r++) {
+					Integer xCoord = (Integer) buildLatticeTable.getValueAt(r, 0);
+					Integer yCoord = (Integer) buildLatticeTable.getValueAt(r, 1);
+					Integer xStart = (Integer) buildLatticeTable.getValueAt(r, 2);
+					Integer xFreq = (Integer) buildLatticeTable.getValueAt(r, 3);
+					Integer yStart = (Integer) buildLatticeTable.getValueAt(r, 4);
+					Integer yFreq = (Integer) buildLatticeTable.getValueAt(r, 5);
+					Boolean dir = (Boolean) buildLatticeTable.getValueAt(r, 6);
+					Integer weight = (Integer) buildLatticeTable.getValueAt(r, 7);
+					if (xCoord != null && yCoord != null) {
+						int[] vec = {xCoord, yCoord};
+						vectors.add(vec);
+						if (xStart == null) {
+							xStarts.add(0);
+						} else {
+							xStarts.add(xStart);
+						}
+						if (xFreq == null) {
+							xFreqs.add(1);
+						} else {
+							xFreqs.add(xFreq);
+						}
+						if (yStart == null) {
+							yStarts.add(0);
+						} else {
+							yStarts.add(yStart);
+						}
+						if (yFreq == null) {
+							yFreqs.add(1);
+						} else {
+							yFreqs.add(yFreq);
+						}
+						if (dir == null) {
+							dirs.add(false);
+						} else {
+							dirs.add(dir);
+						}
+						if (weight == null) {
+							weights.add(1);
+						} else {
+							weights.add(weight);
+						}
+						borders.add(SandpileController.NO_BORDER);
+					}
+				}
+				if (!vectors.isEmpty()) {
+					sandpileController.buildLatticeControl(x, y, (Integer) rowSpinner.getValue(), (Integer) colSpinner.getValue(),
+							(Integer) latticeSpacingSpinner.getValue(), vectors,
+							xStarts, xFreqs, yStarts, yFreqs, dirs, weights, borders);
 				}
 			}
-			if(!vectors.isEmpty()){
-				sandpileController.buildLatticeControl(x, y, (Integer)rowSpinner.getValue(), (Integer)colSpinner.getValue(), 
-						(Integer)latticeSpacingSpinner.getValue(), vectors,
-						xStarts, xFreqs, yStarts, yFreqs, dirs, weights, borders);
-			}
+		} catch (NumberFormatException e) {
+		} catch (NullPointerException e) {
 		}
 		this.updateConfigSelectList();
 		setDefaultCursor();
@@ -2292,7 +2302,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	}//GEN-LAST:event_repaintOnUpdateRadioButtonActionPerformed
 
 	private void repaintDelayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repaintDelayTextFieldActionPerformed
-		sandpileController.setMinRepaintDelay(Integer.valueOf(repaintDelayTextField.getText()));
+		try{
+			sandpileController.setMinRepaintDelay(Integer.valueOf(repaintDelayTextField.getText()));
+		}catch(Exception e){
+			
+		}
 	}//GEN-LAST:event_repaintDelayTextFieldActionPerformed
 
 	private void setSandRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSandRadioButtonActionPerformed
