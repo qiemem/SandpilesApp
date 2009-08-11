@@ -568,9 +568,9 @@ public class SandpileController implements ActionListener, Serializable{
 	public void makeSink(TIntArrayList verts){
 		for (int i = 0; i < verts.size(); i++) {
 			int v = verts.get(i);
-			ArrayList<int[]> edges = new ArrayList<int[]>(getGraph().getOutgoingEdges(v));
-			for(int[] e : edges){
-				delEdge(e[0], e[1], e[2]);
+			EdgeList edges = new EdgeList(getGraph().getOutgoingEdges(v));
+			for(Edge e : edges){
+				delEdge(e.source(), e.dest(), e.wt());
 			}
 		}
 		onGraphChange();
@@ -1309,21 +1309,19 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	protected void delVertices(TIntArrayList vertices) {
-		sg.removeVertices(vertices);
-		configs.clear();
 		boolean[] toRemove = new boolean[configSize()];
 		for (int i = 0; i < vertices.size(); i++) {
 			int v = vertices.get(i);
 			toRemove[v] = true;
-			int index = selectedVertices.indexOf(v);
-			if(index>=0){
-				selectedVertices.remove(index);
-				for (int j = 0; j < selectedVertices.size(); j++) {
-					if (selectedVertices.get(j) > v) {
-						selectedVertices.set(j, selectedVertices.get(j) - 1);
-					}
-				}
-			}
+//			int index = selectedVertices.indexOf(v);
+//			if(index>=0){
+//				selectedVertices.remove(index);
+//				for (int j = 0; j < selectedVertices.size(); j++) {
+//					if (selectedVertices.get(j) > v) {
+//						selectedVertices.set(j, selectedVertices.get(j) - 1);
+//					}
+//				}
+//			}
 		}
 		for (int v = configSize() - 1; v >= 0; v--) {
 			if (toRemove[v]) {
@@ -1331,6 +1329,9 @@ public class SandpileController implements ActionListener, Serializable{
 				currentConfig.remove(v);
 			}
 		}
+		sg.removeVertices(vertices);
+		selectedVertices.clear();
+		configs.clear();
 	}
 
 	public void delAllVerticesControl() {
@@ -1552,8 +1553,8 @@ public class SandpileController implements ActionListener, Serializable{
 				outBuffer.newLine();
 			}
 			for (int v = 0; v < configSize(); v++) {
-				for (int[] e : sg.getOutgoingEdges(v)) {
-					outBuffer.write("edge " + e[0] + " " + e[1] + " " + e[2]);
+				for (Edge e : sg.getOutgoingEdges(v)) {
+					outBuffer.write("edge " + e.source() + " " + e.dest() + " " + e.wt());
 					outBuffer.newLine();
 				}
 			}

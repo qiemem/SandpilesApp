@@ -236,29 +236,27 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		drawer3d.setColors(colors, inDebtColors);
 	}
 
-	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, List<int[]> edgeData){
+	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, EdgeList edgeData){
 		localClipboard.setContents(new SandpileTransferable(locationData, sandData, edgeData), this);
 	}
 	
 	public void copySelectedToClipboard(){
 		TIntArrayList vertices = sandpileController.getSelectedVertices();
-		Float2dArrayList locationData = new Float2dArrayList(0,3);
+		Float2dArrayList locationData = new Float2dArrayList(0,2);
 		TIntArrayList configData = new TIntArrayList();
-		ArrayList<int[]> edgeData = new ArrayList<int[]>();
+		EdgeList edgeData = new EdgeList();
 		int vert = 0;
 		for(int i=0; i< vertices.size(); i++){
 			int v = vertices.get(i);
 			float x = sandpileController.getVertexX(v)-drawer.getOriginX();
 			float y = sandpileController.getVertexY(v)-drawer.getOriginY();
-			float[] pos = {x,y};
-			locationData.add(pos);
+			locationData.addRow(x,y);
 			configData.add(sandpileController.getSand(v));
-			for(int[] e : sandpileController.getGraph().getOutgoingEdges(v)){
-				int w = e[1];
+			for(Edge e : sandpileController.getGraph().getOutgoingEdges(v)){
+				int w = e.dest();
 				int destVert = vertices.indexOf(w);
 				if(destVert>=0){
-					int[] edge = {vert,destVert,sandpileController.getGraph().weight(v, w)};
-					edgeData.add(edge);
+					edgeData.add(vert,destVert,sandpileController.getGraph().weight(v, w));
 				}
 			}
 			vert++;
@@ -269,7 +267,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	public void cutSelectedToClipBoard(){
 		copySelectedToClipboard();
 		sandpileController.delVerticesControl(sandpileController.getSelectedVertices());
-		sandpileController.unselectVertices();
+		//sandpileController.unselectVertices();
 		sandpileController.repaint();
 	}
 
@@ -279,12 +277,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		Float2dArrayList locationData = data.getLocationData();
 		TIntArrayList configData = data.getConfigData();
 		int startingIndex = sandpileController.getConfig().size();
-		for(int i=0; i<locationData.size(); i++){
+		for(int i=0; i<locationData.rows(); i++){
 			sandpileController.addVertex(locationData.get(i,0)+drawer.getOriginX(), locationData.get(i,1)+drawer.getOriginY());
 			sandpileController.setSand(i, configData.get(i));
 		}
-		for(int[] e : data.getEdgeData()){
-			sandpileController.addEdge(e[0]+startingIndex,e[1]+startingIndex,e[2]);
+		for(Edge e : data.getEdgeData()){
+			sandpileController.addEdge(e.source()+startingIndex,e.dest()+startingIndex,e.wt());
 		}
 		sandpileController.repaint();
 	}

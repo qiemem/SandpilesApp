@@ -82,13 +82,13 @@ public class SandpileProtocol {
 			StringBuilder sb = new StringBuilder();
 			boolean needsSpace = false;
 			for (int v = 0; v < sc.configSize(); v++) {								
-				for (int[] e : sc.getGraph().getOutgoingEdges(v)) {
+				for (Edge e : sc.getGraph().getOutgoingEdges(v)) {
 					if (needsSpace) {
 						sb.append(" ");
 					} else {
 						needsSpace = true;
 					}
-					sb.append(e[0]+","+e[1]+","+e[2]);
+					sb.append(e.source()+","+e.dest()+","+e.wt());
 				}
 			}
 			output=sb.toString();

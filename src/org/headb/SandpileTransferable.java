@@ -36,10 +36,10 @@ import gnu.trove.TIntArrayList;
 public class SandpileTransferable implements Transferable {
 	private final Float2dArrayList locationData;
 	private final TIntArrayList configData;
-	private final List<int[]> edgeData;
+	private final EdgeList edgeData;
 
 
-	public SandpileTransferable(Float2dArrayList locationData, TIntArrayList configData, List<int[]> edgeData){
+	public SandpileTransferable(Float2dArrayList locationData, TIntArrayList configData, EdgeList edgeData){
 		this.locationData  = locationData;
 		this.configData = configData;
 		this.edgeData = edgeData;
@@ -53,7 +53,7 @@ public class SandpileTransferable implements Transferable {
 		return configData;
 	}
 
-	public List<int[]> getEdgeData(){
+	public EdgeList getEdgeData(){
 		return edgeData;
 	}
 
