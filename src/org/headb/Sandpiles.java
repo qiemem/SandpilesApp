@@ -82,6 +82,7 @@ public class Sandpiles extends javax.swing.JFrame {
         setBackgroundColorButton = new javax.swing.JButton();
         preferencesDoneButton = new javax.swing.JButton();
         defaultPreferencesButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         sandpilesIP = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -250,6 +251,13 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Cancel");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout preferencesDialogLayout = new org.jdesktop.layout.GroupLayout(preferencesDialog.getContentPane());
         preferencesDialog.getContentPane().setLayout(preferencesDialogLayout);
         preferencesDialogLayout.setHorizontalGroup(
@@ -258,7 +266,9 @@ public class Sandpiles extends javax.swing.JFrame {
             .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(defaultPreferencesButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 369, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 283, Short.MAX_VALUE)
+                .add(jButton1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(preferencesDoneButton)
                 .addContainerGap())
         );
@@ -269,7 +279,8 @@ public class Sandpiles extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(preferencesDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(preferencesDoneButton)
-                    .add(defaultPreferencesButton)))
+                    .add(defaultPreferencesButton)
+                    .add(jButton1)))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -572,6 +583,13 @@ public class Sandpiles extends javax.swing.JFrame {
 		enactPreferences();
 	}//GEN-LAST:event_setBackgroundColorButtonActionPerformed
 
+	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		prefs = SandpilePreferences.getPreferences();
+		enactPreferences();
+		this.preferencesDialog.setVisible(false);
+		this.sandpilesIP.requestFocus();
+	}//GEN-LAST:event_jButton1ActionPerformed
+
 	private void updateColorPreferencesList() {
 		ColorListCellRenderer cellRenderer = new ColorListCellRenderer(0,1);
 		cellRenderer.setColors(this.prefs.getColors());
@@ -643,6 +661,7 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JFileChooser imageFileChooser;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
