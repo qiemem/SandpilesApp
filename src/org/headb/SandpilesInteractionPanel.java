@@ -231,9 +231,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 //		this.centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
 //	}
 
-	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors){
-		drawer.setColors(colors, inDebtColors);
-		drawer3d.setColors(colors, inDebtColors);
+	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors, float[] backgroundColor){
+		drawer.setColors(colors, inDebtColors, backgroundColor);
+		drawer3d.setColors(colors, inDebtColors, backgroundColor);
 	}
 
 	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, EdgeList edgeData){

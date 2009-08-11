@@ -51,6 +51,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	private float rotAngle = 0f;
 	private final float ROT_SCALE = 90f;
 	private float[] rotMatrix = new float[16];
+	private float[] backgroundColor = {0f, 0f, 0f};
 
 	public Sandpile3dDrawer(GLCanvas canvas) {
 		colorMode = ColorMode.NUM_OF_GRAINS;
@@ -205,9 +206,10 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		colorMode = cm;
 	}
 
-	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors) {
+	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors, float[] backgroundColor) {
 		this.colors = new Float2dArrayList(colors);
 		this.inDebtColors = new Float2dArrayList(inDebtColors);
+		this.backgroundColor = backgroundColor;
 	}
 
 	public ColorMode getColorMode() {
@@ -366,6 +368,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
+		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
 
 		// Clear the drawing area
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);

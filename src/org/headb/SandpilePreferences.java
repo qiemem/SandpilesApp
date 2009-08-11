@@ -16,6 +16,7 @@ public class SandpilePreferences implements Serializable{
 
 	private Float2dArrayList colors;
 	private Float2dArrayList inDebtColors;
+	private float[] backgroundColor;
 
 	public static SandpilePreferences getPreferences(){
 		SandpilePreferences prefs = null;
@@ -60,6 +61,7 @@ public class SandpilePreferences implements Serializable{
 		colors = new Float2dArrayList(colorArray, 3);
 		float[] inDebtColorArray = {0.2f, 0f, 0f};
 		inDebtColors = new Float2dArrayList(inDebtColorArray, 3);
+		backgroundColor = new float[3];
 	}
 
 	public boolean save() {
@@ -79,5 +81,12 @@ public class SandpilePreferences implements Serializable{
 
 	public Float2dArrayList getInDebtColors() {
 		return inDebtColors;
+	}
+
+	public  float[] getBackgroundColor() {
+		return backgroundColor;
+	}
+	public void setBackgroundColor(float[] newBGColor) {
+		backgroundColor = newBGColor;
 	}
 }

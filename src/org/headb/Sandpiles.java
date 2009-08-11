@@ -54,7 +54,8 @@ public class Sandpiles extends javax.swing.JFrame {
 		initComponents();
 		this.setTitle("Sandpiles - Untitled");
 		prefs = SandpilePreferences.getPreferences();
-		sandpilesIP.setColors(prefs.getColors(), prefs.getInDebtColors());
+		sandpilesIP.setColors(prefs.getColors(), prefs.getInDebtColors(), prefs.getBackgroundColor());
+		updateBackgroundColorLabel();
 	}
 
 	/** This method is called from within the constructor to
@@ -73,10 +74,14 @@ public class Sandpiles extends javax.swing.JFrame {
         colorPreferencesPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         colorPreferencesList = new javax.swing.JList();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        setColorButton = new javax.swing.JButton();
+        addColorButton = new javax.swing.JButton();
+        removeColorButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        backgroundColorLabel = new javax.swing.JLabel();
+        setBackgroundColorButton = new javax.swing.JButton();
         preferencesDoneButton = new javax.swing.JButton();
+        defaultPreferencesButton = new javax.swing.JButton();
         sandpilesIP = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -150,43 +155,82 @@ public class Sandpiles extends javax.swing.JFrame {
         colorPreferencesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(colorPreferencesList);
 
-        jButton1.setText("Set");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        setColorButton.setText("Set");
+        setColorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                setColorButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("+");
+        addColorButton.setText("Insert");
+        addColorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addColorButtonActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("-");
+        removeColorButton.setText("Remove");
+        removeColorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeColorButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Colors");
+
+        backgroundColorLabel.setText("Background");
+
+        setBackgroundColorButton.setText("Set");
+        setBackgroundColorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setBackgroundColorButtonActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout colorPreferencesPanelLayout = new org.jdesktop.layout.GroupLayout(colorPreferencesPanel);
         colorPreferencesPanel.setLayout(colorPreferencesPanelLayout);
         colorPreferencesPanelLayout.setHorizontalGroup(
             colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, colorPreferencesPanelLayout.createSequentialGroup()
+            .add(colorPreferencesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(colorPreferencesPanelLayout.createSequentialGroup()
-                        .add(jButton1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 32, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(jButton3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .add(449, 449, 449))
+                        .add(jLabel1)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 394, Short.MAX_VALUE))
+                    .add(colorPreferencesPanelLayout.createSequentialGroup()
+                        .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, colorPreferencesPanelLayout.createSequentialGroup()
+                                .add(setColorButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(addColorButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(removeColorButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)))
+                        .add(226, 226, 226)
+                        .add(backgroundColorLabel)
+                        .add(9, 9, 9)))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(setBackgroundColorButton)
+                .addContainerGap())
         );
         colorPreferencesPanelLayout.setVerticalGroup(
             colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, colorPreferencesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButton1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jButton3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 19, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(colorPreferencesPanelLayout.createSequentialGroup()
+                .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(colorPreferencesPanelLayout.createSequentialGroup()
+                        .add(jLabel1)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(setColorButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(addColorButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(removeColorButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(colorPreferencesPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(colorPreferencesPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(setBackgroundColorButton)
+                            .add(backgroundColorLabel))))
                 .addContainerGap())
         );
 
@@ -199,21 +243,33 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
+        defaultPreferencesButton.setText("Defaults");
+        defaultPreferencesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                defaultPreferencesButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout preferencesDialogLayout = new org.jdesktop.layout.GroupLayout(preferencesDialog.getContentPane());
         preferencesDialog.getContentPane().setLayout(preferencesDialogLayout);
         preferencesDialogLayout.setHorizontalGroup(
             preferencesDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(preferencesDoneButton))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                .add(defaultPreferencesButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 369, Short.MAX_VALUE)
+                .add(preferencesDoneButton)
+                .addContainerGap())
         );
         preferencesDialogLayout.setVerticalGroup(
             preferencesDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, preferencesDialogLayout.createSequentialGroup()
-                .add(preferencesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                .add(preferencesTabbedPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(preferencesDoneButton))
+                .add(preferencesDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(preferencesDoneButton)
+                    .add(defaultPreferencesButton)))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -446,16 +502,18 @@ public class Sandpiles extends javax.swing.JFrame {
 		this.preferencesDialog.setVisible(true);
 	}//GEN-LAST:event_jMenuItem2ActionPerformed
 
-	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-		if (colorPreferencesList.getSelectedIndex() < 0)
+	private void setColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setColorButtonActionPerformed
+		int index = colorPreferencesList.getSelectedIndex();
+		if (index < 0)
 			return;
 		DefaultListModel model = (DefaultListModel) colorPreferencesList.getModel();
-		Color defaultColor = (Color) model.getElementAt(colorPreferencesList.getSelectedIndex());
+		Color defaultColor = (Color) model.getElementAt(index);
 		Color newColor = getColor(defaultColor);
-		model.set(colorPreferencesList.getSelectedIndex(), newColor);
-		updateColorPreferences();
+		prefs.getColors().setRow(index, newColor.getRGBColorComponents(null));
+		//model.set(colorPreferencesList.getSelectedIndex(), newColor);
+		//updateColorPreferences();
 		updateColorPreferencesList();
-	}//GEN-LAST:event_jButton1ActionPerformed
+	}//GEN-LAST:event_setColorButtonActionPerformed
 
 	private void preferencesDoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesDoneButtonActionPerformed
 		this.preferencesDialog.setVisible(false);
@@ -471,6 +529,49 @@ public class Sandpiles extends javax.swing.JFrame {
 		}
 	}//GEN-LAST:event_preferencesDialogComponentHidden
 
+	private void addColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addColorButtonActionPerformed
+		int index = colorPreferencesList.getSelectedIndex();
+		DefaultListModel model = (DefaultListModel) colorPreferencesList.getModel();
+		Color defaultColor;
+		if (index < 0){
+			index = colorPreferencesList.getModel().getSize();
+			defaultColor = (Color) model.getElementAt(index-1);
+		}else{
+			defaultColor = (Color) model.getElementAt(index);
+		}
+		Color newColor = getColor(defaultColor);
+		prefs.getColors().insertRow(index, newColor.getRGBColorComponents(null));
+		//model.add(index, newColor);
+		//updateColorPreferences();
+		updateColorPreferencesList();
+		enactPreferences();
+	}//GEN-LAST:event_addColorButtonActionPerformed
+
+	private void removeColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeColorButtonActionPerformed
+		int index = colorPreferencesList.getSelectedIndex();
+		DefaultListModel model = (DefaultListModel) colorPreferencesList.getModel();
+		if(index < 0 || model.getSize()<=1)
+			return;
+		prefs.getColors().removeRow(index);
+		updateColorPreferencesList();
+		enactPreferences();
+	}//GEN-LAST:event_removeColorButtonActionPerformed
+
+	private void defaultPreferencesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultPreferencesButtonActionPerformed
+		this.prefs = new SandpilePreferences();
+		updateColorPreferencesList();
+		updateBackgroundColorLabel();
+		enactPreferences();
+	}//GEN-LAST:event_defaultPreferencesButtonActionPerformed
+
+	private void setBackgroundColorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setBackgroundColorButtonActionPerformed
+		Color defaultColor = backgroundColorLabel.getBackground();
+		Color newColor = getColor(defaultColor);
+		prefs.setBackgroundColor(newColor.getRGBColorComponents(null));
+		updateBackgroundColorLabel();
+		enactPreferences();
+	}//GEN-LAST:event_setBackgroundColorButtonActionPerformed
+
 	private void updateColorPreferencesList() {
 		ColorListCellRenderer cellRenderer = new ColorListCellRenderer(0,1);
 		cellRenderer.setColors(this.prefs.getColors());
@@ -482,17 +583,24 @@ public class Sandpiles extends javax.swing.JFrame {
 		colorPreferencesList.setCellRenderer(cellRenderer);
 	}
 
-	private void updateColorPreferences() {
-		prefs.getColors().clear();
-		for(int i=0; i<colorPreferencesList.getModel().getSize(); i++){
-			Color c = (Color)colorPreferencesList.getModel().getElementAt(i);
-			float[] colorVals = c.getRGBColorComponents(null);
-			prefs.getColors().addRow(colorVals);
-		}
-		sandpilesIP.setColors(prefs.getColors(), prefs.getInDebtColors());
+	private void enactPreferences(){
+		sandpilesIP.setColors(prefs.getColors(), prefs.getInDebtColors(), prefs.getBackgroundColor());
 		sandpilesIP.getSandpileController().repaint();
 	}
 
+	private void updateBackgroundColorLabel() {
+		backgroundColorLabel.setOpaque(true);
+		float[] colorArray = prefs.getBackgroundColor();
+		Color foreground;
+		if(colorArray[0]+colorArray[1]+colorArray[2]>0.5f){
+			foreground = Color.BLACK;
+		}else{
+			foreground = Color.WHITE;
+		}
+		Color background = new Color(colorArray[0], colorArray[1], colorArray[2]);
+		backgroundColorLabel.setBackground(background);
+		backgroundColorLabel.setForeground(foreground);
+	}
 
 	/**
 	 * @param args the command line arguments
@@ -525,16 +633,17 @@ public class Sandpiles extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addColorButton;
+    private javax.swing.JLabel backgroundColorLabel;
     private javax.swing.JList colorPreferencesList;
     private javax.swing.JPanel colorPreferencesPanel;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem2;
+    private javax.swing.JButton defaultPreferencesButton;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JFileChooser imageFileChooser;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -550,9 +659,12 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JFileChooser projectFileChooser;
     private javax.swing.JMenuItem quitMenuItem;
     private javax.swing.JMenuItem redoMenuItem;
+    private javax.swing.JButton removeColorButton;
     private org.headb.SandpilesInteractionPanel sandpilesIP;
     private javax.swing.JMenuItem saveProjectAsMenuItem;
     private javax.swing.JMenuItem saveProjectMenuItem;
+    private javax.swing.JButton setBackgroundColorButton;
+    private javax.swing.JButton setColorButton;
     private javax.swing.JMenuItem undoMenuItem;
     // End of variables declaration//GEN-END:variables
 }

@@ -48,6 +48,12 @@ public class Float2dArrayList extends TFloatArrayList{
 	public void setQuick(int r, int c, float val){
 		super.setQuick(r*cols+c, val);
 	}
+	public void insertRow(int r, float... row){
+		super.insert(r*cols, row);
+	}
+	public void setRow(int r, float... row){
+		super.set(r*cols, row);
+	}
 	public int addRow(){
 		for(int i=0; i<cols; i++)
 			super.add(0f);

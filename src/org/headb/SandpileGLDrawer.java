@@ -72,6 +72,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private float[] selectionBox = {0f, 0f, 0f, 0f};
 	private boolean drawSelectionBox = false;
 	private long timeOfLastDisplay = 0;
+	private float[] backgroundColor = {0f, 0f, 1f};
 
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
@@ -86,9 +87,10 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		this.canvas.addMouseWheelListener(this);
 	}
 
-	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors){
+	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors, float[] backgroundColor){
 		this.colors = new Float2dArrayList(colors);
 		this.inDebtColors = new Float2dArrayList(inDebtColors);
+		this.backgroundColor = backgroundColor;
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -102,7 +104,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.setSwapInterval(1);
 
 		// Setup the drawing area and shading mode
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
 		gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
@@ -148,6 +150,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		
 
 		GL gl = drawable.getGL();
+		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
 		}
