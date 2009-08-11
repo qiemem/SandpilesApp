@@ -348,12 +348,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         removeSandRadioButton = new javax.swing.JRadioButton();
         setSandRadioButton = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
-        amountOfSandField = new javax.swing.JTextField();
         storeConfigButton = new javax.swing.JButton();
         removeConfigButton = new javax.swing.JButton();
-        configTimesTextField = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
         subtractConfigButton = new javax.swing.JButton();
+        configTimesSpinner = new javax.swing.JSpinner();
+        amountOfSandSpinner = new javax.swing.JSpinner();
         makeGridOptionsPanel = new javax.swing.JPanel();
         gridSizeLabel = new javax.swing.JLabel();
         gridRowsField = new javax.swing.JTextField();
@@ -781,8 +781,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         jLabel8.setText("Amount:"); // NOI18N
 
-        amountOfSandField.setText("1"); // NOI18N
-
         storeConfigButton.setText("Store");
         storeConfigButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -797,8 +795,6 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
             }
         });
 
-        configTimesTextField.setText("1");
-
         jLabel25.setText("Times:");
 
         subtractConfigButton.setText("Subtract");
@@ -807,6 +803,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 subtractConfigButtonActionPerformed(evt);
             }
         });
+
+        configTimesSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 
         org.jdesktop.layout.GroupLayout configManagerOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(configManagerOptionsPanel);
         configManagerOptionsPanel.setLayout(configManagerOptionsPanelLayout);
@@ -830,16 +828,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                     .add(configManagerOptionsPanelLayout.createSequentialGroup()
                         .add(jLabel25)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(configTimesTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 73, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(configTimesSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 72, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                         .add(subtractConfigButton)
                         .add(configManagerOptionsPanelLayout.createSequentialGroup()
                             .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                 .add(setSandRadioButton)
-                                .add(jLabel8))
-                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                            .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 74, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(134, Short.MAX_VALUE))
+                                .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                                    .add(jLabel8)
+                                    .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                    .add(amountOfSandSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 83, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED))))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -857,7 +857,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel25)
-                    .add(configTimesTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(configTimesSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(18, 18, 18)
                 .add(jLabel7)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -869,7 +869,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel8)
-                    .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(amountOfSandSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(249, Short.MAX_VALUE))
         );
 
@@ -1806,7 +1806,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			return;
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
-		final int times = Integer.valueOf(configTimesTextField.getText());
+		final int times = (Integer)configTimesSpinner.getValue();
 		if (selection != null) {
 			if (selection.equals(MAX_CONFIG)) {
 				sandpileController.addMaxStableConfig(times);
@@ -1871,7 +1871,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			return;
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		String selection = (String)configSelectList.getSelectedValue();
-		final int times = Integer.valueOf(configTimesTextField.getText());
+		final int times = (Integer)configTimesSpinner.getValue();
 		if(selection!=null){
 			if (selection.equals(MAX_CONFIG)) {
 				sandpileController.setToMaxStableConfig(times);
@@ -2003,11 +2003,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				sandpileController.makeHoneycombControl(Integer.valueOf(makeHoneycombRadiusField.getText()), x, y, makeHoneycombBorderComboBox.getSelectedIndex());
 			} else if (currentState.equals(CONFIG_MANAGER_STATE)) {
 				if (editConfigButtonGroup.isSelected(addSandRadioButton.getModel())) {
-					sandpileController.addSandControl(x, y, Integer.valueOf(amountOfSandField.getText()));
+					sandpileController.addSandControl(x, y, (Integer)amountOfSandSpinner.getValue());
 				} else if (editConfigButtonGroup.isSelected(removeSandRadioButton.getModel())) {
-					sandpileController.addSandControl(x, y, -Integer.valueOf(amountOfSandField.getText()));
+					sandpileController.addSandControl(x, y, -(Integer)amountOfSandSpinner.getValue());
 				} else if (editConfigButtonGroup.isSelected(setSandRadioButton.getModel())) {
-					sandpileController.setSandControl(x, y, Integer.valueOf(amountOfSandField.getText()));
+					sandpileController.setSandControl(x, y, (Integer)amountOfSandSpinner.getValue());
 				}
 			} else if (currentState.equals(BUILD_LATTICE_STATE)) {
 				ArrayList<int[]> vectors = new ArrayList<int[]>();
@@ -2392,7 +2392,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		if(runningThread)
 			return;
 		String selection = (String)configSelectList.getSelectedValue();
-		final int times = -Integer.valueOf(configTimesTextField.getText());
+		final int times = -(Integer)configTimesSpinner.getValue();
 		if(selection!=null){
 			if(selection.equals(MAX_CONFIG)){
 				sandpileController.addMaxStableConfig(times);
@@ -2589,7 +2589,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JRadioButton addSandRadioButton;
     private javax.swing.JRadioButton addUndirectedEdgeRadioButton;
     private javax.swing.JRadioButton addVertexRadioButton;
-    private javax.swing.JTextField amountOfSandField;
+    private javax.swing.JSpinner amountOfSandSpinner;
     private javax.swing.JButton bigDecDelayButton;
     private javax.swing.JButton bigIncDelayButton;
     private javax.swing.JButton bigZoomInButton;
@@ -2610,7 +2610,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JSpinner colorSmoothingSpinner;
     private javax.swing.JPanel configManagerOptionsPanel;
     private javax.swing.JList configSelectList;
-    private javax.swing.JTextField configTimesTextField;
+    private javax.swing.JSpinner configTimesSpinner;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JComboBox controlStateComboBox;
     private javax.swing.JToolBar controlToolBar;
