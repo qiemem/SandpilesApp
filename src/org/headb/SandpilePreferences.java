@@ -26,6 +26,9 @@ public class SandpilePreferences implements Serializable{
 				prefs = (SandpilePreferences)objstream.readObject();
 				objstream.close();
 				System.err.println("Preferences loaded successfully.");
+				// For some reason, deserialization seems to lose the cols field
+				// of Float2dArrayList. Hence, we set it properly here.
+				prefs.colors = new Float2dArrayList(prefs.colors.toNativeArray(), 3);
 			}catch(IOException e){
 				System.err.println("IOException while trying to read preferences file.");
 				System.err.println(e.getMessage());
@@ -41,8 +44,8 @@ public class SandpilePreferences implements Serializable{
 			System.err.println("No preferences file found; using defaults.");
 			prefs = new SandpilePreferences();
 		}
-		//return prefs;
-		return new SandpilePreferences();
+		return prefs;
+		//return new SandpilePreferences();
 	}
 
 	public SandpilePreferences() {

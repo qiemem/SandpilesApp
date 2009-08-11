@@ -13,8 +13,11 @@ import java.awt.Color;
  */
 public class ColorListCellRenderer extends JLabel implements ListCellRenderer{
 	private Float2dArrayList colors;
+	private int start, step;
 
-	public ColorListCellRenderer() {
+	public ColorListCellRenderer(int start, int step) {
+		this.start = start;
+		this.step = step;
 		colors = new Float2dArrayList(3);
 	}
 
@@ -29,7 +32,7 @@ public class ColorListCellRenderer extends JLabel implements ListCellRenderer{
 			boolean cellHasFocus){
 		setOpaque(true);
 		Color color = (Color)value;
-		setText(index+": ("+color.getRed()+", "+color.getGreen()+", "+color.getBlue()+")");
+		setText(start+step*index+": ("+color.getRed()+", "+color.getGreen()+", "+color.getBlue()+")");
 		Color background = Color.BLACK;
 		Color foreground;
 		if(index<colors.size()){

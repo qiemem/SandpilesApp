@@ -459,6 +459,7 @@ public class Sandpiles extends javax.swing.JFrame {
 
 	private void preferencesDoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesDoneButtonActionPerformed
 		this.preferencesDialog.setVisible(false);
+		this.sandpilesIP.requestFocus();
 
 	}//GEN-LAST:event_preferencesDoneButtonActionPerformed
 
@@ -471,7 +472,7 @@ public class Sandpiles extends javax.swing.JFrame {
 	}//GEN-LAST:event_preferencesDialogComponentHidden
 
 	private void updateColorPreferencesList() {
-		ColorListCellRenderer cellRenderer = new ColorListCellRenderer();
+		ColorListCellRenderer cellRenderer = new ColorListCellRenderer(0,1);
 		cellRenderer.setColors(this.prefs.getColors());
 		DefaultListModel colorModel = new DefaultListModel();
 		for(int i=0; i<prefs.getColors().rows(); i++){

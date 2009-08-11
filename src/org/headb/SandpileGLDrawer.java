@@ -72,7 +72,6 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private float[] selectionBox = {0f, 0f, 0f, 0f};
 	private boolean drawSelectionBox = false;
 	private long timeOfLastDisplay = 0;
-//	private ArrayList<ReshapeListener> repaintListeners = new ArrayList<ReshapeListener>();
 
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();

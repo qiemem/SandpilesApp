@@ -91,7 +91,11 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Retrieves the number of outgoing edges of the given vertex.
+	 * Retrieves the sum of the weights of the outgoing edges of the given
+	 * vertex.
+	 *
+	 * @param vert The index of the vertex.
+	 * @return The sum of the weights of the outgoing edges of the given vertex.
 	 */
 	public int degree(int vert) {
 		//return this.vertices.get(vert).degree();
@@ -208,7 +212,10 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Removes a vertex from the graph. Runs in time linear to the number of edges plus the number of vertices.
+	 * Removes a vertex from the graph. Note that the index of all vertices
+	 * added after the vertex being deleted will be decreased by one.
+	 *
+	 * @param toDelete The index of the vertex to delete.
 	 */
 	public void removeVertex(int toDelete) {
 		for (EdgeList edgeList : adj) {
@@ -228,9 +235,9 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Removes the vertices in the list from the graph.
-	 * Know idea what the running time of this is, but I spent a lot of time trying
-	 * to optimize this code.
+	 * Removes the vertices in the list from the graph. Indices are adjusted
+	 * appropriately. Note that this means that the index of vertices will
+	 * change after using this function.
 	 *
 	 * @param vertices A list of the vertices to remove.
 	 */
@@ -281,7 +288,11 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Adds an edge from the first vertex to the second.
+	 * Increases the weight of the edge from sourceVert to destVert by 1. If the
+	 * edge does not exist yet it will be created.
+	 * @param sourceVert The index of the source vertex.
+	 * @param destVert the index of the destination vertex.
+	 * @return Returns the newly created edge.
 	 */
 	public Edge addEdge(int sourceVert, int destVert) {
 		//this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert));
@@ -289,7 +300,15 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Adds an edge of the given weight.
+	 * Increases the weight of the edge from sourceVert to destVert by weight.
+	 * weight can be negative. If the weight of the resulting edge is negative
+	 * or zero, it is removed. If the edge does not already exist it will be
+	 * created
+	 * @param sourceVert The index of the source vertex.
+	 * @param destVert The index of the destination vertex.
+	 * @param weight The amount to increase the weight of the edge by.
+	 * @return Returns the newly created edge or null if the resuling weight was
+	 * zero or less.
 	 */
 	public Edge addEdge(int sourceVert, int destVert, int weight) {
 		Edge e = getEdge(sourceVert, destVert);
@@ -314,17 +333,29 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Removes an edge from the first vertex to the second
+	 * Decreases the weight of the edge from sourceVert to destVert by 1. If the
+	 * weight of the edge becomes zero or less, it is removed.
+	 * @param sourceVert The index of the source vertex.
+	 * @param destVert the index of the destination vertex.
+	 * @return Returns the newly created edge.
 	 */
-	public void removeEdge(int sourceVert, int destVert) {
-		this.removeEdge(sourceVert, destVert, 1);
+	public Edge removeEdge(int sourceVert, int destVert) {
+		return this.removeEdge(sourceVert, destVert, 1);
 	}
 
 	/**
-	 * Removes an edge of the given weight.
+	 * Decreases the weight of the edge from sourceVert to destVert by weight.
+	 * weight can be negative. If the weight of the resulting edge is negative
+	 * or zero, it is removed.
+	 * This is equivalent to addEdge(sourceVert, destVert, -weight)
+	 * @param sourceVert The index of the source vertex.
+	 * @param destVert The index of the destination vertex.
+	 * @param weight The amount to decrease the weight of the edge by.
+	 * @return Returns the newly created edge or null if the resuling weight was
+	 * zero or less.
 	 */
-	public void removeEdge(int sourceVert, int destVert, int weight) {
-		this.addEdge(sourceVert, destVert, -weight);
+	public Edge removeEdge(int sourceVert, int destVert, int weight) {
+		return this.addEdge(sourceVert, destVert, -weight);
 	}
 
 	/**
@@ -339,6 +370,10 @@ public class SandpileGraph {
 		return false;
 	}
 
+	/**
+	 * Returns a list containing the indices of all nonsink vertices.
+	 * @return
+	 */
 	public TIntArrayList getNonSinks() {
 		TIntArrayList nonsinks = new TIntArrayList();
 		for(int v=0; v<numVertices(); v++){
@@ -348,6 +383,10 @@ public class SandpileGraph {
 		return nonsinks;
 	}
 
+	/**
+	 *
+	 * @return A list of the indices of each sink vertex.
+	 */
 	public TIntArrayList getSinks() {
 		TIntArrayList sinks = new TIntArrayList();
 		for(int v=0; v<numVertices(); v++){
