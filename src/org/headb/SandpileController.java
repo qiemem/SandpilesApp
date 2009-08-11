@@ -517,6 +517,7 @@ public class SandpileController implements ActionListener, Serializable{
 			undoManager.addEdit(new SGEdit("delete vertex"));			
 			delVertex(touchVert);
 			onGraphChange();
+			unselectVertices();
 		}
 		repaint();
 	}

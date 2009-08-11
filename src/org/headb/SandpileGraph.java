@@ -382,9 +382,10 @@ public class SandpileGraph {
 
 	public void fireVertexInPlace(SandpileConfiguration config, int vert){
 		EdgeList edges = getOutgoingEdges(vert);
-		for(int i=0; i<edges.size(); i++){
-			Edge e = edges.get(i);
-			config.setQuick(e.dest(), config.getQuick(e.dest())+e.wt());
+		int s = edges.size();
+		for(int i=0; i<s; i++){
+			int dest = edges.destQuick(i);
+			config.setQuick(dest, config.getQuick(dest)+edges.wtQuick(i));
 		}
 		config.setQuick(vert, config.getQuick(vert)-degree(vert));
 	}
@@ -484,7 +485,7 @@ public class SandpileGraph {
 		unstables.addAll(startingVertices);
 		final boolean[] added = new boolean[numVertices()];
 		for(int i=0; i<startingVertices.size(); i++){
-			added[startingVertices.get(i)] = true;
+			added[startingVertices.getQuick(i)] = true;
 		}
 		return new Iterator<SandpileConfiguration>() {
 			public boolean hasNext() {
@@ -502,8 +503,9 @@ public class SandpileGraph {
 						added[v] = true;
 					}
 					EdgeList edges = getOutgoingEdges(v);
-					for(int k=0; k<edges.size(); k++){
-						int w = edges.dest(k);
+					int s = edges.size();
+					for(int k=0; k<s; k++){
+						int w = edges.destQuick(k);
 						int d = degrees.getQuick(w);
 						if(!added[w] && config.getQuick(w)>=d && d>0){
 							unstables.addUnsafe(w);

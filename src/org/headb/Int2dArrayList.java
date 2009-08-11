@@ -11,6 +11,7 @@ import gnu.trove.TIntArrayList;
  * @author headb
  */
 public class Int2dArrayList extends TIntArrayList{
+	private static final int DEFAULT_ROW_CAPACITY = 4;
 	private int cols;
 //	private Int2dArrayList me = this;
 //
@@ -40,7 +41,7 @@ public class Int2dArrayList extends TIntArrayList{
 //	}
 
 	public Int2dArrayList(int cols){
-		super();
+		super(cols*DEFAULT_ROW_CAPACITY);
 		this.cols = cols;
 	}
 	public Int2dArrayList(int rows, int cols){

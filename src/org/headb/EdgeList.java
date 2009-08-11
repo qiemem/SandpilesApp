@@ -11,7 +11,7 @@ import java.util.Iterator;
  * @author headb
  */
 public class EdgeList implements Iterable<Edge>{
-	Int2dArrayList edgeData;
+	private Int2dArrayList edgeData;
 
 	private class MyEdge extends Edge{
 		int edgeNum;
