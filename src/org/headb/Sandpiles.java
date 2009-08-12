@@ -526,10 +526,12 @@ public class Sandpiles extends javax.swing.JFrame {
 		DefaultListModel model = (DefaultListModel) colorPreferencesList.getModel();
 		Color defaultColor = (Color) model.getElementAt(index);
 		Color newColor = getColor(defaultColor);
-		prefs.getColors().setRow(index, newColor.getRGBColorComponents(null));
+		if(newColor!=null)
+			prefs.getColors().setRow(index, newColor.getRGBColorComponents(null));
 		//model.set(colorPreferencesList.getSelectedIndex(), newColor);
 		//updateColorPreferences();
 		updateColorPreferencesList();
+		enactPreferences();
 	}//GEN-LAST:event_setColorButtonActionPerformed
 
 	private void preferencesDoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesDoneButtonActionPerformed
@@ -557,7 +559,8 @@ public class Sandpiles extends javax.swing.JFrame {
 			defaultColor = (Color) model.getElementAt(index);
 		}
 		Color newColor = getColor(defaultColor);
-		prefs.getColors().insertRow(index, newColor.getRGBColorComponents(null));
+		if(newColor!=null)
+			prefs.getColors().insertRow(index, newColor.getRGBColorComponents(null));
 		//model.add(index, newColor);
 		//updateColorPreferences();
 		updateColorPreferencesList();

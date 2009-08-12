@@ -535,10 +535,13 @@ public class SandpileGraph {
 	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
 		final IntGenerationalQueue unstables = new IntGenerationalQueue(numVertices());
-		unstables.addAll(startingVertices);
 		final boolean[] added = new boolean[numVertices()];
 		for(int i=0; i<startingVertices.size(); i++){
-			added[startingVertices.getQuick(i)] = true;
+			int v= startingVertices.getQuick(i);
+			if(config.get(v)>=degree(v)){
+				unstables.addUnsafe(v);
+				added[v] = true;
+			}
 		}
 		return new Iterator<SandpileConfiguration>() {
 			public boolean hasNext() {
