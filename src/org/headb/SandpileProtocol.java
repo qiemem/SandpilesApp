@@ -34,8 +34,9 @@ import gnu.trove.TIntArrayList;
 
 
 /**
- *
- * @author headb
+ * Interprets remote string commands for controlling a SandpileController (and
+ * thus a graph and configs). Used in server mode to interpret remote commands.
+ * @author Bryan Head
  */
 public class SandpileProtocol {
 

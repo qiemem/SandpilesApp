@@ -31,8 +31,10 @@ package org.headb;
 import gnu.trove.TIntArrayList;
 
 /**
- *
- * @author headb
+ * This class is under development and is not currently used.
+ * This class contains a group of vertices that have a common edge structure in
+ * that they each have identical EdgeOffsetLists, which is also contained.
+ * @author Bryan Head
  */
 public class EdgeStructureBlock {
 	TIntArrayList vertices;

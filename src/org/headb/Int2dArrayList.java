@@ -31,8 +31,9 @@ package org.headb;
 import gnu.trove.TIntArrayList;
 
 /**
- *
- * @author headb
+ * Represents a list of arrays of the same size. This is far more efficient than
+ * ArrayList<ArrayList<Integer>> for instance or even int[][].
+ * @author Bryan Head
  */
 public class Int2dArrayList extends TIntArrayList{
 	private static final int DEFAULT_ROW_CAPACITY = 4;

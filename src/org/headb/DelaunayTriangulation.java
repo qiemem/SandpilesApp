@@ -29,17 +29,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Collection;
 
 import gnu.trove.TIntArrayList;
 
 /**
- *
- * @author headb
+ * This class, when given a list of 2 dimensional points, will calculate their
+ * delauney triangulation. The only public methods are the constructor, a get
+ * method for the points, and a get method for the resulting triangles.
+ * @author Bryan Head
  */
 public class DelaunayTriangulation {
 	//private Float2dArrayList points;

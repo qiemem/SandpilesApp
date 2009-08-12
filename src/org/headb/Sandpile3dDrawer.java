@@ -44,8 +44,12 @@ import gnu.trove.TIntArrayList;
 import java.awt.Dimension;
 
 /**
- *
- * @author headb
+ * A SandpileDrawer that finds the delauney triangulation of the vertices and
+ * displays that, using the numeber of grains of sands as the height of each
+ * point. Colors the vertices of each triangle accordingly, using
+ * blending to color the whole triangle. Allows for height and color smoothing.
+ * Does all the mouse view control work.
+ * @author Bryan Head
  */
 public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 

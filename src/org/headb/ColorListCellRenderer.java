@@ -31,9 +31,10 @@ package org.headb;
 import javax.swing.*;
 import java.awt.Component;
 import java.awt.Color;
+
 /**
- * 
- * @author headb
+ * A ListCellRenderer for JLists that have colors as their items.
+ * @author Bryan Head
  */
 public class ColorListCellRenderer extends JLabel implements ListCellRenderer{
 	private Float2dArrayList colors;

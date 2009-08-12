@@ -30,8 +30,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb;
 
 /**
- *
- * @author headb
+ * A simple listener for classes that wish to know when a SandpileController
+ * modifies the graph or configuration.
+ * @author Bryan Head
  */
 public interface SandpileChangeListener {
 	public void onGraphChange(SandpileGraph graph);

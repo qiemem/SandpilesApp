@@ -30,8 +30,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb;
 
 /**
- *
- * @author headb
+ * A simple class representing a directed, weighted edge in a graph.
+ * @author Bryan Head
  */
 public class Edge {
 	private int source;

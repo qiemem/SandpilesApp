@@ -34,8 +34,9 @@ import java.util.List;
 import gnu.trove.TIntArrayList;
 
 /**
- *
- * @author headb
+ * The interface for classes that dictate how a sandpile is displayed on a
+ * canvas.
+ * @author Bryan Head
  */
 public interface SandpileDrawer{
 	public enum ColorMode {

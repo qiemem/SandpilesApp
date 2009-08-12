@@ -31,12 +31,20 @@ package org.headb;
 import java.util.Iterator;
 
 /**
- *
- * @author headb
+ * Represents an adjacency list. Note that using this class over something like
+ * ArrayList<Edge> will usually be better.
+ * @author Bryan Head
  */
 public class EdgeList implements Iterable<Edge>{
 	private Int2dArrayList edgeData;
 
+	/**
+	 * A subclass of Edge that points to a certain lovation in edgeData. The
+	 * EdgeList iterator uses these so that it can keep the list of edges in the
+	 * more efficient form of the Int2dArrayList rather a list of Edges without
+	 * having to the information for each edge into an Edge. Note that this also
+	 * allows write access to the edges.
+	 */
 	private class MyEdge extends Edge{
 		int edgeNum;
 		public MyEdge(int edgeNum){
@@ -143,6 +151,19 @@ public class EdgeList implements Iterable<Edge>{
 		return true;
 	}
 
+	/**
+	 * Allows one to iterate over the EdgeList using the Edge class.
+	 * Although this method is provided for convenience, it is faster to do
+	 * manual iteration such as:
+	 * for(int i = 0; i < edgeList.size(); i++){
+	 *     edgeList.destQuick(i);
+	 *     // or even
+	 *     edgeList.dest(i);
+	 * }
+	 * Using the iterator actually creates new objects; manual iteration does
+	 * not.
+	 * @return
+	 */
 	public Iterator<Edge> iterator(){
 		return new Iterator<Edge>() {
 			private int i = -1;

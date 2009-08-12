@@ -31,8 +31,9 @@ package org.headb;
 import gnu.trove.TFloatArrayList;
 
 /**
- *
- * @author headb
+ * Represents a list of arrays of the same size. This is far more efficient than
+ * ArrayList<ArrayList<Float>> for instance or even float[][].
+ * @author Bryan Head
  */
 public class Float2dArrayList extends TFloatArrayList{
 	static private final long serialVersionUID = -21312181081L;

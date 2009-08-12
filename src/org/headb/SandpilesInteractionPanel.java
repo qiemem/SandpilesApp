@@ -29,20 +29,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.headb;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * SandpilesInteractionPanel.java
- *
- * Created on Feb 28, 2009, 8:08:59 PM
- */
-
 /**
- *
- * @author headb
+ * This panel contains swing elements for both controlling graphs,
+ * configurations, etc. and for displaying the sandpiles themselve. It uses
+ * a SandpileController to do all internal manipulations of graphs and
+ * configurations. It has GLCanvases to display the sandpiles and
+ * SandpileDrawers to dictate how that is done. Note that the fact that this
+ * class uses GLCanvases, which are heavyweight, AWT components may create
+ * problems on some computers. However, they have a significant performance gain
+ * over GLPanels, which are the swing equivalent.
+ * 
+ * @author Bryan Head
  */
 import java.awt.AWTException;
 import java.awt.CardLayout;

@@ -31,8 +31,9 @@ package org.headb;
 import java.io.*;
 
 /**
- *
- * @author headb
+ * Contains color preferences for the display of a sandpile. Used by
+ * SandpileInterfacePanel to tell the SandpileDrawers how to color things.
+ * @author Bryan Head
  */
 public class SandpilePreferences implements Serializable{
 	static private final long serialVersionUID = 181081L;

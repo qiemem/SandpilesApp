@@ -27,17 +27,20 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.headb;
-
-//
-//  SandpileGraph.java
-//  Sandpiles
-//
-//  Created by Bryan Head on 9/22/08.
-//  Copyright 2008 Reed College. All rights reserved.
-//
 import java.util.*;
 import gnu.trove.TIntArrayList;
 
+/**
+ * Represents a weighted, directed graph with methods for updating a sandpile
+ * configuration on that graph. Contains methods for calculating several
+ * important configuration. The most efficient method of updating a config
+ * repeatedly is to use an iterator returned by inPlaceUpdater(config). Calling
+ * the iterator's next() method will transform config into the next
+ * configuration. This class is quite optimized for updating, and not as much
+ * for adding and removing vertices, and doing non-iterating reads. However,
+ * the performance should be more than sufficient for manual creation of graphs.
+ * @author Bryan Head
+ */
 public class SandpileGraph {
 
 	// Edges are represented by Edge arrays
@@ -520,7 +523,7 @@ public class SandpileGraph {
 	}
 	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
-		final IntGenerationalBuffer unstables = new IntGenerationalBuffer(numVertices());
+		final IntGenerationalQueue unstables = new IntGenerationalQueue(numVertices());
 		unstables.addAll(startingVertices);
 		final boolean[] added = new boolean[numVertices()];
 		for(int i=0; i<startingVertices.size(); i++){

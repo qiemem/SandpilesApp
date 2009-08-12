@@ -41,6 +41,12 @@ import javax.swing.DefaultListModel;
 import javax.swing.JColorChooser;
 import java.io.*;
 
+/**
+ * A desktop program for viewing, manipulating, and simulating the sandpile
+ * automata. This class is in charge of displaying everything in a frame and
+ * displaying saving/loading and preferences dialogues.
+ * @author Bryan Head
+ */
 public class Sandpiles extends javax.swing.JFrame {
 
 	private final int SAVE_PROJECT = 0, LOAD_PROJECT = 1, SAVE_CONFIG = 2, LOAD_CONFIG = 3;

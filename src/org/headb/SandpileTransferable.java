@@ -33,6 +33,10 @@ import java.awt.datatransfer.DataFlavor;
 import java.util.List;
 import gnu.trove.TIntArrayList;
 
+/**
+ * Contains data for copying and pasting portions of SandpileGraphs.
+ * @author Bryan Head
+ */
 public class SandpileTransferable implements Transferable {
 	private final Float2dArrayList locationData;
 	private final TIntArrayList configData;

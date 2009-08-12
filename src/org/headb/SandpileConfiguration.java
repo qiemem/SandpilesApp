@@ -29,14 +29,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.headb;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
- * @author headb
+ * Represents the distribution of grains of sand on a SandpileGraph. This class
+ * has the typical array list methods along with methods to add together configs
+ * and multiply by a scalar.
+ * @author Bryan Head
  */
 
 import gnu.trove.TIntArrayList;

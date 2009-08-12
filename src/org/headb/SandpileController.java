@@ -49,6 +49,16 @@ import java.net.*;
 
 import gnu.trove.TIntArrayList;
 
+/**
+ * Contains all methods used to manipulate graphs and configurations independent
+ * of a GUI. Furthermore, this class tracks the positions of all vertices,
+ * which vertices are selected, and how many times each vertex has fired.
+ * Furthermore, this class contains methods for saving and loading projects, and
+ * openning up TCP connections for remote access. Finally, undo maintenance is
+ * also contained in this class.
+ * 
+ * @author Bryan Head
+ */
 public class SandpileController implements ActionListener, Serializable{
 
 	public static final int SINKS_BORDER = 0;

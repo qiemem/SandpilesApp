@@ -40,8 +40,10 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
 import gnu.trove.TIntArrayList;
 /**
- *
- * @author headb
+ * A SandpileDrawer that represents the sandpile as a graph in 2d using OpenGL.
+ * This is the standard visual representation of a sandpile.
+ * Does all the mouse view control work.
+ * @author Bryan Head
  */
 public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelListener, SandpileDrawer, GLEventListener {
 
