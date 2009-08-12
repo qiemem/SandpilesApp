@@ -32,7 +32,7 @@ import javax.swing.*;
 import java.awt.Component;
 import java.awt.Color;
 /**
- *
+ * 
  * @author headb
  */
 public class ColorListCellRenderer extends JLabel implements ListCellRenderer{

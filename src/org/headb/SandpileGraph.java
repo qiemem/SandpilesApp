@@ -520,7 +520,7 @@ public class SandpileGraph {
 	}
 	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
-		final IntCyclicBuffer unstables = new IntCyclicBuffer(numVertices());
+		final IntGenerationalBuffer unstables = new IntGenerationalBuffer(numVertices());
 		unstables.addAll(startingVertices);
 		final boolean[] added = new boolean[numVertices()];
 		for(int i=0; i<startingVertices.size(); i++){
@@ -528,19 +528,29 @@ public class SandpileGraph {
 		}
 		return new Iterator<SandpileConfiguration>() {
 			public boolean hasNext() {
-				return unstables.hasNextCycle();
+				return unstables.hasNextGeneration();
 			}
 			public SandpileConfiguration next() {
-				int numUnstables = unstables.nextCycleLength();
-				unstables.goToNextCycle();
+				int numUnstables = unstables.nextGenerationLength();
+				unstables.goToNextGeneration();
+				// foreach unstable in the current generation...
 				for(int i=0; i<numUnstables; i++){
+
+					// get the next unstable
 					int v = unstables.nextItemUnsafe();
+					// mark it as removed
 					added[v]=false;
+
+					// fire it
 					fireVertexInPlace(config, v);
+
+					// if still unstable, include it in next generation
 					if(config.getQuick(v)>=degrees.getQuick(v)){
 						unstables.addUnsafe(v);
 						added[v] = true;
 					}
+
+					// include (newly) unstable neighbors, adding them too
 					EdgeList edges = getOutgoingEdges(v);
 					int s = edges.size();
 					for(int k=0; k<s; k++){

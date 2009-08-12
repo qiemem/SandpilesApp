@@ -57,7 +57,7 @@ public class SandpileController implements ActionListener, Serializable{
 	public static final int LOOP_BORDER = 3;
 	public static final int LOOP_REVERSE_BORDER = 4;
 
-	private float VERT_RADIUS = 1.0f;
+	public float VERT_RADIUS = 1.0f;
 	private long minUpdateDelay = 100;
 	private long lastUpdateTime = 0;
 	private long minRepaintDelay = 33;

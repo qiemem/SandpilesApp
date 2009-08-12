@@ -364,6 +364,9 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
               <SubComponents>
                 <Container class="javax.swing.JPanel" name="editGraphPanel">
+                  <Properties>
+                    <Property name="toolTipText" type="java.lang.String" value="Add/remove vertices and edges."/>
+                  </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="&lt;User Code&gt;">
@@ -510,6 +513,7 @@
                     <Component class="javax.swing.JButton" name="makeSinkButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Turn into Sink"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Removes all outgoing edges from the selected vertices."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="makeSinkButtonActionPerformed"/>
@@ -630,6 +634,7 @@
                     <Component class="javax.swing.JButton" name="addConfigButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Add" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Adds the selected configuration to the current configuration the indicated number of times."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addConfigButtonActionPerformed"/>
@@ -638,6 +643,7 @@
                     <Component class="javax.swing.JButton" name="setConfigButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Set" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Sets the current configuration to the selected configuration multiplied by the times field."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setConfigButtonActionPerformed"/>
@@ -684,6 +690,7 @@
                     <Component class="javax.swing.JButton" name="storeConfigButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Store"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Stores the current configuration in the config manager so that it may be used later. Editing the graph in any way will remove custom configurations."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="storeConfigButtonActionPerformed"/>
@@ -692,6 +699,7 @@
                     <Component class="javax.swing.JButton" name="removeConfigButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Remove"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Removes the currently selected custom configuration."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeConfigButtonActionPerformed"/>
@@ -705,6 +713,7 @@
                     <Component class="javax.swing.JButton" name="subtractConfigButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Subtract"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Subtracts the selected configuration to the current configuration the indicated number of times."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subtractConfigButtonActionPerformed"/>
@@ -715,9 +724,16 @@
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="1" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="The number of times to apply the above operations."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JSpinner" name="amountOfSandSpinner">
+                      <Properties>
+                        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                          <SpinnerModel initial="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                        </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="The number of grains the above operations will use."/>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -803,7 +819,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="gridRowsField">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="5" noResource="true"/>
+                        <Property name="text" type="java.lang.String" value="50" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Number of rows."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gridRowsFieldActionPerformed"/>
@@ -817,7 +834,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="gridColsField">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="5" noResource="true"/>
+                        <Property name="text" type="java.lang.String" value="50" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Number of columns."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gridColsFieldActionPerformed"/>
@@ -839,6 +857,7 @@
                             <StringItem index="4" value="Looped to S Rev."/>
                           </StringArray>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value=""/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nBorderComboBoxActionPerformed"/>
@@ -983,7 +1002,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="makeHoneycombRadiusField">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="5" noResource="true"/>
+                        <Property name="text" type="java.lang.String" value="50" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Number of layers of vertices."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="makeHoneycombRadiusFieldActionPerformed"/>
@@ -1330,46 +1350,47 @@
                                 </Column>
                               </Table>
                             </Property>
+                            <Property name="toolTipText" type="java.lang.String" value="Creates a lattice based on the integer vectors. The default is the manhattan lattice, made up of one way streets switching directions every other row/column."/>
                             <Property name="cellSelectionEnabled" type="boolean" value="true"/>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                               <TableColumnModel selectionModel="2">
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="x"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="y"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="x start"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="x freq"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="y start"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="y freq"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="Dir"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
+                                  <Title value="Weight"/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
@@ -1387,6 +1408,7 @@
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="50" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Number of rows of the lattice."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JSpinner" name="colSpinner">
@@ -1394,6 +1416,7 @@
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="50" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Number of columns in the lattice."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel22">
@@ -1411,6 +1434,7 @@
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="1" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Distance between each row/column in the lattice."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel24">
@@ -1530,6 +1554,7 @@
                       <Properties>
                         <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Repaint" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Toggles repainting in 2d mode. If delay is 0, this will speed up updates."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintCheckBoxActionPerformed"/>
@@ -1538,6 +1563,7 @@
                     <Component class="javax.swing.JCheckBox" name="edgeLabelsCheckBox">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Draw Edge Labels" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Toggles the display of edge degrees."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="edgeLabelsCheckBoxActionPerformed"/>
@@ -1547,6 +1573,7 @@
                       <Properties>
                         <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Changing Node Size" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="With this on, the size of each vertex is dependent on number of grains/degree."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changingNodeSizeCheckBoxActionPerformed"/>
@@ -1556,6 +1583,7 @@
                       <Properties>
                         <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Draw Edges" noResource="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Toggles the display of edges."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawEdgesCheckBoxActionPerformed"/>
@@ -1564,6 +1592,7 @@
                     <Component class="javax.swing.JCheckBox" name="printFPSCheckBox">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Print FPS"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Prints the FPS to standard error each update."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="printFPSCheckBoxActionPerformed"/>
@@ -1583,6 +1612,7 @@
                             <StringItem index="2" value="Total firings"/>
                           </StringArray>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Changes what each vertex is colored and labelled based on."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colorModeComboBoxActionPerformed"/>
@@ -1595,6 +1625,7 @@
                         </Property>
                         <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Repaint Every:"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Ensures that a certain amount of time passes between each repaint. Setting this higher increases the speed of updates."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintDelayRadioButtonActionPerformed"/>
@@ -1606,6 +1637,7 @@
                           <ComponentRef name="repaintOptionsButtonGroup"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Repaint On Update"/>
+                        <Property name="toolTipText" type="java.lang.String" value="A repaint will occur after each update."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintOnUpdateRadioButtonActionPerformed"/>
@@ -1614,6 +1646,7 @@
                     <Component class="javax.swing.JTextField" name="repaintDelayTextField">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="30"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Minimum time between each repaint."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintDelayTextFieldActionPerformed"/>
@@ -1622,6 +1655,7 @@
                     <Component class="javax.swing.JCheckBox" name="vertexLabelsCheckBox">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Draw Vertex Labels"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Toggles the display of the number of grains/times fired of each vertex."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="vertexLabelsCheckBoxActionPerformed"/>
@@ -1630,6 +1664,7 @@
                     <Component class="javax.swing.JToggleButton" name="dimensionToggleButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="3d"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 20,000 vertices). 3d mode does not display edges."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dimensionToggleButtonActionPerformed"/>
@@ -1640,6 +1675,7 @@
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="3" numberType="java.lang.Integer" stepSize="1" type="number"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Averages the height of each vertex with the height of its neighbors the given number of times."/>
                       </Properties>
                       <Events>
                         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="heightSmoothingSpinnerStateChanged"/>
@@ -1665,6 +1701,7 @@
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="3" numberType="java.lang.Integer" stepSize="1" type="number"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Averages the color of each vertex with the height of its neighbors the given number of times."/>
                       </Properties>
                       <Events>
                         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="colorSmoothingSpinnerStateChanged"/>
@@ -1675,6 +1712,7 @@
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="3.0" numberType="java.lang.Float" stepSize="0.5" type="number"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Multiplies the height of each vertex by the given number. Can be negative."/>
                       </Properties>
                       <Events>
                         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="heightScalarSpinnerStateChanged"/>
@@ -1684,6 +1722,7 @@
                       <Properties>
                         <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" value="Draw Shape"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Display the colored model of the graph."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawShapeCheckBoxActionPerformed"/>
@@ -1692,6 +1731,7 @@
                     <Component class="javax.swing.JCheckBox" name="drawWireCheckBox">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Draw Wire"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Display the outlines of the triangles that make up the shape. Shows how exactly the graph was triangulated and looks badass."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawWireCheckBoxActionPerformed"/>
@@ -1756,6 +1796,7 @@
                 <Component class="javax.swing.JLabel" name="centerLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Center: "/>
+                    <Property name="toolTipText" type="java.lang.String" value=""/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="centerCoordLabel">
@@ -1768,12 +1809,14 @@
                 <Component class="javax.swing.JLabel" name="currentActionLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="None: "/>
+                    <Property name="toolTipText" type="java.lang.String" value="Displays operations that may take a long time."/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="cancelButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Cancel"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Cancel the current operation."/>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="focusable" type="boolean" value="false"/>
                     <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -1884,6 +1927,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="delayTextField">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="The minimum amount of time between updates."/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delayTextFieldActionPerformed"/>
             <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="delayTextFieldCaretUpdate"/>
@@ -1897,6 +1943,7 @@
         <Component class="javax.swing.JButton" name="bigDecDelayButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="--"/>
+            <Property name="toolTipText" type="java.lang.String" value="Decrease delay by 25 ms."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -1908,6 +1955,7 @@
         <Component class="javax.swing.JButton" name="smallDevDelayButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="-"/>
+            <Property name="toolTipText" type="java.lang.String" value="Decrease delay by 5 ms."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -1919,6 +1967,7 @@
         <Component class="javax.swing.JButton" name="smallIncDelayButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="+"/>
+            <Property name="toolTipText" type="java.lang.String" value="Increase delay by 5 ms."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -1930,6 +1979,7 @@
         <Component class="javax.swing.JButton" name="bigIncDelayButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="++"/>
+            <Property name="toolTipText" type="java.lang.String" value="Increases the delay by 25 ms."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -1962,6 +2012,7 @@
         <Component class="javax.swing.JButton" name="bigZoomOutButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="--"/>
+            <Property name="toolTipText" type="java.lang.String" value="Decrease the zoom by 25% of its current value."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -1973,6 +2024,7 @@
         <Component class="javax.swing.JButton" name="smallZoomOutButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="-"/>
+            <Property name="toolTipText" type="java.lang.String" value="Decrease the zoom by 5% of its current value."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -1984,6 +2036,7 @@
         <Component class="javax.swing.JButton" name="smallZoomInButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="+"/>
+            <Property name="toolTipText" type="java.lang.String" value="Increase the zoom by 5% of its current value."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -1995,6 +2048,7 @@
         <Component class="javax.swing.JButton" name="bigZoomInButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="++"/>
+            <Property name="toolTipText" type="java.lang.String" value="Increase the zoom by 25% of its current value."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -2006,6 +2060,7 @@
         <Component class="javax.swing.JToggleButton" name="serverToggleButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Server"/>
+            <Property name="toolTipText" type="java.lang.String" value="Listen for a TCP connection. Used to control this program from some other program. For instance, one can write a python script to collect statistics on graphs being created and updated with this program."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -2032,6 +2087,7 @@
               <ComponentRef name="mouseButtonGroup"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Select"/>
+            <Property name="toolTipText" type="java.lang.String" value="Clicking on a vertex selects/unselects it. Dragging the mouse creates a selection box. Holding down shift has the same effect (and is usually more convenient)."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -2047,6 +2103,7 @@
             </Property>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Edit"/>
+            <Property name="toolTipText" type="java.lang.String" value="The current selection in the sidepanel determines what happens when you click. Dragging moves you around the canvas. Hold down shift to enter selection mode and let go to re-enter edit mode."/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>

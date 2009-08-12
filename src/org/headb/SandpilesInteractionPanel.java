@@ -639,6 +639,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         optionsTabbedPane.setMinimumSize(new java.awt.Dimension(200, 44));
         optionsTabbedPane.setPreferredSize(new java.awt.Dimension(200, 621));
 
+        editGraphPanel.setToolTipText("Add/remove vertices and edges.");
+
         editGraphButtonGroup.add(addVertexRadioButton);
         addVertexRadioButton.setSelected(true);
         addVertexRadioButton.setText("Add Vertex"); // NOI18N
@@ -678,6 +680,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         makeSinkButton.setText("Turn into Sink");
+        makeSinkButton.setToolTipText("Removes all outgoing edges from the selected vertices.");
         makeSinkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 makeSinkButtonActionPerformed(evt);
@@ -749,6 +752,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         jScrollPane3.setViewportView(configSelectList);
 
         addConfigButton.setText("Add"); // NOI18N
+        addConfigButton.setToolTipText("Adds the selected configuration to the current configuration the indicated number of times.");
         addConfigButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addConfigButtonActionPerformed(evt);
@@ -756,6 +760,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         setConfigButton.setText("Set"); // NOI18N
+        setConfigButton.setToolTipText("Sets the current configuration to the selected configuration multiplied by the times field.");
         setConfigButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setConfigButtonActionPerformed(evt);
@@ -782,6 +787,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         jLabel8.setText("Amount:"); // NOI18N
 
         storeConfigButton.setText("Store");
+        storeConfigButton.setToolTipText("Stores the current configuration in the config manager so that it may be used later. Editing the graph in any way will remove custom configurations.");
         storeConfigButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 storeConfigButtonActionPerformed(evt);
@@ -789,6 +795,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         removeConfigButton.setText("Remove");
+        removeConfigButton.setToolTipText("Removes the currently selected custom configuration.");
         removeConfigButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeConfigButtonActionPerformed(evt);
@@ -798,6 +805,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         jLabel25.setText("Times:");
 
         subtractConfigButton.setText("Subtract");
+        subtractConfigButton.setToolTipText("Subtracts the selected configuration to the current configuration the indicated number of times.");
         subtractConfigButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 subtractConfigButtonActionPerformed(evt);
@@ -805,6 +813,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         configTimesSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        configTimesSpinner.setToolTipText("The number of times to apply the above operations.");
+
+        amountOfSandSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), null, null, Integer.valueOf(1)));
+        amountOfSandSpinner.setToolTipText("The number of grains the above operations will use.");
 
         org.jdesktop.layout.GroupLayout configManagerOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(configManagerOptionsPanel);
         configManagerOptionsPanel.setLayout(configManagerOptionsPanelLayout);
@@ -831,14 +843,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                         .add(jLabel25)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(configTimesSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 72, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(setSandRadioButton)
                     .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                        .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(setSandRadioButton)
-                            .add(configManagerOptionsPanelLayout.createSequentialGroup()
-                                .add(jLabel8)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(amountOfSandSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 83, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
+                        .add(jLabel8)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(amountOfSandSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 83, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(153, Short.MAX_VALUE))
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
@@ -877,7 +886,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         gridSizeLabel.setText("Grid Size:"); // NOI18N
 
-        gridRowsField.setText("5"); // NOI18N
+        gridRowsField.setText("50"); // NOI18N
+        gridRowsField.setToolTipText("Number of rows.");
         gridRowsField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gridRowsFieldActionPerformed(evt);
@@ -891,7 +901,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         gridSizeCrossLabel.setText("X"); // NOI18N
 
-        gridColsField.setText("5"); // NOI18N
+        gridColsField.setText("50"); // NOI18N
+        gridColsField.setToolTipText("Number of columns.");
         gridColsField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gridColsFieldActionPerformed(evt);
@@ -901,6 +912,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         jLabel3.setText("N Border:"); // NOI18N
 
         nBorderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Directed", "Undirected", "None", "Looped to S", "Looped to S Rev." }));
+        nBorderComboBox.setToolTipText("");
         nBorderComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nBorderComboBoxActionPerformed(evt);
@@ -999,7 +1011,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         jLabel10.setText("Radius:"); // NOI18N
 
-        makeHoneycombRadiusField.setText("5"); // NOI18N
+        makeHoneycombRadiusField.setText("50"); // NOI18N
+        makeHoneycombRadiusField.setToolTipText("Number of layers of vertices.");
         makeHoneycombRadiusField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 makeHoneycombRadiusFieldActionPerformed(evt);
@@ -1084,19 +1097,31 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 return types [columnIndex];
             }
         });
+        buildLatticeTable.setToolTipText("Creates a lattice based on the integer vectors. The default is the manhattan lattice, made up of one way streets switching directions every other row/column.");
         buildLatticeTable.setCellSelectionEnabled(true);
         jScrollPane1.setViewportView(buildLatticeTable);
         buildLatticeTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        buildLatticeTable.getColumnModel().getColumn(0).setHeaderValue("x");
+        buildLatticeTable.getColumnModel().getColumn(1).setHeaderValue("y");
+        buildLatticeTable.getColumnModel().getColumn(2).setHeaderValue("x start");
+        buildLatticeTable.getColumnModel().getColumn(3).setHeaderValue("x freq");
+        buildLatticeTable.getColumnModel().getColumn(4).setHeaderValue("y start");
+        buildLatticeTable.getColumnModel().getColumn(5).setHeaderValue("y freq");
+        buildLatticeTable.getColumnModel().getColumn(6).setHeaderValue("Dir");
+        buildLatticeTable.getColumnModel().getColumn(7).setHeaderValue("Weight");
 
         rowSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(50), Integer.valueOf(1), null, Integer.valueOf(1)));
+        rowSpinner.setToolTipText("Number of rows of the lattice.");
 
         colSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(50), Integer.valueOf(1), null, Integer.valueOf(1)));
+        colSpinner.setToolTipText("Number of columns in the lattice.");
 
         jLabel22.setText("Rows:");
 
         jLabel23.setText("Cols:");
 
         latticeSpacingSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        latticeSpacingSpinner.setToolTipText("Distance between each row/column in the lattice.");
 
         jLabel24.setText("Spacing:");
 
@@ -1139,6 +1164,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         repaintCheckBox.setSelected(true);
         repaintCheckBox.setText("Repaint"); // NOI18N
+        repaintCheckBox.setToolTipText("Toggles repainting in 2d mode. If delay is 0, this will speed up updates.");
         repaintCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 repaintCheckBoxActionPerformed(evt);
@@ -1146,6 +1172,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         edgeLabelsCheckBox.setText("Draw Edge Labels"); // NOI18N
+        edgeLabelsCheckBox.setToolTipText("Toggles the display of edge degrees.");
         edgeLabelsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 edgeLabelsCheckBoxActionPerformed(evt);
@@ -1154,6 +1181,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         changingNodeSizeCheckBox.setSelected(true);
         changingNodeSizeCheckBox.setText("Changing Node Size"); // NOI18N
+        changingNodeSizeCheckBox.setToolTipText("With this on, the size of each vertex is dependent on number of grains/degree.");
         changingNodeSizeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changingNodeSizeCheckBoxActionPerformed(evt);
@@ -1162,6 +1190,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         drawEdgesCheckBox.setSelected(true);
         drawEdgesCheckBox.setText("Draw Edges"); // NOI18N
+        drawEdgesCheckBox.setToolTipText("Toggles the display of edges.");
         drawEdgesCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drawEdgesCheckBoxActionPerformed(evt);
@@ -1169,6 +1198,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         printFPSCheckBox.setText("Print FPS");
+        printFPSCheckBox.setToolTipText("Prints the FPS to standard error each update.");
         printFPSCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printFPSCheckBoxActionPerformed(evt);
@@ -1178,6 +1208,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         jLabel18.setText("Color Mode: ");
 
         colorModeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Number of grains", "Stability", "Total firings" }));
+        colorModeComboBox.setToolTipText("Changes what each vertex is colored and labelled based on.");
         colorModeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colorModeComboBoxActionPerformed(evt);
@@ -1187,6 +1218,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         repaintOptionsButtonGroup.add(repaintDelayRadioButton);
         repaintDelayRadioButton.setSelected(true);
         repaintDelayRadioButton.setText("Repaint Every:");
+        repaintDelayRadioButton.setToolTipText("Ensures that a certain amount of time passes between each repaint. Setting this higher increases the speed of updates.");
         repaintDelayRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 repaintDelayRadioButtonActionPerformed(evt);
@@ -1195,6 +1227,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         repaintOptionsButtonGroup.add(repaintOnUpdateRadioButton);
         repaintOnUpdateRadioButton.setText("Repaint On Update");
+        repaintOnUpdateRadioButton.setToolTipText("A repaint will occur after each update.");
         repaintOnUpdateRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 repaintOnUpdateRadioButtonActionPerformed(evt);
@@ -1202,6 +1235,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         repaintDelayTextField.setText("30");
+        repaintDelayTextField.setToolTipText("Minimum time between each repaint.");
         repaintDelayTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 repaintDelayTextFieldActionPerformed(evt);
@@ -1209,6 +1243,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         vertexLabelsCheckBox.setText("Draw Vertex Labels");
+        vertexLabelsCheckBox.setToolTipText("Toggles the display of the number of grains/times fired of each vertex.");
         vertexLabelsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 vertexLabelsCheckBoxActionPerformed(evt);
@@ -1216,6 +1251,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         dimensionToggleButton.setText("3d");
+        dimensionToggleButton.setToolTipText("Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 20,000 vertices). 3d mode does not display edges.");
         dimensionToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dimensionToggleButtonActionPerformed(evt);
@@ -1223,6 +1259,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         heightSmoothingSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(3), null, null, Integer.valueOf(1)));
+        heightSmoothingSpinner.setToolTipText("Averages the height of each vertex with the height of its neighbors the given number of times.");
         heightSmoothingSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 heightSmoothingSpinnerStateChanged(evt);
@@ -1236,6 +1273,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         jLabel21.setText("Height Scalar:");
 
         colorSmoothingSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(3), null, null, Integer.valueOf(1)));
+        colorSmoothingSpinner.setToolTipText("Averages the color of each vertex with the height of its neighbors the given number of times.");
         colorSmoothingSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 colorSmoothingSpinnerStateChanged(evt);
@@ -1243,6 +1281,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         heightScalarSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(3.0f), null, null, Float.valueOf(0.5f)));
+        heightScalarSpinner.setToolTipText("Multiplies the height of each vertex by the given number. Can be negative.");
         heightScalarSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 heightScalarSpinnerStateChanged(evt);
@@ -1251,6 +1290,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         drawShapeCheckBox.setSelected(true);
         drawShapeCheckBox.setText("Draw Shape");
+        drawShapeCheckBox.setToolTipText("Display the colored model of the graph.");
         drawShapeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drawShapeCheckBoxActionPerformed(evt);
@@ -1258,6 +1298,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         drawWireCheckBox.setText("Draw Wire");
+        drawWireCheckBox.setToolTipText("Display the outlines of the triangles that make up the shape. Shows how exactly the graph was triangulated and looks badass.");
         drawWireCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drawWireCheckBoxActionPerformed(evt);
@@ -1381,6 +1422,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         infoToolBar.setRollover(true);
 
         centerLabel.setText("Center: ");
+        centerLabel.setToolTipText("");
         infoToolBar.add(centerLabel);
 
         centerCoordLabel.setText("0.0, 0.0");
@@ -1388,10 +1430,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         infoToolBar.add(jSeparator4);
 
         currentActionLabel.setText("None: ");
+        currentActionLabel.setToolTipText("Displays operations that may take a long time.");
         currentActionLabel.setEnabled(false);
         infoToolBar.add(currentActionLabel);
 
         cancelButton.setText("Cancel");
+        cancelButton.setToolTipText("Cancel the current operation.");
         cancelButton.setEnabled(false);
         cancelButton.setFocusable(false);
         cancelButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1498,6 +1542,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         delayLabel.setText("Delay:"); // NOI18N
         controlToolBar.add(delayLabel);
 
+        delayTextField.setToolTipText("The minimum amount of time between updates.");
         delayTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 delayTextFieldActionPerformed(evt);
@@ -1514,6 +1559,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(jLabel12);
 
         bigDecDelayButton.setText("--");
+        bigDecDelayButton.setToolTipText("Decrease delay by 25 ms.");
         bigDecDelayButton.setFocusable(false);
         bigDecDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bigDecDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1525,6 +1571,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(bigDecDelayButton);
 
         smallDevDelayButton.setText("-");
+        smallDevDelayButton.setToolTipText("Decrease delay by 5 ms.");
         smallDevDelayButton.setFocusable(false);
         smallDevDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         smallDevDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1536,6 +1583,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(smallDevDelayButton);
 
         smallIncDelayButton.setText("+");
+        smallIncDelayButton.setToolTipText("Increase delay by 5 ms.");
         smallIncDelayButton.setFocusable(false);
         smallIncDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         smallIncDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1547,6 +1595,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(smallIncDelayButton);
 
         bigIncDelayButton.setText("++");
+        bigIncDelayButton.setToolTipText("Increases the delay by 25 ms.");
         bigIncDelayButton.setFocusable(false);
         bigIncDelayButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bigIncDelayButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1578,6 +1627,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(jLabel11);
 
         bigZoomOutButton.setText("--");
+        bigZoomOutButton.setToolTipText("Decrease the zoom by 25% of its current value.");
         bigZoomOutButton.setFocusable(false);
         bigZoomOutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bigZoomOutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1589,6 +1639,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(bigZoomOutButton);
 
         smallZoomOutButton.setText("-");
+        smallZoomOutButton.setToolTipText("Decrease the zoom by 5% of its current value.");
         smallZoomOutButton.setFocusable(false);
         smallZoomOutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         smallZoomOutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1600,6 +1651,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(smallZoomOutButton);
 
         smallZoomInButton.setText("+");
+        smallZoomInButton.setToolTipText("Increase the zoom by 5% of its current value.");
         smallZoomInButton.setFocusable(false);
         smallZoomInButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         smallZoomInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1611,6 +1663,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(smallZoomInButton);
 
         bigZoomInButton.setText("++");
+        bigZoomInButton.setToolTipText("Increase the zoom by 25% of its current value.");
         bigZoomInButton.setFocusable(false);
         bigZoomInButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bigZoomInButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1622,6 +1675,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         controlToolBar.add(bigZoomInButton);
 
         serverToggleButton.setText("Server");
+        serverToggleButton.setToolTipText("Listen for a TCP connection. Used to control this program from some other program. For instance, one can write a python script to collect statistics on graphs being created and updated with this program.");
         serverToggleButton.setFocusable(false);
         serverToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         serverToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1638,6 +1692,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         mouseButtonGroup.add(selectToggleButton);
         selectToggleButton.setText("Select");
+        selectToggleButton.setToolTipText("Clicking on a vertex selects/unselects it. Dragging the mouse creates a selection box. Holding down shift has the same effect (and is usually more convenient).");
         selectToggleButton.setFocusable(false);
         selectToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         selectToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1651,6 +1706,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         mouseButtonGroup.add(editToggleButton);
         editToggleButton.setSelected(true);
         editToggleButton.setText("Edit");
+        editToggleButton.setToolTipText("The current selection in the sidepanel determines what happens when you click. Dragging moves you around the canvas. Hold down shift to enter selection mode and let go to re-enter edit mode.");
         editToggleButton.setFocusable(false);
         editToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2065,8 +2121,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 					}
 				}
 				if (!vectors.isEmpty()) {
-					sandpileController.buildLatticeControl(x, y, (Integer) rowSpinner.getValue(), (Integer) colSpinner.getValue(),
-							(Integer) latticeSpacingSpinner.getValue(), vectors,
+					int rows = (Integer) rowSpinner.getValue();
+					int cols = (Integer) colSpinner.getValue();
+					int spacing = (Integer) latticeSpacingSpinner.getValue();
+					float newY = y-rows*spacing*sandpileController.VERT_RADIUS*2f;
+					sandpileController.buildLatticeControl(x, newY, rows, cols,
+							spacing, vectors,
 							xStarts, xFreqs, yStarts, yFreqs, dirs, weights, borders);
 				}
 			}

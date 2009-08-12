@@ -31,7 +31,7 @@ package org.headb;
 import java.util.ArrayList;
 import gnu.trove.TIntArrayList;
 /**
- *
+ * This class is under development.
  * @author headb
  */
 public class BlockedSandpileGraph {

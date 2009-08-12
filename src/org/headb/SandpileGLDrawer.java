@@ -105,7 +105,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 		// Setup the drawing area and shading mode
 		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
-		gl.glShadeModel(GL.GL_FLAT); // try setting this to GL_FLAT and see what happens.
+		gl.glShadeModel(GL.GL_FLAT);
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
 		//gl.glDepthFunc(gl.GL_LEQUAL);
@@ -150,13 +150,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		
 
 		GL gl = drawable.getGL();
-		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
 		}
 		//GLU glu = new GLU();
 		// Clear the drawing area
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		// Reset the current matrix to the "identity"
 		gl.glLoadIdentity();
 		if (drawEdges) {
@@ -170,7 +170,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			drawVertexLabels(tr);
 		}
 		if (drawEdgeLabels) {
-			TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 6));
+			TextRenderer tr = new TextRenderer(new java.awt.Font("Courier", java.awt.Font.PLAIN, 8));
 			drawEdgeLabels(tr);
 		}
 		if (!selectedVertices.isEmpty()) {
