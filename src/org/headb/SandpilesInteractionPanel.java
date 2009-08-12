@@ -618,6 +618,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         setPreferredSize(new java.awt.Dimension(1024, 768));
         setRequestFocusEnabled(false);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                formMouseEntered(evt);
+            }
+        });
 
         jSplitPane1.setDividerLocation(350);
         jSplitPane1.setDividerSize(8);
@@ -2520,6 +2525,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	private void makeSinkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeSinkButtonActionPerformed
 		sandpileController.makeSink(sandpileController.getSelectedVertices());
 	}//GEN-LAST:event_makeSinkButtonActionPerformed
+
+	private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+		if(runningThread){
+			setWaitCursor();
+		}
+	}//GEN-LAST:event_formMouseEntered
 
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));

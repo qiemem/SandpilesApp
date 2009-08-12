@@ -438,11 +438,8 @@ public class SandpileGraph {
 		EdgeList edges = getOutgoingEdges(vert);
 		int s = edges.size();
 		for(int i=0; i<s; i++){
-			int dest = edges.destQuick(i);
-			config.increaseQuick(dest, edges.wtQuick(i));
-			//config.setQuick(dest, config.getQuick(dest)+edges.wtQuick(i));
+			config.increaseQuick(edges.destQuick(i), edges.wtQuick(i));
 		}
-		//config.setQuick(vert, config.getQuick(vert)-degreeQuick(vert));
 		config.increaseQuick(vert, -degreeQuick(vert));
 	}
 

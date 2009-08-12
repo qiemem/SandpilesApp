@@ -86,13 +86,13 @@ public class Int2dArrayList extends TIntArrayList{
 		return super.get(r*cols + c);
 	}
 	public int getQuick(int r, int c){
-		return super.getQuick(r*cols+c);
+		return _data[r*cols+c];
 	}
 	public void set(int r, int c, int val){
 		super.set(r*cols+c, val);
 	}
 	public void setQuick(int r, int c, int val){
-		super.setQuick(r*cols+c, val);
+		_data[r*cols + c] = val;
 	}
 	
 	public int addRow(){
