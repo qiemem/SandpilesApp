@@ -135,7 +135,7 @@ public class SandpileController implements ActionListener, Serializable{
 //			configs = new HashMap<String, SandpileConfiguration>(oldConfigs);
 //			selectedVertices = new TIntArrayList(oldSelected.toNativeArray());
 			onGraphChange();
-			onConfigChange();
+			onConfigEdit();
 			repaint();
 		}
 
@@ -146,7 +146,7 @@ public class SandpileController implements ActionListener, Serializable{
 //			currentConfig = newCurConfig;
 //			configs = newConfigs;
 			onGraphChange();
-			onConfigChange();
+			onConfigEdit();
 			repaint();
 		}
 	}
@@ -367,7 +367,7 @@ public class SandpileController implements ActionListener, Serializable{
 	 */
 	public void update() {
 		//if(drawer.getColorMode()==SandpileDrawer.ColorMode.FIRINGS)
-			updateFirings();
+		updateFirings();
 		if (updater == null) {
 			updater = sg.inPlaceUpdater(currentConfig);
 		}
@@ -430,10 +430,19 @@ public class SandpileController implements ActionListener, Serializable{
 
 	/**
 	 * Should be called by any public method that changes the current config.
-	 * Calls onEdit().
+	 * Calls onEdit() and onConfigChange().
+	 */
+	public void onConfigEdit() {
+		onConfigChange();
+		onEdit();
+	}
+
+	/**
+	 * Indicates the current configuration has been changed. Does NOT call
+	 * onEdit(). Hence, unless the change is made by update(), onEdit() should
+	 * probably also be called (to reset the updater iterator).
 	 */
 	public void onConfigChange() {
-		onEdit();
 		for(SandpileChangeListener listener: listeners){
 			listener.onConfigChange(this.getConfig());
 		}
@@ -474,7 +483,7 @@ public class SandpileController implements ActionListener, Serializable{
 	public void setConfig(SandpileConfiguration config){
 		if(config.size() == configSize()){
 			currentConfig = config;
-			onConfigChange();
+			onConfigEdit();
 		}else
 			throw new IndexOutOfBoundsException("Tried to set the current sandpile " +
 					"configuration to a configuration of an incorrect size. The correct" +
@@ -490,7 +499,7 @@ public class SandpileController implements ActionListener, Serializable{
 	public void addConfig(SandpileConfiguration config){
 		if(config.size() == configSize()){
 			currentConfig = currentConfig.plus(config);
-			onConfigChange();
+			onConfigEdit();
 		}else
 			throw new IndexOutOfBoundsException("Tried to add the current sandpile " +
 					"configuration to a configuration of an incorrect size. The correct" +
@@ -620,7 +629,7 @@ public class SandpileController implements ActionListener, Serializable{
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			addSand(touchVert, amount);
-			onConfigChange();
+			onConfigEdit();
 		}
 		repaint();
 	}
@@ -629,7 +638,7 @@ public class SandpileController implements ActionListener, Serializable{
 		int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0) {
 			setSand(touchVert, amount);
-			onConfigChange();
+			onConfigEdit();
 		}
 		repaint();
 	}
@@ -1122,7 +1131,7 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void setToDualConfig(int times) {
 		setConfig(sg.getDualConfig(currentConfig).times(times));
-		onConfigChange();
+		onConfigEdit();
 		repaint();
 	}
 
@@ -1381,7 +1390,7 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void addSand(int vert, int amount) {
 		setSand(vert, currentConfig.get(vert) + amount);
-		onConfigChange();
+		onConfigEdit();
 	}
 
 	public void addSandToRandom(TIntArrayList vertices, int amount){
@@ -1401,7 +1410,7 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void setSand(int vert, int amount) {
 		currentConfig.set(vert, amount);
-		onConfigChange();
+		onConfigEdit();
 	}
 
 //	public Iterable<Integer> getOutgoingVertices(int vert) {

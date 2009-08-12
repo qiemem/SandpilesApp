@@ -106,6 +106,18 @@ public class SandpileGraph {
 	}
 
 	/**
+	 * Retrieves the sum of the weights of the outgoing edges of the given
+	 * vertex. Does not check to see if the index is within range, thus
+	 * creating unpredictable behavior if it is not.
+	 *
+	 * @param vert The index of the vertex.
+	 * @return The sum of the weights of the outgoing edges of the given vertex.
+	 */
+	public int degreeQuick(int vert){
+		return this.degrees.getQuick(vert);
+	}
+
+	/**
 	 * Retrieves the list of edges which begin with the source vertex.
 	 */
 	public final EdgeList getOutgoingEdges(int vert) {
@@ -427,9 +439,11 @@ public class SandpileGraph {
 		int s = edges.size();
 		for(int i=0; i<s; i++){
 			int dest = edges.destQuick(i);
-			config.setQuick(dest, config.getQuick(dest)+edges.wtQuick(i));
+			config.increaseQuick(dest, edges.wtQuick(i));
+			//config.setQuick(dest, config.getQuick(dest)+edges.wtQuick(i));
 		}
-		config.setQuick(vert, config.getQuick(vert)-degree(vert));
+		//config.setQuick(vert, config.getQuick(vert)-degreeQuick(vert));
+		config.increaseQuick(vert, -degreeQuick(vert));
 	}
 
 	public TIntArrayList getUnstables(SandpileConfiguration config) {

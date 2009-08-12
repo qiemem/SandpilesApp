@@ -66,4 +66,8 @@ public class SandpileConfiguration extends TIntArrayList{
 			result.add(this.get(i)*scalar);
 		return result;
 	}
+
+	public void increaseQuick(int v, int amount){
+		this._data[v]+=amount;
+	}
 }
