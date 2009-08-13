@@ -293,8 +293,14 @@ public class DelaunayTriangulation {
 	}
 
 	private void splitTrisWithPointOnLine(int p1, int p2, int p) {
+		//tri1 and tri2 form the qudralateral with diagonal p1-p2 containing new
+		//point p.
+		//Split quad into four triangles.
+
 		TIntArrayList tris = getIncidentTriangles(p1, p2);
 		int tri1 = tris.get(0);
+
+		//find point opposite to edge p1-p2 for tri1.
 		int p3 = -1;
 		for (int i=0; i<3; i++) {
 			if (trisToPoints.get(tri1, i)!=p1 && trisToPoints.get(tri1, i)!=p2) {
@@ -305,10 +311,9 @@ public class DelaunayTriangulation {
 		int[] children1 = {addTriangle(p, p1, p3), addTriangle(p, p2, p3)};
 		triTree.set(tri1, children1);
 		removeTriangle(tri1);
-		legalizeEdge(p, p1, p3);
-		legalizeEdge(p, p2, p3);
-
 		int tri2 = tris.get(0);
+
+		//find point opposite to edge p1-p2 for tri2.
 		int p4 = -1;
 		for (int i=0; i<3; i++) {
 			if (trisToPoints.get(tri2, i)!=p1 && trisToPoints.get(tri2, i)!=p2) {
@@ -317,8 +322,11 @@ public class DelaunayTriangulation {
 			}
 		}
 		int[] children2 = {addTriangle(p, p1, p4), addTriangle(p, p2, p4)};
-		triTree.set(tri2, children1);
+		triTree.set(tri2, children2);
 		removeTriangle(tri2);
+		
+		legalizeEdge(p, p1, p3);
+		legalizeEdge(p, p2, p3);
 		legalizeEdge(p, p1, p4);
 		legalizeEdge(p, p2, p4);
 
@@ -339,6 +347,8 @@ public class DelaunayTriangulation {
 		if (incTris.size() <= 1) {
 			return;
 		}
+
+		// Find the point opposite to p across p1-p2
 		int otherPt = -1;
 		for (int i=0; i<incTris.size(); i++) {
 			int tri = incTris.get(i);
