@@ -48,21 +48,21 @@ public class SandpileGraph {
 	// where int[0] = source
 	// int[1] = dest
 	// int[2] = weight
-	private ArrayList<EdgeList> adj;
+	private ArrayList<SingleSourceEdgeList> adj;
 	private TIntArrayList degrees;
 
 	/**
 	 * Creates a new, empty graph.
 	 */
 	public SandpileGraph() {
-		this.adj = new ArrayList<EdgeList>();
+		this.adj = new ArrayList<SingleSourceEdgeList>();
 		this.degrees = new TIntArrayList();
 	}
 
 	public SandpileGraph(SandpileGraph graph){
-		this.adj = new ArrayList<EdgeList>();
-		for (EdgeList v : graph.adj) {
-			EdgeList newV = new EdgeList(v);
+		this.adj = new ArrayList<SingleSourceEdgeList>();
+		for (SingleSourceEdgeList v : graph.adj) {
+			SingleSourceEdgeList newV = new SingleSourceEdgeList(v);
 			this.adj.add(newV);
 		}
 		this.degrees = new TIntArrayList(graph.degrees.toNativeArray());
@@ -223,7 +223,7 @@ public class SandpileGraph {
 	 * Adds a vertex to the graph.
 	 */
 	public void addVertex() {
-		adj.add(new EdgeList());
+		adj.add(new SingleSourceEdgeList(numVertices()));
 		this.degrees.add(0);
 	}
 

@@ -36,7 +36,7 @@ import java.util.Iterator;
  * @author Bryan Head
  */
 public class EdgeList implements Iterable<Edge>{
-	private Int2dArrayList edgeData;
+	protected Int2dArrayList edgeData;
 
 	/**
 	 * A subclass of Edge that points to a certain lovation in edgeData. The
@@ -45,28 +45,28 @@ public class EdgeList implements Iterable<Edge>{
 	 * having to the information for each edge into an Edge. Note that this also
 	 * allows write access to the edges.
 	 */
-	private class MyEdge extends Edge{
+	protected class MyEdge extends Edge{
 		int edgeNum;
 		public MyEdge(int edgeNum){
 			this.edgeNum = edgeNum;
 		}
 		@Override public int source(){
-			return edgeData.getQuick(edgeNum,0);
+			return sourceQuick(edgeNum);
 		}
 		@Override public void setSource(int s) {
-			edgeData.setQuick(edgeNum, 0, s);
+			setSourceQuick(edgeNum, s);
 		}
 		@Override public int dest() {
-			return edgeData.getQuick(edgeNum, 1);
+			return destQuick(edgeNum);
 		}
 		@Override public void setDest(int d) {
-			edgeData.setQuick(edgeNum, 1, d);
+			setDestQuick(edgeNum, d);
 		}
 		@Override public int wt() {
-			return edgeData.getQuick(edgeNum, 2);
+			return wtQuick(edgeNum);
 		}
 		@Override public void setWt(int w) {
-			edgeData.setQuick(edgeNum, 2, w);
+			setWtQuick(edgeNum, w);
 		}
 	}
 
@@ -98,6 +98,9 @@ public class EdgeList implements Iterable<Edge>{
 	public void setSource(int i, int s){
 		edgeData.set(i, 0, s);
 	}
+	public void setSourceQuick(int i, int s){
+		edgeData.setQuick(i, 0, s);
+	}
 	public int dest(int i){
 		return edgeData.get(i,1);
 	}
@@ -106,6 +109,9 @@ public class EdgeList implements Iterable<Edge>{
 	}
 	public void setDest(int i, int d){
 		edgeData.set(i, 1, d);
+	}
+	public void setDestQuick(int i, int d){
+		edgeData.setQuick(i, 1, d);
 	}
 	public int wt(int i){
 		return edgeData.get(i, 2);
@@ -116,7 +122,9 @@ public class EdgeList implements Iterable<Edge>{
 	public void setWt(int i, int w){
 		edgeData.set(i, 2, w);
 	}
-
+	public void setWtQuick(int i, int w){
+		edgeData.setQuick(i, 2, w);
+	}
 	public Edge get(int i){
 		return new MyEdge(i);
 	}
@@ -135,6 +143,7 @@ public class EdgeList implements Iterable<Edge>{
 			if(f.equals(e)){
 				return i;
 			}
+			i++;
 		}
 		return -1;
 	}
