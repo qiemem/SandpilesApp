@@ -1348,7 +1348,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                         .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                             .add(heightSmoothingSpinner, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
                             .add(colorSmoothingSpinner)
-                            .add(heightScalarSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                            .add(heightScalarSpinner)))
                     .add(drawShapeCheckBox)
                     .add(drawWireCheckBox)
                     .add(jButton1))
@@ -2137,7 +2137,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 					int rows = (Integer) rowSpinner.getValue();
 					int cols = (Integer) colSpinner.getValue();
 					int spacing = (Integer) latticeSpacingSpinner.getValue();
-					float newY = y-rows*spacing*sandpileController.VERT_RADIUS*2f;
+					float newY = y-(rows-1)*spacing*sandpileController.VERT_RADIUS*2f;
 					sandpileController.buildLatticeControl(x, newY, rows, cols,
 							spacing, vectors,
 							xStarts, xFreqs, yStarts, yFreqs, dirs, weights, borders);
