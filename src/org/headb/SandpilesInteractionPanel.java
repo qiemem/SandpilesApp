@@ -400,6 +400,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         drawShapeCheckBox = new javax.swing.JCheckBox();
         drawWireCheckBox = new javax.swing.JCheckBox();
         jLabel13 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         canvasHolderPanel = new javax.swing.JPanel();
         infoToolBar = new javax.swing.JToolBar();
@@ -1209,7 +1210,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         jLabel18.setText("Color Mode: ");
 
-        colorModeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Number of grains", "Stability", "Total firings" }));
+        colorModeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Number of grains", "Stability", "Total firings", "Difference from Base" }));
         colorModeComboBox.setToolTipText("Changes what each vertex is colored and labelled based on.");
         colorModeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1309,6 +1310,13 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         jLabel13.setText("ms");
 
+        jButton1.setText("Set Base Config");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -1340,9 +1348,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                         .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                             .add(heightSmoothingSpinner, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
                             .add(colorSmoothingSpinner)
-                            .add(heightScalarSpinner)))
+                            .add(heightScalarSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                     .add(drawShapeCheckBox)
-                    .add(drawWireCheckBox))
+                    .add(drawWireCheckBox)
+                    .add(jButton1))
                 .addContainerGap(99, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
@@ -1371,6 +1380,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(colorModeComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jButton1)
+                .add(6, 6, 6)
                 .add(dimensionToggleButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -1388,7 +1399,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 .add(drawShapeCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(drawWireCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -2186,6 +2197,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				drawer.setColorMode(SandpileDrawer.ColorMode.FIRINGS);
 				drawer3d.setColorMode(SandpileDrawer.ColorMode.FIRINGS);
 				break;
+			case 3:
+				drawer.setColorMode(SandpileDrawer.ColorMode.DIFFERENCE);
+				drawer3d.setColorMode(SandpileDrawer.ColorMode.DIFFERENCE);
+				break;
 		}
 		sandpileController.repaint();
 }//GEN-LAST:event_colorModeComboBoxActionPerformed
@@ -2532,6 +2547,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		}
 	}//GEN-LAST:event_formMouseEntered
 
+	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		drawer.setBaseConfig(sandpileController.getConfig());
+		drawer3d.setBaseConfig(sandpileController.getConfig());
+	}//GEN-LAST:event_jButton1ActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -2605,6 +2625,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 	public void onGraphChange(SandpileGraph sg) {
 		updateSelectedInfo();
+		drawer.setBaseConfig(sandpileController.getGraph().getUniformConfig(0));
+		drawer3d.setBaseConfig(sandpileController.getGraph().getUniformConfig(0));
 	}
 
 	public void onConfigChange(SandpileConfiguration config) {
@@ -2713,6 +2735,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JComboBox hexSBorderComboBox;
     private javax.swing.JComboBox hexWBorderComboBox;
     private javax.swing.JToolBar infoToolBar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

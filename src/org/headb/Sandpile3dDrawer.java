@@ -61,6 +61,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 	private DelaunayTriangulation tris;
 	private SandpileConfiguration config;
 	private TIntArrayList firings;
+	private SandpileConfiguration baseConfig;
 	private SandpileGraph graph;
 	//private HashMap<float[], Integer> pointsToVerts;
 	private Float2dArrayList colors;
@@ -262,6 +263,10 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		canvas.repaint();
 	}
 
+	public void setBaseConfig(SandpileConfiguration baseConfig){
+		this.baseConfig = new SandpileConfiguration(baseConfig);
+	}
+
 	public void setSelectionBox(float maxX, float maxY, float minX, float minY) {
 	}
 
@@ -428,7 +433,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 		boolean inDebt=false;
 		switch (colorMode) {
 			case NUM_OF_GRAINS:
-				int sand = Math.max(config.get(vert), -1);
+				int sand = config.getQuick(vert);
 				if(sand<0){
 					color = Math.min(-sand-1, inDebtColors.rows()-1);
 					inDebt = true;
@@ -436,14 +441,22 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 					color = Math.min(sand, colors.rows()-1);
 				break;
 			case STABILITY:
-				if (config.get(vert) < graph.degree(vert)) {
+				if (config.getQuick(vert) < graph.degreeQuick(vert)) {
 					color = 0;
 				} else {
 					color = colors.rows()-1;
 				}
 				break;
 			case FIRINGS:
-				color = Math.min(firings.get(vert),colors.rows()-1);
+				color = Math.min(firings.getQuick(vert),colors.rows()-1);
+				break;
+			case DIFFERENCE:
+				sand = config.getQuick(vert) - baseConfig.getQuick(vert);
+				if(sand<0){
+					color = Math.min(-sand-1, inDebtColors.rows()-1);
+					inDebt = true;
+				}else
+					color = Math.min(sand, colors.rows()-1);
 				break;
 		}
 		if(inDebt){

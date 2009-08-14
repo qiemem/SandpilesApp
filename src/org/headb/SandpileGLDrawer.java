@@ -62,6 +62,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private Float2dArrayList colors;
 	private Float2dArrayList inDebtColors;
 	private TIntArrayList firings = new TIntArrayList();
+	private SandpileConfiguration baseConfig;
 	public boolean drawEdgeLabels = false;
 	public boolean drawVertexLabels = false;
 	public boolean drawEdges = true;
@@ -200,10 +201,10 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			EdgeList outEdges = graph.getOutgoingEdges(source);
 			for (int i=0; i<outEdges.size(); i++) {
 				int dest = outEdges.destQuick(i);
-				float sx = vertexLocations.get(source,0);
-				float sy = vertexLocations.get(source,1);
-				float dx = vertexLocations.get(dest,0);
-				float dy = vertexLocations.get(dest,1);
+				float sx = vertexLocations.getQuick(source,0);
+				float sy = vertexLocations.getQuick(source,1);
+				float dx = vertexLocations.getQuick(dest,0);
+				float dy = vertexLocations.getQuick(dest,1);
 				//Only draw the edges that aren't covered by vertices
 				//if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
 				gl.glVertex2f(sx, sy);
@@ -245,9 +246,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			float x = vertexLocations.getQuick(vert,0);
 			float y = vertexLocations.getQuick(vert,1);
 			float size = vertSize;
-			int d = graph.degree(vert);
+			int d = graph.degreeQuick(vert);
 			if (changingVertexSize && d!=0) {
-				int sand = Math.max(config.get(vert), 0);
+				int sand = Math.max(config.getQuick(vert), 0);
 				size = Math.min(((float) sand + 1f) / ((float) d), vertSize);
 			}
 			setColorForVertex(gl, vert);
@@ -266,17 +267,20 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 			int amount = 0;
 			switch(mode){
 				case NUM_OF_GRAINS:
-					amount = config.get(vert);
+					amount = config.getQuick(vert);
 					break;
 				case STABILITY:
-					if (config.get(vert) < graph.degree(vert)) {
+					if (config.getQuick(vert) < graph.degreeQuick(vert)) {
 						amount = 0;
 					} else {
 						amount = 1;
 					}
 					break;
 				case FIRINGS:
-					amount = firings.get(vert);
+					amount = firings.getQuick(vert);
+					break;
+				case DIFFERENCE:
+					amount = config.getQuick(vert) - baseConfig.getQuick(vert);
 					break;
 			}
 			String str = Integer.toString(amount);
@@ -353,6 +357,10 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		this.selectedVertices = selectedVertices;
 		this.firings = firings;
 		canvas.display();
+	}
+
+	public void setBaseConfig(SandpileConfiguration baseConfig){
+		this.baseConfig = new SandpileConfiguration(baseConfig);
 	}
 
 	public void setSelectionBox(float maxX, float maxY, float minX, float minY) {
@@ -444,7 +452,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		boolean inDebt=false;
 		switch (mode) {
 			case NUM_OF_GRAINS:
-				int sand = Math.max(config.getQuick(vert), -1);
+				int sand = config.getQuick(vert);
 				if(sand<0){
 					color = Math.min(-sand-1, inDebtColors.rows()-1);
 					inDebt = true;
@@ -452,7 +460,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 					color = Math.min(sand, colors.rows()-1);
 				break;
 			case STABILITY:
-				if (config.getQuick(vert) < graph.degree(vert)) {
+				if (config.getQuick(vert) < graph.degreeQuick(vert)) {
 					color = 0;
 				} else {
 					color = colors.rows()-1;
@@ -460,6 +468,14 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				break;
 			case FIRINGS:
 				color = Math.min(firings.getQuick(vert),colors.rows()-1);
+				break;
+			case DIFFERENCE:
+				sand = config.getQuick(vert)-baseConfig.getQuick(vert);
+				if(sand<0){
+					color = Math.min(-sand-1, inDebtColors.rows()-1);
+					inDebt = true;
+				}else
+					color = Math.min(sand, colors.rows()-1);
 				break;
 		}
 		if(inDebt)

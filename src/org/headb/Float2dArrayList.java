@@ -57,6 +57,13 @@ public class Float2dArrayList extends TFloatArrayList{
 		super(other.toNativeArray());
 		cols = other.cols;
 	}
+	public Float2dArrayList(Float2dArrayList other, int cols){
+		super(other.toNativeArray());
+		if(other.size()%cols != 0){
+			throw(new IndexOutOfBoundsException("Incompatible number of columns,"+cols+", to convert Float2dArrayList of size "+other.size()+"."));
+		}
+		this.cols = cols;
+	}
 	public Float2dArrayList(float[] array, int cols){
 		super(array);
 		this.cols = cols;

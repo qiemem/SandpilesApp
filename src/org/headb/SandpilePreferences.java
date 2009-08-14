@@ -54,7 +54,8 @@ public class SandpilePreferences implements Serializable{
 				System.err.println("Preferences loaded successfully.");
 				// For some reason, deserialization seems to lose the cols field
 				// of Float2dArrayList. Hence, we set it properly here.
-				prefs.colors = new Float2dArrayList(prefs.colors.toNativeArray(), 3);
+				prefs.colors = new Float2dArrayList(prefs.colors, 3);
+				prefs.inDebtColors = new Float2dArrayList(prefs.inDebtColors, 3);
 			}catch(IOException e){
 				System.err.println("IOException while trying to read preferences file.");
 				System.err.println(e.getMessage());
@@ -84,7 +85,12 @@ public class SandpilePreferences implements Serializable{
 			1f, 1f, 0f,
 			1f, 1f, 1f};
 		colors = new Float2dArrayList(colorArray, 3);
-		float[] inDebtColorArray = {0.2f, 0f, 0f};
+		float[] inDebtColorArray = {0f, 0f, 0.2f,
+			0f, .2f, .2f,
+			0f, 0.2f, 0f,
+			0.2f, 0f, 0f,
+			0.2f, 0.1f, 0f,
+			0.2f, 0.2f, 0f};
 		inDebtColors = new Float2dArrayList(inDebtColorArray, 3);
 		backgroundColor = new float[3];
 	}

@@ -60,91 +60,66 @@ public class DelaunayTriangulation {
 		if(this.points.isEmpty())
 			return;
 
-		float trX = this.points.get(0,0);
-		float trY = this.points.get(0,1);
 
-		for (int i=1; i<this.points.rows(); i++) {
-			float x = this.points.get(i, 0);
-			float y = this.points.get(i, 1);
-			if (y > trY) {
-				trX = this.points.get(i,0);
-				trY = this.points.get(i,1);
-			} else if (y == trY && x > trX) {
-				trX = x;
-				trY = y;
-			}
+		// Get the bounding box
+		float maxX = this.points.get(0, 0), minX = this.points.get(0, 0);
+		float maxY = this.points.get(0, 1), minY = this.points.get(0, 1);
+		for(int i=1; i<this.points.rows(); i++){
+			float x = points.get(i, 0);
+			float y = points.get(i, 1);
+			if(x>maxX)
+				maxX = x;
+			else if(x<minX)
+				minX = x;
+			if(y>maxY)
+				maxY = y;
+			else if(y<minY)
+				minY = y;
 		}
-		float startX = trX+1f;
-		float startY = trY+1f;
-		//Calculate the bounding triangle with top right at startPt.
-		float largestAngle = PI;
-		float smallestAngle = 2 * PI;
-		float largestDist = 0f;
-		for (int i=0; i<this.points.rows(); i++) {
-			//if(p==startPt)
-			//	continue;
-			float px = this.points.get(i,0);
-			float py = this.points.get(i,1);
-			largestAngle = Math.max(atan2(px, py, startX, startY), largestAngle);
-			smallestAngle = Math.min(atan2(px, py, startX, startY), smallestAngle);
-			largestDist = Math.max(largestDist, dist(startX, startY, px, py));
-		}
-		//System.err.println(largestAngle);
-		// For simiplicity's sake, we make the bounding triangle iso.
-		// We make the sides long enough so that the base of the triangle is
-		// further from startPt than any element of points. Thus, we guarantee
-		// that the triangle is in fact bounding.
-		// We bump the tl point up just a touch so that all points as high as
-		// startPt are contained in the circle.
-		float brAngle = largestAngle + (2 * PI - largestAngle) / 2f;
-		float tlAngle = smallestAngle == PI ? PI - (2 * PI - brAngle) / 2f : smallestAngle - (smallestAngle - PI) / 2f;
-		float length = 2f * (float) (largestDist / Math.cos((brAngle - tlAngle) / 2f));
-		float tlX = startX + length * (float) Math.cos(tlAngle);
-		float tlY = startY + length * (float) Math.sin(tlAngle);
-		float brX = startX + length * (float) (Math.cos(brAngle));
-		float brY = startY + length * (float) (Math.sin(brAngle));
 
-		int startPt = this.points.rows();
-		int tl = startPt+1;
-		int br = tl+1;
-		this.points.addRow(startX, startY);
-		this.points.addRow(tlX, tlY);
+		//get a bounding triangle:
+		float trX = (maxX - minX)/2f;
+		float trY = maxY+(maxY-minY);
+		float blX = minX - 8f*(maxX - minX);
+		float blY = minY - (maxY-minY);
+		float brX = maxX + 8f*(maxX - minX);
+		float brY = minY - (maxY-minY);
+
+		int tr = this.points.rows();
+		int l = tr+1;
+		int b = l+1;
+		this.points.addRow(trX, trY);
+		this.points.addRow(blX, blY);
 		this.points.addRow(brX, brY);
 
 		for(int i=0; i<this.points.rows(); i++){
 			pointsToTris.add(new TIntArrayList());
 		}
 
-		parentTri = addTriangle(startPt, tl, br);
+		parentTri = addTriangle(tr, l, b);
 		for (int p = 0; p < this.points.rows()-3; p++) {
-			//try {
+			try {
 			addPoint(p);
-//			} catch (RuntimeException e) {
-//				System.err.println("WARNING: Couldn't add a point. Throwing it out.");
-//				System.err.println("Point: " + points.get(p,0) + " " + points.get(p,1));
-//				System.err.println("Largest angle: " + largestAngle);
-//				System.err.println("Smallest angle: " + smallestAngle);
-//				System.err.println("startPt: " + startX + " " + startY);
-//				System.err.println("brAngle: " + brAngle);
-//				System.err.println("tlAngle: " + tlAngle);
-//				System.err.println("length: " + length);
-//			}
+			} catch (RuntimeException e) {
+				System.err.println("WARNING: Couldn't add a point. Throwing it out.");
+				System.err.println("Point: " + points.get(p,0) + " " + points.get(p,1));
+			}
 			if (Thread.interrupted()) {
 				throw new InterruptedException();
 			}
 		}
-		removePoint(br);
-		removePoint(tl);
-		removePoint(startPt);
+		removePoint(b);
+		removePoint(l);
+		removePoint(tr);
 		triangles = new Int2dArrayList(0, 3);
 		for (int t = 0; t < trisToPoints.rows(); t++) {
 			boolean ok = triTree.get(t)==null;
 			for(int c = 0; c<3; c++){
-				if (trisToPoints.get(t, c)==tl)
+				if (trisToPoints.get(t, c)==l)
 					ok = false;
-				if (trisToPoints.get(t, c)==br)
+				else if (trisToPoints.get(t, c)==b)
 					ok = false;
-				if(trisToPoints.get(t, c)==startPt)
+				else if(trisToPoints.get(t, c)==tr)
 					ok = false;
 			}
 			if(ok){
@@ -224,21 +199,27 @@ public class DelaunayTriangulation {
 	}
 
 	protected int getContainingTriangle(int p) {
-		int curTri = parentTri;
-
-		while (triTree.get(curTri)!=null) {
-			int lastTri = curTri;
-			for (int tri : triTree.get(curTri)) {
-				if (triangleContains(tri, p)) {
-					curTri = tri;
-					break;
-				}
-			}
-			if (lastTri == curTri) {
-				throw (new RuntimeException("Couldn't find triangle for point: " + x(p) + " " + y(p)));
+//		int curTri = parentTri;
+//
+//		while (triTree.get(curTri)!=null) {
+//			int lastTri = curTri;
+//			for (int tri : triTree.get(curTri)) {
+//				if (triangleContains(tri, p)) {
+//					curTri = tri;
+//					break;
+//				}
+//			}
+//			if (lastTri == curTri) {
+//				throw (new RuntimeException("Couldn't find triangle for point: " + x(p) + " " + y(p)));
+//			}
+//		}
+//		return curTri;
+		for(int tri = 0; tri<trisToPoints.rows(); tri++){
+			if(triangleContains(tri, p) && triTree.get(tri)==null){
+				return tri;
 			}
 		}
-		return curTri;
+		throw(new RuntimeException());
 	}
 
 	protected float get2dCross(float x1, float y1, float x2, float y2) {
@@ -325,10 +306,10 @@ public class DelaunayTriangulation {
 		triTree.set(tri2, children2);
 		removeTriangle(tri2);
 		
-		legalizeEdge(p, p1, p3);
-		legalizeEdge(p, p2, p3);
-		legalizeEdge(p, p1, p4);
-		legalizeEdge(p, p2, p4);
+		legalizeEdge(p, p1, p3, 0);
+		legalizeEdge(p, p2, p3, 0);
+		legalizeEdge(p, p1, p4, 0);
+		legalizeEdge(p, p2, p4, 0);
 
 	}
 
@@ -341,7 +322,9 @@ public class DelaunayTriangulation {
 		return c;
 	}
 
-	protected void legalizeEdge(int p, int p1, int p2) {
+	protected void legalizeEdge(int p, int p1, int p2, int n) {
+		//if(n>40)
+			//System.err.println(n);
 		TIntArrayList incTris = getIncidentTriangles(p1, p2);
 		//System.err.println(incTris.size());
 		if (incTris.size() <= 1) {
@@ -374,8 +357,8 @@ public class DelaunayTriangulation {
 			triTree.set(incTris.get(1), children);
 			removeTriangle(incTris.get(1));
 			removeTriangle(incTris.get(0));
-			legalizeEdge(p, p1, otherPt);
-			legalizeEdge(p, otherPt, p2);
+			legalizeEdge(p, p1, otherPt, n+1);
+			legalizeEdge(p, otherPt, p2, n+1);
 		}
 	}
 
@@ -405,9 +388,9 @@ public class DelaunayTriangulation {
 				addTriangle(p, p3(tri), p1(tri))};
 			triTree.set(tri, children);
 			removeTriangle(tri);
-			legalizeEdge(p, p1(tri), p2(tri));
-			legalizeEdge(p, p2(tri), p3(tri));
-			legalizeEdge(p, p3(tri), p1(tri));
+			legalizeEdge(p, p1(tri), p2(tri), 0);
+			legalizeEdge(p, p2(tri), p3(tri), 0);
+			legalizeEdge(p, p3(tri), p1(tri), 0);
 		}
 	}
 

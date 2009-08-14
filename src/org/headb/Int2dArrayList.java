@@ -82,13 +82,20 @@ public class Int2dArrayList extends TIntArrayList{
 		super(array);
 		this.cols = cols;
 	}
+	private boolean checkIndices(int r, int c){
+		return c<cols() && r<rows();
+	}
 	public int get(int r, int c){
+		if(!checkIndices(r,c))
+			throw new IndexOutOfBoundsException();
 		return super.get(r*cols + c);
 	}
 	public int getQuick(int r, int c){
 		return _data[r*cols+c];
 	}
 	public void set(int r, int c, int val){
+		if(!checkIndices(r,c))
+			throw new IndexOutOfBoundsException();
 		super.set(r*cols+c, val);
 	}
 	public void setQuick(int r, int c, int val){

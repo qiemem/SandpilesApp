@@ -60,7 +60,7 @@ public class Sandpiles extends javax.swing.JFrame {
 		initComponents();
 		this.setTitle("Sandpiles - Untitled");
 		prefs = SandpilePreferences.getPreferences();
-		sandpilesIP.setColors(prefs.getColors(), prefs.getInDebtColors(), prefs.getBackgroundColor());
+		enactPreferences();
 		updateBackgroundColorLabel();
 	}
 
