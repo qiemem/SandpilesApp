@@ -29,6 +29,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb;
 import java.util.*;
 import gnu.trove.TIntArrayList;
+import gnu.trove.TIntStack;
 
 /**
  * Represents a weighted, directed graph with methods for updating a sandpile
@@ -379,10 +380,11 @@ public class SandpileGraph {
 	 * @param vertIndex The index of a vertex.
 	 */
 	public boolean isSink(int vertIndex) {
-		if (degree(vertIndex) == 0) {
-			return true;
-		}
-		return false;
+		return degree(vertIndex) == 0;
+	}
+
+	public boolean isSinkQuick(int vertIndex){
+		return degreeQuick(vertIndex) == 0;
 	}
 
 	/**
@@ -603,6 +605,16 @@ public class SandpileGraph {
 		return newConfig;
 	}
 
+	public SandpileConfiguration reverseFireVertexInPlace(SandpileConfiguration config, int vert) {
+		config.increaseQuick(vert, degreeQuick(vert));
+		EdgeList edges = getOutgoingEdges(vert);
+		int s= edges.size();
+		for(int i = 0; i<s; i++){
+			config.increaseQuick(edges.destQuick(i), -edges.wtQuick(i));
+		}
+		return config;
+	}
+
 	public SandpileConfiguration reverseFireConfig(SandpileConfiguration config) {
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
 		for (int sourceVert = 0; sourceVert < config.size(); sourceVert++) {
@@ -719,13 +731,36 @@ public class SandpileGraph {
 	 *
 	 * @return Returns a list representing the configuration.
 	 */
-	public SandpileConfiguration getMinimalBurningConfig() {
-		SandpileConfiguration config = getUniformConfig(0);
-		config = reverseFireConfig(config);
-		int w = getInDebtVertex(config);
-		while (w > -1) {
-			config = reverseFireVertex(config, w);
-			w = getInDebtVertex(config);
+	public SandpileConfiguration getMinimalBurningConfig() throws InterruptedException{
+		SandpileConfiguration config = reverseFireConfig(getUniformConfig(0));
+		TIntStack inDebts = new TIntStack();
+		boolean[] added = new boolean[numVertices()];
+		for(int v=0; v<this.numVertices(); v++){
+			if(config.getQuick(v)<0 && !isSinkQuick(v)){
+				added[v] = true;
+				inDebts.push(v);
+			}
+		}
+		while (inDebts.size()>0) {
+			//System.err.println(w);
+			if(Thread.interrupted())
+				throw new InterruptedException();
+			int v = inDebts.pop();
+			added[v]=false;
+			reverseFireVertexInPlace(config, v);
+			if(config.getQuick(v)<0 && !isSinkQuick(v)){
+				added[v]=true;
+				inDebts.push(v);
+			}
+			EdgeList edges = getOutgoingEdges(v);
+			int s = edges.size();
+			for(int i=0; i<s; i++){
+				int w = edges.destQuick(i);
+				if (!added[w] && config.getQuick(w) < 0 && !isSinkQuick(w)) {
+					added[w] = true;
+					inDebts.push(w);
+				}
+			}
 		}
 		return config;
 	}
@@ -781,8 +816,9 @@ public class SandpileGraph {
 	 * @return Returns the index of a vertex.
 	 */
 	private int getInDebtVertex(SandpileConfiguration config) {
-		for (int i = 0; i < config.size(); i++) {
-			if (config.get(i) < 0 && !this.isSink(i)) {
+		int s = config.size();
+		for (int i = 0; i < s; i++) {
+			if (config.getQuick(i) < 0 && !this.isSinkQuick(i)) {
 				return i;
 			}
 		}

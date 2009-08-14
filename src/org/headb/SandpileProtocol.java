@@ -176,11 +176,23 @@ public class SandpileProtocol {
 				System.err.println("Stabilization interrupted");
 			}
 		} else if (command[0].equals("set_to_burning")) {
-			sc.setToBurningConfig(1);
+			try{
+				sc.setToBurningConfig(1);
+			}catch(InterruptedException e){
+				System.err.println("Burning calculation interrupted");
+			}
 		} else if (command[0].equals("add_burning")) {
-			sc.addBurningConfig(1);
+			try{
+				sc.addBurningConfig(1);
+			}catch(InterruptedException e){
+				System.err.println("Burning calculation interrupted");
+			}
 		}else if (command[0].equals("get_burning")){
-			output = configToString(sc.getGraph().getMinimalBurningConfig());
+			try{
+				output = configToString(sc.getGraph().getMinimalBurningConfig());
+			}catch(InterruptedException e){
+				System.err.println("Burning calculation interrupted");
+			}
 		} else if (command[0].equals("set_to_dual")) {
 			sc.setToDualConfig(1);
 		} else if (command[0].equals("add_dual")) {

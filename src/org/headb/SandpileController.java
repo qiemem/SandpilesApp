@@ -1180,19 +1180,19 @@ public class SandpileController implements ActionListener, Serializable{
 		repaint();
 	}
 
-	public SandpileConfiguration getBurningConfig(){
+	public SandpileConfiguration getBurningConfig() throws InterruptedException{
 		if(!configs.containsKey("Burning")){
 			configs.put("Burning", sg.getMinimalBurningConfig());
 		}
 		return configs.get("Burning");
 	}
 
-	public void setToBurningConfig(int times) {
+	public void setToBurningConfig(int times) throws InterruptedException{
 		setConfig(getBurningConfig().times(times));
 		repaint();
 	}
 
-	public void addBurningConfig(int times) {
+	public void addBurningConfig(int times) throws InterruptedException{
 		setConfig(currentConfig.plus(getBurningConfig().times(times)));
 		repaint();
 	}
@@ -1435,7 +1435,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void unselectVertex(int vert) {
 		int i = selectedVertices.binarySearch(vert);
-		selectedVertices.remove(i);
+		if(i>-1)
+			selectedVertices.remove(i);
 	}
 
 	public void selectVertices(TIntArrayList vertices) {

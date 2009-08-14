@@ -1899,7 +1899,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				};
 				calculationThread.start();
 			} else if (selection.equals(BURNING_CONFIG)) {
-				sandpileController.addBurningConfig(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating burning");
+						try{
+							sandpileController.addBurningConfig(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
@@ -1962,7 +1973,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				};
 				calculationThread.start();
 			} else if (selection.equals(BURNING_CONFIG)) {
-				sandpileController.setToBurningConfig(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating burning");
+						try{
+							sandpileController.setToBurningConfig(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
@@ -2493,7 +2515,18 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				};
 				calculationThread.start();
 			} else if (selection.equals(BURNING_CONFIG)) {
-				sandpileController.addBurningConfig(times);
+				calculationThread = new Thread(){
+					@Override public void run(){
+						calculationThreadInit("Calculating burning");
+						try{
+							sandpileController.addBurningConfig(times);
+						}catch(InterruptedException e){
+
+						}
+						calculationThreadEnd();
+					}
+				};
+				calculationThread.start();
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
