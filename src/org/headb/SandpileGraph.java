@@ -35,7 +35,7 @@ import gnu.trove.TIntStack;
  * Represents a weighted, directed graph with methods for updating a sandpile
  * configuration on that graph. Contains methods for calculating several
  * important configuration. The most efficient method of updating a config
- * repeatedly is to use an iterator returned by inPlaceUpdater(config). Calling
+ * repeatedly is to use an iterator returned by inPlaceParallelUpdater(config). Calling
  * the iterator's next() method will transform config into the next
  * configuration. This class is quite optimized for updating, and not as much
  * for adding and removing vertices, and doing non-iterating reads. However,
@@ -531,10 +531,10 @@ public class SandpileGraph {
 //			}
 //		};
 //	}
-	public Iterator<SandpileConfiguration> inPlaceUpdater(final SandpileConfiguration config) {
-		return inPlaceUpdaterStartingWith(config, getUnstables(config));
+	public Iterator<SandpileConfiguration> inPlaceParallelUpdater(final SandpileConfiguration config) {
+		return inPlaceParallelUpdaterStartingWith(config, getUnstables(config));
 	}
-	public Iterator<SandpileConfiguration> inPlaceUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
+	public Iterator<SandpileConfiguration> inPlaceParallelUpdaterStartingWith(final SandpileConfiguration config, final TIntArrayList startingVertices) {
 
 		final IntGenerationalQueue unstables = new IntGenerationalQueue(numVertices());
 		final boolean[] added = new boolean[numVertices()];
@@ -636,7 +636,7 @@ public class SandpileGraph {
 
 	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, TIntArrayList starters) throws InterruptedException{
 		SandpileConfiguration stableConfig = new SandpileConfiguration(config);
-		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(stableConfig, starters);
+		Iterator<SandpileConfiguration> updater = this.inPlaceParallelUpdaterStartingWith(stableConfig, starters);
 		for(;updater.hasNext();){
 			updater.next();
 			if(Thread.interrupted())
@@ -655,7 +655,7 @@ public class SandpileGraph {
 
 	public SandpileConfiguration stabilizeConfigInPlaceStartingWith(SandpileConfiguration config, TIntArrayList starters) throws InterruptedException {
 		SandpileConfiguration stableConfig = config;
-		Iterator<SandpileConfiguration> updater = this.inPlaceUpdaterStartingWith(config, starters);
+		Iterator<SandpileConfiguration> updater = this.inPlaceParallelUpdaterStartingWith(config, starters);
 		for(;updater.hasNext();){
 			updater.next();
 			if(Thread.interrupted()){

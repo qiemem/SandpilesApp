@@ -122,15 +122,11 @@ public class EdgeList implements Iterable<Edge>{
 	}
 
 	public void add(int s, int d, int w){
-		edgeData.add(s);
-		edgeData.add(d);
-		edgeData.add(w);
+		edgeData.addRow(s,d,w);
 	}
 
 	public void add(Edge e){
-		edgeData.add(e.source());
-		edgeData.add(e.dest());
-		edgeData.add(e.wt());
+		edgeData.addRow(e.source(), e.dest(), e.wt());
 	}
 
 	public int find(Edge e){

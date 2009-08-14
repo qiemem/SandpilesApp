@@ -358,7 +358,7 @@ public class SandpileController implements ActionListener, Serializable{
 	/**
 	 * Updated firing counts (by checking for unstables) and fires all unstable
 	 * vertices. This method uses the iterator returned by
-	 * SandpileGraph.inPlaceUpdater() to update the current config in place. It
+	 * SandpileGraph.inPlaceParallelUpdater() to update the current config in place. It
 	 * will only remake the iterator if it is null. Thus, it is the
 	 * responsibility of the methods that change the graph or config to set the
 	 * iterator to null; the onEdit() method does this. This method will only
@@ -369,7 +369,7 @@ public class SandpileController implements ActionListener, Serializable{
 		//if(drawer.getColorMode()==SandpileDrawer.ColorMode.FIRINGS)
 		updateFirings();
 		if (updater == null) {
-			updater = sg.inPlaceUpdater(currentConfig);
+			updater = sg.inPlaceParallelUpdater(currentConfig);
 		}
 		if (updater.hasNext()) {
 			updater.next();
