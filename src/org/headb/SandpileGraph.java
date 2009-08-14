@@ -590,6 +590,53 @@ public class SandpileGraph {
 		};
 	}
 
+	public SandpileConfiguration inPlaceFastStabilizer(SandpileConfiguration config) throws InterruptedException{
+		return inPlaceFastStabilizerStartingWith(config, getUnstables(config));
+	}
+
+	public SandpileConfiguration inPlaceFastStabilizerStartingWith(SandpileConfiguration config, TIntArrayList startingVertices)
+			throws InterruptedException {
+		final TIntStack unstables = new TIntStack();
+		final boolean[] added = new boolean[numVertices()];
+		for(int i=0; i<startingVertices.size(); i++){
+			int v= startingVertices.getQuick(i);
+			if(config.get(v)>=degree(v)){
+				unstables.push(v);
+				added[v] = true;
+			}
+		}
+
+		while(unstables.size()>0){
+			if(Thread.interrupted()){
+				throw new InterruptedException();
+			}
+			int v = unstables.pop();
+			added[v] = false;
+			stabilizeVertexInPlaceQuick(config, v);
+			EdgeList edges = getOutgoingEdges(v);
+			int s = edges.size();
+			for(int i=0; i<s; i++){
+				int w = edges.destQuick(i);
+				if(!added[w] && !isSinkQuick(w) && config.getQuick(w)>=degreeQuick(w)){
+					added[w] = true;
+					unstables.push(w);
+				}
+			}
+		}
+		return config;
+	}
+
+	public void stabilizeVertexInPlaceQuick(SandpileConfiguration config, int vert) {
+		int d = degreeQuick(vert);
+		int fireTimes = config.getQuick(vert)/d;
+		EdgeList edges = getOutgoingEdges(vert);
+		int s = edges.size();
+		for(int i = 0; i<s; i++){
+			config.increaseQuick(edges.destQuick(i), edges.wtQuick(i)*fireTimes);
+		}
+		config.increaseQuick(vert, -d*fireTimes);
+	}
+
 	/**
 	 * Takes in a configuration and outputs the resulting configuration
 	 */
@@ -631,18 +678,13 @@ public class SandpileGraph {
 	 * WARNING: If the graph does not have a global sink, this function may not end.
 	 */
 	public SandpileConfiguration stabilizeConfig(SandpileConfiguration config) throws InterruptedException{
-		return stabilizeConfigStartingWith(config, getUnstables(config));
+		SandpileConfiguration stableConfig = new SandpileConfiguration(config);
+		return this.inPlaceFastStabilizer(config);
 	}
 
 	public SandpileConfiguration stabilizeConfigStartingWith(SandpileConfiguration config, TIntArrayList starters) throws InterruptedException{
 		SandpileConfiguration stableConfig = new SandpileConfiguration(config);
-		Iterator<SandpileConfiguration> updater = this.inPlaceParallelUpdaterStartingWith(stableConfig, starters);
-		for(;updater.hasNext();){
-			updater.next();
-			if(Thread.interrupted())
-				throw new InterruptedException();
-		}
-		return stableConfig;
+		return this.inPlaceFastStabilizerStartingWith(config, starters);
 	}
 
 	/**

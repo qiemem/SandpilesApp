@@ -140,6 +140,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 		canvas.addMouseListener(new MouseAdapter(){
 			@Override public void mousePressed(MouseEvent e){
+				if(e.getButton()!=e.BUTTON1)
+					return;
 				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
 				mouseX = coords[0];
 				mouseY = coords[1];
@@ -154,6 +156,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				}
 			}
 			@Override public void mouseClicked(MouseEvent e){
+				if(e.getButton()!=e.BUTTON1)
+					return;
 				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
 				mouseX = coords[0];
 				mouseY = coords[1];
@@ -173,6 +177,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				sandpileController.repaint();
 			}
 			@Override public void mouseReleased(MouseEvent e){
+				if(e.getButton()!=e.BUTTON1)
+					return;
 				if(getMouseMode(e) == MouseMode.SELECT)
 					drawer.clearSelectionBox();
 				selecting = false;
@@ -182,6 +188,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		});
 		canvas.addMouseMotionListener(new MouseMotionAdapter(){
 			@Override public void mouseDragged(MouseEvent e){
+				if(e.getButton()!=e.BUTTON1)
+					return;
 				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
 				if(movingVertices){
@@ -2056,7 +2064,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
 		if(runningThread)
 			return;
-		if(getMouseMode(evt)!=MouseMode.EDIT) return;
+		if(getMouseMode(evt)!=MouseMode.EDIT || evt.getButton()!=evt.BUTTON1) return;
 		setWaitCursor();
 		String currentState = optionsTabbedPane.getTitleAt(optionsTabbedPane.getSelectedIndex());
 		float[] coords = drawer.transformCanvasCoords(evt.getX(), evt.getY());
