@@ -101,8 +101,7 @@ public class DelaunayTriangulation {
 			try {
 			addPoint(p);
 			} catch (RuntimeException e) {
-				System.err.println("WARNING: Couldn't add a point. Throwing it out.");
-				System.err.println("Point: " + points.get(p,0) + " " + points.get(p,1));
+				e.printStackTrace();
 			}
 			if (Thread.interrupted()) {
 				throw new InterruptedException();
@@ -199,27 +198,33 @@ public class DelaunayTriangulation {
 	}
 
 	protected int getContainingTriangle(int p) {
-//		int curTri = parentTri;
-//
-//		while (triTree.get(curTri)!=null) {
-//			int lastTri = curTri;
-//			for (int tri : triTree.get(curTri)) {
-//				if (triangleContains(tri, p)) {
-//					curTri = tri;
-//					break;
-//				}
-//			}
-//			if (lastTri == curTri) {
-//				throw (new RuntimeException("Couldn't find triangle for point: " + x(p) + " " + y(p)));
-//			}
-//		}
-//		return curTri;
-		for(int tri = 0; tri<trisToPoints.rows(); tri++){
-			if(triangleContains(tri, p) && triTree.get(tri)==null){
-				return tri;
+		int curTri = parentTri;
+
+		while (triTree.get(curTri)!=null) {
+			int lastTri = curTri;
+			for (int tri : triTree.get(curTri)) {
+				if (triangleContains(tri, p)) {
+					curTri = tri;
+					break;
+				}
+			}
+			if (lastTri == curTri) {
+				//throw (new RuntimeException("Couldn't find triangle for point: " + x(p) + " " + y(p)));
+				for(int i=0; i<trisToPoints.rows(); i++){
+					if(triTree.get(i)==null && triangleContains(i, p)){
+						return i;
+					}
+				}
+				throw (new RuntimeException("Couldn't find triangle for point: " + x(p) + " " + y(p)));
 			}
 		}
-		throw(new RuntimeException());
+		return curTri;
+//		for(int tri = 0; tri<trisToPoints.rows(); tri++){
+//			if(triangleContains(tri, p) && triTree.get(tri)==null){
+//				return tri;
+//			}
+//		}
+//		throw(new RuntimeException());
 	}
 
 	protected float get2dCross(float x1, float y1, float x2, float y2) {
