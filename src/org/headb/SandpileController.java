@@ -392,13 +392,14 @@ public class SandpileController implements ActionListener, Serializable{
 	 * Updates the firing counts by looking up the unstable vertices.
 	 */
 	public void updateFirings() {
-		if (firings.size() != configSize()) {
+		int s = configSize();
+		if (firings.size() != s) {
 			resetFirings();
 		}
-		for (int vert = 0; vert < configSize(); vert++) {
-			int d = sg.degree(vert);
-			if (d!=0&&currentConfig.get(vert) >= d) {
-				firings.set(vert, firings.get(vert) + 1);
+		for (int vert = 0; vert < s; vert++) {
+			int d = sg.degreeQuick(vert);
+			if (currentConfig.getQuick(vert) >= d && d!=0) {
+				firings.setQuick(vert, firings.getQuick(vert) + 1);
 			}
 		}
 	}
