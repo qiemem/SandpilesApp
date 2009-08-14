@@ -60,7 +60,7 @@ public class ColorListCellRenderer extends JLabel implements ListCellRenderer{
 		setText(start+step*index+": ("+color.getRed()+", "+color.getGreen()+", "+color.getBlue()+")");
 		Color background = Color.BLACK;
 		Color foreground;
-		if(index<colors.size()){
+		if(index<colors.rows()){
 			background = new Color(colors.get(index, 0), colors.get(index, 1), colors.get(index, 2));
 		}else{
 			background = Color.WHITE;

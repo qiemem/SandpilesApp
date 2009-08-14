@@ -29,101 +29,104 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.headb;
 import gnu.trove.TFloatArrayList;
+import java.io.Serializable;
 
 /**
  * Represents a list of arrays of the same size. This is far more efficient than
  * ArrayList<ArrayList<Float>> for instance or even float[][].
  * @author Bryan Head
  */
-public class Float2dArrayList extends TFloatArrayList{
+public class Float2dArrayList implements Serializable{
 	static private final long serialVersionUID = -21312181081L;
 	private int cols;
+	private TFloatArrayList data;
 
 	public Float2dArrayList(){
-		super();
+		data = new TFloatArrayList();
 		cols = 1;
 	}
 
 	public Float2dArrayList(int cols){
-		super();
+		data = new TFloatArrayList();
 		this.cols = cols;
 	}
 
 	public Float2dArrayList(int rows, int cols){
-		super(new float[rows*cols]);
+		data = new TFloatArrayList(new float[rows*cols]);
 		this.cols = cols;
 	}
 	public Float2dArrayList(Float2dArrayList other){
-		super(other.toNativeArray());
+		data = new TFloatArrayList(other.toNativeArray());
 		cols = other.cols;
 	}
 	public Float2dArrayList(Float2dArrayList other, int cols){
-		super(other.toNativeArray());
-		if(other.size()%cols != 0){
-			throw(new IndexOutOfBoundsException("Incompatible number of columns,"+cols+", to convert Float2dArrayList of size "+other.size()+"."));
+		data = new TFloatArrayList(other.toNativeArray());
+		if(other.data.size()%cols != 0){
+			throw(new IndexOutOfBoundsException("Incompatible number of columns,"+cols+", to convert Float2dArrayList of size "+other.data.size()+"."));
 		}
 		this.cols = cols;
 	}
 	public Float2dArrayList(float[] array, int cols){
-		super(array);
+		data = new TFloatArrayList(array);
 		this.cols = cols;
 	}
+	public float[] toNativeArray(){
+		return data.toNativeArray();
+	}
+
 	public float get(int r, int c){
-		return super.get(r*cols + c);
+		return data.get(r*cols + c);
 	}
 	public float getQuick(int r, int c){
-		return super.getQuick(r*cols+c);
+		return data.getQuick(r*cols+c);
 	}
 	public void set(int r, int c, float val){
-		super.set(r*cols+c, val);
+		data.set(r*cols+c, val);
 	}
 	public void setQuick(int r, int c, float val){
-		super.setQuick(r*cols+c, val);
+		data.setQuick(r*cols+c, val);
 	}
 	public void insertRow(int r, float... row){
-		super.insert(r*cols, row);
+		data.insert(r*cols, row);
 	}
 	public void setRow(int r, float... row){
-		super.set(r*cols, row);
+		data.set(r*cols, row);
 	}
 	public int addRow(){
 		for(int i=0; i<cols; i++)
-			super.add(0f);
+			data.add(0f);
 		return rows()-1;
 	}
 	public int addRow(float val){
 		for(int i=0; i<cols; i++)
-			super.add(val);
+			data.add(val);
 		return rows()-1;
 	}
 	public int addRow(float... row){
 		if(row.length==cols){
-			super.add(row);
+			data.add(row);
 			return rows()-1;
 		}else
 			throw(new IndexOutOfBoundsException("Tried to add a row of the wrong length. Row length was "+row.length+". It should have been "+cols+"."));
 	}
 	public int rows(){
-		return size()/cols;
+		return data.size()/cols;
 	}
 	public int cols(){
 		return cols;
 	}
 
 	public void removeRow(int r){
-		super.remove(r*cols, cols);
+		data.remove(r*cols, cols);
 	}
-
+	public void clear() {
+		data.clear();
+	}
+	public boolean isEmpty() {
+		return data.isEmpty();
+	}
 	public boolean equals(Float2dArrayList other){
-		if(this==other)
-			return true;
-		if(this.rows()!=other.rows() || this.cols()!=other.cols())
-			return false;
-		for(int i=0; i<this.size(); i++){
-			if(this.get(i)!=other.get(i))
-				return false;
-		}
-		return true;
+		return this.cols() == other.cols() && this.data.equals(other.data);
 	}
 
 }

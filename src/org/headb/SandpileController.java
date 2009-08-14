@@ -1282,7 +1282,7 @@ public class SandpileController implements ActionListener, Serializable{
 	public int addVertex(float x, float y) {
 		sg.addVertex();
 		float[] newPos = {x, y};
-		vertexData.add(newPos);
+		vertexData.addRow(newPos);
 		currentConfig.add(0);
 		firings.add(0);
 		return configSize() - 1;
