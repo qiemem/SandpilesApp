@@ -49,10 +49,21 @@ public class SingleSourceEdgeList extends EdgeList{
 	@Override public int source(int i){
 		return source;
 	}
+
+	public int source() {
+		return source;
+	}
+
 	@Override public int sourceQuick(int i){
 		return source;
 	}
 	@Override public void setSource(int i, int s){
+		source = s;
+	}
+	@Override public void setSourceQuick(int i, int s){
+		source = s;
+	}
+	public void setSource(int s){
 		source = s;
 	}
 	@Override public int dest(int i){
@@ -64,6 +75,9 @@ public class SingleSourceEdgeList extends EdgeList{
 	@Override public void setDest(int i, int d){
 		edgeData.set(i, 0, d);
 	}
+	@Override public void setDestQuick(int i, int d){
+		edgeData.setQuick(i, 0, d);
+	}
 	@Override public int wt(int i){
 		return edgeData.get(i, 1);
 	}
@@ -72,6 +86,9 @@ public class SingleSourceEdgeList extends EdgeList{
 	}
 	@Override public void setWt(int i, int w){
 		edgeData.set(i, 1, w);
+	}
+	@Override public void setWtQuick(int i, int w){
+		edgeData.setQuick(i, 1, w);
 	}
 	@Override public void add(int s, int d, int w){
 		if(s==source)

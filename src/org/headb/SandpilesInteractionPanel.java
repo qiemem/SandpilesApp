@@ -1893,7 +1893,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(IDENTITY_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating identity");
+						if(!calculationThreadInit("Calculating identity"))
+							return;
 						try{
 							sandpileController.addIdentity(times);
 						}catch(InterruptedException e){
@@ -1906,7 +1907,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(BURNING_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating burning");
+						if(!calculationThreadInit("Calculating burning"))
+							return;
 						try{
 							sandpileController.addBurningConfig(times);
 						}catch(InterruptedException e){
@@ -1919,7 +1921,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating equivalent recurrent");
+						if(!calculationThreadInit("Calculating equivalent recurrent"))
+							return;
 						try{
 							sandpileController.addEquivalentRecurrent(times);
 						}catch(InterruptedException e){
@@ -1932,7 +1935,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(INVERSE_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating inverse");
+						if(!calculationThreadInit("Calculating inverse"))
+							return;
 						try{
 							sandpileController.addInverseConfig(times);
 						}catch(InterruptedException e){
@@ -1967,7 +1971,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			}  else if (selection.equals(IDENTITY_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating identity");
+						if(!calculationThreadInit("Calculating identity"))
+							return;
 						try{
 							sandpileController.setToIdentity(times);
 						}catch(InterruptedException e){
@@ -1980,7 +1985,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(BURNING_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating burning");
+						if(!calculationThreadInit("Calculating burning"))
+							return;
 						try{
 							sandpileController.setToBurningConfig(times);
 						}catch(InterruptedException e){
@@ -1993,7 +1999,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating equivalent recurrent");
+						if(!calculationThreadInit("Calculating equivalent recurrent"))
+							return;
 						try{
 							sandpileController.setToEquivalentRecurrent(times);
 						}catch(InterruptedException e){
@@ -2006,7 +2013,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(INVERSE_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating inverse");
+						if(!calculationThreadInit("Calculating inverse"))
+							return;
 						try{
 							sandpileController.setToInverseConfig(times);
 						}catch(InterruptedException e){
@@ -2432,7 +2440,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		if(dimensionToggleButton.isSelected()){
 			calculationThread = new Thread(){
 				@Override public void run(){
-					calculationThreadInit("Calculating triangulation");
+					if(!calculationThreadInit("Calculating triangulation"))
+							return;
 					try{
 						drawer3d.triangulate(sandpileController.vertexData);
 
@@ -2509,7 +2518,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			}  else if (selection.equals(IDENTITY_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating identity");
+						if(!calculationThreadInit("Calculating identity"))
+							return;
 						try{
 							sandpileController.addIdentity(times);
 						}catch(InterruptedException e){
@@ -2522,7 +2532,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(BURNING_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating burning");
+						if(!calculationThreadInit("Calculating burning"))
+							return;
 						try{
 							sandpileController.addBurningConfig(times);
 						}catch(InterruptedException e){
@@ -2535,7 +2546,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating equivalent recurrent");
+						if(!calculationThreadInit("Calculating equivalent recurrent"))
+							return;
 						try{
 							sandpileController.addEquivalentRecurrent(times);
 						}catch(InterruptedException e){
@@ -2548,7 +2560,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			} else if (selection.equals(INVERSE_CONFIG)) {
 				calculationThread = new Thread(){
 					@Override public void run(){
-						calculationThreadInit("Calculating inverse");
+						if(!calculationThreadInit("Calculating inverse"))
+							return;
 						try{
 							sandpileController.addInverseConfig(times);
 						}catch(InterruptedException e){
@@ -2694,21 +2707,24 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	public void calculationThreadInit(String description){
+	public boolean calculationThreadInit(String description){
+		if(runningThread)
+			return false;
+		runningThread = true;
 		setWaitCursor();
 		currentActionLabel.setText(description+": ");
 		currentActionLabel.setEnabled(true);
-		runningThread = true;
 		cancelButton.setEnabled(true);
+		return true;
 	}
 
 	public void calculationThreadEnd(){
 		setDefaultCursor();
 		currentActionLabel.setText("None: ");
 		currentActionLabel.setEnabled(false);
-		runningThread = false;
 		cancelButton.setEnabled(false);
 		sandpileController.repaint();
+		runningThread = false;
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -277,8 +277,17 @@ public class SandpileController implements ActionListener, Serializable{
 		}catch(Exception e){
 			out.println(e.getMessage());
 		}
-		if(msg!=null)
-			out.println(protocol.processInput(msg));
+		if(msg!=null){
+			String response = "";
+			try{
+				response = protocol.processInput(msg);
+			}catch(Exception e){
+				e.printStackTrace();
+				response = e.getMessage();
+			}
+			out.println(response);
+
+		}
 	}
 
 	/**
@@ -589,7 +598,7 @@ public class SandpileController implements ActionListener, Serializable{
 	public void makeSink(TIntArrayList verts){
 		for (int i = 0; i < verts.size(); i++) {
 			int v = verts.get(i);
-			EdgeList edges = new EdgeList(getGraph().getOutgoingEdges(v));
+			SingleSourceEdgeList edges = new SingleSourceEdgeList(getGraph().getOutgoingEdges(v));
 			for(Edge e : edges){
 				delEdge(e.source(), e.dest(), e.wt());
 			}

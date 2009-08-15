@@ -121,7 +121,7 @@ public class SandpileGraph {
 	/**
 	 * Retrieves the list of edges which begin with the source vertex.
 	 */
-	public final EdgeList getOutgoingEdges(int vert) {
+	public final SingleSourceEdgeList getOutgoingEdges(int vert) {
 		return adj.get(vert);
 	}
 
@@ -225,6 +225,20 @@ public class SandpileGraph {
 	public void addVertex() {
 		adj.add(new SingleSourceEdgeList(numVertices()));
 		this.degrees.add(0);
+	}
+
+	public void insertVertex(int i){
+		for(SingleSourceEdgeList edges : adj){
+			if(edges.source()>=i){
+				edges.setSource(edges.source()+1);
+			}
+			for(Edge e : edges){
+				if(e.dest()>=i){
+					e.setDest(e.dest()+1);
+				}
+			}
+		}
+		adj.add(i, new SingleSourceEdgeList(i));
 	}
 
 	/**

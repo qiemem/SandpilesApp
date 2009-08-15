@@ -152,7 +152,7 @@ public class EdgeList implements Iterable<Edge>{
 		int i = find(e);
 		if(i==-1)
 			return false;
-		edgeData.removeRow(find(e));
+		edgeData.removeRow(i);
 		return true;
 	}
 
