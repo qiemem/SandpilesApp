@@ -1541,6 +1541,7 @@ public class SandpileController implements ActionListener, Serializable{
 		undoManager.addEdit(theEdit);
 		theEdit.redoAction();
 		onGraphChange();
+		repaint();
 	}
 
 	protected void delVertices(TIntArrayList vertices) {
@@ -1596,6 +1597,7 @@ public class SandpileController implements ActionListener, Serializable{
 		undoManager.addEdit(theEdit);
 		theEdit.redoAction();
 		onGraphChange();
+		repaint();
 	}
 
 	protected void delAllVertices() {
