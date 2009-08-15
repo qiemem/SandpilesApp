@@ -125,6 +125,16 @@ public class SandpileGraph {
 		return adj.get(vert);
 	}
 
+	public void setOutgoingEdges(int vert, SingleSourceEdgeList edges){
+		adj.set(vert, edges);
+		int degree = 0;
+		for(Edge e : edges){
+			degree+=e.wt();
+		}
+		degrees.set(vert, degree);
+	}
+
+
 	public EdgeList getIncomingEdges(int vert) {
 		EdgeList edges = new EdgeList();
 		for(int v=0; v<this.numVertices(); v++){
@@ -248,16 +258,18 @@ public class SandpileGraph {
 	 * @param toDelete The index of the vertex to delete.
 	 */
 	public void removeVertex(int toDelete) {
-		for (EdgeList edgeList : adj) {
+		for (SingleSourceEdgeList edgeList : adj) {
 			for (Iterator<Edge> edgeIter = edgeList.iterator(); edgeIter.hasNext();) {
 				Edge e = edgeIter.next();
 				if (e.dest() == toDelete) {
 					degrees.set(e.source(), degree(e.source()) - e.wt());
 					edgeIter.remove();
 				} else {
-					e.setSource(e.source() - (e.source() > toDelete ? 1 : 0));
 					e.setDest(e.dest() - (e.dest() > toDelete ? 1 : 0));
 				}
+			}
+			if(edgeList.source()>toDelete){
+				edgeList.setSource(edgeList.source()-1);
 			}
 		}
 		adj.remove(toDelete);
@@ -327,6 +339,10 @@ public class SandpileGraph {
 	public Edge addEdge(int sourceVert, int destVert) {
 		//this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert));
 		return this.addEdge(sourceVert, destVert, 1);
+	}
+
+	public Edge addEdge(Edge e){
+		return addEdge(e.source(), e.dest(), e.wt());
 	}
 
 	/**

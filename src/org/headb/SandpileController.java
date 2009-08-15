@@ -97,14 +97,14 @@ public class SandpileController implements ActionListener, Serializable{
 
 	private boolean needsRepaint = false;
 
-	private class SGEdit extends AbstractUndoableEdit {
-		private SandpileGraph oldSG = new SandpileGraph(sg);
+	private abstract class SGEdit extends AbstractUndoableEdit {
+		//private SandpileGraph oldSG = new SandpileGraph(sg);
 		private Float2dArrayList oldLocations = new Float2dArrayList(vertexData);
 		private SandpileConfiguration oldCurConfig = new SandpileConfiguration(currentConfig);
 		//private HashMap<String, SandpileConfiguration> oldConfigs = new HashMap<String, SandpileConfiguration>(configs);
 		//private TIntArrayList oldSelected = new TIntArrayList(selectedVertices.toNativeArray());
 
-		private SandpileGraph newSG;
+		//private SandpileGraph newSG;
 		private Float2dArrayList newLocations;
 		private SandpileConfiguration newCurConfig;
 		//private HashMap<String, SandpileConfiguration> newConfigs;
@@ -122,14 +122,14 @@ public class SandpileController implements ActionListener, Serializable{
 
 		@Override public void undo(){
 			//System.err.println("undo " + getPresentationName());
-			newSG = new SandpileGraph(sg);
+			//newSG = new SandpileGraph(sg);
 			newLocations = new Float2dArrayList(vertexData);
 			newCurConfig = new SandpileConfiguration(currentConfig);
 //			newConfigs = new HashMap<String, SandpileConfiguration>(configs);
 //			newSelected = new TIntArrayList(selectedVertices.toNativeArray());
 
-
-			sg = new SandpileGraph(oldSG);
+			undoAction();
+			//sg = new SandpileGraph(oldSG);
 			vertexData = new Float2dArrayList(oldLocations);
 			currentConfig = new SandpileConfiguration(oldCurConfig);
 //			configs = new HashMap<String, SandpileConfiguration>(oldConfigs);
@@ -141,7 +141,8 @@ public class SandpileController implements ActionListener, Serializable{
 
 		@Override public void redo(){
 			//System.err.println("redo " + getPresentationName());
-			sg = newSG;
+			//sg = newSG;
+			redoAction();
 			vertexData = newLocations;
 //			currentConfig = newCurConfig;
 //			configs = newConfigs;
@@ -149,6 +150,10 @@ public class SandpileController implements ActionListener, Serializable{
 			onConfigEdit();
 			repaint();
 		}
+
+		public abstract void undoAction();
+
+		public abstract void redoAction();
 	}
 
 
@@ -526,7 +531,15 @@ public class SandpileController implements ActionListener, Serializable{
 	public void addVertexControl(final float x, final float y) {
 		int touchVert = touchingVertex(x, y);
 		if (touchVert < 0) {
-			undoManager.addEdit(new SGEdit("add vertex"));
+			final int vertIndex = configSize();
+			undoManager.addEdit(new SGEdit("add vertex"){
+				@Override public void undoAction() {
+					delVertex(vertIndex);
+				}
+				@Override public void redoAction() {
+					addVertex(x, y);
+				}
+			});
 			addVertex(x,y);
 			onGraphChange();
 			repaint();
@@ -541,9 +554,18 @@ public class SandpileController implements ActionListener, Serializable{
 	 * @param y The y coordinate.
 	 */
 	public void delVertexControl(final float x, final float y) {
+		final SandpileGraph oldSG = new SandpileGraph(sg);
 		final int touchVert = touchingVertex(x, y);
-		if (touchVert >= 0) {
-			undoManager.addEdit(new SGEdit("delete vertex"));			
+		if (touchVert >= 0){
+			undoManager.addEdit(new SGEdit("delete vertex"){
+				@Override public void undoAction() {
+					unselectVertices();
+					sg = new SandpileGraph(oldSG);
+				}
+				@Override public void redoAction() {
+					delVertex(touchVert);
+				}
+			});
 			delVertex(touchVert);
 			onGraphChange();
 			unselectVertices();
@@ -563,8 +585,24 @@ public class SandpileController implements ActionListener, Serializable{
 	 */
 	public void addEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
-		if (touchVert >= 0) {
-			undoManager.addEdit(new SGEdit("add edge(s)"));
+		if (touchVert >= 0  && !selectedVertices.isEmpty()) {
+			final TIntArrayList sourceVerts = new TIntArrayList(selectedVertices.toNativeArray());
+			undoManager.addEdit(new SGEdit("add edge(s)"){
+				@Override
+				public void undoAction() {
+					for (int i = 0; i<sourceVerts.size(); i++) {
+						int v = sourceVerts.get(i);
+						delEdge(v, touchVert, weight);
+					}
+				}
+				@Override
+				public void redoAction() {
+					for (int i = 0; i < sourceVerts.size(); i++) {
+						int v = sourceVerts.get(i);
+						addEdge(v, touchVert, weight);
+					}
+				}
+			});
 			for (int i = 0; i<selectedVertices.size(); i++) {
 				int v = selectedVertices.get(i);
 				addEdge(v, touchVert, weight);
@@ -572,6 +610,21 @@ public class SandpileController implements ActionListener, Serializable{
 			onGraphChange();
 		}
 		repaint();
+	}
+
+	final private ArrayList<SingleSourceEdgeList> storeOutgoingEdgeData(TIntArrayList verts){
+		final ArrayList<SingleSourceEdgeList> edgeLists = new ArrayList<SingleSourceEdgeList>(selectedVertices.size());
+		for (int i = 0; i < selectedVertices.size(); i++) {
+			int v = selectedVertices.get(i);
+			edgeLists.add(new SingleSourceEdgeList(getGraph().getOutgoingEdges(v)));
+		}
+		return edgeLists;
+	}
+
+	final private void restoreOutgoingEdgeData(ArrayList<SingleSourceEdgeList> edgeLists){
+		for (int i = 0; i < edgeLists.size(); i++) {
+			getGraph().setOutgoingEdges(edgeLists.get(i).source(), new SingleSourceEdgeList(edgeLists.get(i)));
+		}
 	}
 
 	/**
@@ -584,8 +637,24 @@ public class SandpileController implements ActionListener, Serializable{
 	 */
 	public void delEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
-		if (touchVert >= 0) {
-			undoManager.addEdit(new SGEdit("delete edge(s)"));
+		if (touchVert >= 0 && !selectedVertices.isEmpty()) {
+
+			//Store the current outgoing edges of all selected vertices
+			//should they be restored later.
+			final ArrayList<SingleSourceEdgeList> edgeLists = storeOutgoingEdgeData(selectedVertices);
+			undoManager.addEdit(new SGEdit("delete edge(s)"){
+				@Override
+				public void undoAction() {
+					restoreOutgoingEdgeData(edgeLists);
+				}
+				@Override
+				public void redoAction() {
+					for (int i = 0; i < edgeLists.size(); i++) {
+						int v = edgeLists.get(i).source();
+						delEdge(v, touchVert, weight);
+					}
+				}
+			});
 			for (int i = 0; i<selectedVertices.size(); i++) {
 				int v = selectedVertices.get(i);
 				delEdge(v, touchVert, weight);
@@ -596,26 +665,55 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void makeSink(TIntArrayList verts){
-		for (int i = 0; i < verts.size(); i++) {
-			int v = verts.get(i);
-			SingleSourceEdgeList edges = new SingleSourceEdgeList(getGraph().getOutgoingEdges(v));
-			for(Edge e : edges){
-				delEdge(e.source(), e.dest(), e.wt());
+		if(verts.isEmpty())
+			return;
+		
+		final ArrayList<SingleSourceEdgeList> edgeLists = storeOutgoingEdgeData(selectedVertices);
+		SGEdit theEdit = new SGEdit("make sink(s)"){
+			@Override
+			public void undoAction() {
+				restoreOutgoingEdgeData(edgeLists);
 			}
-		}
+			@Override
+			public void redoAction() {
+				for(int i=0; i<edgeLists.size(); i++){
+					int v = edgeLists.get(i).source();
+					getGraph().setOutgoingEdges(v, new SingleSourceEdgeList(v));
+				}
+			}
+		};
+
+		undoManager.addEdit(theEdit);
+
+		theEdit.redoAction();
 		onGraphChange();
 		repaint();
 	}
 
 	public void addUndiEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
-		if (touchVert >= 0) {
-			undoManager.addEdit(new SGEdit("add undirected edges"));
-			for (int i = 0; i<selectedVertices.size(); i++) {
-				int v = selectedVertices.get(i);
-				addEdge(v, touchVert, weight);
-				addEdge(touchVert, v, weight);
-			}
+		if (touchVert >= 0 && !selectedVertices.isEmpty()) {
+			final TIntArrayList otherVerts = new TIntArrayList(selectedVertices.toNativeArray());
+			SGEdit theEdit = new SGEdit("add undirected edges"){
+				@Override
+				public void undoAction() {
+					for(int i = 0; i<otherVerts.size(); i++){
+						int v = otherVerts.get(i);
+						delEdge(v, touchVert, weight);
+						delEdge(touchVert, v, weight);
+					}
+				}
+				@Override
+				public void redoAction() {
+					for(int i = 0; i<otherVerts.size(); i++){
+						int v = otherVerts.get(i);
+						addEdge(v, touchVert, weight);
+						addEdge(touchVert, v, weight);
+					}
+				}
+			};
+			undoManager.addEdit(theEdit);
+			theEdit.redoAction();
 			onGraphChange();
 		}
 		repaint();
@@ -623,13 +721,28 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public void delUndiEdgeControl(float x, float y, final int weight) {
 		final int touchVert = touchingVertex(x, y);
-		if (touchVert >= 0) {
-			undoManager.addEdit(new SGEdit("delete undirected edge(s)"));
-			for (int i = 0; i<selectedVertices.size(); i++) {
-				int v = selectedVertices.get(i);
-				delEdge(v, touchVert, weight);
-				delEdge(touchVert, v, weight);
-			}
+		if (touchVert >= 0 && !selectedVertices.isEmpty()) {
+			final TIntArrayList otherVerts = new TIntArrayList(selectedVertices.toNativeArray());
+			final ArrayList<SingleSourceEdgeList> edgeLists = storeOutgoingEdgeData(otherVerts);
+			final SingleSourceEdgeList touchVertEdges = new SingleSourceEdgeList(getGraph().getOutgoingEdges(touchVert));
+			SGEdit theEdit = new SGEdit("delete undirected edge(s)"){
+				@Override
+				public void undoAction() {
+					restoreOutgoingEdgeData(edgeLists);
+					getGraph().setOutgoingEdges(touchVert, new SingleSourceEdgeList(touchVertEdges));
+				}
+
+				@Override
+				public void redoAction() {
+					for (int i = 0; i < selectedVertices.size(); i++) {
+						int v = selectedVertices.get(i);
+						delEdge(v, touchVert, weight);
+						delEdge(touchVert, v, weight);
+					}
+				}
+			};
+			undoManager.addEdit(theEdit);
+			theEdit.redoAction();
 			onGraphChange();
 		}
 		repaint();
@@ -657,8 +770,26 @@ public class SandpileController implements ActionListener, Serializable{
 	public void makeGridControl(final int rows, final int cols,
 			final float x, final float y,
 			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
-		undoManager.addEdit(new SGEdit("make grid"));
-		makeGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+
+		SGEdit theEdit = new SGEdit("make grid"){
+			private int startIndex, endSize;
+			@Override
+			public void undoAction(){
+				TIntArrayList verts = new TIntArrayList();
+				for(int i=startIndex; i<endSize; i++)
+					verts.add(i);
+				delVertices(verts);
+			}
+
+			@Override
+			public void redoAction() {
+				startIndex = configSize();
+				makeGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+				endSize = configSize();
+			}
+		};
+		undoManager.addEdit(theEdit);
+		theEdit.redoAction();
 		onGraphChange();
 		repaint();
 	}
@@ -788,8 +919,26 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void makeHoneycombControl(final int radius, final float x, final float y, final int borders) {
-		undoManager.addEdit(new SGEdit("make honeycomb"));
-		makeHoneycomb(radius, x, y, borders);
+		SGEdit theEdit = new SGEdit("make grid"){
+			private int startIndex, endSize;
+			@Override
+			public void undoAction(){
+				TIntArrayList verts = new TIntArrayList();
+				for(int i=startIndex; i<endSize; i++)
+					verts.add(i);
+				delVertices(verts);
+			}
+
+			@Override
+			public void redoAction() {
+				startIndex = configSize();
+				makeHoneycomb(radius, x, y, borders);;
+				endSize = configSize();
+			}
+		};
+		undoManager.addEdit(theEdit);
+		theEdit.redoAction();
+		
 		onGraphChange();
 		this.repaint();
 
@@ -894,8 +1043,25 @@ public class SandpileController implements ActionListener, Serializable{
 	public void makeHexGridControl(final int rows, final int cols,
 			final float x, final float y,
 			final int nBorder, final int sBorder, final int eBorder, final int wBorder) {
-		undoManager.addEdit(new SGEdit("make hex grid"));
-		makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+		SGEdit theEdit = new SGEdit("make grid"){
+			private int startIndex, endSize;
+			@Override
+			public void undoAction(){
+				TIntArrayList verts = new TIntArrayList();
+				for(int i=startIndex; i<endSize; i++)
+					verts.add(i);
+				delVertices(verts);
+			}
+
+			@Override
+			public void redoAction() {
+				startIndex = configSize();
+				makeHexGrid(rows, cols, x, y, nBorder, sBorder, eBorder, wBorder);
+				endSize = configSize();
+			}
+		};
+		undoManager.addEdit(theEdit);
+		theEdit.redoAction();
 		onGraphChange();
 		this.repaint();
 	}
@@ -1066,8 +1232,25 @@ public class SandpileController implements ActionListener, Serializable{
 			final int spacing, final List<int[]> vectors,
 			final TIntArrayList xStartingWith, final TIntArrayList xFreq, final TIntArrayList yStartingWith, final TIntArrayList yFreq,
 			final List<Boolean> directed, final TIntArrayList weight, final TIntArrayList borders){
-		undoManager.addEdit(new SGEdit("build lattice"));
-		buildLattice(xCoord,yCoord,rows,cols,spacing,vectors,xStartingWith,xFreq,yStartingWith,yFreq,directed,weight,borders);
+		SGEdit theEdit = new SGEdit("make grid"){
+			private int startIndex, endSize;
+			@Override
+			public void undoAction(){
+				TIntArrayList verts = new TIntArrayList();
+				for(int i=startIndex; i<endSize; i++)
+					verts.add(i);
+				delVertices(verts);
+			}
+
+			@Override
+			public void redoAction() {
+				startIndex = configSize();
+				buildLattice(xCoord, yCoord, rows, cols, spacing, vectors, xStartingWith, xFreq, yStartingWith, yFreq, directed, weight, borders);
+				endSize = configSize();
+			}
+		};
+		undoManager.addEdit(theEdit);
+		theEdit.redoAction();
 		onGraphChange();
 		this.repaint();
 	}
@@ -1291,10 +1474,17 @@ public class SandpileController implements ActionListener, Serializable{
 
 	public int addVertex(float x, float y) {
 		sg.addVertex();
-		float[] newPos = {x, y};
-		vertexData.addRow(newPos);
+		vertexData.addRow(x,y);
 		currentConfig.add(0);
 		firings.add(0);
+		return configSize() - 1;
+	}
+
+	public int insertVertex(int index, float x, float y){
+		sg.insertVertex(index);
+		vertexData.insertRow(index, x,y);
+		currentConfig.insert(index, 0);
+		firings.insert(index, 0);
 		return configSize() - 1;
 	}
 
@@ -1333,8 +1523,23 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void delVerticesControl(TIntArrayList vertices) {
-		undoManager.addEdit(new SGEdit("delete vertices"));
-		delVertices(vertices);
+		final SandpileGraph oldSG = new SandpileGraph(sg);
+		final TIntArrayList theVerts = new TIntArrayList(vertices.toNativeArray());
+		SGEdit theEdit = new SGEdit("delete vertices") {
+			@Override
+			public void undoAction() {
+				sg = new SandpileGraph(oldSG);
+				unselectVertices();
+			}
+
+			@Override
+			public void redoAction() {
+				delVertices(theVerts);
+				unselectVertices();
+			}
+		};
+		undoManager.addEdit(theEdit);
+		theEdit.redoAction();
 		onGraphChange();
 	}
 
@@ -1364,11 +1569,33 @@ public class SandpileController implements ActionListener, Serializable{
 		configs.clear();
 	}
 
+	private SandpileGraph tryStoreGraph() {
+		SandpileGraph oldSG;
+		try{
+			oldSG = new SandpileGraph(sg);
+		} catch (OutOfMemoryError e){
+			System.err.println("Not enough memory to copy graph.");
+			oldSG = new SandpileGraph();
+		}
+		return oldSG;
+	}
+
 	public void delAllVerticesControl() {
-		undoManager.addEdit(new SGEdit("delete graph"));
-		delAllVertices();
+		final SandpileGraph oldSG = tryStoreGraph();
+		SGEdit theEdit = new SGEdit("delete graph") {
+			@Override
+			public void undoAction() {
+				sg = new SandpileGraph(oldSG);
+			}
+
+			@Override
+			public void redoAction() {
+				delAllVertices();
+			}
+		};
+		undoManager.addEdit(theEdit);
+		theEdit.redoAction();
 		onGraphChange();
-		repaint();
 	}
 
 	protected void delAllVertices() {
