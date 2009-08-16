@@ -152,20 +152,20 @@ public class SandpileProtocol {
 		} else if (command[0].equals("add_random_sand")) {
 			sc.addSandToRandom(sc.getGraph().getNonSinks(), Integer.valueOf(command[1]));
 		} else if (command[0].equals("set_to_max_stable")) {
-			sc.setToMaxStableConfig(1);
+			sc.setToMaxStableConfig(Integer.valueOf(command[1]));
 		} else if (command[0].equals("add_max_stable")) {
-			sc.addMaxStableConfig(1);
+			sc.addMaxStableConfig(Integer.valueOf(command[1]));
 		}else if (command[0].equals("get_max_stable")){
 			output = configToString(sc.getGraph().getMaxConfig());
 		} else if (command[0].equals("set_to_identity")) {
 			try{
-				sc.setToIdentity(1);
+				sc.setToIdentity(Integer.valueOf(command[1]));
 			}catch(InterruptedException e){
 				System.err.println("Identity calculation interrupted");
 			}
 		} else if (command[0].equals("add_identity")) {
 			try{
-				sc.addIdentity(1);
+				sc.addIdentity(Integer.valueOf(command[1]));
 			}catch(InterruptedException e){
 				System.err.println("Stabilization interrupted");
 			}
@@ -177,13 +177,13 @@ public class SandpileProtocol {
 			}
 		} else if (command[0].equals("set_to_burning")) {
 			try{
-				sc.setToBurningConfig(1);
+				sc.setToBurningConfig(Integer.valueOf(command[1]));
 			}catch(InterruptedException e){
 				System.err.println("Burning calculation interrupted");
 			}
 		} else if (command[0].equals("add_burning")) {
 			try{
-				sc.addBurningConfig(1);
+				sc.addBurningConfig(Integer.valueOf(command[1]));
 			}catch(InterruptedException e){
 				System.err.println("Burning calculation interrupted");
 			}
@@ -199,7 +199,13 @@ public class SandpileProtocol {
 			sc.addDualConfig(1);
 		}else if (command[0].equals("get_dual")){
 			output = configToString(sc.getGraph().getDualConfig(sc.getConfig()));
-		} else {
+		} else if (command[0].equals("get_firings")) {
+			output = formatSeq(sc.getFirings());
+		} else if (command[0].equals("reset_firings")) {
+			sc.resetFirings();
+		}
+
+		else {
 			System.err.println("Could not understand message: " + input);
 		}
 		return output;

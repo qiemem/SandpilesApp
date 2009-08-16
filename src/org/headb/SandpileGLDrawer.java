@@ -385,8 +385,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	public void setGLDimensions(float x, float y, float w, float h) {
-		width = Math.max(w, 1f);
-		height = Math.max(h, 1f);
+		width = Math.max(w, 0.00001f);
+		height = Math.max(h, 0.00001f);
 		originX = x;
 		originY = y;
 		needsReshape = true;

@@ -422,6 +422,10 @@ public class SandpileController implements ActionListener, Serializable{
 		return firings.get(v);
 	}
 
+	public TIntArrayList getFirings() {
+		return firings;
+	}
+
 	/**
 	 * Calls this object's SandpileDrawer's paintSandpileGraph() method with
 	 * this object's current data.
