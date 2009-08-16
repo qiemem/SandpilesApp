@@ -394,10 +394,10 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="edgeWeightField" min="-2" pref="36" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="deleteSelectedVerticesButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="addEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="removeEdgeRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="makeSinkButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="deleteSelectedVerticesButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="108" max="32767" attributes="0"/>
                           </Group>
@@ -1837,10 +1837,16 @@
                 </Component>
                 <Component class="javax.swing.JToolBar$Separator" name="jSeparator6">
                 </Component>
-                <Component class="javax.swing.JLabel" name="selecteCenterLabel">
+                <Component class="javax.swing.JButton" name="selecteCenterButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Selected Center: -, -; "/>
+                    <Property name="text" type="java.lang.String" value="Sel. Center: -, -; "/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
+                    <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selecteCenterButtonActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="selectedSandLabel">
                   <Properties>

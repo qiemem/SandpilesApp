@@ -207,7 +207,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				}
 				mouseX = coords[0];
 				mouseY = coords[1];
-				centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
+				updateCenterCoordLabel();
 			}
 		});
 		MouseWheelListener zoomListener = new MouseWheelListener() {
@@ -418,7 +418,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         currentActionLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
         jSeparator6 = new javax.swing.JToolBar.Separator();
-        selecteCenterLabel = new javax.swing.JLabel();
+        selecteCenterButton = new javax.swing.JButton();
         selectedSandLabel = new javax.swing.JLabel();
         selectedDegreeLabel = new javax.swing.JLabel();
         selectedFiringsLabel = new javax.swing.JLabel();
@@ -712,10 +712,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                         .add(jLabel1)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(deleteSelectedVerticesButton)
                     .add(addEdgeRadioButton)
                     .add(removeEdgeRadioButton)
-                    .add(makeSinkButton))
+                    .add(makeSinkButton)
+                    .add(deleteSelectedVerticesButton))
                 .addContainerGap(108, Short.MAX_VALUE))
         );
         editGraphPanelLayout.setVerticalGroup(
@@ -1466,8 +1466,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         infoToolBar.add(cancelButton);
         infoToolBar.add(jSeparator6);
 
-        selecteCenterLabel.setText("Selected Center: -, -; ");
-        infoToolBar.add(selecteCenterLabel);
+        selecteCenterButton.setText("Sel. Center: -, -; ");
+        selecteCenterButton.setFocusable(false);
+        selecteCenterButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        selecteCenterButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        selecteCenterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecteCenterButtonActionPerformed(evt);
+            }
+        });
+        infoToolBar.add(selecteCenterButton);
 
         selectedSandLabel.setText("Sand: -; ");
         infoToolBar.add(selectedSandLabel);
@@ -2603,6 +2611,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		drawer3d.setBaseConfig(sandpileController.getConfig());
 	}//GEN-LAST:event_jButton1ActionPerformed
 
+	private void selecteCenterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecteCenterButtonActionPerformed
+		drawer.setGLDimensions(getSelectedX(), getSelectedY(), drawer.getWidth(), drawer.getHeight());
+		updateCenterCoordLabel();
+	}//GEN-LAST:event_selecteCenterButtonActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -2643,35 +2656,96 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		}
 	}
 
+	public float getSelectedX() {
+		TIntArrayList selVerts = sandpileController.getSelectedVertices();
+		float x = 0f;
+		if(!selVerts.isEmpty()){
+			int n = selVerts.size();
+			for(int i=0; i<n; i++){
+				int v=selVerts.get(i);
+				x+=sandpileController.getVertexX(v);
+			}
+			x/=n;
+		}
+		return x;
+	}
+
+	public float getSelectedY() {
+		TIntArrayList selVerts = sandpileController.getSelectedVertices();
+		float y = 0f;
+		if(!selVerts.isEmpty()){
+			int n = selVerts.size();
+			for(int i=0; i<n; i++){
+				int v=selVerts.get(i);
+				y+=sandpileController.getVertexY(v);
+			}
+			y/=n;
+		}
+		return y;
+	}
+
+	public int getSelectedDegree() {
+		TIntArrayList selVerts = sandpileController.getSelectedVertices();
+		int degree = 0;
+		if(!selVerts.isEmpty()){
+			int n = selVerts.size();
+			for(int i=0; i<n; i++){
+				int v=selVerts.get(i);
+				degree+=sandpileController.getGraph().degree(v);
+			}
+		}
+		return degree;
+	}
+
+	public int getSelectedSand() {
+		TIntArrayList selVerts = sandpileController.getSelectedVertices();
+		int sand = 0;
+		if(!selVerts.isEmpty()){
+			int n = selVerts.size();
+			for(int i=0; i<n; i++){
+				int v=selVerts.get(i);
+				sand+=sandpileController.getSand(v);
+			}
+		}
+		return sand;
+	}
+
+	public int getSelectedFirings() {
+		TIntArrayList selVerts = sandpileController.getSelectedVertices();
+		int firings = 0;
+		if(!selVerts.isEmpty()){
+			int n = selVerts.size();
+			for(int i=0; i<n; i++){
+				int v=selVerts.get(i);
+				firings+=sandpileController.getFirings(v);
+			}
+		}
+		return firings;
+	}
+
 	public void updateSelectedInfo() {
 		TIntArrayList selVerts = sandpileController.getSelectedVertices();
 		if(!selVerts.isEmpty()){
 			int n = selVerts.size();
-			float x=0f;
-			float y=0f;
-			int degree=0;
-			int sand=0;
-			int firings=0;
-			for(int i=0; i<n; i++){
-				int v=selVerts.get(i);
-				x+=sandpileController.getVertexX(v);
-				y+=sandpileController.getVertexY(v);
-				degree+=sandpileController.getGraph().degree(v);
-				sand+=sandpileController.getConfig().get(v);
-				firings+=sandpileController.getFirings(v);
-			}
-			x/=n;
-			y/=n;
-			this.selecteCenterLabel.setText(String.format("Selected Center: %.2f, %.2f; ", x,y));
+			float x=getSelectedX();
+			float y=getSelectedY();
+			int degree=getSelectedDegree();
+			int sand=getSelectedSand();
+			int firings=getSelectedFirings();
+			this.selecteCenterButton.setText(String.format("Sel. Center: %.2f, %.2f; ", x,y));
 			this.selectedDegreeLabel.setText(String.format("Degree: %d; ",degree));
 			this.selectedSandLabel.setText(String.format("Sand: %d; ",sand));
 			this.selectedFiringsLabel.setText(String.format("Firings: %d; ",firings));
 		}else{
-			this.selecteCenterLabel.setText("Selected Center: -, -; ");
+			this.selecteCenterButton.setText("Sel. Center: -, -; ");
 			this.selectedDegreeLabel.setText("Degree: -; ");
 			this.selectedSandLabel.setText("Sand: -; ");
 			this.selectedFiringsLabel.setText("Firings: -;");
 		}
+	}
+
+	public void updateCenterCoordLabel() {
+		centerCoordLabel.setText(String.format("%.2f, %.2f", drawer.getOriginX(), drawer.getOriginY()));
 	}
 
 	public void onGraphChange(SandpileGraph sg) {
@@ -2855,7 +2929,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JComboBox sBorderComboBox;
     private javax.swing.JScrollPane sandpileViewScrollPane;
     private javax.swing.JToggleButton selectToggleButton;
-    private javax.swing.JLabel selecteCenterLabel;
+    private javax.swing.JButton selecteCenterButton;
     private javax.swing.JLabel selectedDegreeLabel;
     private javax.swing.JLabel selectedFiringsLabel;
     private javax.swing.JLabel selectedSandLabel;
