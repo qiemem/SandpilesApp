@@ -49,6 +49,8 @@ import java.net.*;
 
 import gnu.trove.TIntArrayList;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Contains all methods used to manipulate graphs and configurations independent
  * of a GUI. Furthermore, this class tracks the positions of all vertices,
@@ -96,6 +98,7 @@ public class SandpileController implements ActionListener, Serializable{
 	private PrintWriter out;
 
 	private boolean needsRepaint = false;
+	private ReentrantLock configLock = new ReentrantLock();
 
 	private abstract class SGEdit extends AbstractUndoableEdit {
 		//private SandpileGraph oldSG = new SandpileGraph(sg);
@@ -380,7 +383,7 @@ public class SandpileController implements ActionListener, Serializable{
 	 * update cycles will be performed.
 	 */
 	public void update() {
-		//if(drawer.getColorMode()==SandpileDrawer.ColorMode.FIRINGS)
+		configLock.lock();
 		updateFirings();
 		if (updater == null) {
 			updater = sg.inPlaceParallelUpdater(currentConfig);
@@ -389,7 +392,7 @@ public class SandpileController implements ActionListener, Serializable{
 			updater.next();
 			onConfigChange();
 		}
-		//repaint();
+		configLock.unlock();
 	}
 
 	/**
@@ -397,7 +400,8 @@ public class SandpileController implements ActionListener, Serializable{
 	 */
 	public void resetFirings() {
 		firings = new TIntArrayList();
-		for (int i=0; i<currentConfig.size(); i++) {
+		int size = configSize();
+		for (int i=0; i<size; i++) {
 			firings.add(0);
 		}
 	}
@@ -500,6 +504,7 @@ public class SandpileController implements ActionListener, Serializable{
 	 * config is a different size than the current config.
 	 */
 	public void setConfig(SandpileConfiguration config){
+		configLock.lock();
 		if(config.size() == configSize()){
 			currentConfig = config;
 			onConfigEdit();
@@ -508,6 +513,7 @@ public class SandpileController implements ActionListener, Serializable{
 					"configuration to a configuration of an incorrect size. The correct" +
 					" size is "+ configSize()+" while the new configuration had size" +
 					config.size()+ ".");
+		configLock.unlock();
 	}
 	/**
 	 * Sets the current config to the given config plus the current config.
@@ -516,6 +522,7 @@ public class SandpileController implements ActionListener, Serializable{
 	 * config is a different size than the current config.
 	 */
 	public void addConfig(SandpileConfiguration config){
+		configLock.lock();
 		if(config.size() == configSize()){
 			currentConfig = currentConfig.plus(config);
 			onConfigEdit();
@@ -524,6 +531,7 @@ public class SandpileController implements ActionListener, Serializable{
 					"configuration to a configuration of an incorrect size. The correct" +
 					" size is "+ configSize()+" while the new configuration had size" +
 					config.size()+ ".");
+		configLock.unlock();
 	}
 
 	/**

@@ -728,7 +728,7 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Calculates the maximum stable configuration of the graph, preserving the current configuration.
+	 * Calculates the maximum stable configuration of the graph.
 	 * Runs in O(V).
 	 *
 	 * @return Returns a list of integers, where getMaxConfig()[i] = the amount of sand on vertex i.
@@ -743,7 +743,7 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Calculates the dual of the current configuration. That is, degree[i]-sand[i]-1. Preserves the current configuration.
+	 * Calculates the dual of the current configuration. That is, degree[i]-sand[i]-1.
 	 * Runs in O(V).
 	 *
 	 * @return Returns a list representing the configuration.
@@ -757,7 +757,7 @@ public class SandpileGraph {
 	}
 
 	/**
-	 * Calculates the minimal burning configuration of the graph. Preserves the current configuration.
+	 * Calculates the minimal burning configuration of the graph.
 	 *
 	 * @return Returns a list representing the configuration.
 	 */

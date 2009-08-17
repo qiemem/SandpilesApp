@@ -1772,11 +1772,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		//runTimer.setDelay( delaySlider.getValue());
 		updateControllerDelay();
 		if(runTimer.isRunning()){
-			runTimer.stop();
-			runButton.setText("Run");
+			stopSim();
 		}else{
-			runButton.setText("Pause");
-			runTimer.start();
+			runSim();
 		}
 		/*if(spThread.isAlive()) {
 			spThread.interrupt();
@@ -1790,6 +1788,16 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			spThread.start();
 		}*/
 }//GEN-LAST:event_runButtonActionPerformed
+
+	public void runSim() {
+		runButton.setText("Pause");
+		runTimer.start();
+	}
+
+	public void stopSim() {
+			runTimer.stop();
+			runButton.setText("Run");
+	}
 
 	private void delayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayTextFieldActionPerformed
 		updateControllerDelay();
@@ -2609,6 +2617,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 		drawer.setBaseConfig(sandpileController.getConfig());
 		drawer3d.setBaseConfig(sandpileController.getConfig());
+		sandpileController.repaint();
 	}//GEN-LAST:event_jButton1ActionPerformed
 
 	private void selecteCenterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecteCenterButtonActionPerformed
