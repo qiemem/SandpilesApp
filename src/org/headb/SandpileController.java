@@ -524,7 +524,7 @@ public class SandpileController implements ActionListener, Serializable{
 	public void addConfig(SandpileConfiguration config){
 		configLock.lock();
 		if(config.size() == configSize()){
-			currentConfig = currentConfig.plus(config);
+			currentConfig.plusEquals(config);
 			onConfigEdit();
 		}else
 			throw new IndexOutOfBoundsException("Tried to add the current sandpile " +
@@ -1341,7 +1341,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addDualConfig(int times) {
-		setConfig(currentConfig.plus(sg.getDualConfig(currentConfig).times(times)));
+		addConfig(sg.getDualConfig(currentConfig).times(times));
 		repaint();
 	}
 
@@ -1354,7 +1354,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addMaxStableConfig(int times) {
-		setConfig(currentConfig.plus(sg.getMaxConfig().times(times)));
+		addConfig(sg.getMaxConfig().times(times));
 		repaint();
 	}
 
@@ -1366,7 +1366,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addIdentity(int times) throws InterruptedException{
-		setConfig(currentConfig.plus(getIdentity().times(times)));
+		addConfig(getIdentity().times(times));
 		repaint();
 	}
 
@@ -1381,7 +1381,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addSandEverywhere(int amount) {
-		setConfig(currentConfig.plus(sg.getUniformConfig(amount)));
+		addConfig(sg.getUniformConfig(amount));
 		repaint();
 	}
 
@@ -1398,7 +1398,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addBurningConfig(int times) throws InterruptedException{
-		setConfig(currentConfig.plus(getBurningConfig().times(times)));
+		addConfig(getBurningConfig().times(times));
 		repaint();
 	}
 
@@ -1408,7 +1408,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addEquivalentRecurrent(int times) throws InterruptedException{
-		setConfig(currentConfig.plus(sg.getEquivalentRecurrent(currentConfig).times(times)));
+		addConfig(sg.getEquivalentRecurrent(currentConfig).times(times));
 		repaint();
 	}
 
@@ -1418,7 +1418,7 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void addInverseConfig(int times) throws InterruptedException{
-		setConfig(currentConfig.plus(sg.getInverseConfig(currentConfig).times(times)));
+		addConfig(sg.getInverseConfig(currentConfig).times(times));
 		repaint();
 	}
 

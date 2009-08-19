@@ -2793,6 +2793,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	public boolean calculationThreadInit(String description){
 		if(runningThread)
 			return false;
+
 		runningThread = true;
 		setWaitCursor();
 		currentActionLabel.setText(description+": ");

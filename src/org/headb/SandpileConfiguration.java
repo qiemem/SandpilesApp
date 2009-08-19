@@ -67,6 +67,14 @@ public class SandpileConfiguration extends TIntArrayList{
 		return result;
 	}
 
+	public SandpileConfiguration plusEquals(SandpileConfiguration other){
+		assert this.size() == other.size() : "Tried to add configurations of different size";
+		for(int i=0; i<this.size(); i++){
+			increaseQuick(i, other.getQuick(i));
+		}
+		return this;
+	}
+
 	public void increaseQuick(int v, int amount){
 		this._data[v]+=amount;
 	}
