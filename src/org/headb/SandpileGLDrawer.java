@@ -30,6 +30,7 @@ package org.headb;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
+import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.j2d.TextRenderer;
 import java.awt.Canvas;
 import java.util.List;
@@ -39,6 +40,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
 import gnu.trove.TIntArrayList;
+import java.nio.FloatBuffer;
+
 /**
  * A SandpileDrawer that represents the sandpile as a graph in 2d using OpenGL.
  * This is the standard visual representation of a sandpile.
@@ -60,7 +63,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private float vertSize = 1f;
 	private ColorMode mode = SandpileDrawer.ColorMode.NUM_OF_GRAINS;
 	private Float2dArrayList colors;
+	private int highestColor;
 	private Float2dArrayList inDebtColors;
+	private int lowestColor;
 	private TIntArrayList firings = new TIntArrayList();
 	private SandpileConfiguration baseConfig;
 	public boolean drawEdgeLabels = false;
@@ -77,6 +82,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private long timeOfLastDisplay = 0;
 	private float[] backgroundColor = {0f, 0f, 1f};
 
+	private TIntArrayList colorMetric;
+
+	private FloatBuffer quadVertexBuf = FloatBuffer.allocate(0);
+	private FloatBuffer colorBuf = FloatBuffer.allocate(0);
+
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
 		canvas.addGLEventListener(this);
@@ -90,10 +100,92 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		this.canvas.addMouseWheelListener(this);
 	}
 
+	private void buildQuadVertexArray() {
+		quadVertexBuf.rewind();
+		if(quadVertexBuf.capacity() != graph.numVertices()*8){
+			quadVertexBuf = BufferUtil.newFloatBuffer(graph.numVertices()*8);
+		}else{
+			quadVertexBuf.clear();
+		}
+		int n = vertexLocations.rows();
+		System.err.println("n: "+n);
+		for(int v=0; v<n; v++){
+			float x = vertexLocations.getQuick(v,0);
+			float y = vertexLocations.getQuick(v,1);
+			float size = vertSize;
+			int d = graph.degreeQuick(v);
+			if (changingVertexSize && d!=0) {
+				int sand = Math.max(config.getQuick(v), 0);
+				size = Math.min(((float) sand + 1f) / ((float) d), vertSize);
+			}
+			int i = 8*v;
+			System.err.println(size);
+			//top left
+			quadVertexBuf.put(x-size);
+			quadVertexBuf.put(y+size);
+			//top right
+			quadVertexBuf.put(x+size);
+			quadVertexBuf.put(y+size);
+			//bottom right
+			quadVertexBuf.put(x+size);
+			quadVertexBuf.put(y-size);
+			//bottom left
+			quadVertexBuf.put(x-size);
+			quadVertexBuf.put(y-size);
+		}
+		quadVertexBuf.rewind();
+	}
+
+	private void buildColorArray() {
+		colorBuf.rewind();
+		if(colorBuf.capacity() != graph.numVertices()*12){
+			colorBuf = BufferUtil.newFloatBuffer(graph.numVertices()*12);
+		}else{
+			colorBuf.clear();
+		}
+		float r,g,b;
+		int n = config.size();
+		for(int v=0; v<n; v++){
+			int val = colorMetric.getQuick(v);
+			if(val<0){
+				val = Math.max(val, lowestColor);
+				val = -val-1;
+				r = inDebtColors.getQuick(val, 0);
+				g = inDebtColors.getQuick(val, 1);
+				b = inDebtColors.getQuick(val, 2);
+			}else{
+				val = Math.min(val, highestColor);
+				r = colors.getQuick(val, 0);
+				g = colors.getQuick(val, 1);
+				b = colors.getQuick(val, 2);
+			}
+			int i = 12*v;
+			colorBuf.put(r);
+			colorBuf.put(g);
+			colorBuf.put(b);
+			colorBuf.put(r);
+			colorBuf.put(g);
+			colorBuf.put(b);
+			colorBuf.put(r);
+			colorBuf.put(g);
+			colorBuf.put(b);
+			colorBuf.put(r);
+			colorBuf.put(g);
+			colorBuf.put(b);
+		}
+		colorBuf.rewind();
+	}
+
 	public void setColors(Float2dArrayList colors, Float2dArrayList inDebtColors, float[] backgroundColor){
 		this.colors = new Float2dArrayList(colors);
+		highestColor = this.colors.rows()-1;
 		this.inDebtColors = new Float2dArrayList(inDebtColors);
+		lowestColor = -this.inDebtColors.rows();
 		this.backgroundColor = backgroundColor;
+	}
+
+	public void setColorMode(ColorMode cm) {
+		mode = cm;
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -109,6 +201,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		// Setup the drawing area and shading mode
 		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
 		gl.glShadeModel(GL.GL_FLAT);
+
+		gl.glEnableClientState(gl.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(gl.GL_COLOR_ARRAY);
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
 		//gl.glDepthFunc(gl.GL_LEQUAL);
@@ -156,6 +251,12 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
 		}
+		if(graph.numVertices()!=0){
+			quadVertexBuf.rewind();
+			colorBuf.rewind();
+			gl.glVertexPointer(2, gl.GL_FLOAT, 0, quadVertexBuf);
+			gl.glColorPointer(3, gl.GL_FLOAT, 0, colorBuf);
+		}
 		//GLU glu = new GLU();
 		// Clear the drawing area
 		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
@@ -184,10 +285,6 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		}
 
 		gl.glFlush();
-	}
-
-	public void setColorMode(ColorMode cm) {
-		mode = cm;
 	}
 
 	public ColorMode getColorMode() {
@@ -241,23 +338,25 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	private void drawVertices(GL gl) {
-		gl.glBegin(gl.GL_QUADS);
-		for (int vert = 0; vert < graph.numVertices(); vert++) {
-			float x = vertexLocations.getQuick(vert,0);
-			float y = vertexLocations.getQuick(vert,1);
-			float size = vertSize;
-			int d = graph.degreeQuick(vert);
-			if (changingVertexSize && d!=0) {
-				int sand = Math.max(config.getQuick(vert), 0);
-				size = Math.min(((float) sand + 1f) / ((float) d), vertSize);
-			}
-			setColorForVertex(gl, vert);
-			gl.glVertex2f(x - size, y + size);
-			gl.glVertex2f(x + size, y + size);
-			gl.glVertex2f(x + size, y - size);
-			gl.glVertex2f(x - size, y - size);
+		if(graph.numVertices()!=0){
+			gl.glDrawArrays(gl.GL_QUADS, 0, graph.numVertices());
 		}
-		gl.glEnd();
+//		for (int vert = 0; vert < graph.numVertices(); vert++) {
+//			float x = vertexLocations.getQuick(vert,0);
+//			float y = vertexLocations.getQuick(vert,1);
+//			float size = vertSize;
+//			int d = graph.degreeQuick(vert);
+//			if (changingVertexSize && d!=0) {
+//				int sand = Math.max(config.getQuick(vert), 0);
+//				size = Math.min(((float) sand + 1f) / ((float) d), vertSize);
+//			}
+//			setColorForVertex(gl, vert);
+//			gl.glVertex2f(x - size, y + size);
+//			gl.glVertex2f(x + size, y + size);
+//			gl.glVertex2f(x + size, y - size);
+//			gl.glVertex2f(x - size, y - size);
+//		}
+//		gl.glEnd();
 	}
 
 	private void drawVertexLabels(TextRenderer tr) {
@@ -352,10 +451,29 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
 	public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices) {
 		this.graph = graph;
-		this.vertexLocations = vertexLocations;
+		if(this.vertexLocations!=vertexLocations){
+			this.vertexLocations = vertexLocations;
+			buildQuadVertexArray();
+		}else if(this.changingVertexSize){
+			buildQuadVertexArray();
+		}
 		this.config = config;
 		this.selectedVertices = selectedVertices;
 		this.firings = firings;
+		switch(mode){
+			case NUM_OF_GRAINS:
+				colorMetric = config;
+				break;
+			case FIRINGS:
+				colorMetric = firings;
+				break;
+			case STABILITY:
+				colorMetric = config;
+				break;
+			case DIFFERENCE:
+				colorMetric = config.plus(baseConfig.times(-1));
+		}
+		buildColorArray();
 		canvas.display();
 	}
 
