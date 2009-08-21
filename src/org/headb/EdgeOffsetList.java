@@ -37,7 +37,18 @@ package org.headb;
  * @author Bryan Head
  */
 public class EdgeOffsetList {
-	Int2dArrayList edgeOffsetData;
+	private Int2dArrayList edgeOffsetData;
+	private int degree;
+
+	public EdgeOffsetList(){
+		degree = 0;
+		edgeOffsetData = new Int2dArrayList(2);
+	}
+
+	public EdgeOffsetList(EdgeOffsetList other){
+		this.edgeOffsetData = new Int2dArrayList(other.edgeOffsetData);
+		degree = other.degree;
+	}
 	public int destOffset(int i) {
 		return edgeOffsetData.get(i,1);
 	}
@@ -61,6 +72,7 @@ public class EdgeOffsetList {
 	}
 	public void addEdge(int destOffset, int wt) {
 		edgeOffsetData.addRow(destOffset, wt);
+		degree += wt;
 	}
 	public int wtForOffset(int offset){
 		for(int i=0; i<size(); i++){
@@ -69,6 +81,9 @@ public class EdgeOffsetList {
 			}
 		}
 		return -1;
+	}
+	public int degree() {
+		return degree;
 	}
 	public boolean equals(EdgeOffsetList that){
 		if(this.size()!=that.size())

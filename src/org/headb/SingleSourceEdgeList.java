@@ -33,7 +33,7 @@ package org.headb;
  * A list of edges that all have the same source.
  * @author Bryan Head
  */
-public class SingleSourceEdgeList extends EdgeList{
+public class SingleSourceEdgeList extends GeneralEdgeList{
 	int source = -1;
 
 	public SingleSourceEdgeList(int source){
@@ -104,5 +104,13 @@ public class SingleSourceEdgeList extends EdgeList{
 			edgeData.addRow(e.dest(), e.wt());
 		else
 			throw new IllegalArgumentException("Tried to add an edge with the wrong source to a SingleSourceEdge. Edge's source was "+e.source()+" while it needed to be " + source +".");
+	}
+
+	public EdgeOffsetList getEdgeOffsetList() {
+		EdgeOffsetList offsetList = new EdgeOffsetList();
+		for(Edge e : this){
+			offsetList.addEdge(source()-e.dest(), e.wt());
+		}
+		return offsetList;
 	}
 }

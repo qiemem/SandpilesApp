@@ -40,11 +40,57 @@ public class EdgeStructureBlock {
 	TIntArrayList vertices;
 	EdgeOffsetList edgeInfo;
 
+	private class PersonalizedEdgeList extends EdgeList{
+		private int vert;
+
+		private UnsupportedOperationException manipulationException() {
+			return new UnsupportedOperationException("Can't alter the edges of a vertex in an EdgeStructureBlock through an intermediary EdgeList");
+		}
+		public PersonalizedEdgeList(int vert){
+			this.vert = vert;
+		}
+		public int size() {
+			return edgeInfo.size();
+		}
+		public int source(int i){
+			return vert;
+		}
+		public int sourceQuick(int i){
+			return vert;
+		}
+		public int destQuick(int i){
+			return getDestVertQuick(vert,i);
+		}
+		public int wtQuick(int i){
+			return getWtQuick(i);
+		}
+		public void remove(int i){
+			throw manipulationException();
+		}
+		public void add(int s, int d, int w){
+			throw manipulationException();
+		}
+		public void setWtQuick(int i, int w){
+			throw manipulationException();
+		}
+		public void setDestQuick(int i, int d){
+			throw manipulationException();
+		}
+		public void setSourceQuick(int i, int s){
+			throw manipulationException();
+		}
+	}
+
 	public EdgeStructureBlock(EdgeOffsetList edgeInfo){
 		this.edgeInfo = edgeInfo;
 	}
 
-	public boolean tryAddVertex(int v, Int2dArrayList edgeInfo){
+	public EdgeStructureBlock(EdgeStructureBlock other){
+		this.edgeInfo = new EdgeOffsetList(other.edgeInfo);
+		this.vertices = new TIntArrayList(other.vertices.toNativeArray());
+	}
+
+	public boolean tryAddVertex(int v, EdgeOffsetList edgeInfo){
 		if(this.edgeInfo.equals(edgeInfo)){
 			vertices.add(v);
 			return true;
@@ -88,7 +134,15 @@ public class EdgeStructureBlock {
 		return edgeInfo.wtQuick(edgeIndex);
 	}
 
+	public int degree(){
+		return edgeInfo.degree();
+	}
+
 	public EdgeOffsetList getEdgeOffsetInfo(){
 		return edgeInfo;
+	}
+
+	public EdgeList getOutgoingEdges(int vert){
+		return new PersonalizedEdgeList(vert);
 	}
 }

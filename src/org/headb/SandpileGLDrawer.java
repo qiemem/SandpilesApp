@@ -198,7 +198,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
 		gl.glBegin(gl.GL_LINES);
 		for (int source = 0; source < graph.numVertices(); source++) {
-			EdgeList outEdges = graph.getOutgoingEdges(source);
+			GeneralEdgeList outEdges = graph.getOutgoingEdges(source);
 			for (int i=0; i<outEdges.size(); i++) {
 				int dest = outEdges.destQuick(i);
 				float sx = vertexLocations.getQuick(source,0);
@@ -220,7 +220,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		tr.setColor(.8f, .5f, .6f, 1f);
 		tr.begin3DRendering();
 		for (int source = 0; source < graph.numVertices(); source++) {
-			EdgeList outEdges = graph.getOutgoingEdges(source);
+			GeneralEdgeList outEdges = graph.getOutgoingEdges(source);
 			for (int i=0; i<outEdges.size(); i++) {
 				int dest = outEdges.destQuick(i);
 				int wt = outEdges.wtQuick(i);

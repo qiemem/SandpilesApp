@@ -241,7 +241,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		drawer3d.setColors(colors, inDebtColors, backgroundColor);
 	}
 
-	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, EdgeList edgeData){
+	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, GeneralEdgeList edgeData){
 		localClipboard.setContents(new SandpileTransferable(locationData, sandData, edgeData), this);
 	}
 	
@@ -249,7 +249,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		TIntArrayList vertices = sandpileController.getSelectedVertices();
 		Float2dArrayList locationData = new Float2dArrayList(0,2);
 		TIntArrayList configData = new TIntArrayList();
-		EdgeList edgeData = new EdgeList();
+		GeneralEdgeList edgeData = new GeneralEdgeList();
 		int vert = 0;
 		for(int i=0; i< vertices.size(); i++){
 			int v = vertices.get(i);
