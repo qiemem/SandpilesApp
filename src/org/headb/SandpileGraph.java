@@ -640,15 +640,17 @@ public class SandpileGraph {
 					// fire it
 					//fireVertexInPlace(config, v);
 					// include (newly) unstable neighbors, adding them too
-					EdgeList edges = getOutgoingEdges(v);
-					int s = edges.size();
+					//EdgeList edges = getOutgoingEdges(v);
+					EdgeStructureBlock block = vertsToBlocks.get(v);
+					EdgeOffsetList offsetList = block.getEdgeOffsetInfo();
+					int s = block.numEdges();
 					for(int k=0; k<s; k++){
-						int w = edges.destQuick(k);
-						config.increaseQuick(w, edges.wtQuick(k));
-						int d = degreeQuick(w);
-						if(!added[w] && config.getQuick(w)>=d && d>0){
-							unstables.addUnsafe(w);
-							added[w]=true;
+						int dest = offsetList.destOffsetQuick(k)+v;
+						config.increaseQuick(dest, offsetList.wtQuick(k));
+						int d = degreeQuick(dest);
+						if(!added[dest] && config.getQuick(dest)>=d && d>0){
+							unstables.addUnsafe(dest);
+							added[dest]=true;
 						}
 					}
 					config.increaseQuick(v, -degreeQuick(v));
