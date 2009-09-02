@@ -100,8 +100,10 @@ public class EdgeOffsetList {
 		return degree;
 	}
 	public boolean equals(EdgeOffsetList that){
-		if(this.size()!=that.size())
+		if(this.size()!=that.size() || this.degree() != that.degree())
 			return false;
+		if(this.edgeOffsetData.equals(that.edgeOffsetData))
+			return true;
 		for(int i=0; i<size(); i++){
 			if(wtQuick(i)!=that.wtForOffset(destOffsetQuick(i))){
 				return false;

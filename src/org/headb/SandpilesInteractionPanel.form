@@ -751,11 +751,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="gridSizeLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                              <Component id="gridRowsField" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="gridRowsField" min="-2" pref="55" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="gridSizeCrossLabel" min="-2" pref="8" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="gridColsField" min="-2" pref="39" max="-2" attributes="0"/>
+                              <Component id="gridColsField" min="-2" pref="54" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">

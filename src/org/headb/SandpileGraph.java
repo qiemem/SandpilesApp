@@ -63,13 +63,16 @@ public class SandpileGraph {
 	public SandpileGraph(SandpileGraph graph){
 		this.blocks = new ArrayList<EdgeStructureBlock>();
 		this.vertsToBlocks = new ArrayList<EdgeStructureBlock>();
+		for(int i=0; i<graph.numVertices(); i++){
+			vertsToBlocks.add(null);
+		}
 		for (EdgeStructureBlock block : graph.blocks) {
 			EdgeStructureBlock newBlock = new EdgeStructureBlock(block);
 			this.blocks.add(newBlock);
-		}
-		for (EdgeStructureBlock block : graph.vertsToBlocks){
-			EdgeStructureBlock newBlock = new EdgeStructureBlock(block);
-			this.blocks.add(newBlock);
+			for(int i=0; i<newBlock.numVertices(); i++){
+				int v = newBlock.getVert(i);
+				vertsToBlocks.set(v, newBlock);
+			}
 		}
 	}
 
@@ -165,6 +168,7 @@ public class SandpileGraph {
 		removeVertexFromBlock(vert);
 		EdgeOffsetList offsetList = edges.getEdgeOffsetList();
 		this.placeVertexWithOffsets(vert, offsetList);
+
 	}
 
 
@@ -304,6 +308,10 @@ public class SandpileGraph {
 	 * @param toDelete The index of the vertex to delete.
 	 */
 	public void removeVertex(int toDelete) {
+		TIntArrayList singleton = new TIntArrayList(1);
+		singleton.add(toDelete);
+		removeVertices(singleton);
+
 //		for (SingleSourceEdgeList edgeList : adj) {
 //			for (Iterator<Edge> edgeIter = edgeList.iterator(); edgeIter.hasNext();) {
 //				Edge e = edgeIter.next();
@@ -330,32 +338,33 @@ public class SandpileGraph {
 	 * @param vertices A list of the vertices to remove.
 	 */
 	public void removeVertices(TIntArrayList vertices) {
-//		int[] translator = new int[numVertices()];
-//		ArrayList<GeneralEdgeList> oldAdj = new ArrayList<GeneralEdgeList>(adj);
-//		boolean[] toRemove = new boolean[numVertices()];
-//		for (int i=0; i<vertices.size(); i++) {
-//			int v = vertices.get(i);
-//			toRemove[v] = true;
-//		}
-//		this.removeAllVertices();
-//		int w=0;
-//		for (int v=0; v<oldAdj.size(); v++){
-//			if(!toRemove[v]){
-//				translator[v] = w;
-//				w++;
-//			}
-//		}
-//		addVertices(w);
-//		for (int v = 0; v < oldAdj.size(); v++) {
-//			if (toRemove[v]) {
-//				continue;
-//			}
-//			for (Edge e : oldAdj.get(v)) {
-//				if (!toRemove[e.dest()]) {
-//					addEdge(translator[e.source()], translator[e.dest()], e.wt());
-//				}
-//			}
-//		}
+		int[] translator = new int[numVertices()];
+		//ArrayList<EdgeStructureBlock> oldBlocks = new ArrayList<EdgeStructureBlock>(blocks);
+		ArrayList<EdgeStructureBlock> oldVertsToBlocks = new ArrayList<EdgeStructureBlock>(vertsToBlocks);
+		boolean[] toRemove = new boolean[numVertices()];
+		for (int i=0; i<vertices.size(); i++) {
+			int v = vertices.get(i);
+			toRemove[v] = true;
+		}
+		this.removeAllVertices();
+		int w=0;
+		for (int v=0; v<oldVertsToBlocks.size(); v++){
+			if(!toRemove[v]){
+				translator[v] = w;
+				w++;
+			}
+		}
+		addVertices(w);
+		for (int v = 0; v < oldVertsToBlocks.size(); v++) {
+			if (toRemove[v]) {
+				continue;
+			}
+			for (Edge e : oldVertsToBlocks.get(v).getOutgoingEdges(v)) {
+				if (!toRemove[e.dest()]) {
+					addEdge(translator[e.source()], translator[e.dest()], e.wt());
+				}
+			}
+		}
 	}
 
 	/**

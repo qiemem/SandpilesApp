@@ -816,34 +816,37 @@ public class SandpileController implements ActionListener, Serializable{
 		int[] eBorderRef = new int[rows];
 		int[] wBorderRef = new int[rows];
 
-		//create vertices
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				gridRef[i][j] = configSize();
-				addVertex(x + j * gridSpacing, y - i * gridSpacing);
-			}
-		}
-
+		// create vertices
+		// Note that we try to create the vertices in a row-by-row order as this
+		// helps the SandileGraph identify common structures. It is not
+		// necessary by any means, just more efficient.
 		for (int i = 0; i < cols; i++) {
 			if (nBorder == SINKS_BORDER || nBorder == REFLECTIVE_BORDER) {
 				nBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing, y + gridSpacing);
 			}
-			if (sBorder == SINKS_BORDER || sBorder == REFLECTIVE_BORDER) {
-				sBorderRef[i] = configSize();
-				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
-			}
-
 		}
 		for (int i = 0; i < rows; i++) {
 			if (wBorder == SINKS_BORDER || wBorder == REFLECTIVE_BORDER) {
 				wBorderRef[i] = configSize();
 				addVertex(x - gridSpacing, y - i * gridSpacing);
 			}
+			for (int j = 0; j < cols; j++) {
+				gridRef[i][j] = configSize();
+				addVertex(x + j * gridSpacing, y - i * gridSpacing);
+			}
 			if (eBorder == SINKS_BORDER || eBorder == REFLECTIVE_BORDER) {
 				eBorderRef[i] = configSize();
 				addVertex(x + (cols) * gridSpacing, y - i * gridSpacing);
 			}
+		}
+
+		for (int i = 0; i < cols; i++) {
+			if (sBorder == SINKS_BORDER || sBorder == REFLECTIVE_BORDER) {
+				sBorderRef[i] = configSize();
+				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
+			}
+
 		}
 		//create edges
 		for (int i = 0; i < rows; i++) {
@@ -861,76 +864,76 @@ public class SandpileController implements ActionListener, Serializable{
 							addEdge(nBorderRef[j], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1][j], 1);
+							//addEdge(gridRef[i][j], gridRef[rows-1][j], 1);
 							edges.add(gridRef[rows-1][j], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1][cols-1 - j], 1);
+							edges.add(gridRef[rows-1][cols-1 - j], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i - 1][j]);
+					edges.add(gridRef[i - 1][j],1);
 				}
 
 				if (i == rows - 1) {
 					switch(sBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], sBorderRef[j], 1);
+							edges.add(sBorderRef[j], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], sBorderRef[j], 1);
+							edges.add(sBorderRef[j], 1);
 							addEdge(sBorderRef[j], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[rows-1][j], gridRef[0][j], 1);
+							edges.add(gridRef[0][j], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[rows-1][j], gridRef[0][cols-1-j], 1);
+							edges.add(gridRef[0][cols-1-j], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i + 1][j]);
+					edges.add(gridRef[i + 1][j],1);
 				}
 				if (j == cols - 1) {
 					switch(eBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], eBorderRef[i], 1);
+							edges.add(eBorderRef[i], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], eBorderRef[i], 1);
+							edges.add(eBorderRef[i], 1);
 							addEdge(eBorderRef[i], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[i][j], gridRef[i][0], 1);
+							edges.add(gridRef[i][0], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1-i][0], 1);
+							edges.add(gridRef[rows-1-i][0], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i][j + 1]);
+					edges.add(gridRef[i][j + 1],1);
 				}
 
 				if (j == 0) {
 					switch(wBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], wBorderRef[i], 1);
+							edges.add(wBorderRef[i], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], wBorderRef[i], 1);
+							edges.add(wBorderRef[i], 1);
 							addEdge(wBorderRef[i], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[i][j], gridRef[i][cols-1], 1);
+							edges.add(gridRef[i][cols-1], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1-i][cols-1], 1);
+							edges.add(gridRef[rows-1-i][cols-1], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i][j - 1]);
+					edges.add(gridRef[i][j - 1],1);
 				}
-
+				getGraph().setOutgoingEdges(gridRef[i][j], edges);
 			}
 		}
 	}
