@@ -287,7 +287,7 @@ public class SandpileGraph {
 		placeVertexWithOffsets(this.numVertices()-1, new EdgeOffsetList());
 	}
 
-	public void insertVertex(int i){
+//	public void insertVertex(int i){
 //		for(SingleSourceEdgeList edges : adj){
 //			if(edges.source()>=i){
 //				edges.setSource(edges.source()+1);
@@ -299,7 +299,7 @@ public class SandpileGraph {
 //			}
 //		}
 //		adj.add(i, new SingleSourceEdgeList(i));
-	}
+//	}
 
 	/**
 	 * Removes a vertex from the graph. Note that the index of all vertices

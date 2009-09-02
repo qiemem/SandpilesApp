@@ -1500,13 +1500,13 @@ public class SandpileController implements ActionListener, Serializable{
 		return configSize() - 1;
 	}
 
-	public int insertVertex(int index, float x, float y){
-		sg.insertVertex(index);
-		vertexData.insertRow(index, x,y);
-		currentConfig.insert(index, 0);
-		firings.insert(index, 0);
-		return configSize() - 1;
-	}
+//	public int insertVertex(int index, float x, float y){
+//		sg.insertVertex(index);
+//		vertexData.insertRow(index, x,y);
+//		currentConfig.insert(index, 0);
+//		firings.insert(index, 0);
+//		return configSize() - 1;
+//	}
 
 	public float getVertexX(int vert) {
 		return vertexData.get(vert, 0);
