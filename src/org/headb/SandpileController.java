@@ -596,6 +596,7 @@ public class SandpileController implements ActionListener, Serializable{
 	 * @param weight The weight of the new edges.
 	 */
 	public void addEdgeControl(float x, float y, final int weight) {
+
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0  && !selectedVertices.isEmpty()) {
 			final TIntArrayList sourceVerts = new TIntArrayList(selectedVertices.toNativeArray());
@@ -627,8 +628,8 @@ public class SandpileController implements ActionListener, Serializable{
 	final private ArrayList<SingleSourceEdgeList> storeOutgoingEdgeData(TIntArrayList verts){
 		final ArrayList<SingleSourceEdgeList> edgeLists = new ArrayList<SingleSourceEdgeList>(selectedVertices.size());
 		for (int i = 0; i < selectedVertices.size(); i++) {
-			int v = selectedVertices.get(i);
-			edgeLists.add(new SingleSourceEdgeList(getGraph().getOutgoingEdges(v)));
+			int v = selectedVertices.getQuick(i);
+			edgeLists.add(new SingleSourceEdgeList(getGraph().getOutgoingEdges(v),v));
 		}
 		return edgeLists;
 	}
@@ -736,7 +737,7 @@ public class SandpileController implements ActionListener, Serializable{
 		if (touchVert >= 0 && !selectedVertices.isEmpty()) {
 			final TIntArrayList otherVerts = new TIntArrayList(selectedVertices.toNativeArray());
 			final ArrayList<SingleSourceEdgeList> edgeLists = storeOutgoingEdgeData(otherVerts);
-			final SingleSourceEdgeList touchVertEdges = new SingleSourceEdgeList(getGraph().getOutgoingEdges(touchVert));
+			final SingleSourceEdgeList touchVertEdges = new SingleSourceEdgeList(getGraph().getOutgoingEdges(touchVert),touchVert);
 			SGEdit theEdit = new SGEdit("delete undirected edge(s)"){
 				@Override
 				public void undoAction() {
@@ -847,17 +848,21 @@ public class SandpileController implements ActionListener, Serializable{
 		//create edges
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
+				SingleSourceEdgeList edges = new SingleSourceEdgeList(gridRef[i][j]);
 				if (i == 0) {
 					switch(nBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], nBorderRef[j], 1);
+							edges.add(nBorderRef[j],1);
+							//addEdge(gridRef[i][j], nBorderRef[j], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], nBorderRef[j], 1);
+							edges.add(nBorderRef[j],1);
+							//addEdge(gridRef[i][j], nBorderRef[j], 1);
 							addEdge(nBorderRef[j], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
 							addEdge(gridRef[i][j], gridRef[rows-1][j], 1);
+							edges.add(gridRef[rows-1][j], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
 							addEdge(gridRef[i][j], gridRef[rows-1][cols-1 - j], 1);

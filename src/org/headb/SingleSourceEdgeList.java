@@ -41,6 +41,14 @@ public class SingleSourceEdgeList extends GeneralEdgeList{
 		this.source = source;
 	}
 
+	public SingleSourceEdgeList(EdgeList other, int source){
+		this.source = source;
+		edgeData = new Int2dArrayList(2);
+		for(int i=0; i<other.size(); i++){
+			this.add(source, other.destQuick(i), other.wtQuick(i));
+		}
+	}
+
 	public SingleSourceEdgeList(SingleSourceEdgeList other){
 		source = other.source;
 		edgeData = new Int2dArrayList(other.edgeData);
@@ -92,11 +100,14 @@ public class SingleSourceEdgeList extends GeneralEdgeList{
 	}
 	@Override public void add(int s, int d, int w){
 		if(s==source)
-			edgeData.addRow(d, w);
+			add(d,w);
 		else
 			throw new IllegalArgumentException("Tried to add an edge with the " +
 					"wrong source to a SingleSourceEdge. Edge's source was "
 					+ s + " while it needed to be " + source + ".");
+	}
+	public void add(int d, int w){
+		edgeData.addRow(d,w);
 	}
 
 	@Override public void add(Edge e){

@@ -2195,7 +2195,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				}
 			}
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 		}
 		this.updateConfigSelectList();
 		setDefaultCursor();

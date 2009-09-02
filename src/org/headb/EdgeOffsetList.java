@@ -50,37 +50,51 @@ public class EdgeOffsetList {
 		degree = other.degree;
 	}
 	public int destOffset(int i) {
-		return edgeOffsetData.get(i,1);
+		return edgeOffsetData.get(i,0);
 	}
 	public int destOffsetQuick(int i) {
-		return edgeOffsetData.getQuick(i,1);
+		return edgeOffsetData.getQuick(i,0);
 	}
 	public void setDestOffset(int i, int d){
-		edgeOffsetData.set(i, 1, d);
+		edgeOffsetData.set(i, 0, d);
 	}
 	public int wt(int i){
-		return edgeOffsetData.get(i, 2);
+		return edgeOffsetData.get(i, 1);
 	}
 	public int wtQuick(int i){
-		return edgeOffsetData.getQuick(i, 2);
+		return edgeOffsetData.getQuick(i, 1);
 	}
 	public void setWt(int i, int w){
-		edgeOffsetData.set(i, 2, w);
+		edgeOffsetData.set(i, 1, w);
+		recalcDegree();
 	}
 	public int size(){
 		return edgeOffsetData.rows();
 	}
 	public void addEdge(int destOffset, int wt) {
+		if(wt<=0)
+			return;
 		edgeOffsetData.addRow(destOffset, wt);
 		degree += wt;
 	}
 	public int wtForOffset(int offset){
+		int i = find(offset);
+		if(i<0)
+			return 0;
+		return wtQuick(i);
+	}
+
+	public int find(int offset){
 		for(int i=0; i<size(); i++){
-			if(destOffsetQuick(i)==offset){
-				return wtQuick(i);
+			if(destOffsetQuick(i) == offset){
+				return i;
 			}
 		}
 		return -1;
+	}
+	public void remove(int i){
+		edgeOffsetData.removeRow(i);
+		recalcDegree();
 	}
 	public int degree() {
 		return degree;
@@ -94,5 +108,12 @@ public class EdgeOffsetList {
 			}
 		}
 		return true;
+	}
+
+	private void recalcDegree() {
+		degree=0;
+		for(int i=0; i<size(); i++){
+			degree+=wtQuick(i);
+		}
 	}
 }

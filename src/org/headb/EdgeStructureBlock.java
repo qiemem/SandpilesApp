@@ -59,10 +59,10 @@ public class EdgeStructureBlock {
 			return vert;
 		}
 		public int destQuick(int i){
-			return getDestVertQuick(vert,i);
+			return vert + edgeInfo.destOffsetQuick(i);
 		}
 		public int wtQuick(int i){
-			return getWtQuick(i);
+			return edgeInfo.wtQuick(i);
 		}
 		public void remove(int i){
 			throw manipulationException();
@@ -83,6 +83,7 @@ public class EdgeStructureBlock {
 
 	public EdgeStructureBlock(EdgeOffsetList edgeInfo){
 		this.edgeInfo = edgeInfo;
+		this.vertices = new TIntArrayList();
 	}
 
 	public EdgeStructureBlock(EdgeStructureBlock other){
@@ -98,8 +99,13 @@ public class EdgeStructureBlock {
 		return false;
 	}
 
-	public void removeVertex(int v) {
-		vertices.remove(v);
+	public boolean removeVertex(int v) {
+		int i = vertices.indexOf(v);
+		if(i>=0){
+			vertices.remove(i);
+			return true;
+		}
+		return false;
 	}
 
 	public int numEdges(){
@@ -119,11 +125,11 @@ public class EdgeStructureBlock {
 	}
 
 	public int getDestVert(int vertIndex, int edgeIndex){
-		return edgeInfo.destOffset(edgeIndex) + vertices.get(vertIndex);
+		return edgeInfo.destOffset(edgeIndex) + getVert(vertIndex);
 	}
 
 	public int getDestVertQuick(int vertIndex, int edgeIndex){
-		return edgeInfo.destOffsetQuick(edgeIndex) + vertices.getQuick(vertIndex);
+		return edgeInfo.destOffsetQuick(edgeIndex) + getVert(vertIndex);
 	}
 
 	public int getWt(int edgeIndex) {
@@ -142,7 +148,13 @@ public class EdgeStructureBlock {
 		return edgeInfo;
 	}
 
-	public EdgeList getOutgoingEdges(int vert){
+	public EdgeList getOutgoingEdgesQuick(int vert){
 		return new PersonalizedEdgeList(vert);
+	}
+	public EdgeList getOutgoingEdges(int vert){
+		if(vertices.contains(vert))
+			return new PersonalizedEdgeList(vert);
+		else
+			throw new IndexOutOfBoundsException("Tried to get the outgoing edges of a vertex not in this block.");
 	}
 }

@@ -62,12 +62,14 @@ public class SandpileGraph {
 
 	public SandpileGraph(SandpileGraph graph){
 		this.blocks = new ArrayList<EdgeStructureBlock>();
+		this.vertsToBlocks = new ArrayList<EdgeStructureBlock>();
 		for (EdgeStructureBlock block : graph.blocks) {
 			EdgeStructureBlock newBlock = new EdgeStructureBlock(block);
-			this.blocks.add(block);
+			this.blocks.add(newBlock);
 		}
 		for (EdgeStructureBlock block : graph.vertsToBlocks){
-			vertsToBlocks.add(block);
+			EdgeStructureBlock newBlock = new EdgeStructureBlock(block);
+			this.blocks.add(newBlock);
 		}
 	}
 
@@ -129,11 +131,25 @@ public class SandpileGraph {
 	 * Retrieves the list of edges which begin with the source vertex.
 	 */
 	public final EdgeList getOutgoingEdges(int vert) {
-		return vertsToBlocks.get(vert).getOutgoingEdges(vert);
+		return vertsToBlocks.get(vert).getOutgoingEdgesQuick(vert);
 	}
 
 	private void addBlock(EdgeStructureBlock block){
 		blocks.add(block);
+	}
+
+	private boolean removeBlockIfEmpty(EdgeStructureBlock block){
+		if(block.numVertices()==0){
+			blocks.remove(block);
+			return true;
+		}
+		return false;
+	}
+
+	private void removeVertexFromBlock(int v) {
+		EdgeStructureBlock block = getBlock(v);
+		block.removeVertex(v);
+		removeBlockIfEmpty(block);
 	}
 
 	private EdgeStructureBlock getBlockForOffsetList(EdgeOffsetList offsetList){
@@ -142,13 +158,11 @@ public class SandpileGraph {
 				return block;
 			}
 		}
-		EdgeStructureBlock block = new EdgeStructureBlock(offsetList);
-		addBlock(block);
-		return block;
+		return null;
 	}
 
 	public void setOutgoingEdges(int vert, SingleSourceEdgeList edges){
-		getBlock(vert).removeVertex(vert);
+		removeVertexFromBlock(vert);
 		EdgeOffsetList offsetList = edges.getEdgeOffsetList();
 		this.placeVertexWithOffsets(vert, offsetList);
 	}
@@ -166,7 +180,7 @@ public class SandpileGraph {
 	}
 
 //	public final Iterable<Integer> getOutgoingVertices(int vert) {
-//		final List<int[]> edgeList = getOutgoingEdges(vert);
+//		final List<int[]> edgeList = getOutgoingEdgesQuick(vert);
 //		final Iterator<Integer> vertIter = new Iterator<Integer>() {
 //
 //			Iterator<int[]> edgeIter = edgeList.iterator();
@@ -194,12 +208,12 @@ public class SandpileGraph {
 	/**
 	 * Retrieves the list of edges which begin with any of the edges in the given list.
 	 */
-//	public final GeneralEdgeList getOutgoingEdges(final TIntArrayList verts) {
+//	public final GeneralEdgeList getOutgoingEdgesQuick(final TIntArrayList verts) {
 //		GeneralEdgeList edgeList = new GeneralEdgeList();
 //		boolean[] alreadyAdded = new boolean[numVertices()];
 //		for (int i=0; i< verts.size(); i++) {
 //			int vert = verts.get(i);
-//			for (Edge e : getOutgoingEdges(vert)) {
+//			for (Edge e : getOutgoingEdgesQuick(vert)) {
 //				if (!alreadyAdded[e.dest()]) {
 //					edgeList.add(e);
 //					alreadyAdded[e[1]] = true;
@@ -210,7 +224,7 @@ public class SandpileGraph {
 //	}
 
 //	public final Iterable<Integer> getOutgoingVertices(final Iterable<Integer> verts) {
-//		final List<int[]> edgeList = getOutgoingEdges(verts);
+//		final List<int[]> edgeList = getOutgoingEdgesQuick(verts);
 //		final Iterator<Integer> vertIter = new Iterator<Integer>() {
 //
 //			Iterator<int[]> edgeIter = edgeList.iterator();
@@ -254,8 +268,14 @@ public class SandpileGraph {
 
 	private void placeVertexWithOffsets(int vert, EdgeOffsetList offsets){
 		EdgeStructureBlock block = this.getBlockForOffsetList(offsets);
-		assert block.tryAddVertex(vert, offsets):
-			new RuntimeException("This should be impossible");
+		if(block==null){
+			block = new EdgeStructureBlock(offsets);
+			addBlock(block);
+		}
+		//assert !block.tryAddVertex(vert, offsets):
+		//	new RuntimeException("This should be impossible");
+		block.tryAddVertex(vert, offsets);
+
 		vertsToBlocks.set(vert, block);
 	}
 	public void addVertex() {
@@ -360,15 +380,14 @@ public class SandpileGraph {
 	 * edge does not exist yet it will be created.
 	 * @param sourceVert The index of the source vertex.
 	 * @param destVert the index of the destination vertex.
-	 * @return Returns the newly created edge.
 	 */
-	public Edge addEdge(int sourceVert, int destVert) {
+	public void addEdge(int sourceVert, int destVert) {
 		//this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert));
-		return this.addEdge(sourceVert, destVert, 1);
+		this.addEdge(sourceVert, destVert, 1);
 	}
 
-	public Edge addEdge(Edge e){
-		return addEdge(e.source(), e.dest(), e.wt());
+	public void addEdge(Edge e){
+		addEdge(e.source(), e.dest(), e.wt());
 	}
 
 	/**
@@ -379,38 +398,25 @@ public class SandpileGraph {
 	 * @param sourceVert The index of the source vertex.
 	 * @param destVert The index of the destination vertex.
 	 * @param weight The amount to increase the weight of the edge by.
-	 * @return Returns the newly created edge or null if the resuling weight was
-	 * zero or less.
 	 */
-	public Edge addEdge(int sourceVert, int destVert, int weight) {
-		EdgeOffsetList offsets = this.getBlock(sourceVert).getEdgeOffsetInfo();
-		int originalWeight = 0;
-		for(int i = 0; i<offsets.size(); i++){
-			if(sourceVert+offsets.destOffsetQuick(i)==destVert){
-				originalWeight = offsets.wtQuick(i);
-				break;
-			}
-		}
+	public void addEdge(int sourceVert, int destVert, int weight) {
+		if(sourceVert == destVert)
+			return;
+ 		EdgeOffsetList offsets = new EdgeOffsetList(this.getBlock(sourceVert).getEdgeOffsetInfo());
+		removeVertexFromBlock(sourceVert);
 
-		Edge e = getEdge(sourceVert, destVert);
-		if (e == null && weight > 0) {
-			e = new Edge(sourceVert, destVert, weight);
-			e.setSource(sourceVert);
-			e.setDest(destVert);
-			e.setWt(weight);
-			adj.get(sourceVert).add(e);
-			degrees.set(sourceVert, degree(sourceVert) + weight);
-		} else if(e == null){
-			return null;
-		}else if (weight + e.wt() > 0) {
-			e.setWt(e.wt() + weight);
-			degrees.set(sourceVert, degree(sourceVert) + weight);
-		} else {
-			adj.get(sourceVert).remove(e);
-			degrees.set(sourceVert, degree(sourceVert) - e.wt());
-			return null;
+		int offset = destVert-sourceVert;
+		int edgeIndex = offsets.find(offset);
+		int originalWeight = offsets.wtForOffset(offset);
+		int newWeight = Math.max(0, weight+originalWeight);
+		if (originalWeight==0 && newWeight>0) {
+			offsets.addEdge(offset, newWeight);
+		}else if(newWeight == 0 && edgeIndex>=0){
+			offsets.remove(edgeIndex);
+		}else if(newWeight > 0){
+			offsets.setWt(edgeIndex, newWeight);
 		}
-		return e;
+		this.placeVertexWithOffsets(sourceVert, offsets);
 	}
 
 	/**
@@ -418,10 +424,9 @@ public class SandpileGraph {
 	 * weight of the edge becomes zero or less, it is removed.
 	 * @param sourceVert The index of the source vertex.
 	 * @param destVert the index of the destination vertex.
-	 * @return Returns the newly created edge.
 	 */
-	public Edge removeEdge(int sourceVert, int destVert) {
-		return this.removeEdge(sourceVert, destVert, 1);
+	public void removeEdge(int sourceVert, int destVert) {
+		this.removeEdge(sourceVert, destVert, 1);
 	}
 
 	/**
@@ -432,11 +437,9 @@ public class SandpileGraph {
 	 * @param sourceVert The index of the source vertex.
 	 * @param destVert The index of the destination vertex.
 	 * @param weight The amount to decrease the weight of the edge by.
-	 * @return Returns the newly created edge or null if the resuling weight was
-	 * zero or less.
 	 */
-	public Edge removeEdge(int sourceVert, int destVert, int weight) {
-		return this.addEdge(sourceVert, destVert, -weight);
+	public void removeEdge(int sourceVert, int destVert, int weight) {
+		this.addEdge(sourceVert, destVert, -weight);
 	}
 
 	/**
@@ -502,7 +505,7 @@ public class SandpileGraph {
 	}
 
 	public void fireVertexInPlace(SandpileConfiguration config, int vert){
-		GeneralEdgeList edges = getOutgoingEdges(vert);
+		EdgeList edges = getOutgoingEdges(vert);
 		int s = edges.size();
 		for(int i=0; i<s; i++){
 			config.increaseQuick(edges.destQuick(i), edges.wtQuick(i));
@@ -628,12 +631,12 @@ public class SandpileGraph {
 					// fire it
 					//fireVertexInPlace(config, v);
 					// include (newly) unstable neighbors, adding them too
-					GeneralEdgeList edges = getOutgoingEdges(v);
+					EdgeList edges = getOutgoingEdges(v);
 					int s = edges.size();
 					for(int k=0; k<s; k++){
 						int w = edges.destQuick(k);
 						config.increaseQuick(w, edges.wtQuick(k));
-						int d = degrees.getQuick(w);
+						int d = degreeQuick(w);
 						if(!added[w] && config.getQuick(w)>=d && d>0){
 							unstables.addUnsafe(w);
 							added[w]=true;
@@ -641,7 +644,7 @@ public class SandpileGraph {
 					}
 					config.increaseQuick(v, -degreeQuick(v));
 					// if still unstable, include it in next generation
-					if(config.getQuick(v)>=degrees.getQuick(v)){
+					if(config.getQuick(v)>=degreeQuick(v)){
 						unstables.addUnsafe(v);
 						added[v] = true;
 					}
@@ -672,7 +675,7 @@ public class SandpileGraph {
 
 	public SandpileConfiguration reverseFireVertexInPlace(SandpileConfiguration config, int vert) {
 		config.increaseQuick(vert, degreeQuick(vert));
-		GeneralEdgeList edges = getOutgoingEdges(vert);
+		EdgeList edges = getOutgoingEdges(vert);
 		int s= edges.size();
 		for(int i = 0; i<s; i++){
 			config.increaseQuick(edges.destQuick(i), -edges.wtQuick(i));
@@ -770,8 +773,8 @@ public class SandpileGraph {
 	 */
 	public SandpileConfiguration getMaxConfig() {
 		SandpileConfiguration maxConfig = new SandpileConfiguration(this.numVertices());
-		for (int i=0; i<degrees.size(); i++) {
-			int d = degrees.get(i);
+		for (int i=0; i<numVertices(); i++) {
+			int d = degreeQuick(i);
 			maxConfig.add(d - 1);
 		}
 		return maxConfig;
@@ -817,7 +820,7 @@ public class SandpileGraph {
 				added[v]=true;
 				inDebts.push(v);
 			}
-			GeneralEdgeList edges = getOutgoingEdges(v);
+			EdgeList edges = getOutgoingEdges(v);
 			int s = edges.size();
 			for(int i=0; i<s; i++){
 				int w = edges.destQuick(i);
