@@ -147,7 +147,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				mouseY = coords[1];
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
 				
-				if(sandpileController.getSelectedVertices().contains(vert)&&getMouseMode(e)!=MouseMode.MOVE){
+				if(sandpileController.getSelectedVertices().contains(vert)&&getMouseMode(e)==MouseMode.EDIT){
 					movingVertices = true;
 					drawer.scrollOnDrag = false;
 				}else if(getMouseMode(e) == MouseMode.SELECT){
