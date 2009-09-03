@@ -149,6 +149,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				
 				if(sandpileController.getSelectedVertices().contains(vert)&&getMouseMode(e)!=MouseMode.MOVE){
 					movingVertices = true;
+					drawer.scrollOnDrag = false;
 				}else if(getMouseMode(e) == MouseMode.SELECT){
 					boxX = mouseX;
 					boxY = mouseY;
@@ -184,6 +185,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				selecting = false;
 				movingVertices = false;
 				sandpileController.repaint();
+				drawer.scrollOnDrag=true;
 			}
 		});
 		canvas.addMouseMotionListener(new MouseMotionAdapter(){
@@ -191,7 +193,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				if(e.getButton()!=e.BUTTON1)
 					return;
 				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
-				int vert = sandpileController.touchingVertex(mouseX, mouseY);
+				//int vert = sandpileController.touchingVertex(mouseX, mouseY);
 				if(movingVertices){
 					sandpileController.moveVertices(sandpileController.getSelectedVertices(), coords[0]-mouseX, coords[1]-mouseY);
 					sandpileController.repaint();

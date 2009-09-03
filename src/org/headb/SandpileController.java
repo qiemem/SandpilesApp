@@ -1719,7 +1719,8 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void moveVertices(TIntArrayList vertices, float deltaX, float deltaY) {
-		for (int v=0; v<configSize(); v++) {
+		for (int i=0; i<vertices.size(); i++) {
+			int v = vertices.get(i);
 			setVertexPos(v, getVertexX(v)+deltaX, getVertexY(v)+deltaY);
 		}
 	}

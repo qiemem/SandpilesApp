@@ -67,18 +67,6 @@ public class SandpileGraph {
 		this.vertsToOffsetLists = new ArrayList<EdgeOffsetList>();
 		this.vertexCounts = new HashMap<EdgeOffsetList, Integer>();
 
-//		HashMap<EdgeOffsetList, EdgeOffsetList> blockTranslator = new HashMap<EdgeOffsetList,EdgeOffsetList>();
-//
-//		for (EdgeOffsetList offsetList : graph.offsetLists) {
-//			EdgeOffsetList newOffsetList = new EdgeOffsetList(offsetList);
-//			blockTranslator.put(offsetList, newOffsetList);
-//			offsetLists.add(newOffsetList);
-//			vertexCounts.put(newOffsetList, graph.vertexCounts.get(offsetList));
-//		}
-//		for(EdgeOffsetList ol : graph.offsetLists){
-//			vertsToOffsetLists.add(blockTranslator.get(ol));
-//		}
-
 		for(int v=0; v<graph.numVertices();v++){
 			addVertex();
 			placeVertexWithOffsets(v, graph.getOffsetList(v));
