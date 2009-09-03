@@ -596,6 +596,7 @@ public class SandpileController implements ActionListener, Serializable{
 	 * @param weight The weight of the new edges.
 	 */
 	public void addEdgeControl(float x, float y, final int weight) {
+
 		final int touchVert = touchingVertex(x, y);
 		if (touchVert >= 0  && !selectedVertices.isEmpty()) {
 			final TIntArrayList sourceVerts = new TIntArrayList(selectedVertices.toNativeArray());
@@ -627,8 +628,8 @@ public class SandpileController implements ActionListener, Serializable{
 	final private ArrayList<SingleSourceEdgeList> storeOutgoingEdgeData(TIntArrayList verts){
 		final ArrayList<SingleSourceEdgeList> edgeLists = new ArrayList<SingleSourceEdgeList>(selectedVertices.size());
 		for (int i = 0; i < selectedVertices.size(); i++) {
-			int v = selectedVertices.get(i);
-			edgeLists.add(new SingleSourceEdgeList(getGraph().getOutgoingEdges(v)));
+			int v = selectedVertices.getQuick(i);
+			edgeLists.add(new SingleSourceEdgeList(getGraph().getOutgoingEdges(v),v));
 		}
 		return edgeLists;
 	}
@@ -736,7 +737,7 @@ public class SandpileController implements ActionListener, Serializable{
 		if (touchVert >= 0 && !selectedVertices.isEmpty()) {
 			final TIntArrayList otherVerts = new TIntArrayList(selectedVertices.toNativeArray());
 			final ArrayList<SingleSourceEdgeList> edgeLists = storeOutgoingEdgeData(otherVerts);
-			final SingleSourceEdgeList touchVertEdges = new SingleSourceEdgeList(getGraph().getOutgoingEdges(touchVert));
+			final SingleSourceEdgeList touchVertEdges = new SingleSourceEdgeList(getGraph().getOutgoingEdges(touchVert),touchVert);
 			SGEdit theEdit = new SGEdit("delete undirected edge(s)"){
 				@Override
 				public void undoAction() {
@@ -815,117 +816,124 @@ public class SandpileController implements ActionListener, Serializable{
 		int[] eBorderRef = new int[rows];
 		int[] wBorderRef = new int[rows];
 
-		//create vertices
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				gridRef[i][j] = configSize();
-				addVertex(x + j * gridSpacing, y - i * gridSpacing);
-			}
-		}
-
+		// create vertices
+		// Note that we try to create the vertices in a row-by-row order as this
+		// helps the SandileGraph identify common structures. It is not
+		// necessary by any means, just more efficient.
 		for (int i = 0; i < cols; i++) {
 			if (nBorder == SINKS_BORDER || nBorder == REFLECTIVE_BORDER) {
 				nBorderRef[i] = configSize();
 				addVertex(x + i * gridSpacing, y + gridSpacing);
 			}
-			if (sBorder == SINKS_BORDER || sBorder == REFLECTIVE_BORDER) {
-				sBorderRef[i] = configSize();
-				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
-			}
-
 		}
 		for (int i = 0; i < rows; i++) {
 			if (wBorder == SINKS_BORDER || wBorder == REFLECTIVE_BORDER) {
 				wBorderRef[i] = configSize();
 				addVertex(x - gridSpacing, y - i * gridSpacing);
 			}
+			for (int j = 0; j < cols; j++) {
+				gridRef[i][j] = configSize();
+				addVertex(x + j * gridSpacing, y - i * gridSpacing);
+			}
 			if (eBorder == SINKS_BORDER || eBorder == REFLECTIVE_BORDER) {
 				eBorderRef[i] = configSize();
 				addVertex(x + (cols) * gridSpacing, y - i * gridSpacing);
 			}
 		}
+
+		for (int i = 0; i < cols; i++) {
+			if (sBorder == SINKS_BORDER || sBorder == REFLECTIVE_BORDER) {
+				sBorderRef[i] = configSize();
+				addVertex(x + i * gridSpacing, y - (rows) * gridSpacing);
+			}
+
+		}
 		//create edges
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
+				SingleSourceEdgeList edges = new SingleSourceEdgeList(gridRef[i][j]);
 				if (i == 0) {
 					switch(nBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], nBorderRef[j], 1);
+							edges.add(nBorderRef[j],1);
+							//addEdge(gridRef[i][j], nBorderRef[j], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], nBorderRef[j], 1);
+							edges.add(nBorderRef[j],1);
+							//addEdge(gridRef[i][j], nBorderRef[j], 1);
 							addEdge(nBorderRef[j], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1][j], 1);
+							//addEdge(gridRef[i][j], gridRef[rows-1][j], 1);
+							edges.add(gridRef[rows-1][j], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1][cols-1 - j], 1);
+							edges.add(gridRef[rows-1][cols-1 - j], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i - 1][j]);
+					edges.add(gridRef[i - 1][j],1);
 				}
 
 				if (i == rows - 1) {
 					switch(sBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], sBorderRef[j], 1);
+							edges.add(sBorderRef[j], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], sBorderRef[j], 1);
+							edges.add(sBorderRef[j], 1);
 							addEdge(sBorderRef[j], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[rows-1][j], gridRef[0][j], 1);
+							edges.add(gridRef[0][j], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[rows-1][j], gridRef[0][cols-1-j], 1);
+							edges.add(gridRef[0][cols-1-j], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i + 1][j]);
+					edges.add(gridRef[i + 1][j],1);
 				}
 				if (j == cols - 1) {
 					switch(eBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], eBorderRef[i], 1);
+							edges.add(eBorderRef[i], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], eBorderRef[i], 1);
+							edges.add(eBorderRef[i], 1);
 							addEdge(eBorderRef[i], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[i][j], gridRef[i][0], 1);
+							edges.add(gridRef[i][0], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1-i][0], 1);
+							edges.add(gridRef[rows-1-i][0], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i][j + 1]);
+					edges.add(gridRef[i][j + 1],1);
 				}
 
 				if (j == 0) {
 					switch(wBorder){
 						case SINKS_BORDER:
-							addEdge(gridRef[i][j], wBorderRef[i], 1);
+							edges.add(wBorderRef[i], 1);
 							break;
 						case REFLECTIVE_BORDER:
-							addEdge(gridRef[i][j], wBorderRef[i], 1);
+							edges.add(wBorderRef[i], 1);
 							addEdge(wBorderRef[i], gridRef[i][j], 1);
 							break;
 						case LOOP_BORDER:
-							addEdge(gridRef[i][j], gridRef[i][cols-1], 1);
+							edges.add(gridRef[i][cols-1], 1);
 							break;
 						case LOOP_REVERSE_BORDER:
-							addEdge(gridRef[i][j], gridRef[rows-1-i][cols-1], 1);
+							edges.add(gridRef[rows-1-i][cols-1], 1);
 							break;
 					}
 				} else {
-					addEdge(gridRef[i][j], gridRef[i][j - 1]);
+					edges.add(gridRef[i][j - 1],1);
 				}
-
+				getGraph().setOutgoingEdges(gridRef[i][j], edges);
 			}
 		}
 	}
@@ -1492,13 +1500,13 @@ public class SandpileController implements ActionListener, Serializable{
 		return configSize() - 1;
 	}
 
-	public int insertVertex(int index, float x, float y){
-		sg.insertVertex(index);
-		vertexData.insertRow(index, x,y);
-		currentConfig.insert(index, 0);
-		firings.insert(index, 0);
-		return configSize() - 1;
-	}
+//	public int insertVertex(int index, float x, float y){
+//		sg.insertVertex(index);
+//		vertexData.insertRow(index, x,y);
+//		currentConfig.insert(index, 0);
+//		firings.insert(index, 0);
+//		return configSize() - 1;
+//	}
 
 	public float getVertexX(int vert) {
 		return vertexData.get(vert, 0);
@@ -1711,7 +1719,8 @@ public class SandpileController implements ActionListener, Serializable{
 	}
 
 	public void moveVertices(TIntArrayList vertices, float deltaX, float deltaY) {
-		for (int v=0; v<configSize(); v++) {
+		for (int i=0; i<vertices.size(); i++) {
+			int v = vertices.get(i);
 			setVertexPos(v, getVertexX(v)+deltaX, getVertexY(v)+deltaY);
 		}
 	}

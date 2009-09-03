@@ -147,8 +147,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				mouseY = coords[1];
 				int vert = sandpileController.touchingVertex(mouseX, mouseY);
 				
-				if(sandpileController.getSelectedVertices().contains(vert)&&getMouseMode(e)!=MouseMode.MOVE){
+				if(sandpileController.getSelectedVertices().contains(vert)&&getMouseMode(e)==MouseMode.EDIT){
 					movingVertices = true;
+					drawer.scrollOnDrag = false;
 				}else if(getMouseMode(e) == MouseMode.SELECT){
 					boxX = mouseX;
 					boxY = mouseY;
@@ -184,6 +185,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				selecting = false;
 				movingVertices = false;
 				sandpileController.repaint();
+				drawer.scrollOnDrag=true;
 			}
 		});
 		canvas.addMouseMotionListener(new MouseMotionAdapter(){
@@ -191,7 +193,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				if(e.getButton()!=e.BUTTON1)
 					return;
 				float[] coords = drawer.transformCanvasCoords(e.getX(), e.getY());
-				int vert = sandpileController.touchingVertex(mouseX, mouseY);
+				//int vert = sandpileController.touchingVertex(mouseX, mouseY);
 				if(movingVertices){
 					sandpileController.moveVertices(sandpileController.getSelectedVertices(), coords[0]-mouseX, coords[1]-mouseY);
 					sandpileController.repaint();
@@ -241,7 +243,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		drawer3d.setColors(colors, inDebtColors, backgroundColor);
 	}
 
-	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, EdgeList edgeData){
+	public void copyVertexDataToClipboard(Float2dArrayList locationData, TIntArrayList sandData, GeneralEdgeList edgeData){
 		localClipboard.setContents(new SandpileTransferable(locationData, sandData, edgeData), this);
 	}
 	
@@ -249,7 +251,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		TIntArrayList vertices = sandpileController.getSelectedVertices();
 		Float2dArrayList locationData = new Float2dArrayList(0,2);
 		TIntArrayList configData = new TIntArrayList();
-		EdgeList edgeData = new EdgeList();
+		GeneralEdgeList edgeData = new GeneralEdgeList();
 		int vert = 0;
 		for(int i=0; i< vertices.size(); i++){
 			int v = vertices.get(i);
@@ -961,11 +963,12 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
             .add(makeGridOptionsPanelLayout.createSequentialGroup()
                 .add(gridSizeLabel)
                 .add(2, 2, 2)
-                .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 55, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(gridSizeCrossLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 54, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(104, 104, 104))
             .add(makeGridOptionsPanelLayout.createSequentialGroup()
                 .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel3)
@@ -1259,7 +1262,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         dimensionToggleButton.setText("3d");
-        dimensionToggleButton.setToolTipText("Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 20,000 vertices). 3d mode does not display edges.");
+        dimensionToggleButton.setToolTipText("Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 12,000 vertices). 3d mode does not display edges.");
         dimensionToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dimensionToggleButtonActionPerformed(evt);
@@ -2195,7 +2198,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 				}
 			}
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 		}
 		this.updateConfigSelectList();
 		setDefaultCursor();
@@ -2454,6 +2459,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 	private void dimensionToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dimensionToggleButtonActionPerformed
 		if(dimensionToggleButton.isSelected()){
+			final SandpilesInteractionPanel me = this;
 			calculationThread = new Thread(){
 				@Override public void run(){
 					if(!calculationThreadInit("Calculating triangulation"))
@@ -2469,15 +2475,23 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 						sandpileController.setDrawer(drawer3d);
 						currentDrawer = drawer3d;
 					}catch(InterruptedException e){
-						dimensionToggleButton.setText("3d");
+						onFail();
+					}catch(OutOfMemoryError e){
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(me, "This graph has too many vertices to view in 3d. The maximum is about 12,000.", "Out of Memory", JOptionPane.ERROR_MESSAGE);
+						onFail();
+					}
+					calculationThreadEnd();
+				}
+
+				private void onFail(){
+					dimensionToggleButton.setText("3d");
 						CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
 						cl.show(canvasHolderPanel, "2d");
 						sandpileController.setDrawer(drawer);
 						dimensionToggleButton.setSelected(false);
 						drawer.setZoom(drawer3d.getZoom());
 						currentDrawer = drawer;
-					}
-					calculationThreadEnd();
 				}
 			};
 			calculationThread.start();

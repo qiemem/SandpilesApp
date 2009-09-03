@@ -1,46 +1,18 @@
 /*
-Copyright (c) 2008-2009 Bryan Head
-All Rights Reserved
-
-[This software is released under the "MIT License"]
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the
-Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall
-be included in all copies or substantial portions of the
-Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
-KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
-OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 package org.headb;
 import java.util.Iterator;
-
 /**
- * Represents an adjacency list. Note that using this class over something like
- * ArrayList<Edge> will usually be better.
- * @author Bryan Head
+ *
+ * @author headb
  */
-public class EdgeList implements Iterable<Edge>{
-	protected Int2dArrayList edgeData;
-
+public abstract class EdgeList implements Iterable<Edge>{
 	/**
 	 * A subclass of Edge that points to a certain lovation in edgeData. The
-	 * EdgeList iterator uses these so that it can keep the list of edges in the
+	 * GeneralEdgeList iterator uses these so that it can keep the list of edges in the
 	 * more efficient form of the Int2dArrayList rather a list of Edges without
 	 * having to the information for each edge into an Edge. Note that this also
 	 * allows write access to the edges.
@@ -69,18 +41,8 @@ public class EdgeList implements Iterable<Edge>{
 			setWtQuick(edgeNum, w);
 		}
 	}
-
-	public EdgeList(){
-		edgeData = new Int2dArrayList(3);
-	}
-
-	public EdgeList(EdgeList other){
-		this.edgeData = new Int2dArrayList(other.edgeData);
-	}
-
-	public int size(){
-		return edgeData.rows();
-	}
+	
+	abstract public int size();
 
 	public Edge getEdge(int i){
 		if(i<size())
@@ -89,56 +51,61 @@ public class EdgeList implements Iterable<Edge>{
 			throw new IndexOutOfBoundsException("Size: "+size()+". Edge requested: "+i);
 	}
 
-	public int source(int i){
-		return edgeData.get(i, 0);
-	}
-	public int sourceQuick(int i){
-		return edgeData.getQuick(i, 0);
-	}
-	public void setSource(int i, int s){
-		edgeData.set(i, 0, s);
-	}
-	public void setSourceQuick(int i, int s){
-		edgeData.setQuick(i, 0, s);
-	}
-	public int dest(int i){
-		return edgeData.get(i,1);
-	}
-	public int destQuick(int i){
-		return edgeData.getQuick(i,1);
-	}
-	public void setDest(int i, int d){
-		edgeData.set(i, 1, d);
-	}
-	public void setDestQuick(int i, int d){
-		edgeData.setQuick(i, 1, d);
-	}
-	public int wt(int i){
-		return edgeData.get(i, 2);
-	}
-	public int wtQuick(int i){
-		return edgeData.getQuick(i,2);
-	}
-	public void setWt(int i, int w){
-		edgeData.set(i, 2, w);
-	}
-	public void setWtQuick(int i, int w){
-		edgeData.setQuick(i, 2, w);
-	}
-	public Edge get(int i){
-		return new MyEdge(i);
+	protected void sizeCheck(int i){
+		assert i<size() :
+			new IndexOutOfBoundsException("Size: "+size()+". Edge requested: "+i);
 	}
 
-	public void add(int s, int d, int w){
-		edgeData.addRow(s,d,w);
+	public int source(int i){
+		sizeCheck(i);
+		return sourceQuick(i);
 	}
+
+	abstract public int sourceQuick(int i);
+
+	public void setSource(int i, int s){
+		sizeCheck(i);
+		setSourceQuick(i,s);
+	}
+
+	abstract public void setSourceQuick(int i, int s);
+
+	public int dest(int i){
+		sizeCheck(i);
+		return destQuick(i);
+	}
+
+	abstract public int destQuick(int i);
+
+	public void setDest(int i, int d){
+		sizeCheck(i);
+		setDestQuick(i,d);
+	}
+
+	abstract public void setDestQuick(int i, int d);
+
+	public int wt(int i){
+		sizeCheck(i);
+		return wtQuick(i);
+	}
+
+	abstract public int wtQuick(int i);
+
+	public void setWt(int i, int w){
+		sizeCheck(i);
+		setWtQuick(i, w);
+	}
+
+	abstract public void setWtQuick(int i, int w);
+
+	abstract public void add(int s, int d, int w);
 
 	public void add(Edge e){
-		edgeData.addRow(e.source(), e.dest(), e.wt());
+		add(e.source(), e.dest(), e.wt());
 	}
 
 	public int find(Edge e){
-		int i=0;
+		int i = 0;
 		for(Edge f : this){
 			if(f.equals(e)){
 				return i;
@@ -152,24 +119,14 @@ public class EdgeList implements Iterable<Edge>{
 		int i = find(e);
 		if(i==-1)
 			return false;
-		edgeData.removeRow(i);
+		remove(i);
 		return true;
 	}
 
-	/**
-	 * Allows one to iterate over the EdgeList using the Edge class.
-	 * Although this method is provided for convenience, it is faster to do
-	 * manual iteration such as:
-	 * for(int i = 0; i < edgeList.size(); i++){
-	 *     edgeList.destQuick(i);
-	 *     // or even
-	 *     edgeList.dest(i);
-	 * }
-	 * Using the iterator actually creates new objects; manual iteration does
-	 * not.
-	 * @return
-	 */
+	abstract public void remove(int i);
+	
 	public Iterator<Edge> iterator(){
+		final EdgeList me = this;
 		return new Iterator<Edge>() {
 			private int i = -1;
 			public boolean hasNext() {
@@ -182,7 +139,7 @@ public class EdgeList implements Iterable<Edge>{
 			}
 
 			public void remove() {
-				edgeData.removeRow(i);
+				me.remove(i);
 				i--;
 			}
 		};

@@ -33,12 +33,20 @@ package org.headb;
  * A list of edges that all have the same source.
  * @author Bryan Head
  */
-public class SingleSourceEdgeList extends EdgeList{
+public class SingleSourceEdgeList extends GeneralEdgeList{
 	int source = -1;
 
 	public SingleSourceEdgeList(int source){
 		edgeData = new Int2dArrayList(2);
 		this.source = source;
+	}
+
+	public SingleSourceEdgeList(EdgeList other, int source){
+		this.source = source;
+		edgeData = new Int2dArrayList(2);
+		for(int i=0; i<other.size(); i++){
+			this.add(source, other.destQuick(i), other.wtQuick(i));
+		}
 	}
 
 	public SingleSourceEdgeList(SingleSourceEdgeList other){
@@ -92,11 +100,14 @@ public class SingleSourceEdgeList extends EdgeList{
 	}
 	@Override public void add(int s, int d, int w){
 		if(s==source)
-			edgeData.addRow(d, w);
+			add(d,w);
 		else
 			throw new IllegalArgumentException("Tried to add an edge with the " +
 					"wrong source to a SingleSourceEdge. Edge's source was "
 					+ s + " while it needed to be " + source + ".");
+	}
+	public void add(int d, int w){
+		edgeData.addRow(d,w);
 	}
 
 	@Override public void add(Edge e){
@@ -104,5 +115,13 @@ public class SingleSourceEdgeList extends EdgeList{
 			edgeData.addRow(e.dest(), e.wt());
 		else
 			throw new IllegalArgumentException("Tried to add an edge with the wrong source to a SingleSourceEdge. Edge's source was "+e.source()+" while it needed to be " + source +".");
+	}
+
+	public EdgeOffsetList getEdgeOffsetList() {
+		EdgeOffsetList offsetList = new EdgeOffsetList();
+		for(int i = 0; i<this.size(); i++){
+			offsetList.addEdge(destQuick(i)-source(), wtQuick(i));
+		}
+		return offsetList;
 	}
 }

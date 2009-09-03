@@ -37,47 +37,133 @@ package org.headb;
  * @author Bryan Head
  */
 public class EdgeOffsetList {
-	Int2dArrayList edgeOffsetData;
+	private Int2dArrayList edgeOffsetData;
+	private int degree;
+
+
+
+	private class PersonalizedEdgeList extends EdgeList{
+		private int vert;
+		private EdgeOffsetList owner;
+
+		private UnsupportedOperationException manipulationException() {
+			return new UnsupportedOperationException("Can't alter the edges of a vertex in an EdgeStructureBlock through an intermediary EdgeList");
+		}
+		public PersonalizedEdgeList(EdgeOffsetList owner, int vert){
+			this.owner = owner;
+			this.vert = vert;
+		}
+		public int size() {
+			return owner.size();
+		}
+		public int source(int i){
+			return vert;
+		}
+		public int sourceQuick(int i){
+			return vert;
+		}
+		public int destQuick(int i){
+			return vert + destOffsetQuick(i);
+		}
+		public int wtQuick(int i){
+			return owner.wtQuick(i);
+		}
+		public void remove(int i){
+			throw manipulationException();
+		}
+		public void add(int s, int d, int w){
+			throw manipulationException();
+		}
+		public void setWtQuick(int i, int w){
+			throw manipulationException();
+		}
+		public void setDestQuick(int i, int d){
+			throw manipulationException();
+		}
+		public void setSourceQuick(int i, int s){
+			throw manipulationException();
+		}
+	}
+
+	public EdgeOffsetList(){
+		degree = 0;
+		edgeOffsetData = new Int2dArrayList(2);
+	}
+
+	public EdgeOffsetList(EdgeOffsetList other){
+		this.edgeOffsetData = new Int2dArrayList(other.edgeOffsetData);
+		degree = other.degree;
+	}
 	public int destOffset(int i) {
-		return edgeOffsetData.get(i,1);
+		return edgeOffsetData.get(i,0);
 	}
 	public int destOffsetQuick(int i) {
-		return edgeOffsetData.getQuick(i,1);
+		return edgeOffsetData.getQuick(i,0);
 	}
 	public void setDestOffset(int i, int d){
-		edgeOffsetData.set(i, 1, d);
+		edgeOffsetData.set(i, 0, d);
 	}
 	public int wt(int i){
-		return edgeOffsetData.get(i, 2);
+		return edgeOffsetData.get(i, 1);
 	}
 	public int wtQuick(int i){
-		return edgeOffsetData.getQuick(i, 2);
+		return edgeOffsetData.getQuick(i, 1);
 	}
 	public void setWt(int i, int w){
-		edgeOffsetData.set(i, 2, w);
+		edgeOffsetData.set(i, 1, w);
+		recalcDegree();
 	}
 	public int size(){
 		return edgeOffsetData.rows();
 	}
 	public void addEdge(int destOffset, int wt) {
+		if(wt<=0)
+			return;
 		edgeOffsetData.addRow(destOffset, wt);
+		degree += wt;
 	}
 	public int wtForOffset(int offset){
+		int i = find(offset);
+		if(i<0)
+			return 0;
+		return wtQuick(i);
+	}
+
+	public int find(int offset){
 		for(int i=0; i<size(); i++){
-			if(destOffsetQuick(i)==offset){
-				return wtQuick(i);
+			if(destOffsetQuick(i) == offset){
+				return i;
 			}
 		}
 		return -1;
 	}
+	public void remove(int i){
+		edgeOffsetData.removeRow(i);
+		recalcDegree();
+	}
+	public int degree() {
+		return degree;
+	}
 	public boolean equals(EdgeOffsetList that){
-		if(this.size()!=that.size())
+		if(this.size()!=that.size() || this.degree() != that.degree())
 			return false;
+		if(this.edgeOffsetData.equals(that.edgeOffsetData))
+			return true;
 		for(int i=0; i<size(); i++){
 			if(wtQuick(i)!=that.wtForOffset(destOffsetQuick(i))){
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private void recalcDegree() {
+		degree=0;
+		for(int i=0; i<size(); i++){
+			degree+=wtQuick(i);
+		}
+	}
+	public EdgeList getOutgoingEdges(int vert){
+		return new PersonalizedEdgeList(this, vert);
 	}
 }

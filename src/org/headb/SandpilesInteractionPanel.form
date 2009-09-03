@@ -751,11 +751,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="gridSizeLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                              <Component id="gridRowsField" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="gridRowsField" min="-2" pref="55" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="gridSizeCrossLabel" min="-2" pref="8" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="gridColsField" min="-2" pref="39" max="-2" attributes="0"/>
+                              <Component id="gridColsField" min="-2" pref="54" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -1665,7 +1666,7 @@
                     <Component class="javax.swing.JToggleButton" name="dimensionToggleButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="3d"/>
-                        <Property name="toolTipText" type="java.lang.String" value="Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 20,000 vertices). 3d mode does not display edges."/>
+                        <Property name="toolTipText" type="java.lang.String" value="Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 12,000 vertices). 3d mode does not display edges."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dimensionToggleButtonActionPerformed"/>
