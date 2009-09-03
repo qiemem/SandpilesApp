@@ -119,8 +119,8 @@ public class SingleSourceEdgeList extends GeneralEdgeList{
 
 	public EdgeOffsetList getEdgeOffsetList() {
 		EdgeOffsetList offsetList = new EdgeOffsetList();
-		for(Edge e : this){
-			offsetList.addEdge(e.dest()-source(), e.wt());
+		for(int i = 0; i<this.size(); i++){
+			offsetList.addEdge(destQuick(i)-source(), wtQuick(i));
 		}
 		return offsetList;
 	}

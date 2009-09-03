@@ -637,25 +637,29 @@ public class SandpileGraph {
 					// mark it as removed
 					added[v]=false;
 
-					// fire it
-					//fireVertexInPlace(config, v);
-					// include (newly) unstable neighbors, adding them too
-					//EdgeList edges = getOutgoingEdges(v);
-					EdgeStructureBlock block = vertsToBlocks.get(v);
-					EdgeOffsetList offsetList = block.getEdgeOffsetInfo();
-					int s = block.numEdges();
+
+					// We get the vertices edge info in the form of offsets.
+					// Going through the offset list gives us more direct access
+					// to the edge info.
+					EdgeOffsetList offsetList = vertsToBlocks.get(v).getEdgeOffsetInfo();
+					int s = offsetList.size();
 					for(int k=0; k<s; k++){
+						// Get the a neighboring vertex.
 						int dest = offsetList.destOffsetQuick(k)+v;
+						// Increase the sand on it.
 						config.increaseQuick(dest, offsetList.wtQuick(k));
-						int d = degreeQuick(dest);
-						if(!added[dest] && config.getQuick(dest)>=d && d>0){
+						// Check to see if we made it unstable.
+						int degree = degreeQuick(dest);
+						if(!added[dest] && config.getQuick(dest)>=degree && degree>0){
 							unstables.addUnsafe(dest);
 							added[dest]=true;
 						}
 					}
-					config.increaseQuick(v, -degreeQuick(v));
+					// Remove the sand fired from our source vertex.
+					int degree = offsetList.degree();
+					config.increaseQuick(v, -degree);
 					// if still unstable, include it in next generation
-					if(config.getQuick(v)>=degreeQuick(v)){
+					if(config.getQuick(v)>=degree){
 						unstables.addUnsafe(v);
 						added[v] = true;
 					}
