@@ -1262,7 +1262,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         });
 
         dimensionToggleButton.setText("3d");
-        dimensionToggleButton.setToolTipText("Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 20,000 vertices). 3d mode does not display edges.");
+        dimensionToggleButton.setToolTipText("Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 12,000 vertices). 3d mode does not display edges.");
         dimensionToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dimensionToggleButtonActionPerformed(evt);
@@ -2459,6 +2459,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 	private void dimensionToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dimensionToggleButtonActionPerformed
 		if(dimensionToggleButton.isSelected()){
+			final SandpilesInteractionPanel me = this;
 			calculationThread = new Thread(){
 				@Override public void run(){
 					if(!calculationThreadInit("Calculating triangulation"))
@@ -2474,15 +2475,23 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 						sandpileController.setDrawer(drawer3d);
 						currentDrawer = drawer3d;
 					}catch(InterruptedException e){
-						dimensionToggleButton.setText("3d");
+						onFail();
+					}catch(OutOfMemoryError e){
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(me, "This graph has too many vertices to view in 3d. The maximum is about 12,000.", "Out of Memory", JOptionPane.ERROR_MESSAGE);
+						onFail();
+					}
+					calculationThreadEnd();
+				}
+
+				private void onFail(){
+					dimensionToggleButton.setText("3d");
 						CardLayout cl = (CardLayout) canvasHolderPanel.getLayout();
 						cl.show(canvasHolderPanel, "2d");
 						sandpileController.setDrawer(drawer);
 						dimensionToggleButton.setSelected(false);
 						drawer.setZoom(drawer3d.getZoom());
 						currentDrawer = drawer;
-					}
-					calculationThreadEnd();
 				}
 			};
 			calculationThread.start();

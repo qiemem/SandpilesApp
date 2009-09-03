@@ -1666,7 +1666,7 @@
                     <Component class="javax.swing.JToggleButton" name="dimensionToggleButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="3d"/>
-                        <Property name="toolTipText" type="java.lang.String" value="Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 20,000 vertices). 3d mode does not display edges."/>
+                        <Property name="toolTipText" type="java.lang.String" value="Toggles between 2d and 3d. Note that this may not work for large graphs (bigger than 12,000 vertices). 3d mode does not display edges."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dimensionToggleButtonActionPerformed"/>
