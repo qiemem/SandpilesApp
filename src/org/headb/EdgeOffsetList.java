@@ -40,6 +40,51 @@ public class EdgeOffsetList {
 	private Int2dArrayList edgeOffsetData;
 	private int degree;
 
+
+
+	private class PersonalizedEdgeList extends EdgeList{
+		private int vert;
+		private EdgeOffsetList owner;
+
+		private UnsupportedOperationException manipulationException() {
+			return new UnsupportedOperationException("Can't alter the edges of a vertex in an EdgeStructureBlock through an intermediary EdgeList");
+		}
+		public PersonalizedEdgeList(EdgeOffsetList owner, int vert){
+			this.owner = owner;
+			this.vert = vert;
+		}
+		public int size() {
+			return owner.size();
+		}
+		public int source(int i){
+			return vert;
+		}
+		public int sourceQuick(int i){
+			return vert;
+		}
+		public int destQuick(int i){
+			return vert + destOffsetQuick(i);
+		}
+		public int wtQuick(int i){
+			return owner.wtQuick(i);
+		}
+		public void remove(int i){
+			throw manipulationException();
+		}
+		public void add(int s, int d, int w){
+			throw manipulationException();
+		}
+		public void setWtQuick(int i, int w){
+			throw manipulationException();
+		}
+		public void setDestQuick(int i, int d){
+			throw manipulationException();
+		}
+		public void setSourceQuick(int i, int s){
+			throw manipulationException();
+		}
+	}
+
 	public EdgeOffsetList(){
 		degree = 0;
 		edgeOffsetData = new Int2dArrayList(2);
@@ -117,5 +162,8 @@ public class EdgeOffsetList {
 		for(int i=0; i<size(); i++){
 			degree+=wtQuick(i);
 		}
+	}
+	public EdgeList getOutgoingEdges(int vert){
+		return new PersonalizedEdgeList(this, vert);
 	}
 }

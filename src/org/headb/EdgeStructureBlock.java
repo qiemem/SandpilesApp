@@ -37,8 +37,8 @@ import gnu.trove.TIntArrayList;
  * @author Bryan Head
  */
 public class EdgeStructureBlock {
-	TIntArrayList vertices;
-	EdgeOffsetList edgeInfo;
+	private TIntArrayList vertices;
+	private EdgeOffsetList edgeInfo;
 
 	private class PersonalizedEdgeList extends EdgeList{
 		private int vert;

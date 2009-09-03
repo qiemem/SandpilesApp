@@ -48,36 +48,45 @@ public class SandpileGraph {
 	// where int[0] = source
 	// int[1] = dest
 	// int[2] = weight
-	private ArrayList<EdgeStructureBlock> blocks;
+	private ArrayList<EdgeOffsetList> offsetLists;
+	private HashMap<EdgeOffsetList, Integer> vertexCounts;
 	//private TIntArrayList degrees;
-	private ArrayList<EdgeStructureBlock> vertsToBlocks;
+	private ArrayList<EdgeOffsetList> vertsToOffsetLists;
 
 	/**
 	 * Creates a new, empty graph.
 	 */
 	public SandpileGraph() {
-		this.blocks = new ArrayList<EdgeStructureBlock>();
-		this.vertsToBlocks = new ArrayList<EdgeStructureBlock>();
+		this.offsetLists = new ArrayList<EdgeOffsetList>();
+		this.vertsToOffsetLists = new ArrayList<EdgeOffsetList>();
+		this.vertexCounts = new HashMap<EdgeOffsetList, Integer>();
 	}
 
 	public SandpileGraph(SandpileGraph graph){
-		this.blocks = new ArrayList<EdgeStructureBlock>();
-		this.vertsToBlocks = new ArrayList<EdgeStructureBlock>();
-		for(int i=0; i<graph.numVertices(); i++){
-			vertsToBlocks.add(null);
-		}
-		for (EdgeStructureBlock block : graph.blocks) {
-			EdgeStructureBlock newBlock = new EdgeStructureBlock(block);
-			this.blocks.add(newBlock);
-			for(int i=0; i<newBlock.numVertices(); i++){
-				int v = newBlock.getVert(i);
-				vertsToBlocks.set(v, newBlock);
-			}
+		this.offsetLists = new ArrayList<EdgeOffsetList>();
+		this.vertsToOffsetLists = new ArrayList<EdgeOffsetList>();
+		this.vertexCounts = new HashMap<EdgeOffsetList, Integer>();
+
+//		HashMap<EdgeOffsetList, EdgeOffsetList> blockTranslator = new HashMap<EdgeOffsetList,EdgeOffsetList>();
+//
+//		for (EdgeOffsetList offsetList : graph.offsetLists) {
+//			EdgeOffsetList newOffsetList = new EdgeOffsetList(offsetList);
+//			blockTranslator.put(offsetList, newOffsetList);
+//			offsetLists.add(newOffsetList);
+//			vertexCounts.put(newOffsetList, graph.vertexCounts.get(offsetList));
+//		}
+//		for(EdgeOffsetList ol : graph.offsetLists){
+//			vertsToOffsetLists.add(blockTranslator.get(ol));
+//		}
+
+		for(int v=0; v<graph.numVertices();v++){
+			addVertex();
+			placeVertexWithOffsets(v, graph.getOffsetList(v));
 		}
 	}
 
-	private EdgeStructureBlock getBlock(int vert){
-		return vertsToBlocks.get(vert);
+	private EdgeOffsetList getOffsetList(int vert){
+		return vertsToOffsetLists.get(vert);
 	}
 
 	/**
@@ -85,7 +94,7 @@ public class SandpileGraph {
 	 * @return An int of the number of vertices.
 	 */
 	public int numVertices(){
-		return vertsToBlocks.size();
+		return vertsToOffsetLists.size();
 	}
 
 	/**
@@ -115,7 +124,7 @@ public class SandpileGraph {
 	 */
 	public int degree(int vert) {
 		//return this.vertices.get(vert).degree();
-		return getBlock(vert).degree();
+		return getOffsetList(vert).degree();
 	}
 
 	/**
@@ -127,45 +136,59 @@ public class SandpileGraph {
 	 * @return The sum of the weights of the outgoing edges of the given vertex.
 	 */
 	public int degreeQuick(int vert){
-		return getBlock(vert).degree();
+		return getOffsetList(vert).degree();
 	}
 
 	/**
 	 * Retrieves the list of edges which begin with the source vertex.
 	 */
 	public final EdgeList getOutgoingEdges(int vert) {
-		return vertsToBlocks.get(vert).getOutgoingEdgesQuick(vert);
+		return vertsToOffsetLists.get(vert).getOutgoingEdges(vert);
 	}
 
-	private void addBlock(EdgeStructureBlock block){
-		blocks.add(block);
+	private int getBlockSize(EdgeOffsetList offsetList){
+		return vertexCounts.get(offsetList);
 	}
 
-	private boolean removeBlockIfEmpty(EdgeStructureBlock block){
-		if(block.numVertices()==0){
-			blocks.remove(block);
+	private void incBlockSize(EdgeOffsetList offsetList){
+		vertexCounts.put(offsetList, getBlockSize(offsetList)+1);
+	}
+
+	private void decBlockSize(EdgeOffsetList offsetList){
+		vertexCounts.put(offsetList, getBlockSize(offsetList)+1);
+	}
+
+
+	private void addOffsetList(EdgeOffsetList offsetList){
+		offsetLists.add(offsetList);
+		vertexCounts.put(offsetList, 0);
+	}
+
+	private boolean removeOffsetListIfEmpty(EdgeOffsetList offsetList){
+		if(getBlockSize(offsetList)==0){
+			offsetLists.remove(offsetList);
 			return true;
 		}
 		return false;
 	}
 
-	private void removeVertexFromBlock(int v) {
-		EdgeStructureBlock block = getBlock(v);
-		block.removeVertex(v);
-		removeBlockIfEmpty(block);
+	private void removeVertexFromOffsetList(int v) {
+		EdgeOffsetList offsetList = getOffsetList(v);
+		decBlockSize(offsetList);
+		removeOffsetListIfEmpty(offsetList);
 	}
 
-	private EdgeStructureBlock getBlockForOffsetList(EdgeOffsetList offsetList){
-		for(EdgeStructureBlock block : blocks){
-			if(block.getEdgeOffsetInfo().equals(offsetList)){
-				return block;
+	private EdgeOffsetList getMatchingOffsetList(EdgeOffsetList offsetList){
+		for(EdgeOffsetList ol : offsetLists){
+			if(ol.equals(offsetList)){
+				return ol;
 			}
 		}
 		return null;
 	}
 
 	public void setOutgoingEdges(int vert, SingleSourceEdgeList edges){
-		removeVertexFromBlock(vert);
+		removeVertexFromOffsetList(vert);
 		EdgeOffsetList offsetList = edges.getEdgeOffsetList();
 		this.placeVertexWithOffsets(vert, offsetList);
 
@@ -271,19 +294,20 @@ public class SandpileGraph {
 	 */
 
 	private void placeVertexWithOffsets(int vert, EdgeOffsetList offsets){
-		EdgeStructureBlock block = this.getBlockForOffsetList(offsets);
-		if(block==null){
-			block = new EdgeStructureBlock(offsets);
-			addBlock(block);
+		EdgeOffsetList offsetList = this.getMatchingOffsetList(offsets);
+		if(offsetList==null){
+			offsetList = new EdgeOffsetList(offsets);
+			addOffsetList(offsetList);
 		}
-		//assert !block.tryAddVertex(vert, offsets):
+		//assert !offsetList.tryAddVertex(vert, offsets):
 		//	new RuntimeException("This should be impossible");
-		block.tryAddVertex(vert, offsets);
+		//offsetList.tryAddVertex(vert, offsets);
+		incBlockSize(offsetList);
 
-		vertsToBlocks.set(vert, block);
+		vertsToOffsetLists.set(vert, offsetList);
 	}
 	public void addVertex() {
-		vertsToBlocks.add(null);
+		vertsToOffsetLists.add(null);
 		placeVertexWithOffsets(this.numVertices()-1, new EdgeOffsetList());
 	}
 
@@ -339,8 +363,8 @@ public class SandpileGraph {
 	 */
 	public void removeVertices(TIntArrayList vertices) {
 		int[] translator = new int[numVertices()];
-		//ArrayList<EdgeStructureBlock> oldBlocks = new ArrayList<EdgeStructureBlock>(blocks);
-		ArrayList<EdgeStructureBlock> oldVertsToBlocks = new ArrayList<EdgeStructureBlock>(vertsToBlocks);
+		//ArrayList<EdgeOffsetList> oldOffsetLists = new ArrayList<EdgeOffsetList>(offsetLists);
+		ArrayList<EdgeOffsetList> oldVertsToOffsetLists = new ArrayList<EdgeOffsetList>(vertsToOffsetLists);
 		boolean[] toRemove = new boolean[numVertices()];
 		for (int i=0; i<vertices.size(); i++) {
 			int v = vertices.get(i);
@@ -348,18 +372,18 @@ public class SandpileGraph {
 		}
 		this.removeAllVertices();
 		int w=0;
-		for (int v=0; v<oldVertsToBlocks.size(); v++){
+		for (int v=0; v<oldVertsToOffsetLists.size(); v++){
 			if(!toRemove[v]){
 				translator[v] = w;
 				w++;
 			}
 		}
 		addVertices(w);
-		for (int v = 0; v < oldVertsToBlocks.size(); v++) {
+		for (int v = 0; v < oldVertsToOffsetLists.size(); v++) {
 			if (toRemove[v]) {
 				continue;
 			}
-			for (Edge e : oldVertsToBlocks.get(v).getOutgoingEdges(v)) {
+			for (Edge e : oldVertsToOffsetLists.get(v).getOutgoingEdges(v)) {
 				if (!toRemove[e.dest()]) {
 					addEdge(translator[e.source()], translator[e.dest()], e.wt());
 				}
@@ -371,8 +395,8 @@ public class SandpileGraph {
 	 * Deletes the whole graph. Should run in constant time.
 	 */
 	public void removeAllVertices() {
-		this.blocks.clear();
-		this.vertsToBlocks.clear();
+		this.offsetLists.clear();
+		this.vertsToOffsetLists.clear();
 	}
 
 	/**
@@ -411,8 +435,8 @@ public class SandpileGraph {
 	public void addEdge(int sourceVert, int destVert, int weight) {
 		if(sourceVert == destVert)
 			return;
- 		EdgeOffsetList offsets = new EdgeOffsetList(this.getBlock(sourceVert).getEdgeOffsetInfo());
-		removeVertexFromBlock(sourceVert);
+ 		EdgeOffsetList offsets = new EdgeOffsetList(this.getOffsetList(sourceVert));
+		removeVertexFromOffsetList(sourceVert);
 
 		int offset = destVert-sourceVert;
 		int edgeIndex = offsets.find(offset);
@@ -641,7 +665,7 @@ public class SandpileGraph {
 					// We get the vertices edge info in the form of offsets.
 					// Going through the offset list gives us more direct access
 					// to the edge info.
-					EdgeOffsetList offsetList = vertsToBlocks.get(v).getEdgeOffsetInfo();
+					EdgeOffsetList offsetList = vertsToOffsetLists.get(v);
 					int s = offsetList.size();
 					for(int k=0; k<s; k++){
 						// Get the a neighboring vertex.
