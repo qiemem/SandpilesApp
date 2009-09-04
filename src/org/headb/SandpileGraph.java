@@ -30,6 +30,7 @@ package org.headb;
 import java.util.*;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntStack;
+import java.util.Arrays;
 
 /**
  * Represents a weighted, directed graph with methods for updating a sandpile
@@ -52,6 +53,7 @@ public class SandpileGraph {
 	private HashMap<EdgeOffsetList, Integer> vertexCounts;
 	//private TIntArrayList degrees;
 	private ArrayList<EdgeOffsetList> vertsToOffsetLists;
+	private int[] degrees;
 
 	/**
 	 * Creates a new, empty graph.
@@ -60,16 +62,19 @@ public class SandpileGraph {
 		this.offsetLists = new ArrayList<EdgeOffsetList>();
 		this.vertsToOffsetLists = new ArrayList<EdgeOffsetList>();
 		this.vertexCounts = new HashMap<EdgeOffsetList, Integer>();
+		degrees = new int[0];
 	}
 
 	public SandpileGraph(SandpileGraph graph){
 		this.offsetLists = new ArrayList<EdgeOffsetList>();
 		this.vertsToOffsetLists = new ArrayList<EdgeOffsetList>();
 		this.vertexCounts = new HashMap<EdgeOffsetList, Integer>();
+		degrees = new int[graph.numVertices()];
 
 		for(int v=0; v<graph.numVertices();v++){
 			addVertex();
 			placeVertexWithOffsets(v, graph.getOffsetList(v));
+			degrees[v] = graph.degreeQuick(v);
 		}
 	}
 
@@ -124,7 +129,7 @@ public class SandpileGraph {
 	 * @return The sum of the weights of the outgoing edges of the given vertex.
 	 */
 	public int degreeQuick(int vert){
-		return getOffsetList(vert).degree();
+		return degrees[vert];
 	}
 
 	/**
@@ -179,7 +184,6 @@ public class SandpileGraph {
 		removeVertexFromOffsetList(vert);
 		EdgeOffsetList offsetList = edges.getEdgeOffsetList();
 		this.placeVertexWithOffsets(vert, offsetList);
-
 	}
 
 
@@ -293,10 +297,19 @@ public class SandpileGraph {
 		incBlockSize(offsetList);
 
 		vertsToOffsetLists.set(vert, offsetList);
+		degrees[vert]=offsetList.degree();
 	}
 	public void addVertex() {
 		vertsToOffsetLists.add(null);
+		if(numVertices()>degrees.length){
+			int[] newDegrees = new int[numVertices()*2];
+			for(int i=0; i<degrees.length;i++){
+				newDegrees[i]=degrees[i];
+			}
+			degrees = newDegrees;
+		}
 		placeVertexWithOffsets(this.numVertices()-1, new EdgeOffsetList());
+
 	}
 
 //	public void insertVertex(int i){
@@ -483,7 +496,7 @@ public class SandpileGraph {
 	public TIntArrayList getNonSinks() {
 		TIntArrayList nonsinks = new TIntArrayList();
 		for(int v=0; v<numVertices(); v++){
-			if(!isSink(v))
+			if(!isSinkQuick(v))
 				nonsinks.add(v);
 		}
 		return nonsinks;
@@ -509,7 +522,7 @@ public class SandpileGraph {
 			for (Edge e : getOutgoingEdges(v)) {
 				newConfig.set(e.dest(), newConfig.get(e.dest()) + e.wt());
 			}
-			newConfig.set(v, newConfig.get(v) - degree(v));
+			newConfig.set(v, newConfig.get(v) - degreeQuick(v));
 		}
 		return newConfig;
 	}
@@ -520,7 +533,7 @@ public class SandpileGraph {
 			for (Edge e : getOutgoingEdges(v)) {
 				config.set(e.dest(), config.get(e.dest()) + e.wt());
 			}
-			config.set(v, config.get(v) - degree(v));
+			config.set(v, config.get(v) - degreeQuick(v));
 		}
 		return config;
 	}
@@ -537,7 +550,7 @@ public class SandpileGraph {
 	public TIntArrayList getUnstables(SandpileConfiguration config) {
 		TIntArrayList unstables = new TIntArrayList();
 		for (int v = 0; v < numVertices(); v++) {
-			if (!isSink(v) && config.get(v) >= degree(v)) {
+			if (!isSinkQuick(v) && config.get(v) >= degreeQuick(v)) {
 				unstables.add(v);
 			}
 		}
@@ -550,7 +563,7 @@ public class SandpileGraph {
 		for (int i=0; i< verts.size(); i++) {
 			int v = verts.get(i);
 			//System.err.println(v);
-			if (!isSink(v) && config.get(v) >= degree(v)) {
+			if (!isSinkQuick(v) && config.get(v) >= degreeQuick(v)) {
 				unstables.add(v);
 			}
 		}
@@ -629,7 +642,7 @@ public class SandpileGraph {
 		final boolean[] added = new boolean[numVertices()];
 		for(int i=0; i<startingVertices.size(); i++){
 			int v= startingVertices.getQuick(i);
-			if(config.get(v)>=degree(v)){
+			if(config.get(v)>=degreeQuick(v)){
 				unstables.addUnsafe(v);
 				added[v] = true;
 			}
@@ -641,6 +654,7 @@ public class SandpileGraph {
 			public SandpileConfiguration next() {
 				int numUnstables = unstables.nextGenerationLength();
 				unstables.goToNextGeneration();
+				//System.err.println(numUnstables);
 				// foreach unstable in the current generation...
 				for(int i=0; i<numUnstables; i++){
 
@@ -693,7 +707,7 @@ public class SandpileGraph {
 	//}
 	public SandpileConfiguration reverseFireVertex(SandpileConfiguration config, int vert) {
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
-		newConfig.set(vert, config.get(vert) + degree(vert));
+		newConfig.set(vert, config.get(vert) + degreeQuick(vert));
 		for (Edge e : getOutgoingEdges(vert)) {
 			newConfig.set(e.dest(), newConfig.get(e.dest()) - e.wt());
 		}
@@ -713,7 +727,7 @@ public class SandpileGraph {
 	public SandpileConfiguration reverseFireConfig(SandpileConfiguration config) {
 		SandpileConfiguration newConfig = new SandpileConfiguration(config);
 		for (int sourceVert = 0; sourceVert < config.size(); sourceVert++) {
-			newConfig.set(sourceVert, newConfig.get(sourceVert) + degree(sourceVert));
+			newConfig.set(sourceVert, newConfig.get(sourceVert) + degreeQuick(sourceVert));
 			for (Edge e : this.getOutgoingEdges(sourceVert)) {
 				newConfig.set(e.dest(), newConfig.get(e.dest()) - weight(sourceVert, e.dest()));
 			}
@@ -925,7 +939,7 @@ public class SandpileGraph {
 	 */
 	public boolean isStable(SandpileConfiguration config) {
 		for (int vert = 0; vert < config.size(); vert++) {
-			if (config.get(vert) >= degree(vert)) {
+			if (config.get(vert) >= degreeQuick(vert)) {
 				return true;
 			}
 		}

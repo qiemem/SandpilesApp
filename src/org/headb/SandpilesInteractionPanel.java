@@ -2714,7 +2714,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 			int n = selVerts.size();
 			for(int i=0; i<n; i++){
 				int v=selVerts.get(i);
-				degree+=sandpileController.getGraph().degree(v);
+				degree+=sandpileController.getGraph().degreeQuick(v);
 			}
 		}
 		return degree;

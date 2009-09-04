@@ -1280,7 +1280,7 @@ public class SandpileController implements ActionListener, Serializable{
 			final TIntArrayList xStartingWith, final TIntArrayList xFreq, final TIntArrayList yStartingWith, final TIntArrayList yFreq,
 			final List<Boolean> directed, final TIntArrayList weight, final TIntArrayList borders) {
 		float gridSpacing = VERT_RADIUS * (spacing) * 2f;
-		int[][] gridRef = new int[rows][cols];
+		int[][] gridRef = new int[cols][rows];
 
 		//create vertices
 		for (int x = 0; x < cols; x++) {
