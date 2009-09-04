@@ -362,7 +362,6 @@ public class SandpileController implements ActionListener, Serializable{
 			if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
 				lastUpdateTime = System.currentTimeMillis();
 				this.update();
-				needsRepaint = true;
 			}
 			if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay && needsRepaint) {
 				lastRepaintTime = System.currentTimeMillis();
@@ -469,6 +468,7 @@ public class SandpileController implements ActionListener, Serializable{
 		for(SandpileChangeListener listener: listeners){
 			listener.onConfigChange(this.getConfig());
 		}
+		needsRepaint = true;
 	}
 
 	/**

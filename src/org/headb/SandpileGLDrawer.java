@@ -31,9 +31,8 @@ package org.headb;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 import com.sun.opengl.util.j2d.TextRenderer;
-import java.awt.Canvas;
-import java.util.List;
-import java.util.ArrayList;
+import java.nio.FloatBuffer;
+import com.sun.opengl.util.BufferUtil;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
@@ -77,6 +76,9 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	private long timeOfLastDisplay = 0;
 	private float[] backgroundColor = {0f, 0f, 1f};
 
+	private FloatBuffer colorArray;
+	private int numInDebtColors = 0;
+
 	public SandpileGLDrawer() {
 		canvas = new GLCanvas();
 		canvas.addGLEventListener(this);
@@ -94,6 +96,20 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		this.colors = new Float2dArrayList(colors);
 		this.inDebtColors = new Float2dArrayList(inDebtColors);
 		this.backgroundColor = backgroundColor;
+		
+
+		numInDebtColors = inDebtColors.rows();
+		colorArray = BufferUtil.newFloatBuffer((numInDebtColors+colors.rows())*3);
+		for(int i=0; i<numInDebtColors;i++){
+			colorArray.put(inDebtColors.getQuick(i, 0));
+			colorArray.put(inDebtColors.getQuick(i, 1));
+			colorArray.put(inDebtColors.getQuick(i, 2));
+		}
+		for(int i=0; i<colors.rows();i++){
+			colorArray.put(colors.getQuick(i, 0));
+			colorArray.put(colors.getQuick(i, 1));
+			colorArray.put(colors.getQuick(i, 2));
+		}
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -109,6 +125,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		// Setup the drawing area and shading mode
 		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
 		gl.glShadeModel(GL.GL_FLAT);
+
+		gl.glEnableClientState(gl.GL_COLOR_ARRAY);
 
 		//gl.glEnable(gl.GL_DEPTH_TEST);
 		//gl.glDepthFunc(gl.GL_LEQUAL);
@@ -156,6 +174,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 		if (needsReshape) {
 			reshape(canvas, canvasX, canvasY, canvasW, canvasH);
 		}
+		colorArray.rewind();
+		gl.glColorPointer(3, gl.GL_FLOAT, 0, colorArray);
 		//GLU glu = new GLU();
 		// Clear the drawing area
 		gl.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], 0.0f);
@@ -478,10 +498,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 					color = Math.min(sand, colors.rows()-1);
 				break;
 		}
-		if(inDebt)
-			gl.glColor3f(inDebtColors.getQuick(color, 0),inDebtColors.getQuick(color, 1), inDebtColors.getQuick(color, 2));
-		else
-			gl.glColor3f(colors.getQuick(color, 0), colors.getQuick(color,1), colors.getQuick(color, 2));
+		gl.glArrayElement(color+numInDebtColors);
 	}
 
 //	public void addReshapeListener(ReshapeListener r) {
