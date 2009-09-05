@@ -248,13 +248,10 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 				float sy = vertexLocations.get(source,1);
 				float dx = vertexLocations.get(dest,0);
 				float dy = vertexLocations.get(dest,1);
-				//Only draw the edges that aren't covered by vertices
-				//if (Math.sqrt((dx - sx) * (dx - sx) + (dy - sy) * (dy - sy)) > vertSize * 2f + 0.01f) {
 				float x = (1f - textPlacement) * sx + textPlacement * dx;
 				float y = (1f - textPlacement) * sy + textPlacement * dy;
 				String str = String.valueOf(wt);
 				tr.draw3D(str, x, y, 0f, .15f * vertSize / str.length());
-				//}
 			}
 		}
 		tr.end3DRendering();
@@ -281,7 +278,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 	}
 
 	private void drawVertexLabels(TextRenderer tr) {
-		tr.setColor(.8f, .5f, .6f, 1f);
+		//tr.setColor(.8f, .5f, .6f, 1f);
 		tr.begin3DRendering();
 		for (int vert = 0; vert < graph.numVertices(); vert++) {
 			int amount = 0;

@@ -29,7 +29,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.headb;
 import gnu.trove.TIntArrayList;
-import java.util.Arrays;
 
 /**
  * Represents a queue of ints in which reads (pops) are done from the
@@ -122,7 +121,7 @@ public class IntGenerationalQueue {
 
 	public void goToNextGeneration(){
 		curIndex = nextBegin-1;
-		nextBegin = nextBegin+nextGenerationLength();
+		nextBegin = (nextBegin+nextGenerationLength())%maxSize();
 		nextLength = 0;
 	}
 

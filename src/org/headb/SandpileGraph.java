@@ -686,7 +686,11 @@ public class SandpileGraph {
 					config.increaseQuick(v, -degree);
 					// if still unstable, include it in next generation
 					if(config.getQuick(v)>=degree){
-						unstables.addUnsafe(v);
+						try{
+							unstables.addUnsafe(v);
+						}catch(ArrayIndexOutOfBoundsException e){
+							e.printStackTrace();
+						}
 						added[v] = true;
 					}
 				}
