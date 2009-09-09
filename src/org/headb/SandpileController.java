@@ -69,9 +69,9 @@ public class SandpileController implements ActionListener, Serializable {
     public static final int LOOP_BORDER = 3;
     public static final int LOOP_REVERSE_BORDER = 4;
     public float VERT_RADIUS = 1.0f;
-    private long minUpdateDelay = 100;
+    private int minUpdateDelay = 100;
     private long lastUpdateTime = 0;
-    private long minRepaintDelay = 33;
+    private int minRepaintDelay = 33;
     private long lastRepaintTime = 0;
     private boolean repaintOnEveryUpdate = false;
     private SandpileGraph sg;
@@ -1926,19 +1926,19 @@ public class SandpileController implements ActionListener, Serializable {
         }
     }
 
-    public void setMinRepaintDelay(long delay) {
-        minRepaintDelay = delay;
+    public void setMinRepaintDelay(int delay) {
+        minRepaintDelay = Math.max(delay, 0);
     }
 
-    public void setMinUpdateDelay(long delay) {
-        minUpdateDelay = delay;
+    public void setMinUpdateDelay(int delay) {
+        minUpdateDelay = Math.max(delay, 0);
     }
 
     public void setRepaintOnEveryUpdate(boolean value) {
         repaintOnEveryUpdate = value;
     }
 
-    public long getMinUpdateDelay() {
+    public int getMinUpdateDelay() {
         return minUpdateDelay;
     }
 }

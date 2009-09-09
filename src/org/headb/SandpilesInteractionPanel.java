@@ -2654,8 +2654,10 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 	public boolean updateDrawerZoom(){
 		try{
-			drawer.setZoom(Float.valueOf(zoomTextField.getText())/100.0f);
-			drawer3d.setZoom(Float.valueOf(zoomTextField.getText())/100.0f);
+            float zoom = Math.max(Float.valueOf(zoomTextField.getText()) / 100.0f, 0.0001f);
+			drawer.setZoom(zoom);
+			drawer3d.setZoom(zoom);
+            updateZoomTextField();
 			return true;
 		}catch(NumberFormatException e){
 			return false;
@@ -2670,7 +2672,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 	public boolean updateControllerDelay(){
 		try{
-			sandpileController.setMinUpdateDelay(Long.valueOf(delayTextField.getText()));
+			sandpileController.setMinUpdateDelay(Integer.valueOf(delayTextField.getText()));
+            updateDelayTextField();
 			return true;
 		}catch(NumberFormatException e){
 			return false;

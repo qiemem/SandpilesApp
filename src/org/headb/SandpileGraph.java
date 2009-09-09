@@ -31,7 +31,6 @@ package org.headb;
 import java.util.*;
 import gnu.trove.TIntArrayList;
 import gnu.trove.TIntStack;
-import java.util.Arrays;
 
 /**
  * Represents a weighted, directed graph with methods for updating a sandpile
@@ -91,23 +90,6 @@ public class SandpileGraph {
         return vertsToOffsetLists.size();
     }
 
-    /**
-     * Retrieves the edge beginning with source and ending with dest.
-     * Runs in time linear to the number of source' outgoing edges.
-     *
-     * @param source The index of the source vertex
-     * @param dest The index of the destination vertex
-     * @return If the edge exists, the return value will be {source, dest, weight}. Otherwise, returns null.
-     */
-//	public Edge getEdge(int source, int dest) {
-//		GeneralEdgeList edgeList = adj.get(source);
-//		for (Edge e : edgeList) {
-//			if (e.dest() == dest) {
-//				return e;
-//			}
-//		}
-//		return null;
-//	}
     /**
      * Retrieves the sum of the weights of the outgoing edges of the given
      * vertex.
@@ -197,88 +179,10 @@ public class SandpileGraph {
         return edges;
     }
 
-//	public final Iterable<Integer> getOutgoingVertices(int vert) {
-//		final List<int[]> edgeList = getOutgoingEdgesQuick(vert);
-//		final Iterator<Integer> vertIter = new Iterator<Integer>() {
-//
-//			Iterator<int[]> edgeIter = edgeList.iterator();
-//
-//			public boolean hasNext() {
-//				return edgeIter.hasNext();
-//			}
-//
-//			public Integer next() {
-//				return edgeIter.next()[1];
-//			}
-//
-//			public void remove() {
-//				throw new UnsupportedOperationException();
-//			}
-//		};
-//		return new Iterable<Integer>() {
-//
-//			public Iterator<Integer> iterator() {
-//				return vertIter;
-//			}
-//		};
-//	}
     /**
-     * Retrieves the list of edges which begin with any of the edges in the given list.
-     */
-//	public final GeneralEdgeList getOutgoingEdgesQuick(final TIntArrayList verts) {
-//		GeneralEdgeList edgeList = new GeneralEdgeList();
-//		boolean[] alreadyAdded = new boolean[numVertices()];
-//		for (int i=0; i< verts.size(); i++) {
-//			int vert = verts.get(i);
-//			for (Edge e : getOutgoingEdgesQuick(vert)) {
-//				if (!alreadyAdded[e.dest()]) {
-//					edgeList.add(e);
-//					alreadyAdded[e[1]] = true;
-//				}
-//			}
-//		}
-//		return edgeList;
-//	}
-//	public final Iterable<Integer> getOutgoingVertices(final Iterable<Integer> verts) {
-//		final List<int[]> edgeList = getOutgoingEdgesQuick(verts);
-//		final Iterator<Integer> vertIter = new Iterator<Integer>() {
-//
-//			Iterator<int[]> edgeIter = edgeList.iterator();
-//
-//			public boolean hasNext() {
-//				return edgeIter.hasNext();
-//			}
-//
-//			public Integer next() {
-//				return edgeIter.next()[1];
-//			}
-//
-//			public void remove() {
-//				throw new UnsupportedOperationException();
-//			}
-//		};
-//		return new Iterable<Integer>() {
-//
-//			public Iterator<Integer> iterator() {
-//				return vertIter;
-//			}
-//		};
-//	}
-    /**
-     * Returns a set of the indices of vertices that have outgoing edges with the indicated vertex as their destination.
-     * Runs in linear time, proportional to the number of vertices in the graph.
-     */
-    /*public Set<Integer> getIncomingVertices(int vert) {
-    Set<Integer> incVerts = new HashSet<Integer>();
-    for (int i = 0; i < this.edges.size(); i++) {
-    if (weight(i, vert) > 0) {
-    incVerts.add(i);
-    }
-    }
-    return incVerts;
-    }*/
-    /**
-     * Adds a vertex to the graph.
+     * Determines if the given offset data currently resides in the graph. If so
+     * it links the vertex to that data. Otherwise, it adds the offset data and
+     * links the vertex to it.
      */
     private void placeVertexWithOffsets(int vert, EdgeOffsetList offsets) {
         EdgeOffsetList offsetList = this.getMatchingOffsetList(offsets);
@@ -308,19 +212,7 @@ public class SandpileGraph {
 
     }
 
-//	public void insertVertex(int i){
-//		for(SingleSourceEdgeList edges : adj){
-//			if(edges.source()>=i){
-//				edges.setSource(edges.source()+1);
-//			}
-//			for(Edge e : edges){
-//				if(e.dest()>=i){
-//					e.setDest(e.dest()+1);
-//				}
-//			}
-//		}
-//		adj.add(i, new SingleSourceEdgeList(i));
-//	}
+
     /**
      * Removes a vertex from the graph. Note that the index of all vertices
      * added after the vertex being deleted will be decreased by one.
@@ -328,26 +220,12 @@ public class SandpileGraph {
      * @param toDelete The index of the vertex to delete.
      */
     public void removeVertex(int toDelete) {
+        // Filling in this method would simply be rewriting removeVertices using
+        // a single index instead of a list. No reason to rewrite and this seems
+        // plenty fast for now.
         TIntArrayList singleton = new TIntArrayList(1);
         singleton.add(toDelete);
         removeVertices(singleton);
-
-//		for (SingleSourceEdgeList edgeList : adj) {
-//			for (Iterator<Edge> edgeIter = edgeList.iterator(); edgeIter.hasNext();) {
-//				Edge e = edgeIter.next();
-//				if (e.dest() == toDelete) {
-//					degrees.set(e.source(), degree(e.source()) - e.wt());
-//					edgeIter.remove();
-//				} else {
-//					e.setDest(e.dest() - (e.dest() > toDelete ? 1 : 0));
-//				}
-//			}
-//			if(edgeList.source()>toDelete){
-//				edgeList.setSource(edgeList.source()-1);
-//			}
-//		}
-//		adj.remove(toDelete);
-//		degrees.remove(toDelete);
     }
 
     /**
