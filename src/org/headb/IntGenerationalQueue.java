@@ -25,9 +25,9 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
+
 import gnu.trove.TIntArrayList;
 
 /**
@@ -39,93 +39,93 @@ import gnu.trove.TIntArrayList;
  */
 public class IntGenerationalQueue {
 
-	private int nextBegin = 0, nextLength = 0, curIndex = -1;
-	private int maxSize;
-	private int[] buffer;
-	
-	public IntGenerationalQueue(int maxSize){
-		this.maxSize = maxSize;
-		buffer = new int[maxSize];
-	}
+    private int nextBegin = 0, nextLength = 0, curIndex = -1;
+    private int maxSize;
+    private int[] buffer;
 
-	/**
-	 * Retrieves the maximum number of items this buffer can contain. The rule
-	 * is maxSize() >= remaining() + nextGenerationLength().
-	 * @return The maximum size this buffer was initialized with.
-	 */
-	public int maxSize(){
-		return maxSize;
-	}
+    public IntGenerationalQueue(int maxSize) {
+        this.maxSize = maxSize;
+        buffer = new int[maxSize];
+    }
 
-	/**
-	 * Returns the next int in this cycle.
-	 * @return
-	 * @throws IndexOutOfBoundsException Throws this exception if hasNextItem()
-	 * is false.
-	 */
-	public int nextItem() {
-		if(hasNextItem()){
-			return nextItemUnsafe();
-		} else {
-			throw new IndexOutOfBoundsException("Went beyond the end of the current cycle.");
-		}
-	}
+    /**
+     * Retrieves the maximum number of items this buffer can contain. The rule
+     * is maxSize() >= remaining() + nextGenerationLength().
+     * @return The maximum size this buffer was initialized with.
+     */
+    public int maxSize() {
+        return maxSize;
+    }
 
-	/**
-	 * Returns the next int in this cycle without checking hasNextItem(). If
-	 * hasNextItem() is false, behavior is unpredictable. This method is
-	 * slightly faster than nextItem().
-	 * @return
-	 */
-	public int nextItemUnsafe() {
-		curIndex = nextIndex();
-		return buffer[curIndex];
-	}
+    /**
+     * Returns the next int in this cycle.
+     * @return
+     * @throws IndexOutOfBoundsException Throws this exception if hasNextItem()
+     * is false.
+     */
+    public int nextItem() {
+        if (hasNextItem()) {
+            return nextItemUnsafe();
+        } else {
+            throw new IndexOutOfBoundsException("Went beyond the end of the current cycle.");
+        }
+    }
 
-	public boolean hasNextItem() {
-		return nextIndex()!=nextBegin;
-	}
+    /**
+     * Returns the next int in this cycle without checking hasNextItem(). If
+     * hasNextItem() is false, behavior is unpredictable. This method is
+     * slightly faster than nextItem().
+     * @return
+     */
+    public int nextItemUnsafe() {
+        curIndex = nextIndex();
+        return buffer[curIndex];
+    }
 
-	public int remaining(){
-		return (nextBegin - nextIndex() + maxSize())%maxSize();
-	}
+    public boolean hasNextItem() {
+        return nextIndex() != nextBegin;
+    }
 
-	private int nextIndex() {
-		return (curIndex+1)%maxSize();
-	}
+    public int remaining() {
+        return (nextBegin - nextIndex() + maxSize()) % maxSize();
+    }
 
-	public boolean hasNextGeneration() {
-		return nextGenerationLength()>0;
-	}
+    private int nextIndex() {
+        return (curIndex + 1) % maxSize();
+    }
 
-	public void add(int val){
-		int i = (nextBegin+nextGenerationLength())%maxSize();
-		if(hasNextItem() && i==nextIndex()){
-			throw new IndexOutOfBoundsException("Tried to add at: "+i+" though nextIndex() is "+nextIndex());
-		}else {
-			buffer[i] = val;
-			nextLength++;
-		}
-	}
+    public boolean hasNextGeneration() {
+        return nextGenerationLength() > 0;
+    }
 
-	public void addUnsafe(int val){
-		buffer[(nextBegin+nextGenerationLength())%maxSize()]=val;
-		nextLength++;
-	}
+    public void add(int val) {
+        int i = (nextBegin + nextGenerationLength()) % maxSize();
+        if (hasNextItem() && i == nextIndex()) {
+            throw new IndexOutOfBoundsException("Tried to add at: " + i + " though nextIndex() is " + nextIndex());
+        } else {
+            buffer[i] = val;
+            nextLength++;
+        }
+    }
 
-	public void addAll(TIntArrayList seq){
-		for(int i = 0; i<seq.size(); i++){
-			add(seq.get(i));
-		}
-	}
+    public void addUnsafe(int val) {
+        buffer[(nextBegin + nextGenerationLength()) % maxSize()] = val;
+        nextLength++;
+    }
 
-	public void goToNextGeneration(){
-		curIndex = nextBegin-1;
-		nextBegin = (nextBegin+nextGenerationLength())%maxSize();
-		nextLength = 0;
-	}
+    public void addAll(TIntArrayList seq) {
+        for (int i = 0; i < seq.size(); i++) {
+            add(seq.get(i));
+        }
+    }
 
-	public int nextGenerationLength(){
-		return nextLength;
-	}
+    public void goToNextGeneration() {
+        curIndex = nextBegin - 1;
+        nextBegin = (nextBegin + nextGenerationLength()) % maxSize();
+        nextLength = 0;
+    }
+
+    public int nextGenerationLength() {
+        return nextLength;
+    }
 }

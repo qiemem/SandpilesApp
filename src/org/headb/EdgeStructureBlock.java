@@ -25,9 +25,9 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
+
 import gnu.trove.TIntArrayList;
 
 /**
@@ -37,124 +37,139 @@ import gnu.trove.TIntArrayList;
  * @author Bryan Head
  */
 public class EdgeStructureBlock {
-	private TIntArrayList vertices;
-	private EdgeOffsetList edgeInfo;
 
-	private class PersonalizedEdgeList extends EdgeList{
-		private int vert;
+    private TIntArrayList vertices;
+    private EdgeOffsetList edgeInfo;
 
-		private UnsupportedOperationException manipulationException() {
-			return new UnsupportedOperationException("Can't alter the edges of a vertex in an EdgeStructureBlock through an intermediary EdgeList");
-		}
-		public PersonalizedEdgeList(int vert){
-			this.vert = vert;
-		}
-		public int size() {
-			return edgeInfo.size();
-		}
-		public int source(int i){
-			return vert;
-		}
-		public int sourceQuick(int i){
-			return vert;
-		}
-		public int destQuick(int i){
-			return vert + edgeInfo.destOffsetQuick(i);
-		}
-		public int wtQuick(int i){
-			return edgeInfo.wtQuick(i);
-		}
-		public void remove(int i){
-			throw manipulationException();
-		}
-		public void add(int s, int d, int w){
-			throw manipulationException();
-		}
-		public void setWtQuick(int i, int w){
-			throw manipulationException();
-		}
-		public void setDestQuick(int i, int d){
-			throw manipulationException();
-		}
-		public void setSourceQuick(int i, int s){
-			throw manipulationException();
-		}
-	}
+    private class PersonalizedEdgeList extends EdgeList {
 
-	public EdgeStructureBlock(EdgeOffsetList edgeInfo){
-		this.edgeInfo = edgeInfo;
-		this.vertices = new TIntArrayList();
-	}
+        private int vert;
 
-	public EdgeStructureBlock(EdgeStructureBlock other){
-		this.edgeInfo = new EdgeOffsetList(other.edgeInfo);
-		this.vertices = new TIntArrayList(other.vertices.toNativeArray());
-	}
+        private UnsupportedOperationException manipulationException() {
+            return new UnsupportedOperationException("Can't alter the edges of a vertex in an EdgeStructureBlock through an intermediary EdgeList");
+        }
 
-	public boolean tryAddVertex(int v, EdgeOffsetList edgeInfo){
-		if(this.edgeInfo.equals(edgeInfo)){
-			vertices.add(v);
-			return true;
-		}
-		return false;
-	}
+        public PersonalizedEdgeList(int vert) {
+            this.vert = vert;
+        }
 
-	public boolean removeVertex(int v) {
-		int i = vertices.indexOf(v);
-		if(i>=0){
-			vertices.remove(i);
-			return true;
-		}
-		return false;
-	}
+        public int size() {
+            return edgeInfo.size();
+        }
 
-	public int numEdges(){
-		return edgeInfo.size();
-	}
+        public int source(int i) {
+            return vert;
+        }
 
-	public int numVertices(){
-		return vertices.size();
-	}
+        public int sourceQuick(int i) {
+            return vert;
+        }
 
-	public int getVert(int vertIndex){
-		return vertices.get(vertIndex);
-	}
+        public int destQuick(int i) {
+            return vert + edgeInfo.destOffsetQuick(i);
+        }
 
-	public int getVertQuick(int vertIndex){
-		return vertices.getQuick(vertIndex);
-	}
+        public int wtQuick(int i) {
+            return edgeInfo.wtQuick(i);
+        }
 
-	public int getDestVert(int vertIndex, int edgeIndex){
-		return edgeInfo.destOffset(edgeIndex) + getVert(vertIndex);
-	}
+        public void remove(int i) {
+            throw manipulationException();
+        }
 
-	public int getDestVertQuick(int vertIndex, int edgeIndex){
-		return edgeInfo.destOffsetQuick(edgeIndex) + getVert(vertIndex);
-	}
+        public void add(int s, int d, int w) {
+            throw manipulationException();
+        }
 
-	public int getWt(int edgeIndex) {
-		return edgeInfo.wt(edgeIndex);
-	}
+        public void setWtQuick(int i, int w) {
+            throw manipulationException();
+        }
 
-	public int getWtQuick(int edgeIndex){
-		return edgeInfo.wtQuick(edgeIndex);
-	}
+        public void setDestQuick(int i, int d) {
+            throw manipulationException();
+        }
 
-	public int degree(){
-		return edgeInfo.degree();
-	}
+        public void setSourceQuick(int i, int s) {
+            throw manipulationException();
+        }
+    }
 
-	public EdgeOffsetList getEdgeOffsetInfo(){
-		return edgeInfo;
-	}
+    public EdgeStructureBlock(EdgeOffsetList edgeInfo) {
+        this.edgeInfo = edgeInfo;
+        this.vertices = new TIntArrayList();
+    }
 
-	public EdgeList getOutgoingEdgesQuick(int vert){
-		return new PersonalizedEdgeList(vert);
-	}
-	public EdgeList getOutgoingEdges(int vert){
-		if(vertices.contains(vert))
-			return new PersonalizedEdgeList(vert);
-		else
-			throw new IndexOutOfBoundsException("Tried to get the outgoing edges of a vertex not in this block.");
-	}
+    public EdgeStructureBlock(EdgeStructureBlock other) {
+        this.edgeInfo = new EdgeOffsetList(other.edgeInfo);
+        this.vertices = new TIntArrayList(other.vertices.toNativeArray());
+    }
+
+    public boolean tryAddVertex(int v, EdgeOffsetList edgeInfo) {
+        if (this.edgeInfo.equals(edgeInfo)) {
+            vertices.add(v);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeVertex(int v) {
+        int i = vertices.indexOf(v);
+        if (i >= 0) {
+            vertices.remove(i);
+            return true;
+        }
+        return false;
+    }
+
+    public int numEdges() {
+        return edgeInfo.size();
+    }
+
+    public int numVertices() {
+        return vertices.size();
+    }
+
+    public int getVert(int vertIndex) {
+        return vertices.get(vertIndex);
+    }
+
+    public int getVertQuick(int vertIndex) {
+        return vertices.getQuick(vertIndex);
+    }
+
+    public int getDestVert(int vertIndex, int edgeIndex) {
+        return edgeInfo.destOffset(edgeIndex) + getVert(vertIndex);
+    }
+
+    public int getDestVertQuick(int vertIndex, int edgeIndex) {
+        return edgeInfo.destOffsetQuick(edgeIndex) + getVert(vertIndex);
+    }
+
+    public int getWt(int edgeIndex) {
+        return edgeInfo.wt(edgeIndex);
+    }
+
+    public int getWtQuick(int edgeIndex) {
+        return edgeInfo.wtQuick(edgeIndex);
+    }
+
+    public int degree() {
+        return edgeInfo.degree();
+    }
+
+    public EdgeOffsetList getEdgeOffsetInfo() {
+        return edgeInfo;
+    }
+
+    public EdgeList getOutgoingEdgesQuick(int vert) {
+        return new PersonalizedEdgeList(vert);
+    }
+
+    public EdgeList getOutgoingEdges(int vert) {
+        if (vertices.contains(vert)) {
+            return new PersonalizedEdgeList(vert);
+        } else {
+            throw new IndexOutOfBoundsException("Tried to get the outgoing edges of a vertex not in this block.");
+        }
+    }
 }

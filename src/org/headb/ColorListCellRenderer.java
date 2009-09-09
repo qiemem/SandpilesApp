@@ -25,9 +25,9 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
+
 import javax.swing.*;
 import java.awt.Component;
 import java.awt.Color;
@@ -36,48 +36,48 @@ import java.awt.Color;
  * A ListCellRenderer for JLists that have colors as their items.
  * @author Bryan Head
  */
-public class ColorListCellRenderer extends JLabel implements ListCellRenderer{
-	private Float2dArrayList colors;
-	private int start, step;
+public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
 
-	public ColorListCellRenderer(int start, int step) {
-		this.start = start;
-		this.step = step;
-		colors = new Float2dArrayList(3);
-	}
+    private Float2dArrayList colors;
+    private int start, step;
 
-	public void setColors(Float2dArrayList colors){
-		this.colors = colors;
-	}
+    public ColorListCellRenderer(int start, int step) {
+        this.start = start;
+        this.step = step;
+        colors = new Float2dArrayList(3);
+    }
 
-	public Component getListCellRendererComponent(JList list,
-			Object value,
-			int index,
-			boolean isSelected,
-			boolean cellHasFocus){
-		setOpaque(true);
-		Color color = (Color)value;
-		setText(start+step*index+": ("+color.getRed()+", "+color.getGreen()+", "+color.getBlue()+")");
-		Color background = Color.BLACK;
-		Color foreground;
-		if(index<colors.rows()){
-			background = new Color(colors.get(index, 0), colors.get(index, 1), colors.get(index, 2));
-		}else{
-			background = Color.WHITE;
-		}
-		if(background.getRed()+background.getBlue()+background.getGreen() > (3*255/2)){
-			foreground = Color.BLACK;
-		}else{
-			foreground = Color.WHITE;
-		}
-		if(isSelected){
-			Color temp = foreground;
-			foreground = background;
-			background = temp;
-		}
-		setBackground(background);
-		setForeground(foreground);
-		return this;
-	}
+    public void setColors(Float2dArrayList colors) {
+        this.colors = colors;
+    }
 
+    public Component getListCellRendererComponent(JList list,
+            Object value,
+            int index,
+            boolean isSelected,
+            boolean cellHasFocus) {
+        setOpaque(true);
+        Color color = (Color) value;
+        setText(start + step * index + ": (" + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ")");
+        Color background = Color.BLACK;
+        Color foreground;
+        if (index < colors.rows()) {
+            background = new Color(colors.get(index, 0), colors.get(index, 1), colors.get(index, 2));
+        } else {
+            background = Color.WHITE;
+        }
+        if (background.getRed() + background.getBlue() + background.getGreen() > (3 * 255 / 2)) {
+            foreground = Color.BLACK;
+        } else {
+            foreground = Color.WHITE;
+        }
+        if (isSelected) {
+            Color temp = foreground;
+            foreground = background;
+            background = temp;
+        }
+        setBackground(background);
+        setForeground(foreground);
+        return this;
+    }
 }

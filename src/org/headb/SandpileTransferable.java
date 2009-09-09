@@ -25,9 +25,9 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
+
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.util.List;
@@ -38,39 +38,40 @@ import gnu.trove.TIntArrayList;
  * @author Bryan Head
  */
 public class SandpileTransferable implements Transferable {
-	private final Float2dArrayList locationData;
-	private final TIntArrayList configData;
-	private final GeneralEdgeList edgeData;
 
+    private final Float2dArrayList locationData;
+    private final TIntArrayList configData;
+    private final GeneralEdgeList edgeData;
 
-	public SandpileTransferable(Float2dArrayList locationData, TIntArrayList configData, GeneralEdgeList edgeData){
-		this.locationData  = locationData;
-		this.configData = configData;
-		this.edgeData = edgeData;
-	}
+    public SandpileTransferable(Float2dArrayList locationData, TIntArrayList configData, GeneralEdgeList edgeData) {
+        this.locationData = locationData;
+        this.configData = configData;
+        this.edgeData = edgeData;
+    }
 
-	public Float2dArrayList getLocationData(){
-		return locationData;
-	}
+    public Float2dArrayList getLocationData() {
+        return locationData;
+    }
 
-	public TIntArrayList getConfigData(){
-		return configData;
-	}
+    public TIntArrayList getConfigData() {
+        return configData;
+    }
 
-	public GeneralEdgeList getEdgeData(){
-		return edgeData;
-	}
+    public GeneralEdgeList getEdgeData() {
+        return edgeData;
+    }
 
-	public Object getTransferData(DataFlavor flavor){
-		Object[] data = {locationData, edgeData, configData};
-		return data;
-	}
-	public DataFlavor[] getTransferDataFlavors(){
-		DataFlavor[] flavors = {DataFlavor.getTextPlainUnicodeFlavor()};
-		return flavors;
-	}
+    public Object getTransferData(DataFlavor flavor) {
+        Object[] data = {locationData, edgeData, configData};
+        return data;
+    }
 
-	public boolean isDataFlavorSupported(DataFlavor flavor){
-		return flavor.isFlavorTextType();
-	}
+    public DataFlavor[] getTransferDataFlavors() {
+        DataFlavor[] flavors = {DataFlavor.getTextPlainUnicodeFlavor()};
+        return flavors;
+    }
+
+    public boolean isDataFlavorSupported(DataFlavor flavor) {
+        return flavor.isFlavorTextType();
+    }
 }

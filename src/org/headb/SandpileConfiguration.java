@@ -25,8 +25,7 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
 
 /**
@@ -35,47 +34,48 @@ package org.headb;
  * and multiply by a scalar.
  * @author Bryan Head
  */
-
 import gnu.trove.TIntArrayList;
 
-public class SandpileConfiguration extends TIntArrayList{
+public class SandpileConfiguration extends TIntArrayList {
 
-	public SandpileConfiguration() {
-		super();
-	}
+    public SandpileConfiguration() {
+        super();
+    }
 
-	public SandpileConfiguration(SandpileConfiguration other) {
-		super(other.toNativeArray());
-	}
+    public SandpileConfiguration(SandpileConfiguration other) {
+        super(other.toNativeArray());
+    }
 
-	public SandpileConfiguration(int size) {
-		super(size);
-	}
+    public SandpileConfiguration(int size) {
+        super(size);
+    }
 
-	public SandpileConfiguration plus(SandpileConfiguration other) {
-		assert this.size() == other.size() : "Tried to add configurations of different size";
-		SandpileConfiguration result = new SandpileConfiguration(this.size());
-		for(int i=0;i<this.size();i++)
-			result.add(this.getQuick(i)+other.getQuick(i));
-		return result;
-	}
+    public SandpileConfiguration plus(SandpileConfiguration other) {
+        assert this.size() == other.size() : "Tried to add configurations of different size";
+        SandpileConfiguration result = new SandpileConfiguration(this.size());
+        for (int i = 0; i < this.size(); i++) {
+            result.add(this.getQuick(i) + other.getQuick(i));
+        }
+        return result;
+    }
 
-	public SandpileConfiguration times(int scalar) {
-		SandpileConfiguration result = new SandpileConfiguration();
-		for(int i=0;i<this.size();i++)
-			result.add(this.get(i)*scalar);
-		return result;
-	}
+    public SandpileConfiguration times(int scalar) {
+        SandpileConfiguration result = new SandpileConfiguration();
+        for (int i = 0; i < this.size(); i++) {
+            result.add(this.get(i) * scalar);
+        }
+        return result;
+    }
 
-	public SandpileConfiguration plusEquals(SandpileConfiguration other){
-		assert this.size() == other.size() : "Tried to add configurations of different size";
-		for(int i=0; i<this.size(); i++){
-			increaseQuick(i, other.getQuick(i));
-		}
-		return this;
-	}
+    public SandpileConfiguration plusEquals(SandpileConfiguration other) {
+        assert this.size() == other.size() : "Tried to add configurations of different size";
+        for (int i = 0; i < this.size(); i++) {
+            increaseQuick(i, other.getQuick(i));
+        }
+        return this;
+    }
 
-	public void increaseQuick(int v, int amount){
-		this._data[v]+=amount;
-	}
+    public void increaseQuick(int v, int amount) {
+        this._data[v] += amount;
+    }
 }

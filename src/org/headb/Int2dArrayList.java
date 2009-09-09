@@ -25,9 +25,9 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ */
 package org.headb;
+
 import gnu.trove.TIntArrayList;
 import java.io.Serializable;
 
@@ -36,97 +36,117 @@ import java.io.Serializable;
  * ArrayList<ArrayList<Int>> for instance or even int[][].
  * @author Bryan Head
  */
-public class Int2dArrayList implements Serializable{
-	static private final long serialVersionUID = -21312181081L;
-	private int cols;
-	private TIntArrayList data;
+public class Int2dArrayList implements Serializable {
 
-	public Int2dArrayList(){
-		data = new TIntArrayList();
-		cols = 1;
-	}
+    static private final long serialVersionUID = -21312181081L;
+    private int cols;
+    private TIntArrayList data;
 
-	public Int2dArrayList(int cols){
-		data = new TIntArrayList();
-		this.cols = cols;
-	}
+    public Int2dArrayList() {
+        data = new TIntArrayList();
+        cols = 1;
+    }
 
-	public Int2dArrayList(int rows, int cols){
-		data = new TIntArrayList(new int[rows*cols]);
-		this.cols = cols;
-	}
-	public Int2dArrayList(Int2dArrayList other){
-		data = new TIntArrayList(other.toNativeArray());
-		cols = other.cols;
-	}
-	public Int2dArrayList(Int2dArrayList other, int cols){
-		data = new TIntArrayList(other.toNativeArray());
-		if(other.data.size()%cols != 0){
-			throw(new IndexOutOfBoundsException("Incompatible number of columns,"+cols+", to convert Int2dArrayList of size "+other.data.size()+"."));
-		}
-		this.cols = cols;
-	}
-	public Int2dArrayList(int[] array, int cols){
-		data = new TIntArrayList(array);
-		this.cols = cols;
-	}
-	public int[] toNativeArray(){
-		return data.toNativeArray();
-	}
+    public Int2dArrayList(int cols) {
+        data = new TIntArrayList();
+        this.cols = cols;
+    }
 
-	public int get(int r, int c){
-		return data.get(r*cols + c);
-	}
-	public int getQuick(int r, int c){
-		return data.getQuick(r*cols+c);
-	}
-	public void set(int r, int c, int val){
-		data.set(r*cols+c, val);
-	}
-	public void setQuick(int r, int c, int val){
-		data.setQuick(r*cols+c, val);
-	}
-	public void insertRow(int r, int... row){
-		data.insert(r*cols, row);
-	}
-	public void setRow(int r, int... row){
-		data.set(r*cols, row);
-	}
-	public int addRow(){
-		for(int i=0; i<cols; i++)
-			data.add(0);
-		return rows()-1;
-	}
-	public int addRow(int val){
-		for(int i=0; i<cols; i++)
-			data.add(val);
-		return rows()-1;
-	}
-	public int addRow(int... row){
-		if(row.length==cols){
-			data.add(row);
-			return rows()-1;
-		}else
-			throw(new IndexOutOfBoundsException("Tried to add a row of the wrong length. Row length was "+row.length+". It should have been "+cols+"."));
-	}
-	public int rows(){
-		return data.size()/cols;
-	}
-	public int cols(){
-		return cols;
-	}
+    public Int2dArrayList(int rows, int cols) {
+        data = new TIntArrayList(new int[rows * cols]);
+        this.cols = cols;
+    }
 
-	public void removeRow(int r){
-		data.remove(r*cols, cols);
-	}
-	public void clear() {
-		data.clear();
-	}
-	public boolean isEmpty() {
-		return data.isEmpty();
-	}
-	public boolean equals(Int2dArrayList other){
-		return this.cols() == other.cols() && this.data.equals(other.data);
-	}
+    public Int2dArrayList(Int2dArrayList other) {
+        data = new TIntArrayList(other.toNativeArray());
+        cols = other.cols;
+    }
 
+    public Int2dArrayList(Int2dArrayList other, int cols) {
+        data = new TIntArrayList(other.toNativeArray());
+        if (other.data.size() % cols != 0) {
+            throw (new IndexOutOfBoundsException("Incompatible number of columns," + cols + ", to convert Int2dArrayList of size " + other.data.size() + "."));
+        }
+        this.cols = cols;
+    }
+
+    public Int2dArrayList(int[] array, int cols) {
+        data = new TIntArrayList(array);
+        this.cols = cols;
+    }
+
+    public int[] toNativeArray() {
+        return data.toNativeArray();
+    }
+
+    public int get(int r, int c) {
+        return data.get(r * cols + c);
+    }
+
+    public int getQuick(int r, int c) {
+        return data.getQuick(r * cols + c);
+    }
+
+    public void set(int r, int c, int val) {
+        data.set(r * cols + c, val);
+    }
+
+    public void setQuick(int r, int c, int val) {
+        data.setQuick(r * cols + c, val);
+    }
+
+    public void insertRow(int r, int... row) {
+        data.insert(r * cols, row);
+    }
+
+    public void setRow(int r, int... row) {
+        data.set(r * cols, row);
+    }
+
+    public int addRow() {
+        for (int i = 0; i < cols; i++) {
+            data.add(0);
+        }
+        return rows() - 1;
+    }
+
+    public int addRow(int val) {
+        for (int i = 0; i < cols; i++) {
+            data.add(val);
+        }
+        return rows() - 1;
+    }
+
+    public int addRow(int... row) {
+        if (row.length == cols) {
+            data.add(row);
+            return rows() - 1;
+        } else {
+            throw (new IndexOutOfBoundsException("Tried to add a row of the wrong length. Row length was " + row.length + ". It should have been " + cols + "."));
+        }
+    }
+
+    public int rows() {
+        return data.size() / cols;
+    }
+
+    public int cols() {
+        return cols;
+    }
+
+    public void removeRow(int r) {
+        data.remove(r * cols, cols);
+    }
+
+    public void clear() {
+        data.clear();
+    }
+
+    public boolean isEmpty() {
+        return data.isEmpty();
+    }
+
+    public boolean equals(Int2dArrayList other) {
+        return this.cols() == other.cols() && this.data.equals(other.data);
+    }
 }
