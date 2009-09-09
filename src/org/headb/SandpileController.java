@@ -648,7 +648,7 @@ public class SandpileController implements ActionListener, Serializable {
 
     final private void restoreOutgoingEdgeData(ArrayList<SingleSourceEdgeList> edgeLists) {
         for (int i = 0; i < edgeLists.size(); i++) {
-            getGraph().setOutgoingEdges(edgeLists.get(i).source(), new SingleSourceEdgeList(edgeLists.get(i)));
+            getGraph().setOutgoingEdges(new SingleSourceEdgeList(edgeLists.get(i)));
         }
     }
 
@@ -708,7 +708,7 @@ public class SandpileController implements ActionListener, Serializable {
             public void redoAction() {
                 for (int i = 0; i < edgeLists.size(); i++) {
                     int v = edgeLists.get(i).source();
-                    getGraph().setOutgoingEdges(v, new SingleSourceEdgeList(v));
+                    getGraph().setOutgoingEdges(new SingleSourceEdgeList(v));
                 }
             }
         };
@@ -762,7 +762,7 @@ public class SandpileController implements ActionListener, Serializable {
                 @Override
                 public void undoAction() {
                     restoreOutgoingEdgeData(edgeLists);
-                    getGraph().setOutgoingEdges(touchVert, new SingleSourceEdgeList(touchVertEdges));
+                    getGraph().setOutgoingEdges(new SingleSourceEdgeList(touchVertEdges));
                 }
 
                 @Override
@@ -955,7 +955,7 @@ public class SandpileController implements ActionListener, Serializable {
                 } else {
                     edges.add(gridRef[i][j - 1], 1);
                 }
-                getGraph().setOutgoingEdges(gridRef[i][j], edges);
+                getGraph().setOutgoingEdges(edges);
             }
         }
     }
@@ -1014,24 +1014,26 @@ public class SandpileController implements ActionListener, Serializable {
                 if (j == 0) {
                     continue;
                 }
-                addEdge(gridRef[i][j], gridRef[i][j - 1]);
-                addEdge(gridRef[i][j], gridRef[i][j + 1]);
+                SingleSourceEdgeList edges = new SingleSourceEdgeList(gridRef[i][j]);
+                edges.add(gridRef[i][j-1], 1);
+                edges.add(gridRef[i][j+1], 1);
                 if (i < radius - 1) {
-                    addEdge(gridRef[i][j], gridRef[i - 1][j - 1]);
-                    addEdge(gridRef[i][j], gridRef[i - 1][j]);
-                    addEdge(gridRef[i][j], gridRef[i + 1][j + 1]);
-                    addEdge(gridRef[i][j], gridRef[i + 1][j]);
+                    edges.add(gridRef[i-1][j-1], 1);
+                    edges.add(gridRef[i - 1][j], 1);
+                    edges.add(gridRef[i + 1][j + 1], 1);
+                    edges.add(gridRef[i + 1][j], 1);
                 } else if (i == radius - 1) {
-                    addEdge(gridRef[i][j], gridRef[i - 1][j - 1]);
-                    addEdge(gridRef[i][j], gridRef[i - 1][j]);
-                    addEdge(gridRef[i][j], gridRef[i + 1][j - 1]);
-                    addEdge(gridRef[i][j], gridRef[i + 1][j]);
+                    edges.add(gridRef[i - 1][j - 1], 1);
+                    edges.add(gridRef[i - 1][j], 1);
+                    edges.add(gridRef[i + 1][j - 1], 1);
+                    edges.add(gridRef[i + 1][j], 1);
                 } else {
-                    addEdge(gridRef[i][j], gridRef[i - 1][j + 1]);
-                    addEdge(gridRef[i][j], gridRef[i - 1][j]);
-                    addEdge(gridRef[i][j], gridRef[i + 1][j - 1]);
-                    addEdge(gridRef[i][j], gridRef[i + 1][j]);
+                    edges.add(gridRef[i - 1][j + 1], 1);
+                    edges.add(gridRef[i - 1][j], 1);
+                    edges.add(gridRef[i + 1][j - 1], 1);
+                    edges.add(gridRef[i + 1][j], 1);
                 }
+                getGraph().setOutgoingEdges(edges);
 
             }
             if (i < radius - 1) {

@@ -161,7 +161,8 @@ public class SandpileGraph {
         return null;
     }
 
-    public void setOutgoingEdges(int vert, SingleSourceEdgeList edges) {
+    public void setOutgoingEdges(SingleSourceEdgeList edges) {
+        int vert = edges.source();
         removeVertexFromOffsetList(vert);
         EdgeOffsetList offsetList = edges.getEdgeOffsetList();
         this.placeVertexWithOffsets(vert, offsetList);
