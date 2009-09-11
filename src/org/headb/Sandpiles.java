@@ -68,6 +68,7 @@ public class Sandpiles extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         projectFileChooser = new javax.swing.JFileChooser();
         imageFileChooser = new javax.swing.JFileChooser(new File(System.getProperty("user.home")));
@@ -85,6 +86,14 @@ public class Sandpiles extends javax.swing.JFrame {
         preferencesDoneButton = new javax.swing.JButton();
         defaultPreferencesButton = new javax.swing.JButton();
         cancelPreferencesButton = new javax.swing.JButton();
+        imageSizeDialog = new javax.swing.JDialog();
+        jLabel2 = new javax.swing.JLabel();
+        imageSizeSlider = new javax.swing.JSlider();
+        imageSizeTextField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        imageSizeOkButton = new javax.swing.JButton();
+        imageSizeCancelButton = new javax.swing.JButton();
         sandpilesIP = new org.headb.SandpilesInteractionPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -285,6 +294,84 @@ public class Sandpiles extends javax.swing.JFrame {
                     .add(cancelPreferencesButton)))
         );
 
+        imageSizeDialog.setTitle("Image Size");
+        imageSizeDialog.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        imageSizeDialog.setLocationByPlatform(true);
+
+        jLabel2.setText("How big would you like the picture to be?");
+
+        imageSizeSlider.setMaximum(1000);
+        imageSizeSlider.setValue(100);
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, imageSizeSlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), imageSizeTextField, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        jLabel3.setText("%");
+
+        jLabel4.setText("0 x 0");
+
+        imageSizeOkButton.setText("Ok");
+        imageSizeOkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imageSizeOkButtonActionPerformed(evt);
+            }
+        });
+
+        imageSizeCancelButton.setText("Cancel");
+        imageSizeCancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imageSizeCancelButtonActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout imageSizeDialogLayout = new org.jdesktop.layout.GroupLayout(imageSizeDialog.getContentPane());
+        imageSizeDialog.getContentPane().setLayout(imageSizeDialogLayout);
+        imageSizeDialogLayout.setHorizontalGroup(
+            imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(imageSizeDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel2)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, imageSizeDialogLayout.createSequentialGroup()
+                        .add(imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(imageSizeDialogLayout.createSequentialGroup()
+                                .add(imageSizeOkButton)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(imageSizeCancelButton)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 168, Short.MAX_VALUE)
+                                .add(jLabel4))
+                            .add(imageSizeDialogLayout.createSequentialGroup()
+                                .add(imageSizeSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(imageSizeTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 58, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel3)))
+                .addContainerGap())
+        );
+        imageSizeDialogLayout.setVerticalGroup(
+            imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(imageSizeDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jLabel2)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(jLabel3)
+                        .add(imageSizeTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(imageSizeSlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(imageSizeDialogLayout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel4)
+                        .addContainerGap(49, Short.MAX_VALUE))
+                    .add(imageSizeDialogLayout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(imageSizeDialogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(imageSizeOkButton)
+                            .add(imageSizeCancelButton))
+                        .addContainerGap())))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         fileMenu.setText("File");
@@ -408,6 +495,8 @@ public class Sandpiles extends javax.swing.JFrame {
             .add(sandpilesIP, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -493,20 +582,19 @@ public class Sandpiles extends javax.swing.JFrame {
 	}//GEN-LAST:event_redoMenuItemActionPerformed
 
 	private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        imageFileChooser.showSaveDialog(this);
+        imageSizeDialog.setSize(400,150);
+        imageSizeDialog.setVisible(true);
 	}//GEN-LAST:event_jMenuItem1ActionPerformed
 
 	private void imageFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageFileChooserActionPerformed
-        BufferedImage image = sandpilesIP.getCanvasShot();
+        float scale = ((float) imageSizeSlider.getValue()) / 100f;
+        sandpilesIP.setWaitCursor();
         if (evt.getActionCommand().equals(imageFileChooser.APPROVE_SELECTION)) {
-
             File file = imageFileChooser.getSelectedFile();
-            try {
-                ImageIO.write(image, "png", file);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Unable to write image: " + e.getMessage());
-            }
+            BufferedImage image = sandpilesIP.getCanvasShot(scale);
+            saveImage(image, file);
         }
+        sandpilesIP.setDefaultCursor();
 	}//GEN-LAST:event_imageFileChooserActionPerformed
 
 	private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -600,6 +688,25 @@ public class Sandpiles extends javax.swing.JFrame {
         this.sandpilesIP.requestFocus();
 	}//GEN-LAST:event_cancelPreferencesButtonActionPerformed
 
+    private void imageSizeCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageSizeCancelButtonActionPerformed
+        imageSizeDialog.setVisible(false);
+    }//GEN-LAST:event_imageSizeCancelButtonActionPerformed
+
+    private void imageSizeOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageSizeOkButtonActionPerformed
+        imageSizeDialog.setVisible(false);
+        imageFileChooser.showSaveDialog(this);
+        
+    }//GEN-LAST:event_imageSizeOkButtonActionPerformed
+
+    public boolean saveImage(BufferedImage img, File file){
+        try {
+            ImageIO.write(img, "png", file);
+            return true;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Unable to write image: " + e.getMessage());
+            return false;
+        }
+    }
     private void updateColorPreferencesList() {
         ColorListCellRenderer cellRenderer = new ColorListCellRenderer(0, 1);
         cellRenderer.setColors(this.prefs.getColors());
@@ -671,7 +778,15 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JFileChooser imageFileChooser;
+    private javax.swing.JButton imageSizeCancelButton;
+    private javax.swing.JDialog imageSizeDialog;
+    private javax.swing.JButton imageSizeOkButton;
+    private javax.swing.JSlider imageSizeSlider;
+    private javax.swing.JTextField imageSizeTextField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -694,5 +809,6 @@ public class Sandpiles extends javax.swing.JFrame {
     private javax.swing.JButton setBackgroundColorButton;
     private javax.swing.JButton setColorButton;
     private javax.swing.JMenuItem undoMenuItem;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

@@ -47,7 +47,7 @@ import gnu.trove.TIntArrayList;
  */
 public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelListener, SandpileDrawer, GLEventListener {
 
-    private GLCanvas canvas;
+    private GLJPanel canvas;
     private Float2dArrayList vertexLocations = new Float2dArrayList(0, 2);
     private SandpileGraph graph = new SandpileGraph();
     private SandpileConfiguration config = new SandpileConfiguration();
@@ -80,13 +80,13 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
     private int numInDebtColors = 0;
 
     public SandpileGLDrawer() {
-        canvas = new GLCanvas();
+        canvas = new GLJPanel();
         canvas.addGLEventListener(this);
         canvas.addMouseListener(this);
         canvas.addMouseMotionListener(this);
     }
 
-    public SandpileGLDrawer(GLCanvas canvas) {
+    public SandpileGLDrawer(GLJPanel canvas) {
         this.canvas = canvas;
         this.canvas.addGLEventListener(this);
         this.canvas.addMouseWheelListener(this);
@@ -373,7 +373,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
     }
 
-    public GLCanvas getCanvas() {
+    public GLJPanel getCanvas() {
         return canvas;
     }
 

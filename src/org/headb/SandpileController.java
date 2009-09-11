@@ -42,7 +42,7 @@ import java.util.Iterator;
 import java.io.*;
 import java.util.ArrayList;
 
-import java.awt.Canvas;
+import javax.swing.JPanel;
 import javax.swing.undo.*;
 
 import java.net.*;
@@ -201,7 +201,7 @@ public class SandpileController implements ActionListener, Serializable {
         selectedVertices = new TIntArrayList();
         configs = new HashMap<String, SandpileConfiguration>();
 
-        Canvas canvas = drawer.getCanvas();
+        JPanel canvas = drawer.getCanvas();
         selectedVertices.clear();
     }
 

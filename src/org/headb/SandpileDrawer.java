@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.headb;
 
-import java.awt.Canvas;
+import javax.media.opengl.GLJPanel;
 import java.util.List;
 import gnu.trove.TIntArrayList;
 
@@ -47,7 +47,7 @@ public interface SandpileDrawer {
         DIFFERENCE
     }
 
-    public Canvas getCanvas();
+    public GLJPanel getCanvas();
 
     public void setColorMode(ColorMode cm);
 

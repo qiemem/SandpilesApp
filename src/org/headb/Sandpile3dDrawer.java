@@ -53,7 +53,7 @@ import java.awt.Dimension;
  */
 public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
-    private GLCanvas canvas;
+    private GLJPanel canvas;
     private ColorMode colorMode;
     private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
     private float[] lightDiffuse = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -73,16 +73,16 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
     private boolean drawWire = false;
     private boolean autoRotate = false;
     private float[] lastPoint;
-    private float xRot = 0f, yRot = 0f;
     private float startingZ = 240f;
     private float cameraX = 0f, cameraY = 0f, cameraZ = startingZ;
     private float[] rotAxis = new float[3];
     private float rotAngle = 0f;
     private final float ROT_SCALE = 90f;
-    private float[] rotMatrix = new float[16];
+    private float[] rotMatrix = null;
     private float[] backgroundColor = {0f, 0f, 0f};
 
-    public Sandpile3dDrawer(GLCanvas canvas) {
+    public Sandpile3dDrawer(GLJPanel canvas) {
+        System.err.println("Construct");
         colorMode = ColorMode.NUM_OF_GRAINS;
         this.canvas = canvas;
         this.canvas.addGLEventListener(this);
@@ -153,6 +153,10 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
         canvas.repaint();
     }
 
+
+    public float getRotAngle(){
+        return rotAngle;
+    }
     private float[] trackBallPointMapping(int x, int y) {
         float[] v = new float[3];
         Dimension dim = canvas.getSize();
@@ -227,7 +231,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
         heightMultiplier = s;
     }
 
-    public GLCanvas getCanvas() {
+    public GLJPanel getCanvas() {
         return canvas;
     }
 
@@ -380,7 +384,14 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
         gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT);
         gl.glEnable(gl.GL_COLOR_MATERIAL);
 
-        gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX, rotMatrix, 0);
+        // If rotMatrix is null, then init hasn't been called yet.
+        // This is so that the drawer will remember the rotMatrix (and thus
+        // the orientation of the scene) after setSize() has been called on the
+        // GLJPanel.
+        if(rotMatrix==null){
+            rotMatrix = new float[16];
+            gl.glGetFloatv(gl.GL_MODELVIEW_MATRIX, rotMatrix, 0);
+        }
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {

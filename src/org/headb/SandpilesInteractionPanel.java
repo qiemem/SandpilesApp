@@ -33,32 +33,29 @@ package org.headb;
  * This panel contains swing elements for both controlling graphs,
  * configurations, etc. and for displaying the sandpiles themselve. It uses
  * a SandpileController to do all internal manipulations of graphs and
- * configurations. It has GLCanvases to display the sandpiles and
+ * configurations. It has GLJPaneles to display the sandpiles and
  * SandpileDrawers to dictate how that is done. Note that the fact that this
- * class uses GLCanvases, which are heavyweight, AWT components may create
+ * class uses GLJPaneles, which are heavyweight, AWT components may create
  * problems on some computers. However, they have a significant performance gain
  * over GLPanels, which are the swing equivalent.
  * 
  * @author Bryan Head
  */
-import java.awt.AWTException;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import java.awt.datatransfer.*;
-import javax.swing.Timer;
 import java.util.Vector;
-import java.util.HashSet;
 import java.awt.event.*;
-import java.util.List;
+import java.awt.GraphicsConfiguration;
 import java.util.ArrayList;
 import java.io.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.awt.Robot;
 import java.awt.Rectangle;
-import java.util.Arrays;
 import java.awt.Dimension;
 import gnu.trove.TIntArrayList;
+import javax.media.opengl.*;
 
 public class SandpilesInteractionPanel extends javax.swing.JPanel implements ClipboardOwner, SandpileChangeListener {
 	private static final String MAKE_GRID_STATE = "Make Grid";
@@ -307,7 +304,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        canvas = new javax.media.opengl.GLCanvas();
+        canvas = new javax.media.opengl.GLJPanel();
         controlStateComboBox = new javax.swing.JComboBox();
         optionsContainerPanel = new javax.swing.JPanel();
         blankOptionsPanel = new javax.swing.JPanel();
@@ -329,7 +326,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         sandpileViewScrollPane = new javax.swing.JScrollPane();
         mouseButtonGroup = new javax.swing.ButtonGroup();
         repaintOptionsButtonGroup = new javax.swing.ButtonGroup();
-        canvas3d = new javax.media.opengl.GLCanvas();
+        canvas3d = new javax.media.opengl.GLJPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         controlPanel = new javax.swing.JPanel();
         quitButton = new javax.swing.JButton();
@@ -2784,19 +2781,20 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		updateSelectedInfo();
 	}
 
-	public BufferedImage getCanvasShot(){
-		int height = canvasHolderPanel.getHeight();
-		int width = canvasHolderPanel.getWidth();
-		int x = canvasHolderPanel.getLocationOnScreen().x;
-		int y = canvasHolderPanel.getLocationOnScreen().y;
-		Rectangle rect = new Rectangle(x,y,width,height);
-		try{
-			Robot robot = new Robot();
-			return robot.createScreenCapture(rect);
-		}catch(java.awt.AWTException e){
-			javax.swing.JOptionPane.showInternalMessageDialog(this, "Error creating robot: "+e.getMessage());
-			return null;
-		}
+	public BufferedImage getCanvasShot(float scale){
+        GLJPanel p = this.currentDrawer.getCanvas();
+        GraphicsConfiguration gc = p.getGraphicsConfiguration();
+        p.repaint();
+        int oldW = p.getWidth();
+        int oldH = p.getHeight();
+        int imageW = (int)(oldW * scale);
+        int imageH = (int)(oldH * scale);
+        p.setSize(imageW, imageH);
+        p.repaint();
+        BufferedImage img = gc.createCompatibleImage(imageW, imageH);
+        p.paint(img.createGraphics());
+        p.setSize(oldW, oldH);
+        return img;
 	}
 
 	public void setWaitCursor(){
@@ -2843,8 +2841,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JPanel buildLaticePanel;
     private javax.swing.JTable buildLatticeTable;
     private javax.swing.JButton cancelButton;
-    private javax.media.opengl.GLCanvas canvas;
-    private javax.media.opengl.GLCanvas canvas3d;
+    private javax.media.opengl.GLJPanel canvas;
+    private javax.media.opengl.GLJPanel canvas3d;
     private javax.swing.JPanel canvasHolderPanel;
     private javax.swing.JLabel centerCoordLabel;
     private javax.swing.JLabel centerLabel;
