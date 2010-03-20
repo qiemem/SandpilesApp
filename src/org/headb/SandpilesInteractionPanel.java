@@ -2784,13 +2784,11 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	public BufferedImage getCanvasShot(float scale){
         GLJPanel p = this.currentDrawer.getCanvas();
         GraphicsConfiguration gc = p.getGraphicsConfiguration();
-        p.repaint();
         int oldW = p.getWidth();
         int oldH = p.getHeight();
         int imageW = (int)(oldW * scale);
         int imageH = (int)(oldH * scale);
         p.setSize(imageW, imageH);
-        p.repaint();
         BufferedImage img = gc.createCompatibleImage(imageW, imageH);
         p.paint(img.createGraphics());
         p.setSize(oldW, oldH);

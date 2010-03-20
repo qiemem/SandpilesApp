@@ -283,6 +283,12 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
     }
 
     public float[] normalizedCross(float x1, float y1, float z1, float x2, float y2, float z2) {
+        float[] normal = new float[3];
+        normalizedCross(normal,x1,y1,z1,x2,y2,z2);
+        return normal;
+    }
+
+    public void normalizedCross(float[] result, float x1, float y1, float z1, float x2, float y2, float z2) {
         float x = y1 * z2 - z1 * y2;
         float y = z1 * x2 - x1 * z2;
         float z = x1 * y2 - y1 * x2;
@@ -290,8 +296,9 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
         x /= l;
         y /= l;
         z /= l;
-        float[] normal = {x, y, z};
-        return normal;
+        result[0]=x;
+        result[1]=y;
+        result[2]=z;
     }
 
     public void drawTriangulation(GL gl, DelaunayTriangulation tris) {
@@ -300,6 +307,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
         for (int i = 0; i < heightSmoothing; i++) {
             h = smoothHeights(h);
         }
+        float[] n = new float[3];
         if (drawShape) {
             float[][] c = calcColors();
             for (int i = 0; i < colorSmoothing; i++) {
@@ -317,7 +325,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
                 int v2 = tris.triangles().get(i, 2);
                 float x2 = tris.points().get(v2, 0) - cameraX;
                 float y2 = tris.points().get(v2, 1) - cameraY;
-                float[] n = normalizedCross(x1 - x0, y1 - y0, h[v1] - h[v0],
+                normalizedCross(n,x1 - x0, y1 - y0, h[v1] - h[v0],
                         x2 - x0, y2 - y0, h[v2] - h[v0]);
                 //System.err.println(c[v0][0]+" "+c[v0][1]+" "+c[v0][2]);
                 gl.glNormal3fv(n, 0);
