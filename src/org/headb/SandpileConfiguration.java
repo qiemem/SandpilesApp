@@ -78,4 +78,13 @@ public class SandpileConfiguration extends TIntArrayList {
     public void increaseQuick(int v, int amount) {
         this._data[v] += amount;
     }
+
+    public void setTo(SandpileConfiguration other) {
+        this.resetQuick();
+        this.ensureCapacity(other.size());
+        int n = other.size();
+        for(int i=0; i<n; i++){
+            this.add(other.getQuick(i));
+        }
+    }
 }

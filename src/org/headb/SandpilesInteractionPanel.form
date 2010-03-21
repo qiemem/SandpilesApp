@@ -749,29 +749,33 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="gridSizeLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                              <Component id="gridRowsField" min="-2" pref="55" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="gridSizeCrossLabel" min="-2" pref="8" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="gridColsField" min="-2" pref="54" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="sBorderComboBox" alignment="1" pref="134" max="32767" attributes="0"/>
+                                          <Component id="eBorderComboBox" alignment="1" pref="134" max="32767" attributes="0"/>
+                                          <Component id="wBorderComboBox" alignment="1" pref="134" max="32767" attributes="0"/>
+                                          <Component id="nBorderComboBox" alignment="0" pref="134" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="gridSizeLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                                      <Component id="gridRowsField" min="-2" pref="55" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="gridSizeCrossLabel" min="-2" pref="8" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="gridColsField" min="-2" pref="54" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                               <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="sBorderComboBox" alignment="1" pref="238" max="32767" attributes="0"/>
-                                  <Component id="nBorderComboBox" alignment="0" pref="238" max="32767" attributes="0"/>
-                                  <Component id="eBorderComboBox" alignment="1" pref="238" max="32767" attributes="0"/>
-                                  <Component id="wBorderComboBox" alignment="1" pref="238" max="32767" attributes="0"/>
-                              </Group>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1491,6 +1495,7 @@
                                   <Component id="drawShapeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="drawWireCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButton1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="threadedCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="99" max="32767" attributes="0"/>
                           </Group>
@@ -1510,7 +1515,9 @@
                               <Component id="drawEdgesCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="printFPSCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="threadedCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="repaintDelayRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="repaintDelayTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1545,7 +1552,7 @@
                               <Component id="drawShapeCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="drawWireCheckBox" min="-2" pref="23" max="-2" attributes="0"/>
-                              <EmptySpace pref="165" max="32767" attributes="0"/>
+                              <EmptySpace pref="123" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1750,6 +1757,15 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="threadedCheckBox">
+                      <Properties>
+                        <Property name="selected" type="boolean" value="true"/>
+                        <Property name="text" type="java.lang.String" value="Thread Updates/Repaints"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="threadedCheckBoxActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

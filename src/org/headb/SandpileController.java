@@ -96,6 +96,60 @@ public class SandpileController implements ActionListener, Serializable {
     private boolean needsRepaint = false;
     private ReentrantLock configLock = new ReentrantLock();
 
+    public class UpdateThread extends Thread {
+        @Override public void run() {
+            while(true){
+                if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+                    lastUpdateTime = System.currentTimeMillis();
+                    update();
+                }
+            }
+
+        }
+    }
+
+    public class RepaintThread extends Thread {
+        @Override public void run() {
+            do{
+                if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay && needsRepaint) {
+                    lastRepaintTime = System.currentTimeMillis();
+                    repaint();
+                    needsRepaint = false;
+                }
+            }while(!Thread.interrupted());
+
+        }
+    }
+
+    public Runnable updateRunner = new Runnable () {
+        public void run() {
+            while (!Thread.interrupted()) {
+                if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+                    lastUpdateTime = System.currentTimeMillis();
+                    update();
+                }
+            }
+
+        }
+    };
+    public Runnable repaintRunner = new Runnable () {
+        public void run() {
+            try{
+                while (!Thread.interrupted()) {
+                    if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay && needsRepaint) {
+                        needsRepaint = false;
+                        lastRepaintTime = System.currentTimeMillis();
+                        repaint();
+                    }
+                }
+                throw new InterruptedException();
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
+
+        }
+    };
+
     private abstract class SGEdit extends AbstractUndoableEdit {
         //private SandpileGraph oldSG = new SandpileGraph(sg);
 
@@ -201,7 +255,7 @@ public class SandpileController implements ActionListener, Serializable {
         selectedVertices = new TIntArrayList();
         configs = new HashMap<String, SandpileConfiguration>();
 
-        JPanel canvas = drawer.getCanvas();
+        //JPanel canvas = drawer.getCanvas();
         selectedVertices.clear();
     }
 
@@ -433,7 +487,7 @@ public class SandpileController implements ActionListener, Serializable {
      * this object's current data.
      */
     public void repaint() {
-        drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertices);
+        drawer.paintSandpileGraph(sg, vertexData, currentConfig, firings, selectedVertices, configLock);
     }
 
     /**
@@ -978,7 +1032,6 @@ public class SandpileController implements ActionListener, Serializable {
             public void redoAction() {
                 startIndex = configSize();
                 makeHoneycomb(radius, x, y, borders);
-                ;
                 endSize = configSize();
             }
         };
@@ -1605,6 +1658,7 @@ public class SandpileController implements ActionListener, Serializable {
     }
 
     protected void delVertices(TIntArrayList vertices) {
+        configLock.lock();
         boolean[] toRemove = new boolean[configSize()];
         for (int i = 0; i < vertices.size(); i++) {
             int v = vertices.get(i);
@@ -1628,6 +1682,7 @@ public class SandpileController implements ActionListener, Serializable {
         sg.removeVertices(vertices);
         selectedVertices.clear();
         configs.clear();
+        configLock.unlock();
     }
 
     private SandpileGraph tryStoreGraph() {
@@ -1662,12 +1717,14 @@ public class SandpileController implements ActionListener, Serializable {
     }
 
     protected void delAllVertices() {
+        configLock.lock();
         vertexData.clear();
         currentConfig.clear();
         firings.clear();
         configs.clear();
         sg.removeAllVertices();
         selectedVertices.clear();
+        configLock.unlock();
     }
 
     protected void addEdge(int originVert, int destVert) {

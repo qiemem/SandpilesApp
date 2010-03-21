@@ -107,12 +107,17 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	private boolean runningThread=false;
 	private Thread calculationThread;
 
+    private boolean threadedUR = true;
+
 
 
     private boolean running = false;
 	//private Thread spThread;
     private Timer runTimer;
 	private Timer serverMsgChecker;
+
+    private Thread updateThread=null;
+    private Thread repaintThread=null;
 
 
     /** Creates new form SandpilesInteractionPanel */
@@ -304,7 +309,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        canvas = new javax.media.opengl.GLJPanel();
+        canvas = new javax.media.opengl.GLCanvas();
         controlStateComboBox = new javax.swing.JComboBox();
         optionsContainerPanel = new javax.swing.JPanel();
         blankOptionsPanel = new javax.swing.JPanel();
@@ -326,7 +331,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         sandpileViewScrollPane = new javax.swing.JScrollPane();
         mouseButtonGroup = new javax.swing.ButtonGroup();
         repaintOptionsButtonGroup = new javax.swing.ButtonGroup();
-        canvas3d = new javax.media.opengl.GLJPanel();
+        canvas3d = new javax.media.opengl.GLCanvas();
         jSplitPane1 = new javax.swing.JSplitPane();
         controlPanel = new javax.swing.JPanel();
         quitButton = new javax.swing.JButton();
@@ -408,6 +413,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         drawWireCheckBox = new javax.swing.JCheckBox();
         jLabel13 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        threadedCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         canvasHolderPanel = new javax.swing.JPanel();
         infoToolBar = new javax.swing.JToolBar();
@@ -958,26 +964,28 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         makeGridOptionsPanelLayout.setHorizontalGroup(
             makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                .add(gridSizeLabel)
-                .add(2, 2, 2)
-                .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 55, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(gridSizeCrossLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 54, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, makeGridOptionsPanelLayout.createSequentialGroup()
+                        .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel3)
+                            .add(jLabel4)
+                            .add(jLabel6)
+                            .add(jLabel5))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, sBorderComboBox, 0, 134, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, eBorderComboBox, 0, 134, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, wBorderComboBox, 0, 134, Short.MAX_VALUE)
+                            .add(nBorderComboBox, 0, 134, Short.MAX_VALUE)))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, makeGridOptionsPanelLayout.createSequentialGroup()
+                        .add(gridSizeLabel)
+                        .add(2, 2, 2)
+                        .add(gridRowsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 55, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(gridSizeCrossLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(gridColsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 54, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .add(104, 104, 104))
-            .add(makeGridOptionsPanelLayout.createSequentialGroup()
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel3)
-                    .add(jLabel4)
-                    .add(jLabel6)
-                    .add(jLabel5))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, sBorderComboBox, 0, 238, Short.MAX_VALUE)
-                    .add(nBorderComboBox, 0, 238, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, eBorderComboBox, 0, 238, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, wBorderComboBox, 0, 238, Short.MAX_VALUE)))
         );
         makeGridOptionsPanelLayout.setVerticalGroup(
             makeGridOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1322,6 +1330,14 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
             }
         });
 
+        threadedCheckBox.setSelected(true);
+        threadedCheckBox.setText("Thread Updates/Repaints");
+        threadedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                threadedCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -1356,7 +1372,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                             .add(heightScalarSpinner)))
                     .add(drawShapeCheckBox)
                     .add(drawWireCheckBox)
-                    .add(jButton1))
+                    .add(jButton1)
+                    .add(threadedCheckBox))
                 .addContainerGap(99, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
@@ -1373,7 +1390,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 .add(drawEdgesCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(printFPSCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(threadedCheckBox)
+                .add(30, 30, 30)
                 .add(visualOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(repaintDelayRadioButton)
                     .add(repaintDelayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1404,7 +1423,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
                 .add(drawShapeCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(drawWireCheckBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
         optionsTabbedPane.addTab(VISUAL_OPTIONS_STATE, visualOptionsPanel);
@@ -1771,11 +1790,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
 		//runTimer.setDelay( delaySlider.getValue());
 		updateControllerDelay();
-		if(runTimer.isRunning()){
-			stopSim();
-		}else{
-			runSim();
-		}
+        toggleRunning();
+        //if (repaintThread)
 		/*if(spThread.isAlive()) {
 			spThread.interrupt();
 			try{
@@ -1789,14 +1805,36 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		}*/
 }//GEN-LAST:event_runButtonActionPerformed
 
+    public void toggleRunning() {
+        if(running){
+            stopSim();
+        }else{
+            runSim();
+        }
+        //running = !running;
+    }
 	public void runSim() {
 		runButton.setText("Pause");
-		runTimer.start();
+        running = true;
+        if(threadedUR){
+            updateThread = new Thread(sandpileController.updateRunner);
+            repaintThread = new Thread(sandpileController.repaintRunner);
+            updateThread.start();
+            repaintThread.start();
+        }else{
+            runTimer.start();
+        }
 	}
 
 	public void stopSim() {
-			runTimer.stop();
-			runButton.setText("Run");
+        runButton.setText("Run");
+        running = false;
+        if(threadedUR){
+            updateThread.interrupt();
+            repaintThread.interrupt();
+        }else{
+            runTimer.stop();
+        }
 	}
 
 	private void delayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayTextFieldActionPerformed
@@ -2636,6 +2674,17 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		updateCenterCoordLabel();
 	}//GEN-LAST:event_selecteCenterButtonActionPerformed
 
+    private void threadedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threadedCheckBoxActionPerformed
+        boolean wasRunning = running;
+        if(wasRunning){
+            stopSim();
+        }
+        threadedUR = threadedCheckBox.isSelected();
+        if(wasRunning){
+            runSim();
+        }
+    }//GEN-LAST:event_threadedCheckBoxActionPerformed
+
 	public void updateConfigSelectList() {
 		Vector<String> newList = new Vector<String>(java.util.Arrays.asList(defaultConfigs));
 		for(String s : sandpileController.getStoredConfigNames()){
@@ -2782,7 +2831,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	}
 
 	public BufferedImage getCanvasShot(float scale){
-        GLJPanel p = this.currentDrawer.getCanvas();
+        GLJPanel p = (GLJPanel)this.currentDrawer.getCanvas();
         GraphicsConfiguration gc = p.getGraphicsConfiguration();
         int oldW = p.getWidth();
         int oldH = p.getHeight();
@@ -2839,8 +2888,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JPanel buildLaticePanel;
     private javax.swing.JTable buildLatticeTable;
     private javax.swing.JButton cancelButton;
-    private javax.media.opengl.GLJPanel canvas;
-    private javax.media.opengl.GLJPanel canvas3d;
+    private javax.media.opengl.GLCanvas canvas;
+    private javax.media.opengl.GLCanvas canvas3d;
     private javax.swing.JPanel canvasHolderPanel;
     private javax.swing.JLabel centerCoordLabel;
     private javax.swing.JLabel centerLabel;
@@ -2967,6 +3016,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JButton stepButton;
     private javax.swing.JButton storeConfigButton;
     private javax.swing.JButton subtractConfigButton;
+    private javax.swing.JCheckBox threadedCheckBox;
     private javax.swing.JCheckBox vertexLabelsCheckBox;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;

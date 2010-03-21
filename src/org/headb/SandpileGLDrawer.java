@@ -38,6 +38,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
 import gnu.trove.TIntArrayList;
+import java.util.concurrent.locks.Lock;
 
 /**
  * A SandpileDrawer that represents the sandpile as a graph in 2d using OpenGL.
@@ -47,7 +48,7 @@ import gnu.trove.TIntArrayList;
  */
 public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelListener, SandpileDrawer, GLEventListener {
 
-    private GLJPanel canvas;
+    private GLAutoDrawable canvas;
     private Float2dArrayList vertexLocations = new Float2dArrayList(0, 2);
     private SandpileGraph graph = new SandpileGraph();
     private SandpileConfiguration config = new SandpileConfiguration();
@@ -86,7 +87,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
         canvas.addMouseMotionListener(this);
     }
 
-    public SandpileGLDrawer(GLJPanel canvas) {
+    public SandpileGLDrawer(GLAutoDrawable canvas) {
         this.canvas = canvas;
         this.canvas.addGLEventListener(this);
         this.canvas.addMouseWheelListener(this);
@@ -373,14 +374,17 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
     }
 
-    public GLJPanel getCanvas() {
+    public GLAutoDrawable getCanvas() {
         return canvas;
     }
 
-    public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices) {
+    public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices, Lock configLock) {
         this.graph = graph;
         this.vertexLocations = vertexLocations;
-        this.config = config;
+        //this.config = config;
+        configLock.lock();
+        this.config.setTo(config);
+        configLock.unlock();
         this.selectedVertices = selectedVertices;
         this.firings = firings;
         canvas.display();

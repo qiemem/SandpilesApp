@@ -42,6 +42,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import gnu.trove.TIntArrayList;
 import java.awt.Dimension;
+import java.util.concurrent.locks.Lock;
 
 /**
  * A SandpileDrawer that finds the delauney triangulation of the vertices and
@@ -53,7 +54,7 @@ import java.awt.Dimension;
  */
 public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
-    private GLJPanel canvas;
+    private GLAutoDrawable canvas;
     private ColorMode colorMode;
     private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
     private float[] lightDiffuse = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -81,7 +82,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
     private float[] rotMatrix = null;
     private float[] backgroundColor = {0f, 0f, 0f};
 
-    public Sandpile3dDrawer(GLJPanel canvas) {
+    public Sandpile3dDrawer(GLAutoDrawable canvas) {
         System.err.println("Construct");
         colorMode = ColorMode.NUM_OF_GRAINS;
         this.canvas = canvas;
@@ -159,9 +160,11 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
     }
     private float[] trackBallPointMapping(int x, int y) {
         float[] v = new float[3];
-        Dimension dim = canvas.getSize();
-        v[0] = (2f * x - (float) dim.getWidth()) / (float) dim.getWidth();
-        v[1] = ((float) dim.getHeight() - 2f * y) / (float) dim.getHeight();
+        //Dimension dim = canvas.getSize();
+        float w = canvas.getWidth();
+        float h = canvas.getHeight();
+        v[0] = (2f * x - w) / w;
+        v[1] = (h - 2f * y) / h;
         float d = (float) Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
         d = d < 1f ? d : 1f;
         v[2] = (float) Math.sqrt(1.001f - d * d);
@@ -231,7 +234,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
         heightMultiplier = s;
     }
 
-    public GLJPanel getCanvas() {
+    public GLAutoDrawable getCanvas() {
         return canvas;
     }
 
@@ -256,12 +259,14 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
         tris = new DelaunayTriangulation(vertexLocations);
     }
 
-    public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices) {
+    public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices, Lock configLock) {
 //		ArrayList<Float> heights = new ArrayList<Float>();
 //		for(int v : config){
 //			heights.add((float)v);
 //		}
-        this.config = config;
+        configLock.lock();
+        this.config.setTo(config);
+        configLock.unlock();
         this.firings = firings;
         this.graph = graph;
         //tris.assignHeights(heights);

@@ -28,9 +28,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.headb;
 
-import javax.media.opengl.GLJPanel;
+import javax.media.opengl.GLAutoDrawable;
 import java.util.List;
 import gnu.trove.TIntArrayList;
+import java.util.concurrent.locks.Lock;
 
 /**
  * The interface for classes that dictate how a sandpile is displayed on a
@@ -47,7 +48,7 @@ public interface SandpileDrawer {
         DIFFERENCE
     }
 
-    public GLJPanel getCanvas();
+    public GLAutoDrawable getCanvas();
 
     public void setColorMode(ColorMode cm);
 
@@ -55,7 +56,7 @@ public interface SandpileDrawer {
 
     public ColorMode getColorMode();
 
-    public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices);
+    public void paintSandpileGraph(SandpileGraph graph, Float2dArrayList vertexLocations, SandpileConfiguration config, TIntArrayList firings, TIntArrayList selectedVertices, Lock configLock);
 
     public void setBaseConfig(SandpileConfiguration baseConfig);
 
