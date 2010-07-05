@@ -116,6 +116,8 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private Timer runTimer;
 	private Timer serverMsgChecker;
 
+    private Timer displayUPSTimer;
+
     private Thread updateThread=null;
     private Thread repaintThread=null;
 
@@ -137,6 +139,15 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
 		runTimer = new Timer(0,sandpileController);
 		runTimer.setDelay(0);
+
+        displayUPSTimer = new Timer(250, new ActionListener() {
+            public void actionPerformed(ActionEvent evt){
+                upsLabel.setText(" MS/Update: " + sandpileController.getUPS() + "; ");
+            }
+        });
+
+        displayUPSTimer.start();
+
 		updateDelayTextField();
 		updateSelectedInfo();
 
@@ -427,6 +438,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
         selectedSandLabel = new javax.swing.JLabel();
         selectedDegreeLabel = new javax.swing.JLabel();
         selectedFiringsLabel = new javax.swing.JLabel();
+        upsLabel = new javax.swing.JLabel();
         controlToolBar = new javax.swing.JToolBar();
         runButton = new javax.swing.JToggleButton();
         stepButton = new javax.swing.JButton();
@@ -1504,6 +1516,9 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 
         selectedFiringsLabel.setText("Firings: -; ");
         infoToolBar.add(selectedFiringsLabel);
+
+        upsLabel.setText("MS/Update: -; ");
+        infoToolBar.add(upsLabel);
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -2731,67 +2746,92 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 	public float getSelectedX() {
 		TIntArrayList selVerts = sandpileController.getSelectedVertices();
 		float x = 0f;
-		if(!selVerts.isEmpty()){
-			int n = selVerts.size();
-			for(int i=0; i<n; i++){
-				int v=selVerts.get(i);
-				x+=sandpileController.getVertexX(v);
-			}
-			x/=n;
-		}
+        try{
+		          if (!selVerts.isEmpty()) {
+                int n = selVerts.size();
+                for (int i = 0; i < n; i++) {
+                    int v = selVerts.get(i);
+                    x += sandpileController.getVertexX(v);
+                }
+                x /= n;
+            }
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.err.println("Selection changed while calculating info");
+            return 0;
+        }
 		return x;
 	}
 
 	public float getSelectedY() {
 		TIntArrayList selVerts = sandpileController.getSelectedVertices();
 		float y = 0f;
-		if(!selVerts.isEmpty()){
-			int n = selVerts.size();
-			for(int i=0; i<n; i++){
-				int v=selVerts.get(i);
-				y+=sandpileController.getVertexY(v);
-			}
-			y/=n;
-		}
+        try{
+		          if (!selVerts.isEmpty()) {
+                int n = selVerts.size();
+                for (int i = 0; i < n; i++) {
+                    int v = selVerts.get(i);
+                    y += sandpileController.getVertexY(v);
+                }
+                y /= n;
+            }
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.err.println("Selection changed while calculating info");
+            return 0;
+        }
 		return y;
 	}
 
 	public int getSelectedDegree() {
 		TIntArrayList selVerts = sandpileController.getSelectedVertices();
 		int degree = 0;
-		if(!selVerts.isEmpty()){
-			int n = selVerts.size();
-			for(int i=0; i<n; i++){
-				int v=selVerts.get(i);
-				degree+=sandpileController.getGraph().degreeQuick(v);
-			}
-		}
+        try{
+            if (!selVerts.isEmpty()) {
+                int n = selVerts.size();
+                for (int i = 0; i < n; i++) {
+                    int v = selVerts.get(i);
+                    degree += sandpileController.getGraph().degreeQuick(v);
+                }
+            }
+		}catch(ArrayIndexOutOfBoundsException e){
+            System.err.println("Selection changed while calculating info");
+            return 0;
+        }
 		return degree;
 	}
 
 	public int getSelectedSand() {
 		TIntArrayList selVerts = sandpileController.getSelectedVertices();
 		int sand = 0;
-		if(!selVerts.isEmpty()){
-			int n = selVerts.size();
-			for(int i=0; i<n; i++){
-				int v=selVerts.get(i);
-				sand+=sandpileController.getSand(v);
-			}
-		}
+        try{
+            if (!selVerts.isEmpty()) {
+                int n = selVerts.size();
+                for (int i = 0; i < n; i++) {
+                    int v = selVerts.get(i);
+                    sand += sandpileController.getSand(v);
+                }
+            }
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.err.println("Selection changed while calculating info");
+            return 0;
+        }
 		return sand;
 	}
 
 	public int getSelectedFirings() {
 		TIntArrayList selVerts = sandpileController.getSelectedVertices();
 		int firings = 0;
-		if(!selVerts.isEmpty()){
-			int n = selVerts.size();
-			for(int i=0; i<n; i++){
-				int v=selVerts.get(i);
-				firings+=sandpileController.getFirings(v);
-			}
-		}
+        try{
+            if (!selVerts.isEmpty()) {
+                int n = selVerts.size();
+                for (int i = 0; i < n; i++) {
+                    int v = selVerts.get(i);
+                    firings += sandpileController.getFirings(v);
+                }
+            }
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.err.println("Selection changed while calculating info");
+            return 0;
+        }
 		return firings;
 	}
 
@@ -3017,6 +3057,7 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
     private javax.swing.JButton storeConfigButton;
     private javax.swing.JButton subtractConfigButton;
     private javax.swing.JCheckBox threadedCheckBox;
+    private javax.swing.JLabel upsLabel;
     private javax.swing.JCheckBox vertexLabelsCheckBox;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;

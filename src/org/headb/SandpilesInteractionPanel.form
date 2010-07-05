@@ -1880,6 +1880,11 @@
                     <Property name="text" type="java.lang.String" value="Firings: -; "/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JLabel" name="upsLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="MS/Update: -; "/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>

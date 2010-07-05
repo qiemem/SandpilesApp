@@ -101,7 +101,7 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
         numInDebtColors = inDebtColors.rows();
         colorArray = BufferUtil.newFloatBuffer((numInDebtColors + colors.rows()) * 3);
-        for (int i = 0; i < numInDebtColors; i++) {
+        for ( int i = 0; i < numInDebtColors; i++) {
             colorArray.put(inDebtColors.getQuick(i, 0));
             colorArray.put(inDebtColors.getQuick(i, 1));
             colorArray.put(inDebtColors.getQuick(i, 2));
@@ -218,9 +218,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
     private void drawEdges(GL gl) {
         gl.glColor3f(1.0f, 1.0f, 1.0f);
         gl.glBegin(gl.GL_LINES);
-        for (int source = 0; source < graph.numVertices(); source++) {
+        int numVertices = graph.numVertices();
+        for (int source = 0; source < numVertices; source++) {
             EdgeList outEdges = graph.getOutgoingEdges(source);
-            for (int i = 0; i < outEdges.size(); i++) {
+            int numOutEdges = outEdges.size();
+            for (int i = 0; i < numOutEdges; i++) {
                 int dest = outEdges.destQuick(i);
                 float sx = vertexLocations.getQuick(source, 0);
                 float sy = vertexLocations.getQuick(source, 1);
@@ -243,9 +245,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
         float textPlacement = 0.8f;
         tr.setColor(.8f, .5f, .6f, 1f);
         tr.begin3DRendering();
-        for (int source = 0; source < graph.numVertices(); source++) {
+        int numVertices = graph.numVertices();
+        for (int source = 0; source < numVertices; source++) {
             EdgeList outEdges = graph.getOutgoingEdges(source);
-            for (int i = 0; i < outEdges.size(); i++) {
+            int numOutEdges = outEdges.size();
+            for (int i = 0; i < numOutEdges; i++) {
                 int dest = outEdges.destQuick(i);
                 int wt = outEdges.wtQuick(i);
                 float sx = vertexLocations.get(source, 0);
@@ -264,7 +268,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
     private void drawVertices(GL gl) {
         gl.glBegin(gl.GL_QUADS);
-        for (int vert = 0; vert < graph.numVertices(); vert++) {
+        int numVertices = graph.numVertices();
+        for (int vert = 0; vert < numVertices; vert++) {
             float x = vertexLocations.getQuick(vert, 0);
             float y = vertexLocations.getQuick(vert, 1);
             float size = vertSize;
@@ -288,7 +293,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
         gl.glDisableClientState(gl.GL_COLOR_ARRAY);
         tr.setColor(.8f, .5f, .6f, 1f);
         tr.begin3DRendering();
-        for (int vert = 0; vert < graph.numVertices(); vert++) {
+        int numVertices = graph.numVertices();
+        for (int vert = 0; vert < numVertices; vert++) {
             int amount = 0;
             switch (mode) {
                 case NUM_OF_GRAINS:
@@ -320,7 +326,8 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
     }
 
     private void drawSelected(GL gl) {
-        for (int i = 0; i < selectedVertices.size(); i++) {
+        int numVertices = selectedVertices.size();
+        for (int i = 0; i < numVertices; i++) {
             int selectedVertex = selectedVertices.get(i);
             if (selectedVertex >= 0) {
                 gl.glBegin(gl.GL_LINES);
@@ -480,13 +487,11 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
 
     private void setColorForVertex(GL gl, int vert) {
         int color = 0;
-        boolean inDebt = false;
         switch (mode) {
             case NUM_OF_GRAINS:
                 int sand = config.getQuick(vert);
                 if (sand < 0) {
                     color = Math.min(-sand - 1, inDebtColors.rows() - 1);
-                    inDebt = true;
                 } else {
                     color = Math.min(sand, colors.rows() - 1);
                 }
@@ -505,7 +510,6 @@ public class SandpileGLDrawer extends MouseInputAdapter implements MouseWheelLis
                 sand = config.getQuick(vert) - baseConfig.getQuick(vert);
                 if (sand < 0) {
                     color = Math.min(-sand - 1, inDebtColors.rows() - 1);
-                    inDebt = true;
                 } else {
                     color = Math.min(sand, colors.rows() - 1);
                 }

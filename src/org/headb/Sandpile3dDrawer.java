@@ -529,22 +529,25 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
     }
 
     private float[][] calcColors() {
-        float[][] clrs = new float[config.size()][3];
-        for (int v = 0; v < config.size(); v++) {
+        int size = config.size();
+        float[][] clrs = new float[size][3];
+        for (int v = 0; v < size; v++) {
             clrs[v] = getColorForVertex(v);
         }
         return clrs;
     }
 
     private float[][] smoothColors(float[][] clrs) {
-        float[][] newClrs = new float[config.size()][3];
-        for (int v = 0; v < config.size(); v++) {
+        int size = config.size();
+        float[][] newClrs = new float[size][3];
+        for (int v = 0; v < size; v++) {
             float[] avg = new float[3];
             avg[0] = clrs[v][0];
             avg[1] = clrs[v][1];
             avg[2] = clrs[v][2];
             EdgeList outEdges = graph.getOutgoingEdges(v);
-            for (int i = 0; i < outEdges.size(); i++) {
+            int numOutEdges = outEdges.size();
+            for (int i = 0; i < numOutEdges; i++) {
                 int vert = outEdges.destQuick(i);
                 int wt = outEdges.wtQuick(i);
                 avg[0] += clrs[vert][0] * wt;

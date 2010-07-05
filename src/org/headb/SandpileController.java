@@ -78,8 +78,7 @@ public class SandpileController implements ActionListener, Serializable {
     Float2dArrayList vertexData;
     TIntArrayList firings;
     private TIntArrayList selectedVertices;
-    private long lastUpdate = System.currentTimeMillis();
-    public double fps = 0.0;
+    public double ups = 0.0;
     private SandpileConfiguration currentConfig;
     private SandpileDrawer drawer;
     private File projectFile = null;
@@ -95,36 +94,14 @@ public class SandpileController implements ActionListener, Serializable {
     private PrintWriter out;
     private boolean needsRepaint = false;
     private ReentrantLock configLock = new ReentrantLock();
-
-    public class UpdateThread extends Thread {
-        @Override public void run() {
-            while(true){
-                if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
-                    lastUpdateTime = System.currentTimeMillis();
-                    update();
-                }
-            }
-
-        }
-    }
-
-    public class RepaintThread extends Thread {
-        @Override public void run() {
-            do{
-                if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay && needsRepaint) {
-                    lastRepaintTime = System.currentTimeMillis();
-                    repaint();
-                    needsRepaint = false;
-                }
-            }while(!Thread.interrupted());
-
-        }
-    }
+    private ReentrantLock firingsLock = new ReentrantLock();
 
     public Runnable updateRunner = new Runnable () {
         public void run() {
             while (!Thread.interrupted()) {
-                if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastUpdateTime >= minUpdateDelay) {
+                    ups = (double)(currentTime-lastUpdateTime);
                     lastUpdateTime = System.currentTimeMillis();
                     update();
                 }
@@ -136,15 +113,15 @@ public class SandpileController implements ActionListener, Serializable {
         public void run() {
             try{
                 while (!Thread.interrupted()) {
-                    if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay && needsRepaint) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastRepaintTime >= minRepaintDelay && needsRepaint) {
                         needsRepaint = false;
-                        lastRepaintTime = System.currentTimeMillis();
+                        lastRepaintTime = currentTime;
                         repaint();
                     }
                 }
                 throw new InterruptedException();
             }catch(InterruptedException e){
-                e.printStackTrace();
             }
 
         }
@@ -406,18 +383,23 @@ public class SandpileController implements ActionListener, Serializable {
      */
     public void actionPerformed(ActionEvent evt) {
         if (repaintOnEveryUpdate) {
-            if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastUpdateTime >= minUpdateDelay) {
+                ups = (double)(currentTime-lastUpdateTime);
                 lastUpdateTime = System.currentTimeMillis();
                 this.update();
                 this.repaint();
             }
         } else {
-            if (System.currentTimeMillis() - lastUpdateTime >= minUpdateDelay) {
-                lastUpdateTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastUpdateTime >= minUpdateDelay) {
+                ups = (double)(currentTime-lastUpdateTime);
+                lastUpdateTime = currentTime;
                 this.update();
             }
-            if (System.currentTimeMillis() - lastRepaintTime >= minRepaintDelay && needsRepaint) {
-                lastRepaintTime = System.currentTimeMillis();
+            currentTime = System.currentTimeMillis();
+            if (currentTime - lastRepaintTime >= minRepaintDelay && needsRepaint) {
+                lastRepaintTime = currentTime;
                 this.repaint();
                 needsRepaint = false;
             }
@@ -451,11 +433,13 @@ public class SandpileController implements ActionListener, Serializable {
      * Resets all firing counts to 0.
      */
     public void resetFirings() {
+        firingsLock.lock();
         firings = new TIntArrayList();
         int size = configSize();
         for (int i = 0; i < size; i++) {
             firings.add(0);
         }
+        firingsLock.unlock();
     }
 
     /**
@@ -466,12 +450,14 @@ public class SandpileController implements ActionListener, Serializable {
         if (firings.size() != s) {
             resetFirings();
         }
+        firingsLock.lock();
         for (int vert = 0; vert < s; vert++) {
             int d = sg.degreeQuick(vert);
             if (currentConfig.getQuick(vert) >= d && d != 0) {
                 firings.setQuick(vert, firings.getQuick(vert) + 1);
             }
         }
+        firingsLock.unlock();
     }
 
     public int getFirings(int v) {
@@ -1555,7 +1541,7 @@ public class SandpileController implements ActionListener, Serializable {
         if (config == null) {
             return;
         }
-        setConfig(currentConfig.plus(config.times(times)));
+        addConfig(config.times(times));
         repaint();
     }
 
@@ -1564,12 +1550,15 @@ public class SandpileController implements ActionListener, Serializable {
         if (config == null) {
             return;
         }
+
         setConfig(config.times(times));
         repaint();
     }
 
     public void clearSand() {
+        configLock.lock();
         setConfig(sg.getUniformConfig(0));
+        configLock.unlock();
         repaint();
     }
 
@@ -1586,10 +1575,14 @@ public class SandpileController implements ActionListener, Serializable {
     }
 
     public int addVertex(float x, float y) {
+        configLock.lock();
+        firingsLock.lock();
         sg.addVertex();
         vertexData.addRow(x, y);
         currentConfig.add(0);
         firings.add(0);
+        firingsLock.unlock();
+        configLock.unlock();
         return configSize() - 1;
     }
 
@@ -1618,6 +1611,8 @@ public class SandpileController implements ActionListener, Serializable {
     }
 
     private void delVertex(int v) {
+        configLock.lock();
+        firingsLock.lock();
         vertexData.removeRow(v);
         currentConfig.remove(v);
         int index = selectedVertices.indexOf(v);
@@ -1632,6 +1627,8 @@ public class SandpileController implements ActionListener, Serializable {
         firings.remove(v);
         sg.removeVertex(v);
         configs.clear();
+        firingsLock.unlock();
+        configLock.unlock();
     }
 
     public void delVerticesControl(TIntArrayList vertices) {
@@ -1718,12 +1715,14 @@ public class SandpileController implements ActionListener, Serializable {
 
     protected void delAllVertices() {
         configLock.lock();
+        firingsLock.lock();
         vertexData.clear();
         currentConfig.clear();
         firings.clear();
         configs.clear();
         sg.removeAllVertices();
         selectedVertices.clear();
+        firingsLock.unlock();
         configLock.unlock();
     }
 
@@ -1999,5 +1998,9 @@ public class SandpileController implements ActionListener, Serializable {
 
     public int getMinUpdateDelay() {
         return minUpdateDelay;
+    }
+
+    public double getUPS() {
+        return ups;
     }
 }
