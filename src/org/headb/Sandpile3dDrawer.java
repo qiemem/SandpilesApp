@@ -513,12 +513,15 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
     }
 
     private float[] smoothHeights(float[] heights) {
-        float[] newHeights = new float[config.size()];
+        int size = config.size();
 
-        for (int v = 0; v < config.size(); v++) {
+        float[] newHeights = new float[size];
+
+        for (int v = 0; v < size; v++) {
             float avg = heights[v];
             EdgeList outEdges = graph.getOutgoingEdges(v);
-            for (int i = 0; i < outEdges.size(); i++) {
+            int numOutEdges = outEdges.size();
+            for (int i = 0; i < numOutEdges; i++) {
                 avg += heights[outEdges.destQuick(i)] * outEdges.wtQuick(i);
             }
             avg /= (float) (graph.degreeQuick(v) + 1);
