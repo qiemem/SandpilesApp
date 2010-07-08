@@ -74,6 +74,7 @@ public class SandpileController implements ActionListener, Serializable {
     private int minRepaintDelay = 33;
     private long lastRepaintTime = 0;
     private boolean repaintOnEveryUpdate = false;
+    private boolean trackFirings = false;
     private SandpileGraph sg;
     Float2dArrayList vertexData;
     TIntArrayList firings;
@@ -300,9 +301,9 @@ public class SandpileController implements ActionListener, Serializable {
 
     /**
      * Checks to see if any messages have been sent to the server and, if so,
-     * acts appropriately by interpretting the message with an instance of
+     * acts appropriately by interpreting the message with an instance of
      * SandpileProtocol. You must call startServer() and acceptClient()
-     * succesfully before using this method. This method should be called at
+     * successfully before using this method. This method should be called at
      * regular intervals for correct server behavior. If there are no
      * messages waiting, the method will simply return.
      * @throws IOException Throws this exception if there is a problem reading
@@ -417,8 +418,10 @@ public class SandpileController implements ActionListener, Serializable {
      * update cycles will be performed.
      */
     public void update() {
+        if (getTrackFirings()) {
+            updateFirings();
+        }
         configLock.lock();
-        updateFirings();
         if (updater == null) {
             updater = sg.inPlaceParallelUpdater(currentConfig);
         }
@@ -2002,5 +2005,13 @@ public class SandpileController implements ActionListener, Serializable {
 
     public double getUPS() {
         return ups;
+    }
+
+    public void setTrackFirings(boolean val) {
+        trackFirings = val;
+    }
+
+    public boolean getTrackFirings() {
+        return trackFirings;
     }
 }

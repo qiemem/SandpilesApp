@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <NonVisualComponents>
@@ -1885,6 +1885,18 @@
                     <Property name="text" type="java.lang.String" value="MS/Update: -; "/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JToggleButton" name="serverToggleButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Server"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Listen for a TCP connection. Used to control this program from some other program. For instance, one can write a python script to collect statistics on graphs being created and updated with this program."/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
+                    <Property name="verticalTextPosition" type="int" value="3"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serverToggleButtonActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -1956,6 +1968,17 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetFiringsButtonActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JToggleButton" name="trackFiringsToggleButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Track Firings"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trackFiringsToggleButtonActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator1">
         </Component>
         <Component class="javax.swing.JLabel" name="delayLabel">
@@ -1966,6 +1989,9 @@
         <Component class="javax.swing.JTextField" name="delayTextField">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" value="The minimum amount of time between updates."/>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[42, 28]"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delayTextFieldActionPerformed"/>
@@ -2035,6 +2061,9 @@
         <Component class="javax.swing.JTextField" name="zoomTextField">
           <Properties>
             <Property name="text" type="java.lang.String" value="100.0"/>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[60, 28]"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="zoomTextFieldActionPerformed"/>
@@ -2092,18 +2121,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bigZoomInButtonActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JToggleButton" name="serverToggleButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Server"/>
-            <Property name="toolTipText" type="java.lang.String" value="Listen for a TCP connection. Used to control this program from some other program. For instance, one can write a python script to collect statistics on graphs being created and updated with this program."/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serverToggleButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator5">

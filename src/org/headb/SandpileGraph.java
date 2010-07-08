@@ -543,6 +543,7 @@ public class SandpileGraph {
                     // mark it as removed
                     added[v] = false;
 
+		    int timesToFire = config.getQuick(v)/degreeQuick(v);
 
                     // We get the vertices edge info in the form of offsets.
                     // Going through the offset list gives us more direct access
@@ -553,7 +554,7 @@ public class SandpileGraph {
                         // Get the a neighboring vertex.
                         int dest = offsetList.destOffsetQuick(k) + v;
                         // Increase the sand on it.
-                        config.increaseQuick(dest, offsetList.wtQuick(k));
+                        config.increaseQuick(dest, offsetList.wtQuick(k)*timesToFire);
                         // Check to see if we made it unstable.
                         int degree = degreeQuick(dest);
                         if (!added[dest] && config.getQuick(dest) >= degree && degree > 0) {
@@ -563,7 +564,7 @@ public class SandpileGraph {
                     }
                     // Remove the sand fired from our source vertex.
                     int degree = offsetList.degree();
-                    config.increaseQuick(v, -degree);
+                    config.increaseQuick(v, -degree*timesToFire);
                     // if still unstable, include it in next generation
                     if (config.getQuick(v) >= degree) {
                         try {
