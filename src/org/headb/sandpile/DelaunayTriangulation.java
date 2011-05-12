@@ -111,6 +111,9 @@ public class DelaunayTriangulation {
         }
 
         parentTri = addTriangle(tr, l, b);
+        // TODO: Points should really be added in random order. Adding them
+        // sequentially like this for generated graphs makes n^2 edge flip cases
+        // much more likely.
         for (int p = 0; p < this.points.rows() - 3; p++) {
             try {
                 addPoint(p);
