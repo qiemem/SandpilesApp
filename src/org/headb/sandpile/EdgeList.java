@@ -13,10 +13,10 @@ import java.util.Iterator;
 public abstract class EdgeList implements Iterable<Edge> {
 
     /**
-     * A subclass of Edge that points to a certain lovation in edgeData. The
+     * A subclass of Edge that points to a certain location in edgeData. The
      * GeneralEdgeList iterator uses these so that it can keep the list of edges in the
      * more efficient form of the Int2dArrayList rather a list of Edges without
-     * having to the information for each edge into an Edge. Note that this also
+     * having to convert the information for each edge into an Edge. Note that this also
      * allows write access to the edges.
      */
     protected class MyEdge extends Edge {
