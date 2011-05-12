@@ -29,6 +29,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb.sandpile;
 
 import java.util.ArrayList;
+import java.lang.Math;
 
 import gnu.trove.list.array.TIntArrayList;
 
@@ -69,30 +70,41 @@ public class DelaunayTriangulation {
             float y = points.get(i, 1);
             if (x > maxX) {
                 maxX = x;
-            } else if (x < minX) {
+            }
+            if (x < minX) {
                 minX = x;
             }
             if (y > maxY) {
                 maxY = y;
-            } else if (y < minY) {
+            }
+            if (y < minY) {
                 minY = y;
             }
         }
 
         //get a bounding triangle:
+        /*
         float trX = (maxX - minX) / 2f;
         float trY = maxY + (maxY - minY);
         float blX = minX - 8f * (maxX - minX);
         float blY = minY - (maxY - minY);
         float brX = maxX + 8f * (maxX - minX);
         float brY = minY - (maxY - minY);
+        */
 
         int tr = this.points.rows();
         int l = tr + 1;
         int b = l + 1;
-        this.points.addRow(trX, trY);
-        this.points.addRow(blX, blY);
-        this.points.addRow(brX, brY);
+        //this.points.addRow(trX, trY);
+        //this.points.addRow(blX, blY);
+        //this.points.addRow(brX, brY);
+        float triMinX = minX-5f;
+        float triMinY = minY-5f;
+        float sizeX = 2f*(maxX-triMinX+1f);
+        float sizeY = 2f * (maxY - triMinY+1f);
+        this.points.addRow(triMinX, minY+sizeY);
+        this.points.addRow(triMinX, triMinY);
+        this.points.addRow(minX+sizeX, triMinY);
 
         for (int i = 0; i < this.points.rows(); i++) {
             pointsToTris.add(new TIntArrayList());
@@ -193,16 +205,47 @@ public class DelaunayTriangulation {
         float x2 = x(p2) - x(a);
         float y2 = y(p2) - y(a);
 
+        //System.err.println(get2dCross(lineX, lineY, x1, y1) * get2dCross(lineX, lineY, x2, y2));
+
         return get2dCross(lineX, lineY, x1, y1) * get2dCross(lineX, lineY, x2, y2) >= 0;
     }
 
     protected boolean triangleContains(int tri, int p) {
+        //System.err.println("Is "+p+" in "+tri);
         return sameSide(p, p1(tri), p2(tri), p3(tri)) && sameSide(p, p2(tri), p3(tri), p1(tri)) && sameSide(p, p3(tri), p1(tri), p2(tri));
     }
 
     protected int getContainingTriangle(int p) {
+    //    return getContainingTriangle(parentTri, p);
+    //}
+    //protected int getContainingTriangle(int curTri, int p) {
+        /*
+        if(!triangleContains(curTri, p)){
+            System.err.println("Something's wrong");
+            System.err.println(this.x(p)+" "+this.y(p));
+            System.err.println(x(p1(curTri))+" "+y(p1(curTri)));
+            System.err.println(x(p2(curTri))+" "+y(p2(curTri)));
+            System.err.println(x(p3(curTri))+" "+y(p3(curTri)));
+        }
+        if(triTree.get(curTri)==null) {
+            if(triangleContains(curTri,p))
+                return curTri;
+            else
+                System.err.println("Leaf "+curTri+" doesn't contain point.");
+        } else {
+            for(int tri : triTree.get(curTri)) {
+                if(triangleContains(tri, p)){
+                    return getContainingTriangle(tri, p);
+                }
+            }
+            System.err.println("Branch "+curTri+" has no children containing point.");
+        }
+        throw new RuntimeException("Couldn't find triangle for point.");
+*/
         int curTri = parentTri;
 
+        // This is the iterative version of the recursive search. Considering
+        // the number of triangles involved, this is much faster.
         while (triTree.get(curTri) != null) {
             int lastTri = curTri;
             for (int tri : triTree.get(curTri)) {
@@ -259,25 +302,41 @@ public class DelaunayTriangulation {
         int p1 = p1(tri);
         int p2 = p2(tri);
         int p3 = p3(tri);
+        this.pointsToTris.get(p1).remove(tri);
+        this.pointsToTris.get(p2).remove(tri);
+        this.pointsToTris.get(p3).remove(tri);
+        /*
         int t1 = pointsToTris.get(p1).indexOf(tri);
         if (t1 >= 0) {
             pointsToTris.get(p1).remove(t1);
         }
         int t2 = pointsToTris.get(p2).indexOf(tri);
         if (t2 >= 0) {
+            System.err.println(pointsToTris.get(p2));
             pointsToTris.get(p2).remove(t2);
+            System.err.println(pointsToTris.get(p2));
         }
         int t3 = pointsToTris.get(p3).indexOf(tri);
         if (t3 >= 0) {
+            System.err.println(pointsToTris.get(p3));
             pointsToTris.get(p3).remove(t3);
+            System.err.println(pointsToTris.get(p3));
         }
+         */
+    }
+
+    protected void setChildren(int tri, int[] children) {
+        this.triTree.set(tri, children);
+        this.removeTriangle(tri);
     }
 
     protected TIntArrayList getIncidentTriangles(int p1, int p2) {
         TIntArrayList incTris = new TIntArrayList();
         for (int i = 0; i < pointsToTris.get(p1).size(); i++) {
             int tri = pointsToTris.get(p1).get(i);
-            if (pointsToTris.get(p2).contains(tri)) {
+            if(this.triTree.get(tri)!=null)
+                System.err.println("Non-leaf triangle in pointsToTris.");
+            if (this.triTree.get(tri)==null && pointsToTris.get(p2).contains(tri)) {
                 incTris.add(tri);
             }
         }
@@ -301,8 +360,7 @@ public class DelaunayTriangulation {
             }
         }
         int[] children1 = {addTriangle(p, p1, p3), addTriangle(p, p2, p3)};
-        triTree.set(tri1, children1);
-        removeTriangle(tri1);
+        this.setChildren(tri1, children1);
         int tri2 = tris.get(0);
 
         //find point opposite to edge p1-p2 for tri2.
@@ -314,8 +372,7 @@ public class DelaunayTriangulation {
             }
         }
         int[] children2 = {addTriangle(p, p1, p4), addTriangle(p, p2, p4)};
-        triTree.set(tri2, children2);
-        removeTriangle(tri2);
+        this.setChildren(tri2, children2);
 
         legalizeEdge(p, p1, p3, 0);
         legalizeEdge(p, p2, p3, 0);
@@ -337,9 +394,11 @@ public class DelaunayTriangulation {
         //if(n>40)
         //System.err.println(n);
         TIntArrayList incTris = getIncidentTriangles(p1, p2);
-        //System.err.println(incTris.size());
+
         if (incTris.size() <= 1) {
             return;
+        } else if(incTris.size()>2) {
+            System.err.println("Found "+incTris.size()+" incident triangles.");
         }
 
         // Find the point opposite to p across p1-p2
@@ -364,10 +423,8 @@ public class DelaunayTriangulation {
             int newTri1 = addTriangle(p, p1, otherPt);
             int newTri2 = addTriangle(p, otherPt, p2);
             int[] children = {newTri1, newTri2};
-            triTree.set(incTris.get(0), children);
-            triTree.set(incTris.get(1), children);
-            removeTriangle(incTris.get(1));
-            removeTriangle(incTris.get(0));
+            this.setChildren(incTris.get(0), children);
+            this.setChildren(incTris.get(1), children);
             legalizeEdge(p, p1, otherPt, n + 1);
             legalizeEdge(p, otherPt, p2, n + 1);
         }
@@ -397,8 +454,7 @@ public class DelaunayTriangulation {
             int[] children = {addTriangle(p, p1(tri), p2(tri)),
                 addTriangle(p, p2(tri), p3(tri)),
                 addTriangle(p, p3(tri), p1(tri))};
-            triTree.set(tri, children);
-            removeTriangle(tri);
+            this.setChildren(tri, children);
             legalizeEdge(p, p1(tri), p2(tri), 0);
             legalizeEdge(p, p2(tri), p3(tri), 0);
             legalizeEdge(p, p3(tri), p1(tri), 0);
