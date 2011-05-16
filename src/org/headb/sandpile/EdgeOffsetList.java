@@ -29,9 +29,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.headb.sandpile;
 
 /**
- * This class is under development and is not currently used. Represents a list
- * of edges by indicating the difference in index between the source and
- * destination vertex. This allows many vertices to share the same
+ * Represents a list of edges by indicating the difference in index between the 
+ * source and destination vertex. This allows many vertices to share the same
  * EdgeOffsetList rather than each having their own EdgeList.
  * @author Bryan Head
  */
