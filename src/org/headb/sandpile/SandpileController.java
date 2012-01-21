@@ -61,7 +61,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 
  * @author Bryan Head
  */
-public class SandpileController implements ActionListener, Serializable {
+public class SandpileController implements ActionListener {
 
     public static final int SINKS_BORDER = 0;
     public static final int REFLECTIVE_BORDER = 1;
@@ -111,7 +111,6 @@ public class SandpileController implements ActionListener, Serializable {
                     update();
                 }
             }
-
         }
     };
     public Runnable repaintRunner = new Runnable () {

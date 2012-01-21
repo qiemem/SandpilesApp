@@ -46,9 +46,9 @@ public class DelaunayTriangulation {
     private int parentTri;
     private ArrayList<TIntArrayList> pointsToTris;
     private Int2dArrayList trisToPoints;
-    private final float PI = (float) Math.PI;
+    private static final float PI = (float) Math.PI;
     private ArrayList<int[]> triTree;
-    private final float ERROR_TOLERANCE = 0.00001f;
+    private static final float ERROR_TOLERANCE = 0.00001f;
     private Float2dArrayList points;
 
     public DelaunayTriangulation(Float2dArrayList points) throws InterruptedException {

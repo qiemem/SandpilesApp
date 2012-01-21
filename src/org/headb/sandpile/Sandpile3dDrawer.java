@@ -43,6 +43,7 @@ import java.awt.event.KeyEvent;
 import gnu.trove.list.array.TIntArrayList;
 import java.awt.Dimension;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A SandpileDrawer that finds the delauney triangulation of the vertices and
@@ -81,6 +82,7 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
     private final float ROT_SCALE = 90f;
     private float[] rotMatrix = null;
     private float[] backgroundColor = {0f, 0f, 0f};
+    private Lock internalConfig = new ReentrantLock(true);
 
     public Sandpile3dDrawer(GLAutoDrawable canvas) {
         System.err.println("Construct");
@@ -264,9 +266,14 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 //		for(int v : config){
 //			heights.add((float)v);
 //		}
-        configLock.lock();
-        this.config.setTo(config);
-        configLock.unlock();
+        try {
+            this.internalConfig.lock();
+            configLock.lock();
+            this.config.setTo(config);
+        } finally {
+            configLock.unlock();
+            this.internalConfig.unlock();
+        }
         this.firings = firings;
         this.graph = graph;
         //tris.assignHeights(heights);
@@ -308,65 +315,70 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
     public void drawTriangulation(GL gl, DelaunayTriangulation tris) {
         //System.err.println("Drawing tris");
-        float[] h = calcHeights();
-        for (int i = 0; i < heightSmoothing; i++) {
-            h = smoothHeights(h);
-        }
-        float[] n = new float[3];
-        if (drawShape) {
-            float[][] c = calcColors();
-            for (int i = 0; i < colorSmoothing; i++) {
-                c = smoothColors(c);
+        try {
+            internalConfig.lock();
+            float[] h = calcHeights();
+            for (int i = 0; i < heightSmoothing; i++) {
+                h = smoothHeights(h);
             }
+            float[] n = new float[3];
+            if (drawShape) {
+                float[][] c = calcColors();
+                for (int i = 0; i < colorSmoothing; i++) {
+                    c = smoothColors(c);
+                }
 
-            gl.glBegin(gl.GL_TRIANGLES);
-            for (int i = 0; i < tris.triangles().rows(); i++) {
-                int v0 = tris.triangles().get(i, 0);
-                float x0 = tris.points().get(v0, 0) - cameraX;
-                float y0 = tris.points().get(v0, 1) - cameraY;
-                int v1 = tris.triangles().get(i, 1);
-                float x1 = tris.points().get(v1, 0) - cameraX;
-                float y1 = tris.points().get(v1, 1) - cameraY;
-                int v2 = tris.triangles().get(i, 2);
-                float x2 = tris.points().get(v2, 0) - cameraX;
-                float y2 = tris.points().get(v2, 1) - cameraY;
-                normalizedCross(n,x1 - x0, y1 - y0, h[v1] - h[v0],
-                        x2 - x0, y2 - y0, h[v2] - h[v0]);
-                //System.err.println(c[v0][0]+" "+c[v0][1]+" "+c[v0][2]);
-                gl.glNormal3fv(n, 0);
-                gl.glColor3fv(c[v0], 0);
-                gl.glVertex3f(x0, y0, h[v0]);
-                gl.glColor3fv(c[v1], 0);
-                gl.glVertex3f(x1, y1, h[v1]);
-                gl.glColor3fv(c[v2], 0);
-                gl.glVertex3f(x2, y2, h[v2]);
-                //gl.glVertex3f(tri[0][0], tri[0][1], tri[0][2]);
+                gl.glBegin(gl.GL_TRIANGLES);
+                for (int i = 0; i < tris.triangles().rows(); i++) {
+                    int v0 = tris.triangles().get(i, 0);
+                    float x0 = tris.points().get(v0, 0) - cameraX;
+                    float y0 = tris.points().get(v0, 1) - cameraY;
+                    int v1 = tris.triangles().get(i, 1);
+                    float x1 = tris.points().get(v1, 0) - cameraX;
+                    float y1 = tris.points().get(v1, 1) - cameraY;
+                    int v2 = tris.triangles().get(i, 2);
+                    float x2 = tris.points().get(v2, 0) - cameraX;
+                    float y2 = tris.points().get(v2, 1) - cameraY;
+                    normalizedCross(n,x1 - x0, y1 - y0, h[v1] - h[v0],
+                            x2 - x0, y2 - y0, h[v2] - h[v0]);
+                    //System.err.println(c[v0][0]+" "+c[v0][1]+" "+c[v0][2]);
+                    gl.glNormal3fv(n, 0);
+                    gl.glColor3fv(c[v0], 0);
+                    gl.glVertex3f(x0, y0, h[v0]);
+                    gl.glColor3fv(c[v1], 0);
+                    gl.glVertex3f(x1, y1, h[v1]);
+                    gl.glColor3fv(c[v2], 0);
+                    gl.glVertex3f(x2, y2, h[v2]);
+                    //gl.glVertex3f(tri[0][0], tri[0][1], tri[0][2]);
 
-            }
-            gl.glEnd();
-        }
-
-        if (drawWire) {
-            gl.glColor3f(0f, 1f, 0f);
-            for (int i = 0; i < tris.triangles().rows(); i++) {
-                int v0 = tris.triangles().get(i, 0);
-                float x0 = tris.points().get(v0, 0) - cameraX;
-                float y0 = tris.points().get(v0, 1) - cameraY;
-                int v1 = tris.triangles().get(i, 1);
-                float x1 = tris.points().get(v1, 0) - cameraX;
-                float y1 = tris.points().get(v1, 1) - cameraY;
-                int v2 = tris.triangles().get(i, 2);
-                float x2 = tris.points().get(v2, 0) - cameraX;
-                float y2 = tris.points().get(v2, 1) - cameraY;
-                gl.glBegin(gl.GL_LINES);
-                gl.glVertex3f(x0, y0, h[v0]);
-                gl.glVertex3f(x1, y1, h[v1]);
-                gl.glVertex3f(x1, y1, h[v1]);
-                gl.glVertex3f(x2, y2, h[v2]);
-                gl.glVertex3f(x2, y2, h[v2]);
-                gl.glVertex3f(x0, y0, h[v0]);
+                }
                 gl.glEnd();
             }
+
+            if (drawWire) {
+                gl.glColor3f(0f, 1f, 0f);
+                for (int i = 0; i < tris.triangles().rows(); i++) {
+                    int v0 = tris.triangles().get(i, 0);
+                    float x0 = tris.points().get(v0, 0) - cameraX;
+                    float y0 = tris.points().get(v0, 1) - cameraY;
+                    int v1 = tris.triangles().get(i, 1);
+                    float x1 = tris.points().get(v1, 0) - cameraX;
+                    float y1 = tris.points().get(v1, 1) - cameraY;
+                    int v2 = tris.triangles().get(i, 2);
+                    float x2 = tris.points().get(v2, 0) - cameraX;
+                    float y2 = tris.points().get(v2, 1) - cameraY;
+                    gl.glBegin(gl.GL_LINES);
+                    gl.glVertex3f(x0, y0, h[v0]);
+                    gl.glVertex3f(x1, y1, h[v1]);
+                    gl.glVertex3f(x1, y1, h[v1]);
+                    gl.glVertex3f(x2, y2, h[v2]);
+                    gl.glVertex3f(x2, y2, h[v2]);
+                    gl.glVertex3f(x0, y0, h[v0]);
+                    gl.glEnd();
+                }
+            }
+        } finally {
+            internalConfig.unlock();
         }
     }
 
@@ -514,7 +526,6 @@ public class Sandpile3dDrawer implements SandpileDrawer, GLEventListener {
 
     private float[] smoothHeights(float[] heights) {
         int size = config.size();
-
         float[] newHeights = new float[size];
 
         for (int v = 0; v < size; v++) {
