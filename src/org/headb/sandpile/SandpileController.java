@@ -1701,12 +1701,17 @@ public class SandpileController implements ActionListener {
     //				}
     //			}
             }
-            for (int v = configSize() - 1; v >= 0; v--) {
-                if (toRemove[v]) {
-                    vertexData.removeRow(v);
-                    currentConfig.remove(v);
+            SandpileConfiguration newConfig = new SandpileConfiguration(currentConfig.size()-vertices.size());
+            Float2dArrayList newVertexData = new Float2dArrayList(vertexData.rows()-vertices.size(), 2);
+            for (int v=0, w=0; v<currentConfig.size(); v++) {
+                if (!toRemove[v]) {
+                    newVertexData.setRow(w, vertexData.get(v,0), vertexData.get(v,1));
+                    newConfig.add(currentConfig.get(v));
+                    w++;
                 }
             }
+            vertexData = newVertexData;
+            currentConfig = newConfig;
             sg.removeVertices(vertices);
             selectedVertices.clear();
             configs.clear();

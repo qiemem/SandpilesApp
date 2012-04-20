@@ -1965,75 +1965,81 @@ public class SandpilesInteractionPanel extends javax.swing.JPanel implements Cli
 		String selection = (String)configSelectList.getSelectedValue();
 		final int times = (Integer)configTimesSpinner.getValue();
 		if (selection != null) {
-			if (selection.equals(MAX_CONFIG)) {
-				sandpileController.addMaxStableConfig(times);
-			} else if (selection.equals(CURRENT_CONFIG)) {
-				sandpileController.addCurrentConfig(times);
-			} else if (selection.equals(DUAL_CONFIG)) {
-				sandpileController.addDualConfig(times);
-			} else if (selection.equals(ONES_CONFIG)) {
-				sandpileController.addSandEverywhere(times);
-			} else if (selection.equals(IDENTITY_CONFIG)) {
-				calculationThread = new Thread(){
-					@Override public void run(){
-						if(!calculationThreadInit("Calculating identity"))
-							return;
-						try{
-							sandpileController.addIdentity(times);
-						}catch(InterruptedException e){
+            try {
+                if (selection.equals(MAX_CONFIG)) {
+                    sandpileController.addMaxStableConfig(times);
+                } else if (selection.equals(CURRENT_CONFIG)) {
+                    sandpileController.addCurrentConfig(times);
+                } else if (selection.equals(DUAL_CONFIG)) {
+                    sandpileController.addDualConfig(times);
+                } else if (selection.equals(ONES_CONFIG)) {
+                    sandpileController.addSandEverywhere(times);
+                } else if (selection.equals(IDENTITY_CONFIG)) {
+                    calculationThread = new Thread(){
+                        @Override public void run(){
+                            if(!calculationThreadInit("Calculating identity"))
+                                return;
+                            try{
+                                sandpileController.addIdentity(times);
+                            }catch(InterruptedException e){
 
-						}
-						calculationThreadEnd();
-					}
-				};
-				calculationThread.start();
-			} else if (selection.equals(BURNING_CONFIG)) {
-				calculationThread = new Thread(){
-					@Override public void run(){
-						if(!calculationThreadInit("Calculating burning"))
-							return;
-						try{
-							sandpileController.addBurningConfig(times);
-						}catch(InterruptedException e){
+                            }
+                            calculationThreadEnd();
+                        }
+                    };
+                    calculationThread.start();
+                } else if (selection.equals(BURNING_CONFIG)) {
+                    calculationThread = new Thread(){
+                        @Override public void run(){
+                            if(!calculationThreadInit("Calculating burning"))
+                                return;
+                            try{
+                                sandpileController.addBurningConfig(times);
+                            }catch(InterruptedException e){
 
-						}
-						calculationThreadEnd();
-					}
-				};
-				calculationThread.start();
-			} else if (selection.equals(EQUIVALENT_RECURRENT)) {
-				calculationThread = new Thread(){
-					@Override public void run(){
-						if(!calculationThreadInit("Calculating equivalent recurrent"))
-							return;
-						try{
-							sandpileController.addEquivalentRecurrent(times);
-						}catch(InterruptedException e){
+                            }
+                            calculationThreadEnd();
+                        }
+                    };
+                    calculationThread.start();
+                } else if (selection.equals(EQUIVALENT_RECURRENT)) {
+                    calculationThread = new Thread(){
+                        @Override public void run(){
+                            if(!calculationThreadInit("Calculating equivalent recurrent"))
+                                return;
+                            try{
+                                sandpileController.addEquivalentRecurrent(times);
+                            }catch(InterruptedException e){
 
-						}
-						calculationThreadEnd();
-					}
-				};
-				calculationThread.start();
-			} else if (selection.equals(INVERSE_CONFIG)) {
-				calculationThread = new Thread(){
-					@Override public void run(){
-						if(!calculationThreadInit("Calculating inverse"))
-							return;
-						try{
-							sandpileController.addInverseConfig(times);
-						}catch(InterruptedException e){
+                            }
+                            calculationThreadEnd();
+                        }
+                    };
+                    calculationThread.start();
+                } else if (selection.equals(INVERSE_CONFIG)) {
+                    calculationThread = new Thread(){
+                        @Override public void run(){
+                            if(!calculationThreadInit("Calculating inverse"))
+                                return;
+                            try{
+                                sandpileController.addInverseConfig(times);
+                            }catch(InterruptedException e){
 
-						}
-						calculationThreadEnd();
-					}
-				};
-				calculationThread.start();
-			} else if (selection.equals(RANDOM_CONFIG)) {
-				sandpileController.addRandomConfig(times);
-			} else {
-				sandpileController.addConfigNamed(selection, times);
-			}
+                            }
+                            calculationThreadEnd();
+                        }
+                    };
+                    calculationThread.start();
+                } else if (selection.equals(RANDOM_CONFIG)) {
+                    sandpileController.addRandomConfig(times);
+                } else {
+                    sandpileController.addConfigNamed(selection, times);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "An error occurred: "
+                        +e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
 		}
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_addConfigButtonActionPerformed
