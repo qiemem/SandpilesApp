@@ -1638,27 +1638,9 @@ public class SandpileController implements ActionListener {
     }
 
     private void delVertex(int v) {
-        configLock.lock();
-        firingsLock.lock();
-        try {
-            vertexData.removeRow(v);
-            currentConfig.remove(v);
-            int index = selectedVertices.indexOf(v);
-            if (index >= 0) {
-                selectedVertices.remove(index);
-                for (int i = 0; i < selectedVertices.size(); i++) {
-                    if (selectedVertices.get(i) > v) {
-                        selectedVertices.set(i, selectedVertices.get(i) - 1);
-                    }
-                }
-            }
-            firings.remove(v);
-            sg.removeVertex(v);
-            configs.clear();
-        } finally {
-            firingsLock.unlock();
-            configLock.unlock();
-        }
+        TIntArrayList vertAsList = new TIntArrayList();
+        vertAsList.add(v);
+        delVertices(vertAsList);
     }
 
     public void delVerticesControl(TIntArrayList vertices) {
@@ -1675,7 +1657,6 @@ public class SandpileController implements ActionListener {
             @Override
             public void redoAction() {
                 delVertices(theVerts);
-                unselectVertices();
             }
         };
         undoManager.addEdit(theEdit);
@@ -1691,15 +1672,6 @@ public class SandpileController implements ActionListener {
             for (int i = 0; i < vertices.size(); i++) {
                 int v = vertices.get(i);
                 toRemove[v] = true;
-    //			int index = selectedVertices.indexOf(v);
-    //			if(index>=0){
-    //				selectedVertices.remove(index);
-    //				for (int j = 0; j < selectedVertices.size(); j++) {
-    //					if (selectedVertices.get(j) > v) {
-    //						selectedVertices.set(j, selectedVertices.get(j) - 1);
-    //					}
-    //				}
-    //			}
             }
             SandpileConfiguration newConfig = new SandpileConfiguration(currentConfig.size()-vertices.size());
             Float2dArrayList newVertexData = new Float2dArrayList(vertexData.rows()-vertices.size(), 2);
@@ -1712,8 +1684,8 @@ public class SandpileController implements ActionListener {
             }
             vertexData = newVertexData;
             currentConfig = newConfig;
+            this.unselectVertices();
             sg.removeVertices(vertices);
-            selectedVertices.clear();
             configs.clear();
         } finally {
             configLock.unlock();
